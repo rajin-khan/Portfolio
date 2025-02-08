@@ -22,7 +22,7 @@ const { name, description, url, image, tags } = Astro.props;
 
     <!-- Tags Section with Custom Gradient Colors -->
     <div class="flex flex-wrap gap-1 mt-3">
-      {tags.map((tag) => (
+        {(tags || []).map((tag) => (
         <span class={`px-2 py-1 text-xs font-semibold rounded-lg bg-gradient-to-r ${tag.gradient} text-white`}>
           {tag.name}
         </span>

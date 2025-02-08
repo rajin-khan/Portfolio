@@ -12,7 +12,7 @@ function parseDate(dateStr) {
 const sortedPosts = allPosts
   .map((post) => ({
     ...post,
-    date: parseDate(post.data.dateFormatted),
+    date: new Date(post.data.date),
   }))
   .sort((a, b) => b.date.getTime() - a.date.getTime());
 
@@ -85,10 +85,15 @@ const postsLoop = sortedPosts.slice(0, count).map((post) => {
             <span>{post.description}</span>
           </p>
           <div class="mt-2.5 text-xs font-medium text-neutral-800 dark:text-neutral-300">
-            Posted on {post.dateFormatted}
+            Posted on{" "}
+            {new Date(post.date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </div>
         </div>
       </div>
-    )
+    );
   })
 }

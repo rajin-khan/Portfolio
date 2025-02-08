@@ -2,15 +2,28 @@
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-	const postEntries = await getCollection("post");
-	return postEntries.map((entry) => ({
-		params: { slug: entry.slug },
-		props: { entry },
-	}));
+  const postEntries = await getCollection("post");
+
+  return postEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
 }
 
 const { entry } = Astro.props;
+const frontmatter = entry.data || {};
 const { Content } = await entry.render();
 ---
 
-<Content />
+<article class="prose dark:prose-invert mx-auto">
+  <h1 class="text-4xl font-bold mb-3">{frontmatter.title}</h1>
+  <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">
+    {new Date(frontmatter.date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })}
+  </p>
+  
+  <Content />
+</article>
