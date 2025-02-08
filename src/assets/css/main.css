@@ -110,6 +110,15 @@
     100% { background: #ff3366; }
   }
 
+  /* Force dark mode by default */
+html {
+    color-scheme: dark;
+  }
+  html.dark {
+    background-color: #0a0a0a;
+    color-scheme: dark;
+  }  
+
 /* Smaller, evenly spaced gradient tags */
 .tag {
     display: inline-block;
