@@ -1,0 +1,51 @@
+[
+	{
+		"dates": "August 2024 · Present",
+		"role": "Loop Reverie",
+		"company": "Graphic Designer",
+		"description": "Brand identity design and content creation.",
+		"logo": "/assets/images/experiences/loopreverie.png"
+	},
+	{
+		"dates": "October 2022 · Present",
+		"role": "Private Tutor",
+		"company": "O Levels Instructor",
+		"description": "Teaching CS, Calc I, II, III, Statistics and Mechanics.",
+		"logo": "/assets/images/experiences/rtp.png"
+	},
+	{
+		"dates": "January 2022 · Present ",
+		"role": "North South University",
+		"company": "BS Computer Science and Engineering",
+		"description": "Specialized in ML, DL, and NLP.",
+		"logo": "/assets/images/experiences/NSU.png"
+	},
+    {
+		"dates": "December 2021 · September 2022 ",
+		"role": "TornaDough",
+		"company": "Head of Creative",
+		"description": "Brand identity, content creation and social media management, while developing marketing strategies.",
+		"logo": "/assets/images/experiences/tornadough.png"
+	},
+    {
+		"dates": "August 2019 · November 2021 ",
+		"role": "Zenith Education",
+		"company": "Teaching Assistant",
+		"description": "Creating, analyzing, grading, and recording papers.",
+		"logo": "/assets/images/experiences/zenith.png"
+	},
+    {
+		"dates": "June 2019 · June 2021 ",
+		"role": "Loreeto International",
+		"company": "A Levels",
+		"description": "Daily Star Award (Excellence in Education)",
+		"logo": "/assets/images/experiences/loreeto.png"
+	},
+    {
+		"dates": "June 2006 · June 2019 ",
+		"role": "Sunnydale",
+		"company": "Elementary, Middle, High School, O Levels",
+		"description": "Daily Star Award (Excellence in Education)",
+		"logo": "/assets/images/experiences/sd.png"
+	}
+]

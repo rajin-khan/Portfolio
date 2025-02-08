@@ -1,0 +1,74 @@
+---
+import experiences from "../collections/experiences.json";
+import AboutExperience from "../components/about-experience.astro";
+import PageHeading from "../components/page-heading.astro";
+import Layout from "../layouts/main.astro";
+---
+
+<Layout title="About Me">
+  <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
+    <PageHeading
+      title="About Me"
+      description="Hey! I'm a Computer Science student from Dhaka, Bangladesh. I'm passionate and skilled in Data Analysis, Machine Learning, and Graphic Design too!"
+    />
+
+    <div class="morphing-container">
+        <div class="background-text">rajin khan</div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+      </div>
+
+    <h2 class="mb-2 text-2xl font-bold dark:text-neutral-200">Short Bio</h2>
+    <p
+      class="text-sm leading-6 text-gray-600 dark:text-neutral-400 sm:leading-7 lg:leading-8 sm:text-base lg:text-lg"
+    >
+        ML explorer 🤖, Softwate Dev Enthusiast 📱, Design Perfectionist 🎨.
+    </p>
+
+    <h2
+      class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200"
+    >
+      Eduation & Experience
+    </h2>
+    <div class="px-5 py-10">
+      {
+        experiences.map((experience) => {
+          return (
+            <div class="pb-10 border-l border-gray-200 last:border-l-0 dark:border-neutral-700">
+              <AboutExperience
+                dates={experience.dates}
+                role={experience.role}
+                company={experience.company}
+                description={experience.description}
+                logo={experience.logo}
+              />
+            </div>
+          )
+        })
+      }
+    </div>
+
+    <h2 class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200">Down to Connect?</h2>
+    <p
+      class="text-sm leading-6 text-gray-600 dark:text-neutral-400 sm:leading-7 lg:leading-8 sm:text-base lg:text-lg"
+    >
+      If you want to reach out, or just shoot a text, <a
+        href="https://www.instagram.com/raaajiin/"
+        target="_blank"
+        class="text-indigo-600 underline">I'm always on Instagram</a
+      >. Or, if you're a recruiter, send me an <a href="mailto:rajin.khan2001@gmail.com?subject=Let's%20Connect&body=Hi%20Rajin," class="text-indigo-600 underline"
+        >email</a
+      > and I'll get back to you STAT.
+    </p>
+  </section>
+</Layout>
