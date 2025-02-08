@@ -1,8 +1,7 @@
 ---
 title: "First Blog Post"
 description: "This is a test post to fix Astro errors."
-date: "2024-02-08"
-slug: "first-post"
+date: 2024-02-08
 ---
 
 ## Welcome to My Blog
