@@ -2,25 +2,31 @@
 import Footer from "../components/footer.astro";
 import Header from "../components/header.astro";
 import SquareLines from "../components/square-lines.astro";
+
 const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
 
-    <!-- Used to add dark mode right away, adding here prevents any flicker -->
+    <!-- Dark mode initialization script -->
     <script is:inline>
       if (typeof Storage !== 'undefined') {
-        if (
-          localStorage.getItem('dark_mode') &&
-          localStorage.getItem('dark_mode') == 'true'
-        ) {
-          document.documentElement.classList.add('dark')
+        // If no preference is set, default to dark mode
+        if (localStorage.getItem('dark_mode') === null) {
+          localStorage.setItem('dark_mode', 'true');
         }
+        // Apply dark mode if it's set to true
+        if (localStorage.getItem('dark_mode') === 'true') {
+          document.documentElement.classList.add('dark');
+        }
+      } else {
+        // If localStorage is not available, default to dark mode
+        document.documentElement.classList.add('dark');
       }
     </script>
 
