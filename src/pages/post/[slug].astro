@@ -1,29 +1,36 @@
 ---
-import { getCollection } from "astro:content";
+import { getEntryBySlug, getCollection } from "astro:content";
+import PostLayout from "../../layouts/post.astro";
 
+// Define the static paths for dynamic routes
 export async function getStaticPaths() {
-  const postEntries = await getCollection("post");
-
-  return postEntries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
+  const posts = await getCollection("post");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { entry: post },
   }));
 }
 
-const { entry } = Astro.props;
-const frontmatter = entry.data || {};
-const { Content } = await entry.render();
----
+const { slug } = Astro.params;
+const entry = await getEntryBySlug("post", slug);
 
-<article class="prose dark:prose-invert mx-auto">
-  <h1 class="text-4xl font-bold mb-3">{frontmatter.title}</h1>
-  <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">
-    {new Date(frontmatter.date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })}
-  </p>
-  
-  <Content />
-</article>
+if (!entry) {
+  throw new Error(`Post not found: ${slug}`);
+}
+
+const { Content } = await entry.render();
+const { title, description, date } = entry.data;
+
+---
+<PostLayout title={title} description={description} date={date}>
+  <article class="prose dark:prose-invert mx-auto">
+    <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">
+      {new Date(date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })}
+    </p>
+    <Content />
+  </article>
+</PostLayout>

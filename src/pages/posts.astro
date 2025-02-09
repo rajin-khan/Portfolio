@@ -1,10 +1,11 @@
 ---
+import { getCollection } from "astro:content";
 import PageHeading from "../components/page-heading.astro";
-import PostsLoop from "../components/posts-loop.astro";
 import Layout from "../layouts/main.astro";
+const posts = await getCollection("post");
 ---
 
-<Layout title="Posts">
+<Layout title="Blog Posts">
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
     <PageHeading
       title="Blog Posts"
@@ -12,7 +13,49 @@ import Layout from "../layouts/main.astro";
     />
 
     <div class="z-50 flex flex-col items-stretch w-full gap-5 my-8">
-      <PostsLoop count="999999999" />
+      {
+        posts.map((post) => (
+          <a
+            href={`/post/${post.slug}`}
+            class="relative flex flex-col items-stretch duration-300 ease-out p-7 group h-100 rounded-2xl"
+          >
+            <span class="absolute inset-0 z-20 block w-full h-full duration-300 ease-out bg-transparent border border-transparent border-dashed rounded-2xl group-hover:-translate-x-1 group-hover:-translate-y-1 dark:border-neutral-600" />
+            <span class="absolute inset-0 z-10 block w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-300 dark:border-neutral-600 group-hover:translate-x-1 group-hover:translate-y-1" />
+
+            <span class="relative z-30 block">
+              <div class="flex">
+                {post.data.tags?.map((tag) => (
+                  <span class="px-2 py-1 text-xs font-semibold rounded-lg bg-gradient-to-r text-white">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <span class="block w-full px-1 mt-5 mb-1">
+                <span class="flex items-center mb-0 text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+                  {post.data.title}
+                  <span class="ml-1 inline-block transition-transform duration-300 translate-x-0 group-hover:translate-x-1">
+                    →
+                  </span>
+                </span>
+              </span>
+
+              <span class="text-xs text-neutral-600 dark:text-neutral-400 block truncate">
+                {post.data.description}
+              </span>
+
+              <p class="mt-4 text-sm text-white-500 dark:text-white-500">
+                Posted on{" "}
+                {new Date(post.data.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </span>
+          </a>
+        ))
+      }
     </div>
   </section>
 </Layout>
