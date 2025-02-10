@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import Button from "../components/button.astro";
 import Layout from "../layouts/main.astro";
 import PageHeading from "../components/page-heading.astro";
 
@@ -24,7 +25,7 @@ const [visiblePosts, remainingPosts] = [
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
     <PageHeading
       title="Blog Posts"
-      description="I really do love talking a lot. Mostly about new tech, or things I learn as I'm growing my skillset."
+      description="All the things I love. New Tech, Design, or things I learn as I'm growing my skillset."
     />
 
     <div id="posts-container" class="z-50 flex flex-col items-stretch w-full gap-5 my-8">
@@ -90,13 +91,13 @@ const [visiblePosts, remainingPosts] = [
     {remainingPosts.length > 0 && (
       <div class="flex justify-center mt-8">
         <button
-          id="load-more"
-          class="px-6 py-2 rounded-lg bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
+            id="load-more"
+            class="px-4 py-1.5 text-sm font-medium rounded-full border border-neutral-800 dark:border-neutral-200 bg-neutral-800 dark:bg-neutral-200 text-neutral-100 dark:text-neutral-900 transition-all duration-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-neutral-900 dark:hover:text-neutral-100"
         >
-          Load More Posts
+        Previous Posts
         </button>
-      </div>
-    )}
+    </div>
+)}
   </section>
 </Layout>
 
