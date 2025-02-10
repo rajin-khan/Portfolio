@@ -20,17 +20,103 @@ if (!entry) {
 
 const { Content } = await entry.render();
 const { title, description, date } = entry.data;
-
 ---
+
 <PostLayout title={title} description={description} date={date}>
   <article class="prose dark:prose-invert mx-auto">
     <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">
-      {new Date(date).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })}
+      {
+        new Date(date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      }
     </p>
     <Content />
   </article>
+  <section class="mt-10">
+    <!-- Toggle Button -->
+    <div class="flex justify-center mt-4">
+      <button
+        id="toggle-comments"
+        class="flex items-center text-lg text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
+      >
+        <span>Show Comments</span>
+        <span id="arrow" class="ml-2 transition-transform">↓</span>
+      </button>
+    </div>
+
+    <!-- Comments Section (Initially Hidden) -->
+    <div id="comments-section" class="hidden mt-6">
+      <div id="giscus-container"></div>
+    </div>
+
+    <script>
+      function getTheme() {
+        return document.documentElement.classList.contains("dark")
+          ? "dark_high_contrast"
+          : "light";
+      }
+
+      function loadGiscus() {
+        if (document.getElementById("giscus-container").children.length > 0)
+          return;
+        const theme = getTheme();
+        const script = document.createElement("script");
+        script.src = "https://giscus.app/client.js";
+        script.setAttribute("data-repo", "rajin-khan/Portfolio");
+        script.setAttribute("data-repo-id", "R_kgDON2W65A");
+        script.setAttribute("data-category", "Announcements");
+        script.setAttribute("data-category-id", "DIC_kwDON2W65M4Cm1Wm");
+        script.setAttribute("data-mapping", "pathname");
+        script.setAttribute("data-strict", "0");
+        script.setAttribute("data-reactions-enabled", "1");
+        script.setAttribute("data-emit-metadata", "0");
+        script.setAttribute("data-input-position", "top");
+        script.setAttribute("data-theme", theme);
+        script.setAttribute("data-lang", "en");
+        script.setAttribute("data-loading", "lazy");
+        script.crossOrigin = "anonymous";
+        script.async = true;
+
+        document.getElementById("giscus-container").appendChild(script);
+      }
+
+      function updateGiscusTheme() {
+        const theme = getTheme();
+        const iframe = document.querySelector("iframe.giscus-frame");
+        if (iframe) {
+          (iframe as HTMLIFrameElement).contentWindow.postMessage(
+            { giscus: { setConfig: { theme } } },
+            "https://giscus.app"
+          );
+        }
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        const toggleBtn = document.getElementById("toggle-comments");
+        const commentsSection = document.getElementById("comments-section");
+        const arrow = document.getElementById("arrow");
+
+        toggleBtn.addEventListener("click", () => {
+          const isHidden = commentsSection.classList.contains("hidden");
+          commentsSection.classList.toggle("hidden");
+          arrow.textContent = isHidden ? "↑" : "↓";
+          toggleBtn.firstElementChild.textContent = isHidden
+            ? "Hide Comments"
+            : "Show Comments";
+
+          if (isHidden) {
+            loadGiscus();
+          }
+        });
+      });
+
+      const observer = new MutationObserver(updateGiscusTheme);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    </script>
+  </section>
 </PostLayout>
