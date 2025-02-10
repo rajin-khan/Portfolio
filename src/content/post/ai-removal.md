@@ -48,10 +48,11 @@ AI tools like **Figma’s Auto Layout** and **Adobe Sensei** are helping designe
 ![AI-Generated UI](https://media.nngroup.com/media/articles/opengraph_images/Opengraph_-_Stages_of_AI_ImageGen.png)
 
 ---
-
 ## 🔗 **Conclusion & CTA**
 AI is reshaping how we **design, develop, and debug** web applications. Whether you’re a beginner or an experienced developer, **integrating AI into your workflow** can significantly boost efficiency.
 
-🚀 **What are your thoughts on AI in web development?**
-💬 Share your experiences in the comments!
+🚀 **What are your thoughts on AI in web development?**  
+💬 Share your experiences in the comments!  
 🔔 **Follow me for more AI-driven web dev insights!**
+
+---
