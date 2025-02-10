@@ -4,5 +4,6 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
+    site: 'http://rajinkhan.vercel.app',
 	integrations: [tailwind()],
 });
