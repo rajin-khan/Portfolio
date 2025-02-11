@@ -4,6 +4,7 @@ import Projects from "../components/home/projects.astro";
 import Separator from "../components/home/separator.astro";
 import Writings from "../components/home/writings.astro";
 import Layout from "../layouts/main.astro";
+import StatusIndicator from "../components/status-indicator.astro";
 
 // Add structured data for your personal information
 const personSchema = {
@@ -46,7 +47,12 @@ const personSchema = {
           <li>Graphic Design</li>
           <li>and more!</li>
         </ul>
-        <Button text="📝 View My Resume" link="/resume.pdf" />
+        <div class="flex items-center gap-6">
+            <Button text="📝 View My Resume" link="/resume.pdf" />
+            <div class="mt-5">
+                <StatusIndicator status="uni" />
+            </div>
+        </div>
       </div>
       
       <div class="relative justify-end hidden w-full mt-10 md:flex md:pl-10 md:w-1/2 md:mt-0 md:translate-y-4 xl:translate-y-0">

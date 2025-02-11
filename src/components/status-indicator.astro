@@ -1,0 +1,64 @@
+---
+interface Props {
+  status?: 'online' | 'offline' | 'away' | 'uni';
+}
+
+const { status = 'offline' } = Astro.props;
+
+// Status configurations with dark/light mode colors
+const statusConfig = {
+  online: {
+    text: 'Coding right now',
+    light: '#10B981',
+    dark: '#34D399'
+  },
+  offline: {
+    text: 'Resting',
+    light: '#6B7280',
+    dark: '#9CA3AF'
+  },
+  away: {
+    text: 'Currently Away',
+    light: '#F59E0B',
+    dark: '#FBBF24'
+  },
+  uni: {
+    text: 'Currently Studying',
+    light: '#EF4444',
+    dark: '#FCA5A5'
+  }
+};
+
+const currentStatus = statusConfig[status] || statusConfig.offline;
+---
+
+<div class="inline-flex items-center gap-2">
+  <div class="relative flex">
+    <div class="status-dot w-2.5 h-2.5 rounded-full transition-colors duration-300"></div>
+    <div class="status-dot-ping absolute inset-0 w-2.5 h-2.5 rounded-full animate-ping transition-colors duration-300 opacity-30"></div>
+  </div>
+  <span class="text-sm font-medium text-black dark:text-white">
+    {currentStatus.text}
+  </span>
+</div>
+
+<style define:vars={{
+  statusColorLight: currentStatus.light,
+  statusColorDark: currentStatus.dark,
+}}>
+  .status-dot {
+    background-color: var(--statusColorLight);
+  }
+  
+  .status-dot-ping {
+    background-color: var(--statusColorLight);
+  }
+
+  :global(.dark) .status-dot {
+    background-color: var(--statusColorDark);
+  }
+
+  :global(.dark) .status-dot-ping {
+    background-color: var(--statusColorDark);
+  }
+</style>
