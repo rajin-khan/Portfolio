@@ -54,7 +54,7 @@ Here's an **easy** to follow plan for you, **just for the CSE courses**:
 
 ---
 
-![Rajin's Plan for year 1](../../../public/assets/images/posts/rajin-coursemap-1.png)
+![Rajin's Plan for year 1](/assets/images/posts/rajin-coursemap-1.png)
 
 ## ❶ For your first year, it's pretty straightforward. 
 
@@ -64,7 +64,7 @@ Remember to **study the languages in advance**, and try to build something *othe
 
 ---
 
-![Rajin's Plan for year 2](../../../public/assets/images/posts/rajin-coursemap-2.png)
+![Rajin's Plan for year 2](/assets/images/posts/rajin-coursemap-2.png)
 
 ## ❷ For your second year, it's a bit more exciting.  
 
@@ -75,7 +75,7 @@ Word of advice? **Don't** stress about **CSE225**. It really isn't as hard as pe
 
 ---
 
-![Rajin's Plan for year 3](../../../public/assets/images/posts/rajin-coursemap-3.png)
+![Rajin's Plan for year 3](/assets/images/posts/rajin-coursemap-3.png)
 
 ## ❸ Third year's got even more courses. And this is where things get fun. 
 
@@ -85,7 +85,7 @@ You can do the rest to your liking, but try to save ***Design and Analysis of Al
 
 ---
 
-![Rajin's Plan for year 4](../../../public/assets/images/posts/rajin-coursemap-4.png)
+![Rajin's Plan for year 4](/assets/images/posts/rajin-coursemap-4.png)
 
 ## ❹ Final Year. This is it.  
 
