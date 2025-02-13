@@ -100,7 +100,7 @@ Hopefully NSU's next iteration of course plan fixes this issue.
 
 ---
 
-Now that all the planning's been taken care of, there's one more you need to be aware of.
+Now that all the planning's been taken care of, there's one more thing you need to be aware of.
 
 ### 📚 **Your Study Plan:**
 ---
