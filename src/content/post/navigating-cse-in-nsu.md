@@ -79,7 +79,7 @@ Word of advice? **Don't** stress about **CSE225**. It really isn't as hard as pe
 
 ## ❸ Third year's got even more courses. And this is where things get fun. 
 
-Right off the bat, take on your ***Junior Capstone Project* (CSE299)** and finish it *(Provided you've already completed 60 credits)*. It's laid back, easy, and fun, with **weekly project upgrades** determining your entire grade. Along with it, I'd suggest picking ***Operating Systems* (CSE323)**.  
+Right off the bat, take on your ***Junior Capstone Project* (CSE299)** and finish it *(Provided you've already completed 60 credits)*. It's laid back, easy, and fun, with **weekly project updates** determining your entire grade. Along with it, I'd suggest picking ***Operating Systems* (CSE323)**.  
 
 You can do the rest to your liking, but try to save ***Design and Analysis of Algorithms* (CSE373)** for a semester where it's the **only CSE course** you'll take. It is a **bit** more challenging than other courses.
 
