@@ -3,6 +3,7 @@ import experiences from "../collections/experiences.json";
 import AboutExperience from "../components/about-experience.astro";
 import PageHeading from "../components/page-heading.astro";
 import Layout from "../layouts/main.astro";
+import BentoImageSwitcher from "../components/bento-image-switcher.astro";
 ---
 
 <Layout title="About Me">
@@ -12,21 +13,7 @@ import Layout from "../layouts/main.astro";
       description="Hey! I'm Rajin Khan, a Computer Science student from Dhaka, Bangladesh. I'm passionate and skilled in Data Analysis, Machine Learning, and Graphic Design too! (My formal name is Adib Ar Rahman Khan, in case my resume confused you.)"
     />
 
-    <div class="morphing-container">
-        <div class="background-text">rajin khan</div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-        <div class="blob"></div>
-      </div>
+    <BentoImageSwitcher />
 
     <h2 class="mb-2 text-2xl font-bold dark:text-neutral-200">Short Bio</h2>
     <p
@@ -56,6 +43,22 @@ import Layout from "../layouts/main.astro";
           )
         })
       }
+    </div>
+
+    <div class="morphing-container">
+        <div class="background-text">rajin khan</div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
     </div>
 
     <h2 class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200">Down to Connect?</h2>

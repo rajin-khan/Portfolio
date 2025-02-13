@@ -1,0 +1,85 @@
+<div class="bento-container my-8">
+    <div class="image-switcher">
+      <div class="image-slides">
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    .bento-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+  
+    .image-switcher {
+      aspect-ratio: 4/3;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      background: #f0f0f0;
+      box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.1);
+    }
+  
+    .image-slides {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+  
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background-size: cover;
+      background-position: center;
+      transition: opacity 0.5s ease-in-out;
+    }
+  
+    .slide:nth-child(1) {
+      background-image: url('/assets/images/rajin-just-smiling.jpg');
+      opacity: 1;
+    }
+  
+    .slide:nth-child(2) {
+      background-image: url('/assets/images/rajin-smiling-yet-again.jpg');
+    }
+  
+    .slide:nth-child(3) {
+      background-image: url('/assets/images/rajin-in-formal.jpg');
+    }
+  
+    /* Dark mode support */
+    :global(.dark) .image-switcher {
+      background: #1a1a1a;
+    }
+  
+    @media (prefers-reduced-motion: reduce) {
+      .slide {
+        transition: none;
+      }
+    }
+  </style>
+  
+  <script>
+    function setupImageSwitcher() {
+      const slides = document.querySelectorAll('.slide') as NodeListOf<HTMLElement>;
+      let currentSlide = 0;
+      
+      function showNextSlide() {
+        (slides[currentSlide] as HTMLElement).style.opacity = '0';
+        currentSlide = (currentSlide + 1) % slides.length;
+        (slides[currentSlide] as HTMLElement).style.opacity = '1';
+      }
+  
+      // Change slide every 3 seconds
+      setInterval(showNextSlide, 3000);
+    }
+  
+    // Run setup when the component mounts
+    document.addEventListener('DOMContentLoaded', setupImageSwitcher);
+  </script>
