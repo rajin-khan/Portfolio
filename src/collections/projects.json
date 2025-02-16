@@ -34,6 +34,17 @@
           { "name": "React", "gradient": "from-indigo-500 to-purple-600" }
         ]
 	},
+    {
+		"name": "cash*",
+		"description": "Custom shell exploring the Kernel and OS.",
+		"image": "/assets/images/projects/cash.png",
+		"url": "https://github.com/rajin-khan/CASH",
+        "tags": [
+          { "name": "Shell", "gradient": "from-green-400 to-blue-600" },
+          { "name": "CLI", "gradient": "from-indigo-500 to-purple-600" },
+          { "name": "C", "gradient": "from-blue-500 to-orange-500" }
+        ]
+	},
 	{
 		"name": "DARKRUNNER",
 		"description": "Endless Runner Game, exploring Java.",
@@ -54,18 +65,6 @@
           { "name": "CLI", "gradient": "from-indigo-500 to-purple-600" },
           { "name": "C", "gradient": "from-blue-500 to-orange-500" },
           { "name": "Management", "gradient": "from-pink-500 to-yellow-600" }
-        ]
-	},
-	{
-		"name": "BIBLIO",
-		"description": "Vanilla Library Management System.",
-		"image": "/assets/images/projects/BIBLIO.png",
-		"url": "https://github.com/rajin-khan/BIBLIO",
-        "tags": [
-          { "name": "Web", "gradient": "from-green-400 to-blue-600" },
-          { "name": "HTML", "gradient": "from-pink-500 to-yellow-600" },
-          { "name": "CSS", "gradient": "from-blue-500 to-orange-500" },
-          { "name": "MySQL", "gradient": "from-indigo-500 to-purple-600" }
         ]
 	}
 ]
