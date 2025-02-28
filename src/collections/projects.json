@@ -24,7 +24,7 @@
 	},
     {
 		"name": "Syncly*",
-		"description": "Drive Aggregator with dynamic storage.",
+		"description": "Cloud Aggregator with dynamic storage.",
 		"image": "/assets/images/projects/Syncly.png",
 		"url": "https://github.com/rajin-khan/syncly",
         "tags": [
