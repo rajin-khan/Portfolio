@@ -5,6 +5,7 @@ import Separator from "../components/home/separator.astro";
 import Writings from "../components/home/writings.astro";
 import Layout from "../layouts/main.astro";
 import StatusIndicator from "../components/status-indicator.astro";
+import TechStack from "../components/tech-stack.astro";
 
 // Add structured data for your personal information
 const personSchema = {
@@ -82,6 +83,10 @@ const personSchema = {
 
   <Separator text="My projects" />
   <Projects />
+
+  <Separator text="Tech Stack" />
+  <TechStack />
+  
   <Separator text="Oh, and I talk a lot" />
   <Writings />
 
