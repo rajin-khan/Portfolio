@@ -22,7 +22,7 @@
 A sleek, **blazing-fast** portfolio built with **Astro** and **TailwindCSS**, designed to showcase projects, blog posts, and my resume – all in one place. 
 *(Also, my website will force you to use dark mode for every instance that you reload it. Because that is the only way it should be viewed. Cheers!)*
 
-### **🌍 Live Now →** [rajinkhan.vercel.app](https://rajinkhan.vercel.app)
+### **🌍 Live Now →** [rajinkhan.com](https://rajinkhan.com)
 
 ---
 
@@ -59,7 +59,7 @@ Fully responsive on **all devices**
 ## **📬 Contact Me**
 📧 **Email:** [rajin.khan2001@gmail.com](mailto:rajin.khan2001@gmail.com)  
 🔗 **LinkedIn:** [linkedin.com/in/rajin-khan](https://linkedin.com/in/rajin-khan)  
-📸 **Instagram:** [@raaajiin](https://twitter.com/raaajiin)  
+📸 **Instagram:** [@raaajiin](https://instagram.com/raaajiin)  
 
 ---
 
