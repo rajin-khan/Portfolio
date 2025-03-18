@@ -12,7 +12,7 @@
     },
     {
 		"name": "GridGenius*",
-		"description": "AI-Powered Energy Optimization Tool.",
+		"description": "AI-Powered Energy Optimization System.",
 		"image": "/assets/images/projects/GridGenius.png",
 		"url": "https://github.com/rajin-khan/GridGenius",
         "tags": [
@@ -57,14 +57,15 @@
         ]
 	},
 	{
-		"name": "UNIX GM",
-		"description": "Management System exploring C.",
-		"image": "/assets/images/projects/UNIX.png",
-		"url": "https://github.com/rajin-khan/UNIX",
+		"name": "UBL Retail",
+		"description": "Computer Vision pipeline for Unilever BD.",
+		"image": "/assets/images/projects/ubl.png",
+		"url": "https://github.com/rajin-khan/UBLRetailAnalysis",
         "tags": [
-          { "name": "CLI", "gradient": "from-indigo-500 to-purple-600" },
-          { "name": "C", "gradient": "from-blue-500 to-orange-500" },
-          { "name": "Management", "gradient": "from-pink-500 to-yellow-600" }
+          { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
+          { "name": "ML", "gradient": "from-green-400 to-blue-600" },
+          { "name": "DL", "gradient": "from-indigo-500 to-purple-600" },
+          { "name": "YOLO", "gradient": "from-indigo-500 to-purple-600" }
         ]
 	}
 ]
