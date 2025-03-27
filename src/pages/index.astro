@@ -15,7 +15,6 @@ const personSchema = {
   "description": "CS student from Dhaka, Bangladesh focusing on Supervised Machine Learning",
   "url": "https://rajinkhan.vercel.app",
   "sameAs": [
-    // Add your social media profiles here
     "https://github.com/rajin-khan",
     "https://www.linkedin.com/in/rajin-khan",
     "https://www.instagram.com/raaajiin/",
@@ -29,7 +28,7 @@ const personSchema = {
   description="CS student from Dhaka, Bangladesh specializing in Supervised Machine Learning, Data Analytics, and Mobile Development."
 >
   <main class="relative z-20 w-full max-w-4xl mx-auto mt-16 px-7 md:mt-24 lg:mt-32 xl:px-0">
-    <section class="flex flex-col items-center md:flex-row">
+    <section class="flex flex-col-reverse md:flex-row items-center">
       <div class="relative w-full md:w-1/2">
         <h1 class="mb-5 text-4xl font-bold leading-tight md:text-4xl lg:text-6xl dark:text-white">
           Hello, I'm Rajin.
@@ -49,33 +48,23 @@ const personSchema = {
         </ul>
         <div class="flex items-center gap-6">
             <Button text="📝 View My Resume" link="/resume.pdf" />
+            
             <div class="mt-5">
                 <StatusIndicator status="online" />
             </div>
         </div>
       </div>
       
-      <div class="relative justify-end hidden w-full mt-10 md:flex md:pl-10 md:w-1/2 md:mt-0 md:translate-y-4 xl:translate-y-0">
-        <div class="relative z-50 w-full">
-          <div class="absolute bottom-0 z-40 w-16 h-16 -translate-x-6 -translate-y-1/2 lg:top-auto top-0 lg:-translate-y-[330px] rounded-full">
-            <span class="relative z-20 flex items-center justify-center w-full h-full text-2xl border-8 border-white rounded-full dark:border-neutral-950 bg-neutral-100 dark:bg-neutral-900">
-              <span class="flex items-center justify-center w-full h-full bg-white border border-dashed rounded-full dark:bg-neutral-950 border-neutral-300 dark:border-neutral-700" aria-hidden="true">
-                😴
-              </span>
-            </span>
-          </div>
-          <div class="relative z-30 px-10">
-            <img
-              src="/assets/images/image.png"
-              class="relative z-30 w-auto h-auto max-w-xs md:max-w-md mx-auto translate-x-[-65px] translate-y-[-1px]"
-              alt="Rajin Khan - Computer Science Student and Machine Learning Enthusiast"
-              width="400"
-              height="400"
-              loading="eager"
-            />
-          </div>
-          <div class="absolute bottom-0 right-0 z-20 w-full h-full lg:h-[420px] translate-x-0 -translate-y-px border border-dashed rounded-2xl bg-gradient-to-r dark:from-neutral-950 dark:via-black dark:to-neutral-950 from-white via-neutral-50 to-white border-neutral-300 dark:border-neutral-700">
-          </div>
+      <div class="relative flex justify-center w-full mt-10 md:mt-0 md:w-1/2 md:translate-y-4 xl:translate-y-0 order-first md:order-none">
+        <div class="relative flex items-center justify-center w-[280px] h-[280px] lg:w-[360px] lg:h-[360px] border-2 border-dashed rounded-full border-neutral-300 dark:border-neutral-700">
+          <img
+            src="/assets/images/rajin-main.jpeg"
+            class="w-[265px] h-[265px] lg:w-[335px] lg:h-[335px] rounded-full object-cover"
+            alt="Rajin Khan - Computer Science Student and Machine Learning Enthusiast"
+            width="390"
+            height="390"
+            loading="eager"
+          />
         </div>
       </div>
     </section>
