@@ -7,13 +7,12 @@ import Layout from "../layouts/main.astro";
 import StatusIndicator from "../components/status-indicator.astro";
 import TechStack from "../components/tech-stack.astro";
 
-// Add structured data for your personal information
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Rajin Khan",
   "description": "CS student from Dhaka, Bangladesh focusing on Supervised Machine Learning",
-  "url": "https://rajinkhan.vercel.app",
+  "url": "https://rajinkhan.com",
   "sameAs": [
     "https://github.com/rajin-khan",
     "https://www.linkedin.com/in/rajin-khan",
@@ -21,11 +20,16 @@ const personSchema = {
     "https://www.facebook.com/rajinisdown/"
   ]
 };
+
+const pageTitle = "Rajin Khan"; 
+const pageDescription = "Personal portfolio of Rajin Khan, a Computer Science student from Dhaka, Bangladesh specializing in Machine Learning, Data Analytics, and Mobile Development.";
+
 ---
 
 <Layout 
-  title="Rajin Khan"
-  description="CS student from Dhaka, Bangladesh specializing in Supervised Machine Learning, Data Analytics, and Mobile Development."
+  title={pageTitle} 
+  description={pageDescription} 
+  ogImage="/assets/images/rajin-main.jpeg"
 >
   <main class="relative z-20 w-full max-w-4xl mx-auto mt-16 px-7 md:mt-24 lg:mt-32 xl:px-0">
     <section class="flex flex-col-reverse md:flex-row items-center">
@@ -48,7 +52,6 @@ const personSchema = {
         </ul>
         <div class="flex items-center gap-6">
             <Button text="📝 View My Resume" link="/resume.pdf" />
-            
             <div class="mt-5">
                 <StatusIndicator status="online" />
             </div>
@@ -79,6 +82,5 @@ const personSchema = {
   <Separator text="Oh, and I talk a lot" />
   <Writings />
 
-  <!-- Add structured data -->
   <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 </Layout>
