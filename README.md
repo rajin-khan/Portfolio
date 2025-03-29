@@ -32,6 +32,9 @@ A sleek, **blazing-fast** portfolio built with **Astro** and **TailwindCSS**, de
 |---|---|
 | ![Light Mode](./light1.png) | ![Dark Mode](./dark1.png) |
 
+### **🍻 About Section**  
+![About Preview](./dark4.png)
+
 ### **🛠️ Projects Section**  
 ![Projects Preview](./dark3.png)
 
