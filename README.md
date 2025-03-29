@@ -4,7 +4,7 @@
 
 ---
 
-### **🚀 Tech & Deployment**
+### **📲 Tech & Deployment**
 <p align="center">
   <img src="https://img.shields.io/badge/Built%20With-Astro-blueviolet?style=for-the-badge&logo=astro&logoColor=white" />
   <img src="https://img.shields.io/badge/Styled%20With-TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" />
@@ -32,14 +32,14 @@ A sleek, **blazing-fast** portfolio built with **Astro** and **TailwindCSS**, de
 |---|---|
 | ![Light Mode](./light1.png) | ![Dark Mode](./dark1.png) |
 
-### **🍻 About Section**  
-![About Preview](./dark4.png)
+### **📝 Blog Section**  
+![Posts Preview](./dark2.png)
 
 ### **🛠️ Projects Section**  
 ![Projects Preview](./dark3.png)
 
-### **📝 Blog Section**  
-![Posts Preview](./dark2.png)
+### **🍻 About Section**  
+![About Preview](./dark4.png)
 
 ---
 
