@@ -1,128 +1,93 @@
 ---
- // tech-stack.astro
+
+const techStackItems = [
+  { name: "C", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" },
+  { name: "C++", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" },
+  { name: "Java", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" },
+  { name: "Python", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" },
+  { name: "Dart", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Dart_programming_language_logo_icon.svg/2048px-Dart_programming_language_logo_icon.svg.png" },
+  { name: "Flutter", logoUrl: "https://avatars.githubusercontent.com/u/14101776?s=280&v=4" },
+  { name: "HTML", logoUrl: "https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582748_1280.png" },
+  { name: "CSS", logoUrl: "https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582747_1280.png" },
+  { name: "Astro", logoUrl: "https://astro.build/assets/press/astro-icon-light-gradient.svg" },
+  { name: "SQL", logoUrl: "https://static-00.iconduck.com/assets.00/sql-database-generic-icon-1521x2048-d0vdpxpg.png" },
+  { name: "MySQL", logoUrl: "https://upload.wikimedia.org/wikipedia/labs/8/8e/Mysql_logo.png" },
+  { name: "NumPy", logoUrl: "https://i.pinimg.com/originals/b1/e8/44/b1e8445e6096877bf32af7cae6aba731.png" },
+  { name: "Pandas", logoUrl: "https://pandas.pydata.org/static/img/pandas_mark_white.svg" },
+  { name: "Matplotlib", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Matplotlib_icon.svg/1024px-Matplotlib_icon.svg.png" },
+  { name: "Seaborn", logoUrl: "https://cdn.worldvectorlogo.com/logos/seaborn-1.svg" },
+  { name: "PyTorch", logoUrl: "https://static-00.iconduck.com/assets.00/pytorch-icon-1694x2048-jgwjy3ne.png" },
+  { name: "YOLO", logoUrl: "https://cdn.prod.website-files.com/646dd1f1a3703e451ba81ecc/64994922cf2a6385a4bf4489_UltralyticsYOLO_mark_blue.svg" },
+  { name: "OpenCV", logoUrl: "https://raw.githubusercontent.com/wiki/opencv/opencv/logo/OpenCV_logo_no_text.png" },
+  { name: "Jupyter", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/1200px-Jupyter_logo.svg.png" },
+  { name: "Git", logoUrl: "https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" },
+  { name: "Bash", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/bash/bash-original.svg" },
+];
+
+const duplicatedTechStack = [...techStackItems, ...techStackItems];
+const animationDuration = techStackItems.length * 3; 
 ---
 
-<section class="tech-stack py-6 px-7 w-full max-w-4xl mx-auto">
-    <div class="flex flex-wrap justify-center gap-6">
-      <!-- Languages -->
-      <div class="tech-item" title="C">
-        <span class="tooltip">C</span>
-        <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" alt="C" />
-      </div>
-      <div class="tech-item" title="C++">
-        <span class="tooltip">C++</span>
-        <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" alt="C++" />
-      </div>
-      <div class="tech-item" title="Java">
-        <span class="tooltip">Java</span>
-        <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="Java" />
-      </div>
-      <div class="tech-item" title="Python">
-        <span class="tooltip">Python</span>
-        <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" />
-      </div>
-      <div class="tech-item" title="Dart">
-        <span class="tooltip">Dart</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Dart_programming_language_logo_icon.svg/2048px-Dart_programming_language_logo_icon.svg.png" alt="Dart" />
-      </div>
-      <div class="tech-item" title="HTML">
-        <span class="tooltip">HTML</span>
-        <img src="https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582748_1280.png" alt="HTML" />
-      </div>
-      <div class="tech-item" title="CSS">
-        <span class="tooltip">CSS</span>
-        <img src="https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582747_1280.png" alt="CSS" />
-      </div>
-      <div class="tech-item" title="SQL">
-        <span class="tooltip">SQL</span>
-        <img src="https://static-00.iconduck.com/assets.00/sql-database-generic-icon-1521x2048-d0vdpxpg.png" alt="SQL" />
-      </div>
-      <div class="tech-item" title="MySQL">
-        <span class="tooltip">MySQL</span>
-        <img src="https://upload.wikimedia.org/wikipedia/labs/8/8e/Mysql_logo.png" alt="MySQL" />
-      </div>
-      
-      <div class="tech-item" title="Astro">
-        <span class="tooltip">Astro</span>
-        <img src="https://astro.build/assets/press/astro-icon-light-gradient.svg" alt="Astro" />
-      </div>
-      <div class="tech-item" title="Flutter">
-        <span class="tooltip">Flutter</span>
-        <img src="https://avatars.githubusercontent.com/u/14101776?s=280&v=4" alt="Flutter" />
-      </div>
-      <div class="tech-item" title="NumPy">
-        <span class="tooltip">NumPy</span>
-        <img src="https://i.pinimg.com/originals/b1/e8/44/b1e8445e6096877bf32af7cae6aba731.png" alt="NumPy" />
-      </div>
-      <div class="tech-item" title="Pandas">
-        <span class="tooltip">Pandas</span>
-        <img src="https://pandas.pydata.org/static/img/pandas_mark_white.svg" alt="Pandas" />
-      </div>
-      <div class="tech-item" title="Matplotlib">
-        <span class="tooltip">Matplotlib</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Matplotlib_icon.svg/1024px-Matplotlib_icon.svg.png" alt="Matplotlib" />
-      </div>
-      <div class="tech-item" title="Seaborn">
-        <span class="tooltip">Seaborn</span>
-        <img src="https://cdn.worldvectorlogo.com/logos/seaborn-1.svg" alt="Seaborn" />
-      </div>
-      <div class="tech-item" title="PyTorch">
-        <span class="tooltip">PyTorch</span>
-        <img src="https://static-00.iconduck.com/assets.00/pytorch-icon-1694x2048-jgwjy3ne.png" alt="PyTorch" />
-      </div>
-      <div class="tech-item" title="YOLO">
-        <span class="tooltip">YOLO</span>
-        <img src="https://cdn.prod.website-files.com/646dd1f1a3703e451ba81ecc/64994922cf2a6385a4bf4489_UltralyticsYOLO_mark_blue.svg" alt="YOLO" />
-      </div>
-      <div class="tech-item" title="OpenCV">
-        <span class="tooltip">OpenCV</span>
-        <img src="https://raw.githubusercontent.com/wiki/opencv/opencv/logo/OpenCV_logo_no_text.png" alt="OpenCV" />
-    </div>
-      <div class="tech-item" title="Jupyter">
-        <span class="tooltip">Jupyter</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/1200px-Jupyter_logo.svg.png" alt="Jupyter" />
-      </div>
-      <div class="tech-item" title="Git">
-        <span class="tooltip">Git</span>
-        <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git" />
+<section class="py-0 md:py-0 w-full"> 
+    <div class="scroller-container max-w-5xl mx-auto" data-animated="true"> 
+      <div class="scroller-inner">
+        {duplicatedTechStack.map((tech) => (
+          <div class="tech-item">
+            <img src={tech.logoUrl} alt={tech.name} class="tech-logo" />
+            <span class="tech-name">{tech.name}</span>
+          </div>
+        ))}
       </div>
     </div>
   </section>
   
-  <style>
-    
-    .tech-stack {
-      margin-bottom: 0;
+  <style define:vars={{ animationDuration: `${animationDuration}s` }}>
+    .scroller-container {
+      overflow: hidden;
+      -webkit-mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
+              mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
+    }
+  
+    .scroller-inner {
+      display: flex;
+      flex-wrap: nowrap;
+      width: max-content; 
+      animation: scroll var(--animationDuration) linear infinite;
     }
   
     .tech-item {
-      @apply w-16 h-16 flex items-center justify-center transition-all duration-300 relative;
-    }
-  
-    .tech-item img {
-      @apply w-12 h-12 object-contain opacity-90 hover:opacity-100 transition-all duration-300;
+      @apply flex items-center gap-x-4 px-6 py-0 whitespace-nowrap; 
+      /* UPDATED: Transition all properties for smooth shadow fade-in */
+      @apply transition-all duration-200 ease-in-out; 
+      /* Optional: Add slight padding if shadow gets clipped, but usually okay */
     }
   
     .tech-item:hover {
-      transform: scale(1.15);
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-    }
-
-    .tech-item:hover img {
-      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.25));
+       transform: scale(1.1); 
     }
   
-    /* Tooltip */
-    .tooltip {
-      @apply absolute text-sm font-medium text-white bg-black/80 dark:bg-white/90 dark:text-black px-3 py-1 rounded-lg opacity-0 transition-all duration-300 pointer-events-none;
-      bottom: 120%;
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
+    .tech-logo {
+      @apply w-8 h-8 md:w-10 md:h-10 object-contain flex-shrink-0; 
+      /* ADDED: Permanent subtle drop shadow for visibility */
+      /* Adjust color/opacity/blur/offset as needed */
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.15)) 
+              drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.2)); /* Two shadows for slightly more definition */
     }
   
-    .tech-item:hover .tooltip {
-      opacity: 1;
-      transform: translateX(-50%) translateY(-5px);
+    .tech-name {
+      @apply text-base md:text-lg font-bold text-neutral-800 dark:text-neutral-200; 
+    }
+  
+    .scroller-container:hover .scroller-inner {
+      animation-play-state: paused;
+    }
+  
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%); 
+      }
     }
   </style>
