@@ -11,6 +11,17 @@
         ]
     },
     {
+		"name": "Tessro",
+		"description": "Real-Time video-sync platform w/ live chat.",
+		"image": "/assets/images/projects/Tessro.png",
+		"url": "https://tessro-production.up.railway.app/",
+        "tags": [
+          { "name": "Real Time Streaming", "gradient": "from-indigo-500 to-purple-600" },
+          { "name": "Live Chat", "gradient": "from-pink-500 to-yellow-600" },
+          { "name": "React", "gradient": "from-blue-500 to-orange-500" }
+        ]
+	},
+    {
 		"name": "GridGenius*",
 		"description": "AI-Powered Energy Optimization System.",
 		"image": "/assets/images/projects/GridGenius.png",
@@ -43,17 +54,6 @@
           { "name": "Shell", "gradient": "from-green-400 to-blue-600" },
           { "name": "CLI", "gradient": "from-indigo-500 to-purple-600" },
           { "name": "C", "gradient": "from-blue-500 to-orange-500" }
-        ]
-	},
-	{
-		"name": "DARKRUNNER",
-		"description": "Endless Runner Game, exploring Java.",
-		"image": "/assets/images/projects/DarkRunner.png",
-		"url": "https://github.com/rajin-khan/DARKRUNNER",
-        "tags": [
-          { "name": "Game", "gradient": "from-indigo-500 to-purple-600" },
-          { "name": "Java", "gradient": "from-blue-500 to-orange-500" },
-          { "name": "Platformer", "gradient": "from-pink-500 to-yellow-600" }
         ]
 	},
 	{
