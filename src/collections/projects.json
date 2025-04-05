@@ -12,11 +12,12 @@
     },
     {
 		"name": "Tessro",
-		"description": "Real-Time video-sync platform w/ live chat.",
+		"description": "Real-Time video-sync and stream w/ chat.",
 		"image": "/assets/images/projects/Tessro.png",
 		"url": "https://tessro.com/",
         "tags": [
           { "name": "Streaming", "gradient": "from-indigo-500 to-purple-600" },
+          { "name": "Peer-to-Peer", "gradient": "from-indigo-500 to-purple-600" },
           { "name": "Live Chat", "gradient": "from-pink-500 to-yellow-600" },
           { "name": "React", "gradient": "from-blue-500 to-orange-500" }
         ]
