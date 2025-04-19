@@ -46,7 +46,7 @@
         ]
 	},
     {
-		"name": "cash*",
+		"name": "cash",
 		"description": "Custom shell exploring the Kernel and OS.",
 		"image": "/assets/images/projects/cash.png",
 		"url": "https://github.com/rajin-khan/CASH",
