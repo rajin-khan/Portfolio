@@ -1,13 +1,14 @@
 [
 	{
-        "name": "TapSense",
-        "description": "Accessibility App for the Visually Impaired.",
-        "image": "/assets/images/projects/TapSense.png",
-        "url": "https://github.com/rajin-khan/TapSense",
+        "name": "PuffNotes",
+        "description": "Cozy, Minimalist Note Taker with AI.",
+        "image": "/assets/images/projects/PuffNotes.png",
+        "url": "https://puff-notes.vercel.app",
         "tags": [
-          { "name": "Mobile", "gradient": "from-green-400 to-yellow-600" },
-          { "name": "Flutter", "gradient": "from-blue-500 to-blue-600" },
-          { "name": "Accessibility", "gradient": "from-pink-500 to-yellow-600" }
+          { "name": "Productivity", "gradient": "from-green-400 to-yellow-600" },
+          { "name": "Notes", "gradient": "from-blue-500 to-blue-600" },
+          { "name": "React", "gradient": "from-pink-500 to-yellow-600" },
+          { "name": "AI", "gradient": "from-pink-500 to-yellow-600" }
         ]
     },
     {
@@ -33,17 +34,16 @@
         ]
 	},
     {
-		"name": "Syncly*",
-		"description": "Cloud Aggregator with dynamic storage.",
-		"image": "/assets/images/projects/Syncly.png",
-		"url": "https://github.com/rajin-khan/syncly",
+        "name": "TapSense",
+        "description": "Accessibility App for the Visually Impaired.",
+        "image": "/assets/images/projects/TapSense.png",
+        "url": "https://github.com/rajin-khan/TapSense",
         "tags": [
-          { "name": "Web", "gradient": "from-green-400 to-blue-600" },
           { "name": "Mobile", "gradient": "from-green-400 to-yellow-600" },
-          { "name": "Telegram Bot", "gradient": "from-blue-500 to-orange-500" },
-          { "name": "React", "gradient": "from-indigo-500 to-purple-600" }
+          { "name": "Flutter", "gradient": "from-blue-500 to-blue-600" },
+          { "name": "Accessibility", "gradient": "from-pink-500 to-yellow-600" }
         ]
-	},
+    },
     {
 		"name": "cash",
 		"description": "Custom shell exploring the Kernel and OS.",
