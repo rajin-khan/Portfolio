@@ -4,33 +4,354 @@ import PageHeading from "../../components/page-heading.astro";
 
 const project = {
   name: "Tessro",
-  description: "Real-Time video-sync and stream w/ chat.",
+  description: "Real-time video sync & streaming with live chat.",
   image: "/assets/images/projects/Tessro.png",
   githubUrl: "https://github.com/rajin-khan/Tessro",
   externalUrl: "https://tessro.com/",
-  tags: [
-    { name: "Streaming", gradient: "from-indigo-500 to-purple-600" },
-    { name: "Peer-to-Peer", gradient: "from-pink-500 to-yellow-600" },
-    { name: "Live Chat", gradient: "from-green-400 to-blue-600" }
+  tags: [],
+  features: [
+    { name: "Sync Mode", description: "Sync local video playback across devices.", icon: "🔄" },
+    { name: "Stream Mode", description: "Host streams via WebRTC in real-time.", icon: "📺" },
+    { name: "Live Chat", description: "Real-time chat with timestamps.", icon: "💬" },
+    { name: "Secure Sessions", description: "Password-protected access.", icon: "🔒" },
+    { name: "Privacy First", description: "No uploads, no tracking.", icon: "🛡️" },
+    { name: "Mobile-Friendly", description: "Seamless on all devices.", icon: "📱" }
+  ],
+  useCases: [
+    { name: "Movie Nights", description: "Sync movies with friends globally.", emoji: "🎞️" },
+    { name: "Online Training", description: "Synchronized video for training.", emoji: "🎓" },
+    { name: "Film Reviews", description: "Collaborate on reviews remotely.", emoji: "📽️" },
+    { name: "Family Time", description: "Share videos with loved ones.", emoji: "🤝" }
+  ],
+  roadmap: [
+    { name: "Voice Chat", status: "In Progress" },
+    { name: "Emoji Reactions", status: "In Progress" },
+    { name: "Subtitle Syncing", status: "Planned" },
+    { name: "Self-hosted TURN", status: "Planned" },
+    { name: "Mobile App", status: "Planned" },
+    { name: "Offline Mode", status: "Planned" }
   ]
 };
 ---
 
 <Layout title={project.name}>
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
-    <PageHeading
-      title={project.name}
-      description={project.description}
-    />
+    <style>
+      /* Custom Styles for Tessro Page */
+      .tessro-section {
+        margin-bottom: 2.5rem;
+      }
 
-    <div class="my-8">
-      <img
-        src={project.image}
-        alt={project.name}
-        class="w-full h-auto rounded-lg aspect-[16/9] object-cover"
+      @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+      @keyframes slideInUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes glowPulse {
+        0%, 100% { 
+          box-shadow: 0 0 5px rgba(168, 85, 247, 0.3), 0 0 10px rgba(59, 130, 246, 0.3); 
+        }
+        50% { 
+          box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), 0 0 20px rgba(59, 130, 246, 0.6); 
+        }
+      }
+
+      .glow-pulse {
+        animation: glowPulse 2s infinite ease-in-out;
+      }
+
+      /* Light mode subtle glow */
+      html:not(.dark) .glow-pulse {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        animation: none;
+      }
+
+      /* Dark mode maintains glow animation */
+      .dark .glow-pulse {
+        animation: glowPulse 2s infinite ease-in-out;
+      }
+
+      .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+      }
+
+      .slide-in-up {
+        animation: slideInUp 0.6s ease-out forwards;
+      }
+
+      .banner-image {
+        border: 2px solid transparent;
+        background: linear-gradient(45deg, #a855f7, #3b82f6);
+        border-radius: 1rem;
+        padding: 4px;
+        transition: transform 0.3s ease;
+      }
+
+      .banner-image:hover {
+        transform: scale(1.02);
+      }
+
+      .tags-container {
+        opacity: 1;
+      }
+
+      .cta-buttons {
+        opacity: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+
+      @media (min-width: 640px) {
+        .cta-buttons {
+          flex-direction: row;
+        }
+      }
+
+      .features-grid, .use-cases-grid, .roadmap-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+        .features-grid, .use-cases-grid, .roadmap-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .feature-card, .use-case-card, .roadmap-card {
+        border: 1px solid;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        transition: all 0.3s ease;
+        opacity: 1;
+        background-color: transparent;
+      }
+
+      /* Light mode card styles */
+      html:not(.dark) .feature-card,
+      html:not(.dark) .use-case-card,
+      html:not(.dark) .roadmap-card {
+        border-color: rgba(59, 130, 246, 0.2);
+        background-color: rgba(248, 250, 252, 0.5);
+      }
+
+      html:not(.dark) .feature-card:hover,
+      html:not(.dark) .use-case-card:hover,
+      html:not(.dark) .roadmap-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(59, 130, 246, 0.5);
+        box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+
+      /* Dark mode card styles */
+      .dark .feature-card,
+      .dark .use-case-card,
+      .dark .roadmap-card {
+        border-color: rgba(59, 130, 246, 0.2);
+        background-color: rgba(31, 41, 55, 0.3);
+      }
+
+      .dark .feature-card:hover,
+      .dark .use-case-card:hover,
+      .dark .roadmap-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(59, 130, 246, 0.5);
+        box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        background-color: rgba(55, 65, 81, 0.5);
+      }
+
+      .feature-card .icon, .use-case-card .emoji {
+        font-size: 1.5rem;
+        margin-right: 0.75rem;
+      }
+
+      /* Light mode icon colors */
+      html:not(.dark) .feature-card .icon,
+      html:not(.dark) .use-case-card .emoji {
+        color: #7c3aed;
+      }
+
+      /* Dark mode icon colors */
+      .dark .feature-card .icon,
+      .dark .use-case-card .emoji {
+        color: #a855f7;
+      }
+
+      .feature-card h3, .use-case-card h3, .roadmap-card h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: inherit;
+      }
+
+      /* Light mode text colors */
+      html:not(.dark) .feature-card h3,
+      html:not(.dark) .use-case-card h3,
+      html:not(.dark) .roadmap-card h3 {
+        color: #1f2937;
+      }
+
+      html:not(.dark) .feature-card p,
+      html:not(.dark) .use-case-card p,
+      html:not(.dark) .roadmap-card p {
+        color: #4b5563;
+      }
+
+      /* Dark mode text colors */
+      .dark .feature-card h3,
+      .dark .use-case-card h3,
+      .dark .roadmap-card h3 {
+        color: #ffffff;
+      }
+
+      .dark .feature-card p,
+      .dark .use-case-card p,
+      .dark .roadmap-card p {
+        color: #d4d4d8;
+      }
+
+      .feature-card p, .use-case-card p, .roadmap-card p {
+        font-size: 0.875rem;
+      }
+
+      .roadmap-card .status {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.25rem 0.5rem;
+        border-radius: 1rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Status badge colors for both modes */
+      .roadmap-card .status {
+        color: #a855f7;
+        background: rgba(168, 85, 247, 0.1);
+      }
+
+      .roadmap-card.in-progress .status {
+        color: #facc15;
+        background: rgba(250, 204, 21, 0.1);
+      }
+
+      /* Light mode status badges */
+      html:not(.dark) .roadmap-card .status {
+        color: #7c3aed;
+        background: rgba(124, 58, 237, 0.1);
+      }
+
+      html:not(.dark) .roadmap-card.in-progress .status {
+        color: #d97706;
+        background: rgba(217, 119, 6, 0.1);
+      }
+
+      .section-heading {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        position: relative;
+        opacity: 1;
+      }
+
+      /* Light mode heading color */
+      html:not(.dark) .section-heading {
+        color: #1f2937;
+      }
+
+      /* Dark mode heading color */
+      .dark .section-heading {
+        color: #ffffff;
+      }
+
+      .section-heading::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5rem;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(to right, #a855f7, #3b82f6);
+        border-radius: 1px;
+      }
+
+      @media (min-width: 640px) {
+        .section-heading {
+          font-size: 1.75rem;
+        }
+      }
+
+      .prose p {
+        margin-bottom: 1rem;
+      }
+
+      /* Light mode prose colors */
+      html:not(.dark) .prose p {
+        color: #4b5563;
+      }
+
+      html:not(.dark) .prose strong {
+        color: #1f2937;
+      }
+
+      /* Dark mode prose colors */
+      .dark .prose p {
+        color: #d4d4d8;
+      }
+
+      .dark .prose strong {
+        color: #ffffff;
+      }
+
+      .prose ul {
+        list-style-type: disc;
+        list-style-position: inside;
+        margin: 1rem 0;
+        space-y: 0.5rem;
+      }
+
+      .prose li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Light mode list colors */
+      html:not(.dark) .prose ul {
+        color: #4b5563;
+      }
+
+      /* Dark mode list colors */
+      .dark .prose ul {
+        color: #d4d4d8;
+      }
+    </style>
+
+    <!-- Main Section -->
+    <div class="tessro-section fade-in">
+      <PageHeading
+        title={project.name}
+        description={project.description}
       />
 
-      <div class="flex flex-wrap gap-1 mt-3">
+      <!-- Banner Image -->
+      <div class="my-4">
+        <img
+          src={project.image}
+          alt={project.name}
+          class="banner-image w-full h-auto rounded-lg aspect-[16/9] object-cover glow-pulse"
+        />
+      </div>
+
+      <!-- Tags -->
+      <div class="tags-container slide-in-up flex flex-wrap gap-1 mb-4">
         {project.tags.map((tag) => (
           <span
             class={`px-2 py-1 text-xs font-semibold rounded-lg bg-gradient-to-r ${tag.gradient} text-white`}
@@ -40,12 +361,13 @@ const project = {
         ))}
       </div>
 
-      <div class="mt-5 flex flex-col sm:flex-row gap-3">
+      <!-- CTA Buttons -->
+      <div class="cta-buttons slide-in-up" style="animation-delay: 0.2s;">
         <a
           href={project.externalUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-neutral-800 dark:border-neutral-200 bg-neutral-800 dark:bg-neutral-200 text-neutral-100 dark:text-neutral-900 transition-all duration-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-neutral-900 dark:hover:text-neutral-100"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
         >
           Visit Live Site
         </a>
@@ -53,18 +375,134 @@ const project = {
           href={project.githubUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-neutral-800 dark:border-neutral-200 bg-transparent text-neutral-800 dark:text-neutral-200 transition-all duration-300 hover:bg-neutral-800 dark:hover:bg-neutral-200 hover:text-neutral-100 dark:hover:text-neutral-900"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-900 dark:text-neutral-200 transition-all duration-300 hover:bg-gray-900 dark:hover:bg-neutral-200 hover:text-white dark:hover:text-neutral-900"
         >
           View on GitHub
         </a>
       </div>
+    </div>
 
-      <div class="mt-5 prose prose-sm sm:prose-base dark:prose-invert">
-        <p>{project.description}</p>
+    <!-- Overview Section (Paragraphs) -->
+    <div class="tessro-section">
+      <h2 class="section-heading slide-in-up">What is Tessro?</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          Tessro enables real-time video synchronization and streaming with integrated chat functionality, perfect for collaborative viewing experiences.
+          Tessro was born out of a personal need—I used to watch movies with my girlfriend over long-distance calls, and we’d struggle to sync our playback. We’d constantly tell each other, "Pause now," or "Play at 3...2...1," trying to match up by talking it through. It was frustrating, and I got tired of the hassle. So, I created Tessro, a cutting-edge platform designed to bring people together through real-time video synchronization and streaming. Imagine hosting a movie night with friends scattered across the globe, or conducting a training session where everyone's video playback is perfectly in sync—Tessro makes it happen effortlessly. It offers two powerful modes: Sync Mode, where participants use the same local video file and Tessro ensures flawless synchronization, and Stream Mode, where the host streams their video live to others using WebRTC's peer-to-peer technology.
+        </p>
+        <p>
+          What sets Tessro apart is its commitment to simplicity and privacy. There's no need to upload videos, create accounts, or worry about tracking—Tessro operates on a privacy-first principle, ensuring your data stays secure. With integrated live chat, secure password-protected sessions, and a mobile-friendly design, Tessro is the ultimate tool for collaborative viewing experiences, whether you're watching a film with family or reviewing footage with a remote team.
         </p>
       </div>
     </div>
+
+    <!-- Features Section -->
+    <div class="tessro-section">
+      <h2 class="section-heading slide-in-up">Key Features</h2>
+      <div class="features-grid">
+        {project.features.map((feature, index) => (
+          <div class="feature-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <div class="flex items-center">
+              <span class="icon">{feature.icon}</span>
+              <h3>{feature.name}</h3>
+            </div>
+            <p>{feature.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Use Cases Section -->
+    <div class="tessro-section">
+      <h2 class="section-heading slide-in-up">Perfect For</h2>
+      <div class="use-cases-grid">
+        {project.useCases.map((useCase, index) => (
+          <div class="use-case-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <span class="emoji">{useCase.emoji}</span>
+            <div>
+              <h3>{useCase.name}</h3>
+              <p>{useCase.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Privacy and Tech Stack Section (Paragraphs) -->
+    <div class="tessro-section">
+      <h2 class="section-heading slide-in-up">Privacy & Technology</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          Privacy is at the core of Tessro's design. Unlike traditional video platforms, Tessro ensures your videos never leave your device—there are no uploads to servers, no trackers monitoring your activity, and no need to create an account. Everything operates through direct WebRTC peer-to-peer connections, meaning your sessions are private and secure. Sessions are password-protected, and participants join using nicknames, adding an extra layer of anonymity. Looking ahead, Tessro plans to implement a self-hosted TURN server to further enhance privacy by improving NAT traversal without relying on third-party services.
+        </p>
+        <p>
+          Tessro is built with a modern tech stack to deliver a seamless experience. The frontend leverages <strong>React</strong> and <strong>Vite</strong> for a fast, responsive interface, while the backend uses <strong>Node.js</strong> and <strong>Express</strong> to manage sessions and synchronization. <strong>WebRTC</strong> powers the peer-to-peer streaming, ensuring low latency and privacy, and <strong>Socket.IO</strong> enables real-time chat and sync. Styling is handled with <strong>Tailwind CSS</strong> for a sleek, responsive design, and the platform is deployed on <strong>Railway</strong> for scalability. This combination ensures Tessro is both powerful and user-friendly.
+        </p>
+      </div>
+    </div>
+
+    <!-- Roadmap Section -->
+    <div class="tessro-section">
+      <h2 class="section-heading slide-in-up">What's Next</h2>
+      <div class="roadmap-grid">
+        {project.roadmap.map((item, index) => (
+          <div class={`roadmap-card slide-in-up ${item.status.toLowerCase().replace(' ', '-')}`} style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <span class="status">{item.status}</span>
+            <h3>{item.name}</h3>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Final Call to Action -->
+    <div class="tessro-section">
+      <h2 class="section-heading slide-in-up">Get Started</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          Ready to sync up with friends or collaborate with your team? Start a Tessro session today and experience seamless video sharing. Want to contribute or explore the code? Check out the project on GitHub!
+        </p>
+      </div>
+      <div class="cta-buttons slide-in-up" style="animation-delay: 0.4s;">
+        <a
+          href={project.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
+        >
+          Start a Session
+        </a>
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-900 dark:text-neutral-200 transition-all duration-300 hover:bg-gray-900 dark:hover:bg-neutral-200 hover:text-white dark:hover:text-neutral-900"
+        >
+          Contribute on GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Script for Animations -->
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('slide-in-up');
+            }
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.slide-in-up').forEach(element => {
+          observer.observe(element);
+        });
+
+        // Fallback: Ensure elements are visible after a short delay
+        setTimeout(() => {
+          document.querySelectorAll('.slide-in-up').forEach(element => {
+            element.classList.add('slide-in-up');
+          });
+        }, 1000);
+      });
+    </script>
   </section>
 </Layout>

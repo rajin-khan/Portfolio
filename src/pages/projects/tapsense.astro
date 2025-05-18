@@ -2,31 +2,32 @@
 import Layout from "../../layouts/main.astro";
 import PageHeading from "../../components/page-heading.astro";
 
-// Hardcoded project data
 const project = {
-  name: "PuffNotes",
-  description: "Cozy, Minimalist Note Taker with AI.",
-  image: "/assets/images/projects/PuffNotes.png",
-  githubUrl: "https://github.com/rajin-khan/PuffNotes",
-  externalUrl: "https://puff-notes.vercel.app",
-  tags: [],
+  name: "TapSense",
+  description: "Accessibility App for the Visually Impaired.",
+  image: "/assets/images/projects/TapSense.png",
+  githubUrl: "https://github.com/rajin-khan/TapSense",
+  externalUrl: "https://forms.gle/eNikmS3Znb9zGgyv9",
+  tags: [
+
+  ],
   features: [
-    { name: "AI Beautify", description: "Turn rough ideas into polished notes with one click.", icon: "✨" },
-    { name: "Local First", description: "Saves as .md files on your device, no cloud needed.", icon: "💾" },
-    { name: "Calm UI", description: "Glassmorphism design with focus mode.", icon: "🧘‍♂️" },
-    { name: "Markdown Simplicity", description: "Compatible with any markdown reader.", icon: "🧠" }
+    { name: "Reader", description: "Scan text from images and convert to speech.", icon: "🔍" },
+    { name: "To-Do", description: "Voice-powered dynamic to-do list creation.", icon: "🗒️" },
+    { name: "Navigation", description: "Dynamic directions with voice commands.", icon: "🗺️" },
+    { name: "Detection", description: "Identify objects with confidence levels.", icon: "👓" }
   ],
   useCases: [
-    { name: "Students", description: "Effortless note-taking for classes.", emoji: "🧠" },
-    { name: "Writers", description: "Distraction-free scratchpad for ideas.", emoji: "✍️" },
-    { name: "Coders", description: "Offline-first app for quick notes.", emoji: "⚡" },
-    { name: "Thinkers", description: "Dump thoughts without fuss.", emoji: "🌙" },
+    { name: "Daily Tasks", description: "Simplify reading and task management.", emoji: "📋" },
+    { name: "Navigation", description: "Guide users with voice directions.", emoji: "🚶" },
+    { name: "Object Recognition", description: "Identify surroundings easily.", emoji: "🔎" },
+    { name: "Productivity", description: "Boost efficiency with voice tools.", emoji: "⚙️" }
   ],
   roadmap: [
-    { name: "Theming", status: "Planned" },
-    { name: "Embeddable AI Prompts", status: "Planned" },
-    { name: "Drag-and-Drop Images", status: "Planned" },
-    { name: "Tag + Folder Organization", status: "Planned" }
+    { name: "iOS Support", status: "In Progress" },
+    { name: "Advanced Detection", status: "Planned" },
+    { name: "Multi-Language Support", status: "Planned" },
+    { name: "Custom Voice Commands", status: "Planned" }
   ]
 };
 ---
@@ -34,8 +35,8 @@ const project = {
 <Layout title={project.name}>
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
     <style>
-      /* Custom Styles for Puffnotes Page */
-      .puffnotes-section {
+      /* Custom Styles for TapSense Page */
+      .tapsense-section {
         margin-bottom: 2.5rem;
       }
 
@@ -51,10 +52,10 @@ const project = {
 
       @keyframes glowPulse {
         0%, 100% { 
-          box-shadow: 0 0 5px rgba(139, 111, 71, 0.3), 0 0 10px rgba(74, 55, 40, 0.3); 
+          box-shadow: 0 0 5px rgba(217, 56, 30, 0.3), 0 0 10px rgba(249, 115, 22, 0.3); 
         }
         50% { 
-          box-shadow: 0 0 15px rgba(139, 111, 71, 0.6), 0 0 20px rgba(74, 55, 40, 0.6); 
+          box-shadow: 0 0 15px rgba(217, 56, 30, 0.6), 0 0 20px rgba(249, 115, 22, 0.6); 
         }
       }
 
@@ -83,7 +84,7 @@ const project = {
 
       .banner-image {
         border: 2px solid transparent;
-        background: linear-gradient(45deg, #f5f5f5, #8b6f47);
+        background: linear-gradient(45deg, #d9381e, #f97316);
         border-radius: 1rem;
         padding: 4px;
         transition: transform 0.3s ease;
@@ -115,7 +116,7 @@ const project = {
         }
       }
 
-      .features-grid, .use-cases-grid, .roadmap-grid {
+      .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
         display: grid;
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -123,12 +124,12 @@ const project = {
       }
 
       @media (min-width: 640px) {
-        .features-grid, .use-cases-grid, .roadmap-grid {
+        .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
           grid-template-columns: repeat(2, 1fr);
         }
       }
 
-      .feature-card, .use-case-card, .roadmap-card {
+      .feature-card, .use-case-card, .roadmap-card, .team-card {
         border: 1px solid;
         border-radius: 0.75rem;
         padding: 1rem;
@@ -140,35 +141,39 @@ const project = {
       /* Light mode card styles */
       html:not(.dark) .feature-card,
       html:not(.dark) .use-case-card,
-      html:not(.dark) .roadmap-card {
-        border-color: rgba(74, 55, 40, 0.2);
-        background-color: rgba(245, 245, 245, 0.5);
+      html:not(.dark) .roadmap-card,
+      html:not(.dark) .team-card {
+        border-color: rgba(217, 56, 30, 0.2);
+        background-color: rgba(255, 245, 245, 0.5);
       }
 
       html:not(.dark) .feature-card:hover,
       html:not(.dark) .use-case-card:hover,
-      html:not(.dark) .roadmap-card:hover {
+      html:not(.dark) .roadmap-card:hover,
+      html:not(.dark) .team-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(74, 55, 40, 0.5);
-        box-shadow: 0 5px 15px rgba(74, 55, 40, 0.2);
-        background-color: rgba(250, 250, 250, 0.8);
+        border-color: rgba(217, 56, 30, 0.5);
+        box-shadow: 0 5px 15px rgba(217, 56, 30, 0.2);
+        background-color: rgba(255, 250, 250, 0.8);
       }
 
       /* Dark mode card styles */
       .dark .feature-card,
       .dark .use-case-card,
-      .dark .roadmap-card {
-        border-color: rgba(139, 111, 71, 0.2);
-        background-color: rgba(50, 40, 30, 0.3);
+      .dark .roadmap-card,
+      .dark .team-card {
+        border-color: rgba(249, 115, 22, 0.2);
+        background-color: rgba(50, 40, 40, 0.3);
       }
 
       .dark .feature-card:hover,
       .dark .use-case-card:hover,
-      .dark .roadmap-card:hover {
+      .dark .roadmap-card:hover,
+      .dark .team-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(139, 111, 71, 0.5);
-        box-shadow: 0 5px 15px rgba(139, 111, 71, 0.3);
-        background-color: rgba(70, 60, 50, 0.5);
+        border-color: rgba(249, 115, 22, 0.5);
+        box-shadow: 0 5px 15px rgba(249, 115, 22, 0.3);
+        background-color: rgba(70, 60, 60, 0.5);
       }
 
       .feature-card .icon, .use-case-card .emoji {
@@ -179,16 +184,16 @@ const project = {
       /* Light mode icon colors */
       html:not(.dark) .feature-card .icon,
       html:not(.dark) .use-case-card .emoji {
-        color: #4a3728;
+        color: #d9381e;
       }
 
       /* Dark mode icon colors */
       .dark .feature-card .icon,
       .dark .use-case-card .emoji {
-        color: #8b6f47;
+        color: #f97316;
       }
 
-      .feature-card h3, .use-case-card h3, .roadmap-card h3 {
+      .feature-card h3, .use-case-card h3, .roadmap-card h3, .team-card h3 {
         font-size: 1.1rem;
         font-weight: 600;
         margin-bottom: 0.25rem;
@@ -198,30 +203,34 @@ const project = {
       /* Light mode text colors */
       html:not(.dark) .feature-card h3,
       html:not(.dark) .use-case-card h3,
-      html:not(.dark) .roadmap-card h3 {
-        color: #4a3728;
+      html:not(.dark) .roadmap-card h3,
+      html:not(.dark) .team-card h3 {
+        color: #1a1a1a;
       }
 
       html:not(.dark) .feature-card p,
       html:not(.dark) .use-case-card p,
-      html:not(.dark) .roadmap-card p {
-        color: #6b5847;
+      html:not(.dark) .roadmap-card p,
+      html:not(.dark) .team-card p {
+        color: #4a4a4a;
       }
 
       /* Dark mode text colors */
       .dark .feature-card h3,
       .dark .use-case-card h3,
-      .dark .roadmap-card h3 {
+      .dark .roadmap-card h3,
+      .dark .team-card h3 {
         color: #ffffff;
       }
 
       .dark .feature-card p,
       .dark .use-case-card p,
-      .dark .roadmap-card p {
+      .dark .roadmap-card p,
+      .dark .team-card p {
         color: #d4d4d8;
       }
 
-      .feature-card p, .use-case-card p, .roadmap-card p {
+      .feature-card p, .use-case-card p, .roadmap-card p, .team-card p {
         font-size: 0.875rem;
       }
 
@@ -236,14 +245,24 @@ const project = {
 
       /* Status badge colors for both modes */
       .roadmap-card .status {
-        color: #8b6f47;
-        background: rgba(139, 111, 71, 0.1);
+        color: #f97316;
+        background: rgba(249, 115, 22, 0.1);
+      }
+
+      .roadmap-card.in-progress .status {
+        color: #d4af37;
+        background: rgba(212, 175, 55, 0.1);
       }
 
       /* Light mode status badges */
       html:not(.dark) .roadmap-card .status {
-        color: #4a3728;
-        background: rgba(74, 55, 40, 0.1);
+        color: #d9381e;
+        background: rgba(217, 56, 30, 0.1);
+      }
+
+      html:not(.dark) .roadmap-card.in-progress .status {
+        color: #d4af37;
+        background: rgba(212, 175, 55, 0.1);
       }
 
       .section-heading {
@@ -256,7 +275,7 @@ const project = {
 
       /* Light mode heading color */
       html:not(.dark) .section-heading {
-        color: #4a3728;
+        color: #1a1a1a;
       }
 
       /* Dark mode heading color */
@@ -271,7 +290,7 @@ const project = {
         left: 0;
         width: 50px;
         height: 2px;
-        background: linear-gradient(to right, #f5f5f5, #8b6f47);
+        background: linear-gradient(to right, #d9381e, #f97316);
         border-radius: 1px;
       }
 
@@ -287,11 +306,11 @@ const project = {
 
       /* Light mode prose colors */
       html:not(.dark) .prose p {
-        color: #6b5847;
+        color: #4a4a4a;
       }
 
       html:not(.dark) .prose strong {
-        color: #4a3728;
+        color: #1a1a1a;
       }
 
       /* Dark mode prose colors */
@@ -315,7 +334,7 @@ const project = {
 
       /* Light mode list colors */
       html:not(.dark) .prose ul {
-        color: #6b5847;
+        color: #4a4a4a;
       }
 
       /* Dark mode list colors */
@@ -325,7 +344,7 @@ const project = {
     </style>
 
     <!-- Main Section -->
-    <div class="puffnotes-section fade-in">
+    <div class="tapsense-section fade-in">
       <PageHeading
         title={project.name}
         description={project.description}
@@ -359,7 +378,7 @@ const project = {
           rel="noopener noreferrer"
           class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
         >
-          Visit Live Site
+          Sign Up for Beta
         </a>
         <a
           href={project.githubUrl}
@@ -373,20 +392,20 @@ const project = {
     </div>
 
     <!-- Overview Section (Paragraphs) -->
-    <div class="puffnotes-section">
-      <h2 class="section-heading slide-in-up">What is PuffNotes?</h2>
+    <div class="tapsense-section">
+      <h2 class="section-heading slide-in-up">What is TapSense?</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          I love taking notes. But I hate taking long, long notes. PuffNotes was born to solve this problem. I usually take notes on my laptop in class, but there’s often so much to type out that I end up getting distracted, missing important points, or losing track of what’s happening in the lecture. Frustrated, I decided to create a solution tailored to my exact needs—PuffNotes, a minimalist, local-first, markdown-based note-taking app designed to make your messy, vague ideas look smart and structured with just one click. I kept it minimal, cozy, fun, and easy, ensuring it’s a perfect fit for anyone facing similar challenges. Built for lazy writers, distracted students, and tired creatives, PuffNotes offers a quiet, beautiful space to jot down thoughts without the clutter of traditional productivity tools. Powered with lightning-fast AI, it transforms rough fragments into polished, organized notes in seconds.
+          TapSense is an accessibility app designed for visually impaired users, offering intuitive tools to simplify daily tasks. With a minimalistic interface, it provides features like text-to-speech, voice-powered to-do lists, dynamic navigation, and object detection, all tailored to enhance independence and productivity.
         </p>
         <p>
-          With PuffNotes, there’s no need for logins, cloud storage, or internet access after the initial load—your notes are saved directly to your device as .md files. Its serene interface, soft animations, and focus mode create a calm writing environment, while features like autosave and AI beautification ensure your thoughts are captured effortlessly. Whether you're a student, writer, or late-night thinker, PuffNotes is your cozy companion for effortless note-taking.
+          Built with cross-platform compatibility in mind, TapSense runs smoothly on both iOS and Android using Flutter. Its consistent UI, with "READ SCREEN" buttons always accessible, ensures an easy and seamless experience for users. Currently in beta testing on Android, TapSense aims to empower visually impaired individuals with practical, voice-driven solutions.
         </p>
       </div>
     </div>
 
     <!-- Features Section -->
-    <div class="puffnotes-section">
+    <div class="tapsense-section">
       <h2 class="section-heading slide-in-up">Key Features</h2>
       <div class="features-grid">
         {project.features.map((feature, index) => (
@@ -402,7 +421,7 @@ const project = {
     </div>
 
     <!-- Use Cases Section -->
-    <div class="puffnotes-section">
+    <div class="tapsense-section">
       <h2 class="section-heading slide-in-up">Perfect For</h2>
       <div class="use-cases-grid">
         {project.useCases.map((useCase, index) => (
@@ -417,25 +436,25 @@ const project = {
       </div>
     </div>
 
-    <!-- Privacy and Tech Stack Section (Paragraphs) -->
-    <div class="puffnotes-section">
-      <h2 class="section-heading slide-in-up">Privacy & Technology</h2>
+    <!-- Technology Section (Paragraphs) -->
+    <div class="tapsense-section">
+      <h2 class="section-heading slide-in-up">Technology & Architecture</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          Privacy is a cornerstone of PuffNotes. Your notes are saved directly to your device as .md files, with no cloud storage, no accounts, and no tracking. After the initial load, PuffNotes works entirely offline, ensuring your thoughts remain yours. The <strong>AI</strong> beautification feature only activates when you choose to use it, and even then, your data stays secure. This local-first approach makes PuffNotes a safe haven for your ideas.
+          TapSense is built using <strong>Flutter</strong> for cross-platform compatibility on iOS and Android. It leverages <strong>Google ML Kit</strong> for text recognition and object detection, ensuring accurate OCR and scene analysis. <strong>Speech-to-Text</strong> and <strong>Text-to-Speech</strong> packages enable voice-driven interactions, while <strong>Hive</strong> provides local NoSQL storage for to-do lists.
         </p>
         <p>
-          PuffNotes is built with a modern tech stack for a seamless experience. The frontend uses <strong>React</strong> and <strong>Vite</strong> for a fast, responsive interface, styled with <strong>Tailwind CSS</strong> for a cozy, relaxing design. AI powers the beautification feature, making your notes polished and professional with minimal effort.
+          The app integrates additional tools like the <strong>Image Picker Library</strong> for capturing images, <strong>LatLong</strong> and <strong>Dio</strong> for navigation, ensuring a seamless experience. Its consistent UI design, with "READ SCREEN" buttons for accessibility, makes navigation intuitive for visually impaired users.
         </p>
       </div>
     </div>
 
     <!-- Roadmap Section -->
-    <div class="puffnotes-section">
+    <div class="tapsense-section">
       <h2 class="section-heading slide-in-up">What's Next</h2>
       <div class="roadmap-grid">
         {project.roadmap.map((item, index) => (
-          <div class={`roadmap-card slide-in-up`} style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+          <div class={`roadmap-card slide-in-up ${item.status.toLowerCase().replace(' ', '-')}`} style={`animation-delay: ${0.2 * (index + 1)}s;`}>
             <span class="status">{item.status}</span>
             <h3>{item.name}</h3>
           </div>
@@ -444,11 +463,11 @@ const project = {
     </div>
 
     <!-- Final Call to Action -->
-    <div class="puffnotes-section">
+    <div class="tapsense-section">
       <h2 class="section-heading slide-in-up">Get Started</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          Ready to turn your messy thoughts into polished notes? Start using PuffNotes today and experience the magic of effortless note-taking. Want to contribute or explore the code? Check out the project on GitHub!
+          Ready to experience TapSense? Join the beta testing on Android or explore the code on GitHub. Help us make daily tasks easier for the visually impaired community!
         </p>
       </div>
       <div class="cta-buttons slide-in-up" style="animation-delay: 0.4s;">
@@ -458,7 +477,7 @@ const project = {
           rel="noopener noreferrer"
           class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
         >
-          Start Writing
+          Join Beta Testing
         </a>
         <a
           href={project.githubUrl}

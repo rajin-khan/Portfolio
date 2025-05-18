@@ -2,31 +2,30 @@
 import Layout from "../../layouts/main.astro";
 import PageHeading from "../../components/page-heading.astro";
 
-// Hardcoded project data
 const project = {
-  name: "PuffNotes",
-  description: "Cozy, Minimalist Note Taker with AI.",
-  image: "/assets/images/projects/PuffNotes.png",
-  githubUrl: "https://github.com/rajin-khan/PuffNotes",
-  externalUrl: "https://puff-notes.vercel.app",
+  name: "CASH",
+  description: "Custom Shell Exploring the Kernel and OS.",
+  image: "/assets/images/projects/cash.png",
+  githubUrl: "https://github.com/rajin-khan/CASH",
+  externalUrl: "https://github.com/rajin-khan/CASH",
   tags: [],
   features: [
-    { name: "AI Beautify", description: "Turn rough ideas into polished notes with one click.", icon: "✨" },
-    { name: "Local First", description: "Saves as .md files on your device, no cloud needed.", icon: "💾" },
-    { name: "Calm UI", description: "Glassmorphism design with focus mode.", icon: "🧘‍♂️" },
-    { name: "Markdown Simplicity", description: "Compatible with any markdown reader.", icon: "🧠" }
+    { name: "Command Execution", description: "Run commands with argument parsing.", icon: "💻" },
+    { name: "Background Processes", description: "Execute tasks in the background with &. ", icon: "⚙️" },
+    { name: "Redirection", description: "Support for input/output redirection (> <).", icon: "➡️" },
+    { name: "Piping", description: "Chain commands using pipes (|).", icon: "🔗" },
   ],
   useCases: [
-    { name: "Students", description: "Effortless note-taking for classes.", emoji: "🧠" },
-    { name: "Writers", description: "Distraction-free scratchpad for ideas.", emoji: "✍️" },
-    { name: "Coders", description: "Offline-first app for quick notes.", emoji: "⚡" },
-    { name: "Thinkers", description: "Dump thoughts without fuss.", emoji: "🌙" },
+    { name: "System Exploration", description: "Learn kernel and OS interactions.", emoji: "🔍" },
+    { name: "Process Management", description: "Handle processes with system calls.", emoji: "⚡" },
+    { name: "Scripting", description: "Automate tasks with simple scripts.", emoji: "📝" },
+    { name: "Development", description: "Test and debug shell features.", emoji: "🛠️" }
   ],
   roadmap: [
-    { name: "Theming", status: "Planned" },
-    { name: "Embeddable AI Prompts", status: "Planned" },
-    { name: "Drag-and-Drop Images", status: "Planned" },
-    { name: "Tag + Folder Organization", status: "Planned" }
+    { name: "Auto-Completion", status: "Planned" },
+    { name: "Alias Support", status: "Planned" },
+    { name: "Advanced Scripting", status: "Planned" },
+    { name: "Configuration File", status: "Planned" }
   ]
 };
 ---
@@ -34,8 +33,8 @@ const project = {
 <Layout title={project.name}>
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
     <style>
-      /* Custom Styles for Puffnotes Page */
-      .puffnotes-section {
+      /* Custom Styles for CASH Page */
+      .cash-section {
         margin-bottom: 2.5rem;
       }
 
@@ -51,10 +50,10 @@ const project = {
 
       @keyframes glowPulse {
         0%, 100% { 
-          box-shadow: 0 0 5px rgba(139, 111, 71, 0.3), 0 0 10px rgba(74, 55, 40, 0.3); 
+          box-shadow: 0 0 5px rgba(230, 213, 163, 0.3), 0 0 10px rgba(26, 26, 26, 0.3); 
         }
         50% { 
-          box-shadow: 0 0 15px rgba(139, 111, 71, 0.6), 0 0 20px rgba(74, 55, 40, 0.6); 
+          box-shadow: 0 0 15px rgba(230, 213, 163, 0.6), 0 0 20px rgba(26, 26, 26, 0.6); 
         }
       }
 
@@ -83,7 +82,7 @@ const project = {
 
       .banner-image {
         border: 2px solid transparent;
-        background: linear-gradient(45deg, #f5f5f5, #8b6f47);
+        background: linear-gradient(45deg, #1a1a1a, #e6d5a3);
         border-radius: 1rem;
         padding: 4px;
         transition: transform 0.3s ease;
@@ -115,7 +114,7 @@ const project = {
         }
       }
 
-      .features-grid, .use-cases-grid, .roadmap-grid {
+      .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
         display: grid;
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -123,12 +122,12 @@ const project = {
       }
 
       @media (min-width: 640px) {
-        .features-grid, .use-cases-grid, .roadmap-grid {
+        .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
           grid-template-columns: repeat(2, 1fr);
         }
       }
 
-      .feature-card, .use-case-card, .roadmap-card {
+      .feature-card, .use-case-card, .roadmap-card, .team-card {
         border: 1px solid;
         border-radius: 0.75rem;
         padding: 1rem;
@@ -140,35 +139,39 @@ const project = {
       /* Light mode card styles */
       html:not(.dark) .feature-card,
       html:not(.dark) .use-case-card,
-      html:not(.dark) .roadmap-card {
-        border-color: rgba(74, 55, 40, 0.2);
+      html:not(.dark) .roadmap-card,
+      html:not(.dark) .team-card {
+        border-color: rgba(26, 26, 26, 0.2);
         background-color: rgba(245, 245, 245, 0.5);
       }
 
       html:not(.dark) .feature-card:hover,
       html:not(.dark) .use-case-card:hover,
-      html:not(.dark) .roadmap-card:hover {
+      html:not(.dark) .roadmap-card:hover,
+      html:not(.dark) .team-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(74, 55, 40, 0.5);
-        box-shadow: 0 5px 15px rgba(74, 55, 40, 0.2);
+        border-color: rgba(26, 26, 26, 0.5);
+        box-shadow: 0 5px 15px rgba(26, 26, 26, 0.2);
         background-color: rgba(250, 250, 250, 0.8);
       }
 
       /* Dark mode card styles */
       .dark .feature-card,
       .dark .use-case-card,
-      .dark .roadmap-card {
-        border-color: rgba(139, 111, 71, 0.2);
-        background-color: rgba(50, 40, 30, 0.3);
+      .dark .roadmap-card,
+      .dark .team-card {
+        border-color: rgba(230, 213, 163, 0.2);
+        background-color: rgba(40, 40, 40, 0.3);
       }
 
       .dark .feature-card:hover,
       .dark .use-case-card:hover,
-      .dark .roadmap-card:hover {
+      .dark .roadmap-card:hover,
+      .dark .team-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(139, 111, 71, 0.5);
-        box-shadow: 0 5px 15px rgba(139, 111, 71, 0.3);
-        background-color: rgba(70, 60, 50, 0.5);
+        border-color: rgba(230, 213, 163, 0.5);
+        box-shadow: 0 5px 15px rgba(230, 213, 163, 0.3);
+        background-color: rgba(60, 60, 60, 0.5);
       }
 
       .feature-card .icon, .use-case-card .emoji {
@@ -179,16 +182,16 @@ const project = {
       /* Light mode icon colors */
       html:not(.dark) .feature-card .icon,
       html:not(.dark) .use-case-card .emoji {
-        color: #4a3728;
+        color: #1a1a1a;
       }
 
       /* Dark mode icon colors */
       .dark .feature-card .icon,
       .dark .use-case-card .emoji {
-        color: #8b6f47;
+        color: #e6d5a3;
       }
 
-      .feature-card h3, .use-case-card h3, .roadmap-card h3 {
+      .feature-card h3, .use-case-card h3, .roadmap-card h3, .team-card h3 {
         font-size: 1.1rem;
         font-weight: 600;
         margin-bottom: 0.25rem;
@@ -198,30 +201,34 @@ const project = {
       /* Light mode text colors */
       html:not(.dark) .feature-card h3,
       html:not(.dark) .use-case-card h3,
-      html:not(.dark) .roadmap-card h3 {
-        color: #4a3728;
+      html:not(.dark) .roadmap-card h3,
+      html:not(.dark) .team-card h3 {
+        color: #1a1a1a;
       }
 
       html:not(.dark) .feature-card p,
       html:not(.dark) .use-case-card p,
-      html:not(.dark) .roadmap-card p {
-        color: #6b5847;
+      html:not(.dark) .roadmap-card p,
+      html:not(.dark) .team-card p {
+        color: #4a4a4a;
       }
 
       /* Dark mode text colors */
       .dark .feature-card h3,
       .dark .use-case-card h3,
-      .dark .roadmap-card h3 {
+      .dark .roadmap-card h3,
+      .dark .team-card h3 {
         color: #ffffff;
       }
 
       .dark .feature-card p,
       .dark .use-case-card p,
-      .dark .roadmap-card p {
+      .dark .roadmap-card p,
+      .dark .team-card p {
         color: #d4d4d8;
       }
 
-      .feature-card p, .use-case-card p, .roadmap-card p {
+      .feature-card p, .use-case-card p, .roadmap-card p, .team-card p {
         font-size: 0.875rem;
       }
 
@@ -236,14 +243,14 @@ const project = {
 
       /* Status badge colors for both modes */
       .roadmap-card .status {
-        color: #8b6f47;
-        background: rgba(139, 111, 71, 0.1);
+        color: #e6d5a3;
+        background: rgba(230, 213, 163, 0.1);
       }
 
       /* Light mode status badges */
       html:not(.dark) .roadmap-card .status {
-        color: #4a3728;
-        background: rgba(74, 55, 40, 0.1);
+        color: #1a1a1a;
+        background: rgba(26, 26, 26, 0.1);
       }
 
       .section-heading {
@@ -256,7 +263,7 @@ const project = {
 
       /* Light mode heading color */
       html:not(.dark) .section-heading {
-        color: #4a3728;
+        color: #1a1a1a;
       }
 
       /* Dark mode heading color */
@@ -271,7 +278,7 @@ const project = {
         left: 0;
         width: 50px;
         height: 2px;
-        background: linear-gradient(to right, #f5f5f5, #8b6f47);
+        background: linear-gradient(to right, #1a1a1a, #e6d5a3);
         border-radius: 1px;
       }
 
@@ -287,11 +294,11 @@ const project = {
 
       /* Light mode prose colors */
       html:not(.dark) .prose p {
-        color: #6b5847;
+        color: #4a4a4a;
       }
 
       html:not(.dark) .prose strong {
-        color: #4a3728;
+        color: #1a1a1a;
       }
 
       /* Dark mode prose colors */
@@ -315,7 +322,7 @@ const project = {
 
       /* Light mode list colors */
       html:not(.dark) .prose ul {
-        color: #6b5847;
+        color: #4a4a4a;
       }
 
       /* Dark mode list colors */
@@ -325,7 +332,7 @@ const project = {
     </style>
 
     <!-- Main Section -->
-    <div class="puffnotes-section fade-in">
+    <div class="cash-section fade-in">
       <PageHeading
         title={project.name}
         description={project.description}
@@ -359,7 +366,7 @@ const project = {
           rel="noopener noreferrer"
           class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
         >
-          Visit Live Site
+          View Project
         </a>
         <a
           href={project.githubUrl}
@@ -373,20 +380,20 @@ const project = {
     </div>
 
     <!-- Overview Section (Paragraphs) -->
-    <div class="puffnotes-section">
-      <h2 class="section-heading slide-in-up">What is PuffNotes?</h2>
+    <div class="cash-section">
+      <h2 class="section-heading slide-in-up">What is CASH?</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          I love taking notes. But I hate taking long, long notes. PuffNotes was born to solve this problem. I usually take notes on my laptop in class, but there’s often so much to type out that I end up getting distracted, missing important points, or losing track of what’s happening in the lecture. Frustrated, I decided to create a solution tailored to my exact needs—PuffNotes, a minimalist, local-first, markdown-based note-taking app designed to make your messy, vague ideas look smart and structured with just one click. I kept it minimal, cozy, fun, and easy, ensuring it’s a perfect fit for anyone facing similar challenges. Built for lazy writers, distracted students, and tired creatives, PuffNotes offers a quiet, beautiful space to jot down thoughts without the clutter of traditional productivity tools. Powered with lightning-fast AI, it transforms rough fragments into polished, organized notes in seconds.
+          The story behind CASH is a little stupid, honestly. When I first shared the idea of building my own shell, the sheer shock on people's faces made me want to get started on building it. And honestly, it worked out pretty well. CASH (Command and Script Shell) is a minimalist, lightweight shell built in C to explore kernel processes, system calls, and shell internals. Designed as a learning tool, it provides a foundation for understanding how shells interact with the operating system, manage processes, and execute commands.
         </p>
         <p>
-          With PuffNotes, there’s no need for logins, cloud storage, or internet access after the initial load—your notes are saved directly to your device as .md files. Its serene interface, soft animations, and focus mode create a calm writing environment, while features like autosave and AI beautification ensure your thoughts are captured effortlessly. Whether you're a student, writer, or late-night thinker, PuffNotes is your cozy companion for effortless note-taking.
+          CASH supports essential shell features like command execution, background processes, input/output redirection, and piping. Compatible with Linux and macOS, it offers an extensible design for adding modern features, making it a great starting point for developers interested in OS-level programming.
         </p>
       </div>
     </div>
 
     <!-- Features Section -->
-    <div class="puffnotes-section">
+    <div class="cash-section">
       <h2 class="section-heading slide-in-up">Key Features</h2>
       <div class="features-grid">
         {project.features.map((feature, index) => (
@@ -402,7 +409,7 @@ const project = {
     </div>
 
     <!-- Use Cases Section -->
-    <div class="puffnotes-section">
+    <div class="cash-section">
       <h2 class="section-heading slide-in-up">Perfect For</h2>
       <div class="use-cases-grid">
         {project.useCases.map((useCase, index) => (
@@ -417,21 +424,21 @@ const project = {
       </div>
     </div>
 
-    <!-- Privacy and Tech Stack Section (Paragraphs) -->
-    <div class="puffnotes-section">
-      <h2 class="section-heading slide-in-up">Privacy & Technology</h2>
+    <!-- Technology Section (Paragraphs) -->
+    <div class="cash-section">
+      <h2 class="section-heading slide-in-up">Technology & Architecture</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          Privacy is a cornerstone of PuffNotes. Your notes are saved directly to your device as .md files, with no cloud storage, no accounts, and no tracking. After the initial load, PuffNotes works entirely offline, ensuring your thoughts remain yours. The <strong>AI</strong> beautification feature only activates when you choose to use it, and even then, your data stays secure. This local-first approach makes PuffNotes a safe haven for your ideas.
+          CASH is built entirely in <strong>C</strong>, leveraging system calls for process management, command execution, and I/O operations. It uses standard C libraries to handle file descriptors for redirection and piping, ensuring efficient communication between processes.
         </p>
         <p>
-          PuffNotes is built with a modern tech stack for a seamless experience. The frontend uses <strong>React</strong> and <strong>Vite</strong> for a fast, responsive interface, styled with <strong>Tailwind CSS</strong> for a cozy, relaxing design. AI powers the beautification feature, making your notes polished and professional with minimal effort.
+          The shell is designed to be lightweight and extensible, with a modular structure that supports adding new features like scripting and command history. It runs on Linux and macOS, utilizing the POSIX standard for portability and compatibility with system-level operations.
         </p>
       </div>
     </div>
 
     <!-- Roadmap Section -->
-    <div class="puffnotes-section">
+    <div class="cash-section">
       <h2 class="section-heading slide-in-up">What's Next</h2>
       <div class="roadmap-grid">
         {project.roadmap.map((item, index) => (
@@ -444,11 +451,11 @@ const project = {
     </div>
 
     <!-- Final Call to Action -->
-    <div class="puffnotes-section">
+    <div class="cash-section">
       <h2 class="section-heading slide-in-up">Get Started</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          Ready to turn your messy thoughts into polished notes? Start using PuffNotes today and experience the magic of effortless note-taking. Want to contribute or explore the code? Check out the project on GitHub!
+          Ready to explore the internals of a shell? Clone CASH, build it, and start experimenting with kernel processes and system calls. Contributions are welcome—check out the project on GitHub!
         </p>
       </div>
       <div class="cta-buttons slide-in-up" style="animation-delay: 0.4s;">
@@ -458,7 +465,7 @@ const project = {
           rel="noopener noreferrer"
           class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
         >
-          Start Writing
+          Explore CASH
         </a>
         <a
           href={project.githubUrl}

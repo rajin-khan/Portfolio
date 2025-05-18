@@ -2,31 +2,32 @@
 import Layout from "../../layouts/main.astro";
 import PageHeading from "../../components/page-heading.astro";
 
-// Hardcoded project data
 const project = {
-  name: "PuffNotes",
-  description: "Cozy, Minimalist Note Taker with AI.",
-  image: "/assets/images/projects/PuffNotes.png",
-  githubUrl: "https://github.com/rajin-khan/PuffNotes",
-  externalUrl: "https://puff-notes.vercel.app",
-  tags: [],
+  name: "UBL Retail",
+  description: "Computer Vision Pipeline for Unilever BD.",
+  image: "/assets/images/projects/ubl.png",
+  githubUrl: "https://github.com/rajin-khan/UBLRetailAnalysis",
+  externalUrl: "https://github.com/rajin-khan/UBLRetailAnalysis",
+  tags: [
+
+  ],
   features: [
-    { name: "AI Beautify", description: "Turn rough ideas into polished notes with one click.", icon: "✨" },
-    { name: "Local First", description: "Saves as .md files on your device, no cloud needed.", icon: "💾" },
-    { name: "Calm UI", description: "Glassmorphism design with focus mode.", icon: "🧘‍♂️" },
-    { name: "Markdown Simplicity", description: "Compatible with any markdown reader.", icon: "🧠" }
+    { name: "Product Detection", description: "Identify Unilever products using YOLO.", icon: "🔍" },
+    { name: "Sales Analysis", description: "Analyze product placement and sales trends.", icon: "📊" },
+    { name: "Distribution Insights", description: "Optimize product distribution strategies.", icon: "📦" },
+    { name: "Retail Monitoring", description: "Monitor store shelves in real-time.", icon: "🏬" }
   ],
   useCases: [
-    { name: "Students", description: "Effortless note-taking for classes.", emoji: "🧠" },
-    { name: "Writers", description: "Distraction-free scratchpad for ideas.", emoji: "✍️" },
-    { name: "Coders", description: "Offline-first app for quick notes.", emoji: "⚡" },
-    { name: "Thinkers", description: "Dump thoughts without fuss.", emoji: "🌙" },
+    { name: "Inventory Management", description: "Track product stock on shelves.", emoji: "📋" },
+    { name: "Sales Optimization", description: "Redirect sales based on insights.", emoji: "💰" },
+    { name: "Product Placement", description: "Improve shelf positioning strategies.", emoji: "📍" },
+    { name: "Market Analysis", description: "Understand consumer behavior trends.", emoji: "📈" }
   ],
   roadmap: [
-    { name: "Theming", status: "Planned" },
-    { name: "Embeddable AI Prompts", status: "Planned" },
-    { name: "Drag-and-Drop Images", status: "Planned" },
-    { name: "Tag + Folder Organization", status: "Planned" }
+    { name: "Real-Time Analytics", status: "Planned" },
+    { name: "Multi-Store Support", status: "Planned" },
+    { name: "Enhanced YOLO Models", status: "Planned" },
+    { name: "Mobile Integration", status: "Planned" }
   ]
 };
 ---
@@ -34,8 +35,8 @@ const project = {
 <Layout title={project.name}>
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
     <style>
-      /* Custom Styles for Puffnotes Page */
-      .puffnotes-section {
+      /* Custom Styles for UBL Retail Page */
+      .ublretail-section {
         margin-bottom: 2.5rem;
       }
 
@@ -51,10 +52,10 @@ const project = {
 
       @keyframes glowPulse {
         0%, 100% { 
-          box-shadow: 0 0 5px rgba(139, 111, 71, 0.3), 0 0 10px rgba(74, 55, 40, 0.3); 
+          box-shadow: 0 0 5px rgba(30, 64, 175, 0.3), 0 0 10px rgba(255, 255, 255, 0.3); 
         }
         50% { 
-          box-shadow: 0 0 15px rgba(139, 111, 71, 0.6), 0 0 20px rgba(74, 55, 40, 0.6); 
+          box-shadow: 0 0 15px rgba(30, 64, 175, 0.6), 0 0 20px rgba(255, 255, 255, 0.6); 
         }
       }
 
@@ -83,7 +84,7 @@ const project = {
 
       .banner-image {
         border: 2px solid transparent;
-        background: linear-gradient(45deg, #f5f5f5, #8b6f47);
+        background: linear-gradient(45deg, #ffffff, #1e40af);
         border-radius: 1rem;
         padding: 4px;
         transition: transform 0.3s ease;
@@ -115,7 +116,7 @@ const project = {
         }
       }
 
-      .features-grid, .use-cases-grid, .roadmap-grid {
+      .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
         display: grid;
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -123,12 +124,12 @@ const project = {
       }
 
       @media (min-width: 640px) {
-        .features-grid, .use-cases-grid, .roadmap-grid {
+        .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
           grid-template-columns: repeat(2, 1fr);
         }
       }
 
-      .feature-card, .use-case-card, .roadmap-card {
+      .feature-card, .use-case-card, .roadmap-card, .team-card {
         border: 1px solid;
         border-radius: 0.75rem;
         padding: 1rem;
@@ -140,35 +141,39 @@ const project = {
       /* Light mode card styles */
       html:not(.dark) .feature-card,
       html:not(.dark) .use-case-card,
-      html:not(.dark) .roadmap-card {
-        border-color: rgba(74, 55, 40, 0.2);
+      html:not(.dark) .roadmap-card,
+      html:not(.dark) .team-card {
+        border-color: rgba(30, 64, 175, 0.2);
         background-color: rgba(245, 245, 245, 0.5);
       }
 
       html:not(.dark) .feature-card:hover,
       html:not(.dark) .use-case-card:hover,
-      html:not(.dark) .roadmap-card:hover {
+      html:not(.dark) .roadmap-card:hover,
+      html:not(.dark) .team-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(74, 55, 40, 0.5);
-        box-shadow: 0 5px 15px rgba(74, 55, 40, 0.2);
-        background-color: rgba(250, 250, 250, 0.8);
+        border-color: rgba(30, 64, 175, 0.5);
+        box-shadow: 0 5px 15px rgba(30, 64, 175, 0.2);
+        background-color: rgba(255, 255, 255, 0.8);
       }
 
       /* Dark mode card styles */
       .dark .feature-card,
       .dark .use-case-card,
-      .dark .roadmap-card {
-        border-color: rgba(139, 111, 71, 0.2);
-        background-color: rgba(50, 40, 30, 0.3);
+      .dark .roadmap-card,
+      .dark .team-card {
+        border-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(40, 40, 40, 0.3);
       }
 
       .dark .feature-card:hover,
       .dark .use-case-card:hover,
-      .dark .roadmap-card:hover {
+      .dark .roadmap-card:hover,
+      .dark .team-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(139, 111, 71, 0.5);
-        box-shadow: 0 5px 15px rgba(139, 111, 71, 0.3);
-        background-color: rgba(70, 60, 50, 0.5);
+        border-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        background-color: rgba(60, 60, 60, 0.5);
       }
 
       .feature-card .icon, .use-case-card .emoji {
@@ -179,16 +184,16 @@ const project = {
       /* Light mode icon colors */
       html:not(.dark) .feature-card .icon,
       html:not(.dark) .use-case-card .emoji {
-        color: #4a3728;
+        color: #1e40af;
       }
 
       /* Dark mode icon colors */
       .dark .feature-card .icon,
       .dark .use-case-card .emoji {
-        color: #8b6f47;
+        color: #ffffff;
       }
 
-      .feature-card h3, .use-case-card h3, .roadmap-card h3 {
+      .feature-card h3, .use-case-card h3, .roadmap-card h3, .team-card h3 {
         font-size: 1.1rem;
         font-weight: 600;
         margin-bottom: 0.25rem;
@@ -198,30 +203,34 @@ const project = {
       /* Light mode text colors */
       html:not(.dark) .feature-card h3,
       html:not(.dark) .use-case-card h3,
-      html:not(.dark) .roadmap-card h3 {
-        color: #4a3728;
+      html:not(.dark) .roadmap-card h3,
+      html:not(.dark) .team-card h3 {
+        color: #1a1a1a;
       }
 
       html:not(.dark) .feature-card p,
       html:not(.dark) .use-case-card p,
-      html:not(.dark) .roadmap-card p {
-        color: #6b5847;
+      html:not(.dark) .roadmap-card p,
+      html:not(.dark) .team-card p {
+        color: #4a4a4a;
       }
 
       /* Dark mode text colors */
       .dark .feature-card h3,
       .dark .use-case-card h3,
-      .dark .roadmap-card h3 {
+      .dark .roadmap-card h3,
+      .dark .team-card h3 {
         color: #ffffff;
       }
 
       .dark .feature-card p,
       .dark .use-case-card p,
-      .dark .roadmap-card p {
+      .dark .roadmap-card p,
+      .dark .team-card p {
         color: #d4d4d8;
       }
 
-      .feature-card p, .use-case-card p, .roadmap-card p {
+      .feature-card p, .use-case-card p, .roadmap-card p, .team-card p {
         font-size: 0.875rem;
       }
 
@@ -236,14 +245,14 @@ const project = {
 
       /* Status badge colors for both modes */
       .roadmap-card .status {
-        color: #8b6f47;
-        background: rgba(139, 111, 71, 0.1);
+        color: #1e40af;
+        background: rgba(30, 64, 175, 0.1);
       }
 
       /* Light mode status badges */
       html:not(.dark) .roadmap-card .status {
-        color: #4a3728;
-        background: rgba(74, 55, 40, 0.1);
+        color: #1e40af;
+        background: rgba(30, 64, 175, 0.1);
       }
 
       .section-heading {
@@ -256,7 +265,7 @@ const project = {
 
       /* Light mode heading color */
       html:not(.dark) .section-heading {
-        color: #4a3728;
+        color: #1a1a1a;
       }
 
       /* Dark mode heading color */
@@ -271,7 +280,7 @@ const project = {
         left: 0;
         width: 50px;
         height: 2px;
-        background: linear-gradient(to right, #f5f5f5, #8b6f47);
+        background: linear-gradient(to right, #ffffff, #1e40af);
         border-radius: 1px;
       }
 
@@ -287,11 +296,11 @@ const project = {
 
       /* Light mode prose colors */
       html:not(.dark) .prose p {
-        color: #6b5847;
+        color: #4a4a4a;
       }
 
       html:not(.dark) .prose strong {
-        color: #4a3728;
+        color: #1a1a1a;
       }
 
       /* Dark mode prose colors */
@@ -315,7 +324,7 @@ const project = {
 
       /* Light mode list colors */
       html:not(.dark) .prose ul {
-        color: #6b5847;
+        color: #4a4a4a;
       }
 
       /* Dark mode list colors */
@@ -325,7 +334,7 @@ const project = {
     </style>
 
     <!-- Main Section -->
-    <div class="puffnotes-section fade-in">
+    <div class="ublretail-section fade-in">
       <PageHeading
         title={project.name}
         description={project.description}
@@ -344,7 +353,7 @@ const project = {
       <div class="tags-container slide-in-up">
         {project.tags.map((tag) => (
           <span
-            class={`px-2 py-1 text-xs font-semibold rounded-lg bg-gradient-to-r ${tag.gradient} text-white`}
+            class={`px-2 py-1 text-xs font-semibold rounded-lg bg-gradient-to-r ${tag.gradient} text-black`}
           >
             {tag.name}
           </span>
@@ -359,7 +368,7 @@ const project = {
           rel="noopener noreferrer"
           class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
         >
-          Visit Live Site
+          View Project
         </a>
         <a
           href={project.githubUrl}
@@ -373,20 +382,20 @@ const project = {
     </div>
 
     <!-- Overview Section (Paragraphs) -->
-    <div class="puffnotes-section">
-      <h2 class="section-heading slide-in-up">What is PuffNotes?</h2>
+    <div class="ublretail-section">
+      <h2 class="section-heading slide-in-up">What is UBL Retail?</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          I love taking notes. But I hate taking long, long notes. PuffNotes was born to solve this problem. I usually take notes on my laptop in class, but there’s often so much to type out that I end up getting distracted, missing important points, or losing track of what’s happening in the lecture. Frustrated, I decided to create a solution tailored to my exact needs—PuffNotes, a minimalist, local-first, markdown-based note-taking app designed to make your messy, vague ideas look smart and structured with just one click. I kept it minimal, cozy, fun, and easy, ensuring it’s a perfect fit for anyone facing similar challenges. Built for lazy writers, distracted students, and tired creatives, PuffNotes offers a quiet, beautiful space to jot down thoughts without the clutter of traditional productivity tools. Powered with lightning-fast AI, it transforms rough fragments into polished, organized notes in seconds.
+          UBL Retail is a computer vision pipeline developed for Unilever Bangladesh to analyze product placement, sales trends, and distribution in retail stores. By leveraging AI, machine learning, and deep learning, it provides actionable insights to optimize sales strategies and improve product distribution.
         </p>
         <p>
-          With PuffNotes, there’s no need for logins, cloud storage, or internet access after the initial load—your notes are saved directly to your device as .md files. Its serene interface, soft animations, and focus mode create a calm writing environment, while features like autosave and AI beautification ensure your thoughts are captured effortlessly. Whether you're a student, writer, or late-night thinker, PuffNotes is your cozy companion for effortless note-taking.
+          Using the YOLO object detection model, UBL Retail identifies Unilever products on store shelves, monitors their placement, and analyzes sales patterns. This data-driven approach helps Unilever redirect sales efforts, enhance inventory management, and ensure optimal product availability, ultimately boosting retail efficiency and customer satisfaction.
         </p>
       </div>
     </div>
 
     <!-- Features Section -->
-    <div class="puffnotes-section">
+    <div class="ublretail-section">
       <h2 class="section-heading slide-in-up">Key Features</h2>
       <div class="features-grid">
         {project.features.map((feature, index) => (
@@ -402,7 +411,7 @@ const project = {
     </div>
 
     <!-- Use Cases Section -->
-    <div class="puffnotes-section">
+    <div class="ublretail-section">
       <h2 class="section-heading slide-in-up">Perfect For</h2>
       <div class="use-cases-grid">
         {project.useCases.map((useCase, index) => (
@@ -417,21 +426,21 @@ const project = {
       </div>
     </div>
 
-    <!-- Privacy and Tech Stack Section (Paragraphs) -->
-    <div class="puffnotes-section">
-      <h2 class="section-heading slide-in-up">Privacy & Technology</h2>
+    <!-- Technology Section (Paragraphs) -->
+    <div class="ublretail-section">
+      <h2 class="section-heading slide-in-up">Technology & Architecture</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          Privacy is a cornerstone of PuffNotes. Your notes are saved directly to your device as .md files, with no cloud storage, no accounts, and no tracking. After the initial load, PuffNotes works entirely offline, ensuring your thoughts remain yours. The <strong>AI</strong> beautification feature only activates when you choose to use it, and even then, your data stays secure. This local-first approach makes PuffNotes a safe haven for your ideas.
+          UBL Retail leverages a computer vision pipeline powered by <strong>YOLO</strong> for real-time object detection of Unilever products on store shelves. The system uses deep learning models to process images, combined with machine learning techniques for sales trend analysis and distribution optimization.
         </p>
         <p>
-          PuffNotes is built with a modern tech stack for a seamless experience. The frontend uses <strong>React</strong> and <strong>Vite</strong> for a fast, responsive interface, styled with <strong>Tailwind CSS</strong> for a cozy, relaxing design. AI powers the beautification feature, making your notes polished and professional with minimal effort.
+          Built with a modular architecture, UBL Retail integrates AI-driven analytics to provide insights into product placement and inventory levels. The pipeline processes store images, extracts product data, and generates reports to guide sales redirection and distribution strategies, ensuring scalability and accuracy for retail operations.
         </p>
       </div>
     </div>
 
     <!-- Roadmap Section -->
-    <div class="puffnotes-section">
+    <div class="ublretail-section">
       <h2 class="section-heading slide-in-up">What's Next</h2>
       <div class="roadmap-grid">
         {project.roadmap.map((item, index) => (
@@ -444,11 +453,11 @@ const project = {
     </div>
 
     <!-- Final Call to Action -->
-    <div class="puffnotes-section">
+    <div class="ublretail-section">
       <h2 class="section-heading slide-in-up">Get Started</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          Ready to turn your messy thoughts into polished notes? Start using PuffNotes today and experience the magic of effortless note-taking. Want to contribute or explore the code? Check out the project on GitHub!
+          This was one of the most interesting projects I've worked on in a while. You can explore the UBL Retail project on GitHub, and see how computer vision can transform product analysis and sales strategies.
         </p>
       </div>
       <div class="cta-buttons slide-in-up" style="animation-delay: 0.4s;">
@@ -458,7 +467,7 @@ const project = {
           rel="noopener noreferrer"
           class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
         >
-          Start Writing
+          Explore UBL Retail
         </a>
         <a
           href={project.githubUrl}
