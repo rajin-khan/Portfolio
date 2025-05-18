@@ -76,7 +76,7 @@ const GITHUB_EVENTS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/event
             href="https://github.com/${latestCommit.repo.name}"
             target="_blank"
             rel="noopener noreferrer"
-            class="relative block border border-transparent border-dashed cursor-pointer p-5 group rounded-2xl bg-neutral-800 dark:bg-neutral-950 hover:bg-neutral-700 dark:hover:bg-neutral-900 transition-colors duration-300"
+            class="relative block border border-transparent border-dashed cursor-pointer p-5 sm:p-4 group rounded-2xl bg-neutral-800 dark:bg-neutral-950 hover:bg-neutral-700 dark:hover:bg-neutral-900 transition-colors duration-300"
           >
             <div
               class="absolute inset-0 z-20 w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-600 dark:border-neutral-700 group-hover:-translate-x-1 group-hover:-translate-y-1 bg-neutral-800 dark:bg-neutral-950"
@@ -85,10 +85,10 @@ const GITHUB_EVENTS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/event
               class="absolute inset-0 z-10 w-full h-full duration-300 ease-out border-2 border-dashed rounded-2xl border-neutral-500 dark:border-neutral-600 group-hover:translate-x-1 group-hover:translate-y-1"
             ></div>
             <div
-              class="relative z-30 duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1 flex items-center space-x-3"
+              class="relative z-30 duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1 flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-3"
             >
               <div
-                class="relative w-10 h-10 transform group-hover:scale-110 transition-all duration-300 ease-out"
+                class="relative w-8 h-8 sm:w-10 sm:h-10 transform group-hover:scale-110 transition-all duration-300 ease-out"
               >
                 <svg
                   class="w-full h-full text-neutral-400 dark:text-neutral-300 group-hover:text-neutral-300 dark:group-hover:text-neutral-200"
@@ -105,13 +105,13 @@ const GITHUB_EVENTS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/event
               </div>
               <div class="flex-1">
                 <p
-                  class="text-sm font-medium text-neutral-400 dark:text-neutral-300 group-hover:text-neutral-300 dark:group-hover:text-neutral-200 transition-colors duration-300"
+                  class="text-xs sm:text-sm font-medium text-neutral-400 dark:text-neutral-300 group-hover:text-neutral-300 dark:group-hover:text-neutral-200 transition-colors duration-300"
                 >
                   <span class="underline">@rajin-khan</span> committed to 
                   <span class="underline">${latestCommit.repo.name}</span>
                 </p>
                 <div
-                  class="mt-1 text-base font-mono bg-neutral-900 dark:bg-neutral-950 px-2 py-1 rounded-md text-neutral-300 dark:text-neutral-200 truncate group-hover:bg-neutral-800 dark:group-hover:bg-neutral-900 transition-colors duration-300 shadow-xs"
+                  class="mt-1 text-sm sm:text-base font-mono bg-neutral-900 dark:bg-neutral-950 px-2 py-1 rounded-md text-neutral-300 dark:text-neutral-200 break-words group-hover:bg-neutral-800 dark:group-hover:bg-neutral-900 transition-colors duration-300 shadow-xs"
                 >
                   <span class="animate-pulse text-neutral-400 dark:text-neutral-300">▋</span> 
                   ${latestCommit.payload.commits[0].message || "No commit message"}
