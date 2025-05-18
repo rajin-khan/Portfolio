@@ -6,6 +6,7 @@ import Writings from "../components/home/writings.astro";
 import Layout from "../layouts/main.astro";
 import StatusIndicator from "../components/status-indicator.astro";
 import TechStack from "../components/tech-stack.astro";
+import LatestCommit from "../components/latest-commit.astro";
 
 const personSchema = {
   "@context": "https://schema.org",
@@ -78,6 +79,9 @@ const pageDescription = "Personal portfolio of Rajin Khan, a Computer Science st
 
   <Separator text="Tech Stack" />
   <TechStack />
+
+  <Separator text="Latest Activity" />
+  <LatestCommit />
   
   <Separator text="Oh, and I talk a lot" />
   <Writings />

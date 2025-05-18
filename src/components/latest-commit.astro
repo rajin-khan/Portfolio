@@ -1,0 +1,109 @@
+---
+const GITHUB_USERNAME = "rajin-khan";
+const GITHUB_EVENTS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/events`;
+
+interface GitHubEvent {
+  type: string;
+  repo: { name: string; url: string };
+  created_at: string;
+  payload: {
+    commits?: { message: string; sha: string; url: string }[];
+    ref?: string;
+  };
+}
+
+// Fetch the latest commit
+async function fetchLatestCommit(): Promise<GitHubEvent | null> {
+  try {
+    const response = await fetch(GITHUB_EVENTS_URL, {
+      headers: {
+        Accept: "application/vnd.github.v3+json",
+      },
+    });
+    if (!response.ok) throw new Error("Failed to fetch GitHub events");
+    const events: GitHubEvent[] = await response.json();
+    return (
+      events.find(
+        (event) => event.type === "PushEvent" && event.payload.commits?.length > 0
+      ) || null
+    );
+  } catch (error) {
+    console.error("Error fetching GitHub events:", error);
+    return null;
+  }
+}
+
+const latestCommit = await fetchLatestCommit();
+
+function formatTimeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const difference = Math.abs(now.getTime() - date.getTime());
+  const hours = Math.floor(difference / (1000 * 60 * 60));
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+---
+
+<section class="w-full max-w-4xl mx-auto px-7 xl:px-0 mb-12">
+
+  {latestCommit ? (
+    <a
+      href={`https://github.com/${latestCommit.repo.name}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="relative block border border-transparent border-dashed cursor-pointer p-5 group rounded-2xl bg-neutral-800 dark:bg-neutral-950 hover:bg-neutral-700 dark:hover:bg-neutral-900 transition-colors duration-300"
+    >
+      <div
+        class="absolute inset-0 z-20 w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-600 dark:border-neutral-700 group-hover:-translate-x-1 group-hover:-translate-y-1 bg-neutral-800 dark:bg-neutral-950"
+      ></div>
+      <div
+        class="absolute inset-0 z-10 w-full h-full duration-300 ease-out border-2 border-dashed rounded-2xl border-neutral-500 dark:border-neutral-600 group-hover:translate-x-1 group-hover:translate-y-1"
+      ></div>
+      <div
+        class="relative z-30 duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1 flex items-center space-x-3"
+      >
+        <div
+          class="relative w-10 h-10 transform group-hover:scale-110 transition-all duration-300 ease-out"
+        >
+          <svg
+            class="w-full h-full text-neutral-400 dark:text-neutral-300 group-hover:text-neutral-300 dark:group-hover:text-neutral-200"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <p
+            class="text-sm font-medium text-neutral-400 dark:text-neutral-300 group-hover:text-neutral-300 dark:group-hover:text-neutral-200 transition-colors duration-300"
+          >
+            <span class="underline">@{GITHUB_USERNAME}</span> committed to{" "}
+            <span class="underline">{latestCommit.repo.name}</span>
+          </p>
+          <div
+            class="mt-1 text-base font-mono bg-neutral-900 dark:bg-neutral-950 px-2 py-1 rounded-md text-neutral-300 dark:text-neutral-200 truncate group-hover:bg-neutral-800 dark:group-hover:bg-neutral-900 transition-colors duration-300 shadow-xs"
+          >
+            <span class="animate-pulse text-neutral-400 dark:text-neutral-300">▋</span>{" "}
+            {latestCommit.payload.commits?.[0].message || "No commit message"}
+          </div>
+          <p
+            class="mt-1 text-xs text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-400 dark:group-hover:text-neutral-300 transition-colors duration-300"
+          >
+            {formatTimeAgo(latestCommit.created_at)}
+          </p>
+        </div>
+      </div>
+    </a>
+  ) : (
+    <p class="text-sm text-neutral-400 dark:text-neutral-300">
+      No recent commits found.
+    </p>
+  )}
+</section>

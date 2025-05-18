@@ -38,54 +38,60 @@ const [visiblePosts, remainingPosts] = [
             href={`/post/${post.slug}`}
             class="relative flex flex-col md:flex-row items-stretch md:justify-between duration-300 ease-out p-7 group h-100 rounded-2xl"
           >
-            <span class="absolute inset-0 z-20 block w-full h-full duration-300 ease-out bg-transparent border border-transparent border-dashed rounded-2xl group-hover:-translate-x-1 group-hover:-translate-y-1 dark:border-neutral-600" />
-            <span class="absolute inset-0 z-10 block w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-300 dark:border-neutral-600 group-hover:translate-x-1 group-hover:translate-y-1" />
+            <span
+              class="absolute inset-0 z-20 block w-full h-full duration-300 ease-out bg-transparent border border-transparent border-dashed group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:border group-hover:border-neutral-300 dark:group-hover:border-neutral-600 group-hover:bg-white dark:group-hover:bg-neutral-950 rounded-2xl"
+            ></span>
+            <span
+              class="absolute inset-0 z-10 block w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-300 dark:border-neutral-600 group-hover:translate-x-1 group-hover:translate-y-1"
+            ></span>
 
-            <div class="relative z-30 flex flex-col md:flex-row items-stretch gap-6 w-full">
-              <div class="flex-1">
-                <div class="flex flex-wrap gap-3 mb-3">
-                  {post.data.tags?.map((tag) => (
-                    <span
-                      class="px-3 py-1 text-xs font-bold rounded-md border-neutral-300 dark:border-neutral-600 text-white"
-                      style={{
-                        background: `linear-gradient(135deg, hsl(${Math.random() * 360}, 100%, 70%), hsl(${Math.random() * 360}, 100%, 15%))`,
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <span class="block w-full px-1 mt-3 mb-1">
-                  <span class="flex items-center mb-0 text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-                    {post.data.title}
-                    <span class="ml-1 inline-block transition-transform duration-300 translate-x-0 group-hover:translate-x-1">
-                      →
+            <div class="relative z-30 duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1 w-full">
+              <div class="flex flex-col md:flex-row items-stretch gap-6 w-full">
+                <div class="flex-1">
+                  <div class="flex flex-wrap gap-3 mb-3">
+                    {post.data.tags?.map((tag) => (
+                      <span
+                        class="px-3 py-1 text-xs font-bold rounded-md border-neutral-300 dark:border-neutral-600 text-white"
+                        style={{
+                          background: `linear-gradient(135deg, hsl(${Math.random() * 360}, 100%, 70%), hsl(${Math.random() * 360}, 100%, 15%))`,
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <span class="block w-full px-1 mt-3 mb-1">
+                    <span class="flex items-center mb-0 text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+                      {post.data.title}
+                      <span class="ml-1 inline-block transition-transform duration-300 translate-x-0 group-hover:translate-x-1">
+                        →
+                      </span>
                     </span>
                   </span>
-                </span>
-                <span class="text-xs text-neutral-600 dark:text-neutral-400 block truncate overflow-hidden break-words w-full max-w-full">
-                  {post.data.description}
-                </span>
-                <p class="mt-4 text-sm text-white-500 dark:text-white-500">
-                  Posted on{" "}
-                  {post.date.toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
-              {post.data.image && (
-                <div class="relative z-30 w-full sm:w-52 h-36 rounded-xl overflow-hidden ml-auto">
-                  <img
-                    src={post.data.image}
-                    alt={post.data.title}
-                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <span class="text-xs text-neutral-600 dark:text-neutral-400 block truncate overflow-hidden break-words w-full max-w-full">
+                    {post.data.description}
+                  </span>
+                  <p class="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
+                    Posted on{" "}
+                    {post.date.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
                 </div>
-              )}
+                {post.data.image && (
+                  <div class="relative z-30 w-full sm:w-52 h-36 rounded-xl overflow-hidden ml-auto">
+                    <img
+                      src={post.data.image}
+                      alt={post.data.title}
+                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </a>
         ))
@@ -122,49 +128,55 @@ const [visiblePosts, remainingPosts] = [
         postElement.className =
           "relative flex flex-col md:flex-row items-stretch md:justify-between duration-300 ease-out p-7 group h-100 rounded-2xl";
         postElement.innerHTML = `
-        <span class="absolute inset-0 z-20 block w-full h-full duration-300 ease-out bg-transparent border border-transparent border-dashed rounded-2xl group-hover:-translate-x-1 group-hover:-translate-y-1 dark:border-neutral-600"></span>
-        <span class="absolute inset-0 z-10 block w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-300 dark:border-neutral-600 group-hover:translate-x-1 group-hover:translate-y-1"></span>
-        <div class="relative z-30 flex flex-col md:flex-row items-stretch gap-6 w-full">
-          <div class="flex-1">
-            <div class="flex flex-wrap gap-3 mb-3">
-              ${post.data.tags
-                ?.map(
-                  (tag) => `
-                <span class="px-3 py-1 text-xs font-bold rounded-md border-neutral-300 dark:border-neutral-600 text-white"
-                      style="background: linear-gradient(135deg, hsl(${Math.random() * 360}, 100%, 70%), hsl(${Math.random() * 360}, 100%, 15%))">
-                  ${tag}
+          <span
+            class="absolute inset-0 z-20 block w-full h-full duration-300 ease-out bg-transparent border border-transparent border-dashed group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:border group-hover:border-neutral-300 dark:group-hover:border-neutral-600 group-hover:bg-white dark:group-hover:bg-neutral-950 rounded-2xl"
+          ></span>
+          <span
+            class="absolute inset-0 z-10 block w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-300 dark:border-neutral-600 group-hover:translate-x-1 group-hover:translate-y-1"
+          ></span>
+          <div class="relative z-30 duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1 w-full">
+            <div class="flex flex-col md:flex-row items-stretch gap-6 w-full">
+              <div class="flex-1">
+                <div class="flex flex-wrap gap-3 mb-3">
+                  ${post.data.tags
+                    ?.map(
+                      (tag) => `
+                    <span class="px-3 py-1 text-xs font-bold rounded-md border-neutral-300 dark:border-neutral-600 text-white"
+                          style="background: linear-gradient(135deg, hsl(${Math.random() * 360}, 100%, 70%), hsl(${Math.random() * 360}, 100%, 15%))">
+                      ${tag}
+                    </span>
+                  `
+                    )
+                    .join("")}
+                </div>
+                <span class="block w-full px-1 mt-3 mb-1">
+                  <span class="flex items-center mb-0 text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+                    ${post.data.title}
+                    <span class="ml-1 inline-block transition-transform duration-300 translate-x-0 group-hover:translate-x-1">→</span>
+                  </span>
                 </span>
+                <span class="text-xs text-neutral-600 dark:text-neutral-400 block truncate overflow-hidden break-words w-full max-w-full">
+                  ${post.data.description}
+                </span>
+                <p class="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
+                  Posted on ${new Date(post.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+              </div>
+              ${
+                post.data.image
+                  ? `
+                <div class="relative z-30 w-full sm:w-52 h-36 rounded-xl overflow-hidden ml-auto">
+                  <img src="${post.data.image}" alt="${post.data.title}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                </div>
               `
-                )
-                .join("")}
+                  : ""
+              }
             </div>
-            <span class="block w-full px-1 mt-3 mb-1">
-              <span class="flex items-center mb-0 text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-                ${post.data.title}
-                <span class="ml-1 inline-block transition-transform duration-300 translate-x-0 group-hover:translate-x-1">→</span>
-              </span>
-            </span>
-            <span class="text-xs text-neutral-600 dark:text-neutral-400 block truncate overflow-hidden break-words w-full max-w-full">
-              ${post.data.description}
-            </span>
-            <p class="mt-4 text-sm text-white-500 dark:text-white-500">
-              Posted on ${new Date(post.date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
-          </div>
-          ${
-            post.data.image
-              ? `
-            <div class="relative z-30 w-full sm:w-52 h-36 rounded-xl overflow-hidden ml-auto">
-              <img src="${post.data.image}" alt="${post.data.title}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-            </div>
-          `
-              : ""
-          }
-        </div>`;
+          </div>`;
         postsContainer.appendChild(postElement);
       });
 
