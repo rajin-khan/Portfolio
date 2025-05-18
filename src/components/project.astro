@@ -1,10 +1,14 @@
 ---
 const { name, description, url, image, tags } = Astro.props;
+
+// Determine if the link is external (for target="_blank")
+const isExternal = url.startsWith("http");
 ---
 
 <a
   href={url}
-  target="_blank"
+  target={isExternal ? "_blank" : undefined}
+  rel={isExternal ? "noopener noreferrer" : undefined}
   class="relative flex flex-col items-stretch duration-300 ease-out p-7 sm:p-3 group h-100 rounded-2xl"
 >
   <span
@@ -17,12 +21,12 @@ const { name, description, url, image, tags } = Astro.props;
     class="relative z-30 block duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1"
   >
     <span class="block w-full">
-      <img src={image} class="w-full h-auto rounded-lg aspect-[16/9] object-cover" />
+      <img src={image} class="w-full h-auto rounded-lg aspect-[16/9] object-cover" alt={name} />
     </span>
 
     <!-- Tags Section with Custom Gradient Colors -->
     <div class="flex flex-wrap gap-1 mt-3">
-        {(tags || []).map((tag) => (
+      {(tags || []).map((tag) => (
         <span class={`px-2 py-1 text-xs font-semibold rounded-lg bg-gradient-to-r ${tag.gradient} text-white`}>
           {tag.name}
         </span>
@@ -40,36 +44,41 @@ const { name, description, url, image, tags } = Astro.props;
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
-          ><g
+        >
+          <g
             stroke="none"
             stroke-width="1"
             fill="none"
             fill-rule="evenodd"
             stroke-linecap="round"
             stroke-linejoin="round"
-            ><g
+          >
+            <g
               id="svg"
               transform="translate(0.666667, 2.333333)"
               stroke="currentColor"
               stroke-width="2.4"
-              ><g
-                ><polyline
+            >
+              <g>
+                <polyline
                   class="transition-all duration-200 ease-out opacity-0 delay-0 group-hover:opacity-100"
                   points="5.33333333 0 10.8333333 5.5 5.33333333 11"
-                ></polyline><line
+                ></polyline>
+                <line
                   class="transition-all duration-200 ease-out transform -translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:ml-0"
                   x1="10.8333333"
                   y1="5.5"
                   x2="0.833333333"
-                  y2="5.16666667"></line></g
-              ></g
-            ></g
-          ></svg
-        >
+                  y2="5.16666667"
+                ></line>
+              </g>
+            </g>
+          </g>
+        </svg>
       </span>
-      <span class="text-xs text-neutral-600 dark:text-neutral-400 block truncate"
-        >{description}</span
-      >
+      <span class="text-xs text-neutral-600 dark:text-neutral-400 block break-words">
+        {description}
+      </span>
     </span>
   </span>
 </a>
