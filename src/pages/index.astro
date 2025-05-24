@@ -19,18 +19,29 @@ const personSchema = {
     "https://www.linkedin.com/in/rajin-khan",
     "https://www.instagram.com/raaajiin/",
     "https://www.facebook.com/rajinisdown/"
-  ]
+  ],
+  "jobTitle": "Senior Computer Science Student",
+  "worksFor": {
+    "@type": "The Data Island",
+    "name": "Junior AI Engineer"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Dhaka",
+    "addressCountry": "Bangladesh"
+  },
+  "image": "https://rajinkhan.com/assets/images/rajins-banner.png" // Add image to schema
 };
 
-const pageTitle = "Rajin Khan"; 
-const pageDescription = "Personal portfolio of Rajin Khan, a Computer Science student from Dhaka, Bangladesh specializing in Machine Learning, Data Analytics, and Mobile Development.";
-
+const pageTitle = "Rajin Khan - Computer Science Portfolio | Machine Learning & Mobile Development";
+const pageDescription = "Explore Rajin Khan’s portfolio, a Computer Science student from Dhaka, Bangladesh, specializing in Generative AI, Data Analytics, and Web Development projects.";
+const ogImage = "/assets/images/rajins-banner.png"; // Update to new Open Graph image
 ---
 
 <Layout 
   title={pageTitle} 
   description={pageDescription} 
-  ogImage="/assets/images/rajin-main.jpeg"
+  ogImage={ogImage}
 >
   <main class="relative z-20 w-full max-w-4xl mx-auto mt-16 px-7 md:mt-24 lg:mt-32 xl:px-0">
     <section class="flex flex-col-reverse md:flex-row items-center">
@@ -62,7 +73,7 @@ const pageDescription = "Personal portfolio of Rajin Khan, a Computer Science st
       <div class="relative flex justify-center w-full mt-10 md:mt-0 md:w-1/2 md:translate-y-4 xl:translate-y-0 order-first md:order-none">
         <div class="relative flex items-center justify-center w-[280px] h-[280px] lg:w-[360px] lg:h-[360px] border-2 border-dashed rounded-full border-neutral-300 dark:border-neutral-700">
           <img
-            src="/assets/images/rajin-main.jpeg"
+            src="/assets/images/rajin-darkbg.png"
             class="w-[265px] h-[265px] lg:w-[335px] lg:h-[335px] rounded-full object-cover"
             alt="Rajin Khan - Computer Science Student and Machine Learning Enthusiast"
             width="390"
