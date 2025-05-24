@@ -1,0 +1,523 @@
+---
+import Layout from "../../layouts/main.astro";
+import PageHeading from "../../components/page-heading.astro";
+
+const project = {
+  name: "DOZR",
+  description: "Real-time driver drowsiness detection system using YOLOv5 and OpenCV for road safety.",
+  image: "/assets/images/projects/dozr.png",
+  githubUrl: "https://github.com/rajin-khan/dozr",
+  externalUrl: "https://github.com/rajin-khan/dozr",
+  tags: [
+  ],
+  features: [
+    { name: "Real-time Detection", description: "Detects drowsiness using YOLOv5 via webcam.", icon: "🕒" },
+    { name: "Alert System", description: "Triggers alerts to prevent accidents.", icon: "🔔" },
+    { name: "Custom Training", description: "Fine-tune models with custom datasets.", icon: "🎯" },
+    { name: "CPU/GPU Support", description: "Compatible with both CPU and GPU for inference.", icon: "⚙️" }
+  ],
+  useCases: [
+    { name: "Road Safety", description: "Enhance driver safety by detecting drowsiness.", emoji: "🚗" },
+    { name: "Fleet Management", description: "Monitor drivers in commercial vehicles.", emoji: "🚛" },
+    { name: "Driver Training", description: "Use data to improve driver awareness.", emoji: "📚" },
+    { name: "Research", description: "Study drowsiness patterns with custom datasets.", emoji: "🔬" }
+  ],
+  roadmap: [
+    { name: "Interactive Dashboard", status: "Planned" },
+    { name: "Mobile App Support", status: "Planned" },
+    { name: "Voice-based Alerts", status: "Planned" },
+    { name: "Emergency Call Triggers", status: "Planned" }
+  ]
+};
+---
+
+<Layout title={project.name}>
+  <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
+    <style>
+      /* Custom Styles for DOZR Page */
+      .dozr-section {
+        margin-bottom: 2.5rem;
+      }
+
+      @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+      @keyframes slideInUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes glowPulse {
+        0%, 100% { 
+          box-shadow: 0 0 5px rgba(74, 222, 128, 0.3), 0 0 10px rgba(250, 204, 21, 0.3); 
+        }
+        50% { 
+          box-shadow: 0 0 15px rgba(74, 222, 128, 0.6), 0 0 20px rgba(250, 204, 21, 0.6); 
+        }
+      }
+
+      .glow-pulse {
+        animation: glowPulse 2s infinite ease-in-out;
+      }
+
+      /* Light mode subtle glow */
+      html:not(.dark) .glow-pulse {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        animation: none;
+      }
+
+      /* Dark mode maintains glow animation */
+      .dark .glow-pulse {
+        animation: glowPulse 2s infinite ease-in-out;
+      }
+
+      .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+      }
+
+      .slide-in-up {
+        animation: slideInUp 0.6s ease-out forwards;
+      }
+
+      .banner-image {
+        border: 2px solid transparent;
+        background: linear-gradient(45deg, #4ade80, #facc15);
+        border-radius: 1rem;
+        padding: 4px;
+        transition: transform 0.3s ease;
+      }
+
+      .banner-image:hover {
+        transform: scale(1.02);
+      }
+
+      .tags-container {
+        opacity: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .cta-buttons {
+        opacity: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+
+      @media (min-width: 640px) {
+        .cta-buttons {
+          flex-direction: row;
+        }
+      }
+
+      .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+        .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .feature-card, .use-case-card, .roadmap-card, .team-card {
+        border: 1px solid;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        transition: all 0.3s ease;
+        opacity: 1;
+        background-color: transparent;
+      }
+
+      /* Light mode card styles */
+      html:not(.dark) .feature-card,
+      html:not(.dark) .use-case-card,
+      html:not(.dark) .roadmap-card,
+      html:not(.dark) .team-card {
+        border-color: rgba(74, 222, 128, 0.2);
+        background-color: rgba(245, 245, 245, 0.5);
+      }
+
+      html:not(.dark) .feature-card:hover,
+      html:not(.dark) .use-case-card:hover,
+      html:not(.dark) .roadmap-card:hover,
+      html:not(.dark) .team-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(74, 222, 128, 0.5);
+        box-shadow: 0 5px 15px rgba(74, 222, 128, 0.2);
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+
+      /* Dark mode card styles */
+      .dark .feature-card,
+      .dark .use-case-card,
+      .dark .roadmap-card,
+      .dark .team-card {
+        border-color: rgba(250, 204, 21, 0.2);
+        background-color: rgba(40, 40, 40, 0.3);
+      }
+
+      .dark .feature-card:hover,
+      .dark .use-case-card:hover,
+      .dark .roadmap-card:hover,
+      .dark .team-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(250, 204, 21, 0.5);
+        box-shadow: 0 5px 15px rgba(250, 204, 21, 0.3);
+        background-color: rgba(60, 60, 60, 0.5);
+      }
+
+      .feature-card .icon, .use-case-card .emoji {
+        font-size: 1.5rem;
+        margin-right: 0.75rem;
+      }
+
+      /* Light mode icon colors */
+      html:not(.dark) .feature-card .icon,
+      html:not(.dark) .use-case-card .emoji {
+        color: #4ade80;
+      }
+
+      /* Dark mode icon colors */
+      .dark .feature-card .icon,
+      .dark .use-case-card .emoji {
+        color: #facc15;
+      }
+
+      .feature-card h3, .use-case-card h3, .roadmap-card h3, .team-card h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: inherit;
+      }
+
+      /* Light mode text colors */
+      html:not(.dark) .feature-card h3,
+      html:not(.dark) .use-case-card h3,
+      html:not(.dark) .roadmap-card h3,
+      html:not(.dark) .team-card h3 {
+        color: #1a1a1a;
+      }
+
+      html:not(.dark) .feature-card p,
+      html:not(.dark) .use-case-card p,
+      html:not(.dark) .roadmap-card p,
+      html:not(.dark) .team-card p {
+        color: #4a4a4a;
+      }
+
+      /* Dark mode text colors */
+      .dark .feature-card h3,
+      .dark .use-case-card h3,
+      .dark .roadmap-card h3,
+      .dark .team-card h3 {
+        color: #ffffff;
+      }
+
+      .dark .feature-card p,
+      .dark .use-case-card p,
+      .dark .roadmap-card p,
+      .dark .team-card p {
+        color: #d4d4d8;
+      }
+
+      .feature-card p, .use-case-card p, .roadmap-card p, .team-card p {
+        font-size: 0.875rem;
+      }
+
+      .roadmap-card .status {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.25rem 0.5rem;
+        border-radius: 1rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Status badge colors for both modes */
+      .roadmap-card .status {
+        color: #4ade80;
+        background: rgba(74, 222, 128, 0.1);
+      }
+
+      /* Light mode status badges */
+      html:not(.dark) .roadmap-card .status {
+        color: #4ade80;
+        background: rgba(74, 222, 128, 0.1);
+      }
+
+      .section-heading {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        position: relative;
+        opacity: 1;
+      }
+
+      /* Light mode heading color */
+      html:not(.dark) .section-heading {
+        color: #1a1a1a;
+      }
+
+      /* Dark mode heading color */
+      .dark .section-heading {
+        color: #ffffff;
+      }
+
+      .section-heading::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5rem;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(to right, #4ade80, #facc15);
+        border-radius: 1px;
+      }
+
+      @media (min-width: 640px) {
+        .section-heading {
+          font-size: 1.75rem;
+        }
+      }
+
+      .prose p {
+        margin-bottom: 1rem;
+      }
+
+      /* Light mode prose colors */
+      html:not(.dark) .prose p {
+        color: #4a4a4a;
+      }
+
+      html:not(.dark) .prose strong {
+        color: #1a1a1a;
+      }
+
+      /* Dark mode prose colors */
+      .dark .prose p {
+        color: #d4d4d8;
+      }
+
+      .dark .prose strong {
+        color: #ffffff;
+      }
+
+      .prose ul {
+        list-style-type: disc;
+        list-style-position: inside;
+        margin: 1rem 0;
+      }
+
+      .prose li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Light mode list colors */
+      html:not(.dark) .prose ul {
+        color: #4a4a4a;
+      }
+
+      /* Dark mode list colors */
+      .dark .prose ul {
+        color: #d4d4d8;
+      }
+
+      /* Team GitHub link colors */
+      html:not(.dark) .team-card a {
+        color: #4ade80;
+      }
+
+      html:not(.dark) .team-card a:hover {
+        color: #86efac;
+      }
+
+      .dark .team-card a {
+        color: #facc15;
+      }
+
+      .dark .team-card a:hover {
+        color: #fde047;
+      }
+    </style>
+
+    <!-- Main Section -->
+    <div class="dozr-section fade-in">
+      <PageHeading
+        title={project.name}
+        description={project.description}
+      />
+
+      <!-- Banner Image -->
+      <div class="my-4">
+        <img
+          src={project.image}
+          alt={project.name}
+          class="banner-image w-full h-auto rounded-lg aspect-[16/9] object-cover glow-pulse"
+        />
+      </div>
+
+      <!-- Tags -->
+      <div class="tags-container slide-in-up">
+        {project.tags.map((tag) => (
+          <span
+            class={`px-2 py-1 text-xs font-semibold rounded-lg bg-gradient-to-r ${tag.gradient} text-black`}
+          >
+            {tag.name}
+          </span>
+        ))}
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="cta-buttons slide-in-up" style="animation-delay: 0.2s;">
+        <a
+          href={project.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
+        >
+          View Project
+        </a>
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-900 dark:text-neutral-200 transition-all duration-300 hover:bg-gray-900 dark:hover:bg-neutral-200 hover:text-white dark:hover:text-neutral-900"
+        >
+          View on GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Overview Section (Paragraphs) -->
+    <div class="dozr-section">
+      <h2 class="section-heading slide-in-up">What is DOZR?</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          DOZR is a real-time drowsiness detection system designed to improve road safety by identifying drowsy drivers using <strong>YOLOv5</strong> and <strong>OpenCV</strong>. It processes webcam input to detect signs of drowsiness and triggers alerts to prevent accidents.
+        </p>
+        <p>
+          Built with <strong>PyTorch</strong>, DOZR supports custom dataset training and is compatible with both CPU and GPU for efficient inference. With high precision and recall, it offers a reliable solution for drivers, fleet managers, and researchers aiming to enhance safety and study drowsiness patterns.
+        </p>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="dozr-section">
+      <h2 class="section-heading slide-in-up">Key Features</h2>
+      <div class="features-grid">
+        {project.features.map((feature, index) => (
+          <div class="feature-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <div class="flex items-center">
+              <span class="icon">{feature.icon}</span>
+              <h3>{feature.name}</h3>
+            </div>
+            <p>{feature.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Use Cases Section -->
+    <div class="dozr-section">
+      <h2 class="section-heading slide-in-up">Perfect For</h2>
+      <div class="use-cases-grid">
+        {project.useCases.map((useCase, index) => (
+          <div class="use-case-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <span class="emoji">{useCase.emoji}</span>
+            <div>
+              <h3>{useCase.name}</h3>
+              <p>{useCase.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Technology Section (Paragraphs) -->
+    <div class="dozr-section">
+      <h2 class="section-heading slide-in-up">Technology & Architecture</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          DOZR leverages <strong>YOLOv5</strong> for real-time object detection, integrated with <strong>PyTorch</strong> for deep learning and <strong>OpenCV</strong> for computer vision tasks. The system processes webcam or video input to detect drowsy states, using annotated datasets created with <strong>LabelImg</strong>.
+        </p>
+        <p>
+          The architecture supports custom training with user-provided datasets and runs efficiently on both CPU and GPU. With a modular design, DOZR is extensible for future features like dashboards and mobile alerts, making it a versatile tool for road safety applications.
+        </p>
+      </div>
+    </div>
+
+    <!-- Roadmap Section -->
+    <div class="dozr-section">
+      <h2 class="section-heading slide-in-up">What's Next</h2>
+      <div class="roadmap-grid">
+        {project.roadmap.map((item, index) => (
+          <div class="roadmap-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <span class="status">{item.status}</span>
+            <h3>{item.name}</h3>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Final Call to Action -->
+    <div class="dozr-section">
+      <h2 class="section-heading slide-in-up">Get Started</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          DOZR is a powerful tool for enhancing road safety through AI-driven drowsiness detection. Explore the project on GitHub to try it out, contribute, or integrate it into your safety solutions.
+        </p>
+      </div>
+      <div class="cta-buttons slide-in-up" style="animation-delay: 0.4s;">
+        <a
+          href={project.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
+        >
+          Explore DOZR
+        </a>
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-900 dark:text-neutral-200 transition-all duration-300 hover:bg-gray-900 dark:hover:bg-neutral-200 hover:text-white dark:hover:text-neutral-900"
+        >
+          Contribute on GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Script for Animations -->
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('slide-in-up');
+            }
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.slide-in-up').forEach(element => {
+          observer.observe(element);
+        });
+
+        // Fallback: Ensure elements are visible after a short delay
+        setTimeout(() => {
+          document.querySelectorAll('.slide-in-up').forEach(element => {
+            element.classList.add('slide-in-up');
+          });
+        }, 1000);
+      });
+    </script>
+  </section>
+</Layout>

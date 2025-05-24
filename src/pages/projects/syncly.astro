@@ -1,0 +1,544 @@
+---
+import Layout from "../../layouts/main.astro";
+import PageHeading from "../../components/page-heading.astro";
+
+const project = {
+  name: "Syncly",
+  description: "Unified cloud file management platform with AI-powered, search, conversationality with files and multi-platform access.",
+  image: "/assets/images/projects/Syncly.png",
+  githubUrl: "https://github.com/rajin-khan/Syncly",
+  externalUrl: "https://github.com/rajin-khan/Syncly",
+  tags: [
+  ],
+  features: [
+    { name: "Multi-Cloud Support", description: "Manage files across Google Drive and Dropbox.", icon: "☁️" },
+    { name: "AI-Powered Search", description: "Search files with contextual AI assistance.", icon: "🔍" },
+    { name: "File Splitting", description: "Intelligently split and upload files to optimal drives.", icon: "✂️" },
+    { name: "Telegram Bot", description: "Interact with files via Telegram.", icon: "🤖" }
+  ],
+  useCases: [
+    { name: "Cloud Storage Management", description: "Unify and manage multiple cloud accounts.", emoji: "📂" },
+    { name: "Smart File Search", description: "Find files quickly with AI-driven search.", emoji: "🔎" },
+    { name: "Secure File Access", description: "Access files securely via web or Telegram.", emoji: "🔒" },
+    { name: "Storage Optimization", description: "Monitor and optimize storage usage.", emoji: "📊" }
+  ],
+  roadmap: [
+    { name: "Mobile App Rollout", status: "Planned" },
+    { name: "Railway Deployment", status: "Planned" },
+    { name: "Expanded Cloud Support", status: "Planned" },
+    { name: "Advanced AI Features", status: "Planned" }
+  ],
+  team: [
+    { name: "Rajin Khan", institution: "North South University", github: "https://github.com/rajin-khan" },
+    { name: "Ahnaf Ojayer", institution: "North South University", github: "https://github.com/0jayer" },
+    { name: "Rihal Mahmood", institution: "North South University", github: "https://github.com/RihalMahmood" }
+  ]
+};
+---
+
+<Layout title={project.name}>
+  <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
+    <style>
+      /* Custom Styles for Syncly Page */
+      .syncly-section {
+        margin-bottom: 2.5rem;
+      }
+
+      @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+      @keyframes slideInUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes glowPulse {
+        0%, 100% { 
+          box-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(209, 213, 219, 0.3); 
+        }
+        50% { 
+          box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 20px rgba(209, 213, 219, 0.6); 
+        }
+      }
+
+      .glow-pulse {
+        animation: glowPulse 2s infinite ease-in-out;
+      }
+
+      /* Light mode subtle glow */
+      html:not(.dark) .glow-pulse {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        animation: none;
+      }
+
+      /* Dark mode maintains glow animation */
+      .dark .glow-pulse {
+        animation: glowPulse 2s infinite ease-in-out;
+      }
+
+      .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+      }
+
+      .slide-in-up {
+        animation: slideInUp 0.6s ease-out forwards;
+      }
+
+      .banner-image {
+        border: 2px solid transparent;
+        background: linear-gradient(45deg, #ffffff, #e5e7eb);
+        border-radius: 1rem;
+        padding: 4px;
+        transition: transform 0.3s ease;
+      }
+
+      .banner-image:hover {
+        transform: scale(1.02);
+      }
+
+      .tags-container {
+        opacity: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .cta-buttons {
+        opacity: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+
+      @media (min-width: 640px) {
+        .cta-buttons {
+          flex-direction: row;
+        }
+      }
+
+      .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+        .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .feature-card, .use-case-card, .roadmap-card, .team-card {
+        border: 1px solid;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        transition: all 0.3s ease;
+        opacity: 1;
+        background-color: transparent;
+      }
+
+      /* Light mode card styles */
+      html:not(.dark) .feature-card,
+      html:not(.dark) .use-case-card,
+      html:not(.dark) .roadmap-card,
+      html:not(.dark) .team-card {
+        border-color: rgba(156, 163, 175, 0.2);
+        background-color: rgba(245, 245, 245, 0.5);
+      }
+
+      html:not(.dark) .feature-card:hover,
+      html:not(.dark) .use-case-card:hover,
+      html:not(.dark) .roadmap-card:hover,
+      html:not(.dark) .team-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(156, 163, 175, 0.5);
+        box-shadow: 0 5px 15px rgba(156, 163, 175, 0.2);
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+
+      /* Dark mode card styles */
+      .dark .feature-card,
+      .dark .use-case-card,
+      .dark .roadmap-card,
+      .dark .team-card {
+        border-color: rgba(209, 213, 219, 0.2);
+        background-color: rgba(40, 40, 40, 0.3);
+      }
+
+      .dark .feature-card:hover,
+      .dark .use-case-card:hover,
+      .dark .roadmap-card:hover,
+      .dark .team-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(209, 213, 219, 0.5);
+        box-shadow: 0 5px 15px rgba(209, 213, 219, 0.3);
+        background-color: rgba(60, 60, 60, 0.5);
+      }
+
+      .feature-card .icon, .use-case-card .emoji {
+        font-size: 1.5rem;
+        margin-right: 0.75rem;
+      }
+
+      /* Light mode icon colors */
+      html:not(.dark) .feature-card .icon,
+      html:not(.dark) .use-case-card .emoji {
+        color: #6b7280;
+      }
+
+      /* Dark mode icon colors */
+      .dark .feature-card .icon,
+      .dark .use-case-card .emoji {
+        color: #d1d5db;
+      }
+
+      .feature-card h3, .use-case-card h3, .roadmap-card h3, .team-card h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: inherit;
+      }
+
+      /* Light mode text colors */
+      html:not(.dark) .feature-card h3,
+      html:not(.dark) .use-case-card h3,
+      html:not(.dark) .roadmap-card h3,
+      html:not(.dark) .team-card h3 {
+        color: #1a1a1a;
+      }
+
+      html:not(.dark) .feature-card p,
+      html:not(.dark) .use-case-card p,
+      html:not(.dark) .roadmap-card p,
+      html:not(.dark) .team-card p {
+        color: #4a4a4a;
+      }
+
+      /* Dark mode text colors */
+      .dark .feature-card h3,
+      .dark .use-case-card h3,
+      .dark .roadmap-card h3,
+      .dark .team-card h3 {
+        color: #ffffff;
+      }
+
+      .dark .feature-card p,
+      .dark .use-case-card p,
+      .dark .roadmap-card p,
+      .dark .team-card p {
+        color: #d4d4d8;
+      }
+
+      .feature-card p, .use-case-card p, .roadmap-card p, .team-card p {
+        font-size: 0.875rem;
+      }
+
+      .roadmap-card .status {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.25rem 0.5rem;
+        border-radius: 1rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Status badge colors for both modes */
+      .roadmap-card .status {
+        color: #6b7280;
+        background: rgba(156, 163, 175, 0.1);
+      }
+
+      /* Light mode status badges */
+      html:not(.dark) .roadmap-card .status {
+        color: #6b7280;
+        background: rgba(156, 163, 175, 0.1);
+      }
+
+      .section-heading {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        position: relative;
+        opacity: 1;
+      }
+
+      /* Light mode heading color */
+      html:not(.dark) .section-heading {
+        color: #1a1a1a;
+      }
+
+      /* Dark mode heading color */
+      .dark .section-heading {
+        color: #ffffff;
+      }
+
+      .section-heading::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5rem;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(to right, #ffffff, #e5e7eb);
+        border-radius: 1px;
+      }
+
+      @media (min-width: 640px) {
+        .section-heading {
+          font-size: 1.75rem;
+        }
+      }
+
+      .prose p {
+        margin-bottom: 1rem;
+      }
+
+      /* Light mode prose colors */
+      html:not(.dark) .prose p {
+        color: #4a4a4a;
+      }
+
+      html:not(.dark) .prose strong {
+        color: #1a1a1a;
+      }
+
+      /* Dark mode prose colors */
+      .dark .prose p {
+        color: #d4d4d8;
+      }
+
+      .dark .prose strong {
+        color: #ffffff;
+      }
+
+      .prose ul {
+        list-style-type: disc;
+        list-style-position: inside;
+        margin: 1rem 0;
+      }
+
+      .prose li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Light mode list colors */
+      html:not(.dark) .prose ul {
+        color: #4a4a4a;
+      }
+
+      /* Dark mode list colors */
+      .dark .prose ul {
+        color: #d4d4d8;
+      }
+
+      /* Team GitHub link colors */
+      html:not(.dark) .team-card a {
+        color: #6b7280;
+      }
+
+      html:not(.dark) .team-card a:hover {
+        color: #4b5563;
+      }
+
+      .dark .team-card a {
+        color: #d1d5db;
+      }
+
+      .dark .team-card a:hover {
+        color: #f3f4f6;
+      }
+    </style>
+
+    <!-- Main Section -->
+    <div class="syncly-section fade-in">
+      <PageHeading
+        title={project.name}
+        description={project.description}
+      />
+
+      <!-- Banner Image -->
+      <div class="my-4">
+        <img
+          src={project.image}
+          alt={project.name}
+          class="banner-image w-full h-auto rounded-lg aspect-[16/9] object-cover glow-pulse"
+        />
+      </div>
+
+      <!-- Tags -->
+      <div class="tags-container slide-in-up">
+        {project.tags.map((tag) => (
+          <span
+            class={`px-2 py-1 text-xs font-semibold rounded-lg bg-gradient-to-r ${tag.gradient} text-black`}
+          >
+            {tag.name}
+          </span>
+        ))}
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="cta-buttons slide-in-up" style="animation-delay: 0.2s;">
+        <a
+          href={project.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
+        >
+          View Project
+        </a>
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-900 dark:text-neutral-200 transition-all duration-300 hover:bg-gray-900 dark:hover:bg-neutral-200 hover:text-white dark:hover:text-neutral-900"
+        >
+          View on GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Overview Section (Paragraphs) -->
+    <div class="syncly-section">
+      <h2 class="section-heading slide-in-up">What is Syncly?</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          Syncly is a unified cloud file management platform that simplifies the way you store, search, and manage files across multiple cloud services like Google Drive and Dropbox. With intelligent file splitting, AI-powered search, and multi-platform access via web and Telegram, Syncly streamlines your workflow.
+        </p>
+        <p>
+          Powered by <strong>FastAPI</strong>, <strong>React</strong>, and the <strong>Groq API</strong>, Syncly offers secure user management, real-time storage insights, and a conversational AI assistant that extracts relevant information from your files. Whether you're managing storage or searching for specific content, Syncly makes it effortless and secure.
+        </p>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="syncly-section">
+      <h2 class="section-heading slide-in-up">Key Features</h2>
+      <div class="features-grid">
+        {project.features.map((feature, index) => (
+          <div class="feature-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <div class="flex items-center">
+              <span class="icon">{feature.icon}</span>
+              <h3>{feature.name}</h3>
+            </div>
+            <p>{feature.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Use Cases Section -->
+    <div class="syncly-section">
+      <h2 class="section-heading slide-in-up">Perfect For</h2>
+      <div class="use-cases-grid">
+        {project.useCases.map((useCase, index) => (
+          <div class="use-case-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <span class="emoji">{useCase.emoji}</span>
+            <div>
+              <h3>{useCase.name}</h3>
+              <p>{useCase.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Technology Section (Paragraphs) -->
+    <div class="syncly-section">
+      <h2 class="section-heading slide-in-up">Technology & Architecture</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          Syncly is built with a modern tech stack, featuring <strong>FastAPI</strong> for the backend, <strong>Vite + React</strong> for the web frontend, and <strong>MongoDB</strong> for secure data storage. It integrates with Google Drive and Dropbox APIs for cloud storage management and uses the <strong>Groq API</strong> for AI-powered search and assistance.
+        </p>
+        <p>
+          The modular architecture ensures scalability, with OAuth 2.0 for secure cloud authentication, JWT for session management, and a Telegram bot for seamless interaction. The AI assistant leverages Llama models to provide context-aware responses, making file search and management smarter and more efficient.
+        </p>
+      </div>
+    </div>
+
+    <!-- Roadmap Section -->
+    <div class="syncly-section">
+      <h2 class="section-heading slide-in-up">What's Next</h2>
+      <div class="roadmap-grid">
+        {project.roadmap.map((item, index) => (
+          <div class="roadmap-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <span class="status">{item.status}</span>
+            <h3>{item.name}</h3>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="syncly-section">
+      <h2 class="section-heading slide-in-up">The Team</h2>
+      <div class="team-grid">
+        {project.team.map((member, index) => (
+          <div class="team-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <h3>{member.name}</h3>
+            <p>{member.institution}</p>
+            <a href={member.github} target="_blank" rel="noopener noreferrer" class="hover:underline">
+              View GitHub
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Final Call to Action -->
+    <div class="syncly-section">
+      <h2 class="section-heading slide-in-up">Get Started</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          Syncly is an innovative solution for unified cloud file management. Explore the project on GitHub to see how AI and cloud integration can transform the way you handle files.
+        </p>
+      </div>
+      <div class="cta-buttons slide-in-up" style="animation-delay: 0.4s;">
+        <a
+          href={project.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
+        >
+          Explore Syncly
+        </a>
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-900 dark:text-neutral-200 transition-all duration-300 hover:bg-gray-900 dark:hover:bg-neutral-200 hover:text-white dark:hover:text-neutral-900"
+        >
+          Contribute on GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Script for Animations -->
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('slide-in-up');
+            }
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.slide-in-up').forEach(element => {
+          observer.observe(element);
+        });
+
+        // Fallback: Ensure elements are visible after a short delay
+        setTimeout(() => {
+          document.querySelectorAll('.slide-in-up').forEach(element => {
+            element.classList.add('slide-in-up');
+          });
+        }, 1000);
+      });
+    </script>
+  </section>
+</Layout>

@@ -1,0 +1,543 @@
+---
+import Layout from "../../layouts/main.astro";
+import PageHeading from "../../components/page-heading.astro";
+
+const project = {
+  name: "DARKRUNNER",
+  description: "A thrilling 2D platformer game built with Java Swing, featuring pixel art and dynamic gameplay.",
+  image: "/assets/images/projects/DarkRunner.png",
+  githubUrl: "https://github.com/rajin-khan/DARKRUNNER",
+  externalUrl: "https://github.com/rajin-khan/DARKRUNNER",
+  tags: [
+  ],
+  features: [
+    { name: "Dynamic Obstacles", description: "Randomly generated ground and aerial threats.", icon: "⚡" },
+    { name: "Pixel Art Style", description: "Retro-styled visuals for an immersive experience.", icon: "🎨" },
+    { name: "Health System", description: "Three health points with real-time visual updates.", icon: "❤️" },
+    { name: "Background Music", description: "Custom soundtrack for an engaging experience.", icon: "🎵" }
+  ],
+  useCases: [
+    { name: "Casual Gaming", description: "Enjoy fast-paced fun in V1 mode.", emoji: "🎮" },
+    { name: "Challenge Seekers", description: "Tackle tougher obstacles in V2 mode.", emoji: "🏆" },
+    { name: "Retro Fans", description: "Experience nostalgic pixel art aesthetics.", emoji: "🕹️" },
+    { name: "Learning Java", description: "Study OOP and Swing through game dev.", emoji: "📚" }
+  ],
+  roadmap: [
+    { name: "Multiplayer Mode", status: "Planned" },
+    { name: "New Levels", status: "Planned" },
+    { name: "Custom Soundtracks", status: "Planned" },
+    { name: "Mobile Support", status: "Planned" }
+  ],
+  team: [
+    { name: "Rajin Khan", institution: "North South University", github: "https://github.com/rajin-khan" },
+    { name: "Saumik Saha Kabbya", institution: "North South University", github: "https://github.com/Kabbya04" }
+  ]
+};
+---
+
+<Layout title={project.name}>
+  <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
+    <style>
+      /* Custom Styles for DARKRUNNER Page */
+      .darkrunner-section {
+        margin-bottom: 2.5rem;
+      }
+
+      @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+      @keyframes slideInUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes glowPulse {
+        0%, 100% { 
+          box-shadow: 0 0 5px rgba(139, 92, 246, 0.3), 0 0 10px rgba(236, 72, 153, 0.3); 
+        }
+        50% { 
+          box-shadow: 0 0 15px rgba(139, 92, 246, 0.6), 0 0 20px rgba(236, 72, 153, 0.6); 
+        }
+      }
+
+      .glow-pulse {
+        animation: glowPulse 2s infinite ease-in-out;
+      }
+
+      /* Light mode subtle glow */
+      html:not(.dark) .glow-pulse {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        animation: none;
+      }
+
+      /* Dark mode maintains glow animation */
+      .dark .glow-pulse {
+        animation: glowPulse 2s infinite ease-in-out;
+      }
+
+      .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+      }
+
+      .slide-in-up {
+        animation: slideInUp 0.6s ease-out forwards;
+      }
+
+      .banner-image {
+        border: 2px solid transparent;
+        background: linear-gradient(45deg, #8b5cf6, #ec4899);
+        border-radius: 1rem;
+        padding: 4px;
+        transition: transform 0.3s ease;
+      }
+
+      .banner-image:hover {
+        transform: scale(1.02);
+      }
+
+      .tags-container {
+        opacity: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .cta-buttons {
+        opacity: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+
+      @media (min-width: 640px) {
+        .cta-buttons {
+          flex-direction: row;
+        }
+      }
+
+      .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+        .features-grid, .use-cases-grid, .roadmap-grid, .team-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .feature-card, .use-case-card, .roadmap-card, .team-card {
+        border: 1px solid;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        transition: all 0.3s ease;
+        opacity: 1;
+        background-color: transparent;
+      }
+
+      /* Light mode card styles */
+      html:not(.dark) .feature-card,
+      html:not(.dark) .use-case-card,
+      html:not(.dark) .roadmap-card,
+      html:not(.dark) .team-card {
+        border-color: rgba(139, 92, 246, 0.2);
+        background-color: rgba(245, 245, 245, 0.5);
+      }
+
+      html:not(.dark) .feature-card:hover,
+      html:not(.dark) .use-case-card:hover,
+      html:not(.dark) .roadmap-card:hover,
+      html:not(.dark) .team-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2);
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+
+      /* Dark mode card styles */
+      .dark .feature-card,
+      .dark .use-case-card,
+      .dark .roadmap-card,
+      .dark .team-card {
+        border-color: rgba(236, 72, 153, 0.2);
+        background-color: rgba(40, 40, 40, 0.3);
+      }
+
+      .dark .feature-card:hover,
+      .dark .use-case-card:hover,
+      .dark .roadmap-card:hover,
+      .dark .team-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(236, 72, 153, 0.5);
+        box-shadow: 0 5px 15px rgba(236, 72, 153, 0.3);
+        background-color: rgba(60, 60, 60, 0.5);
+      }
+
+      .feature-card .icon, .use-case-card .emoji {
+        font-size: 1.5rem;
+        margin-right: 0.75rem;
+      }
+
+      /* Light mode icon colors */
+      html:not(.dark) .feature-card .icon,
+      html:not(.dark) .use-case-card .emoji {
+        color: #8b5cf6;
+      }
+
+      /* Dark mode icon colors */
+      .dark .feature-card .icon,
+      .dark .use-case-card .emoji {
+        color: #ec4899;
+      }
+
+      .feature-card h3, .use-case-card h3, .roadmap-card h3, .team-card h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: inherit;
+      }
+
+      /* Light mode text colors */
+      html:not(.dark) .feature-card h3,
+      html:not(.dark) .use-case-card h3,
+      html:not(.dark) .roadmap-card h3,
+      html:not(.dark) .team-card h3 {
+        color: #1a1a1a;
+      }
+
+      html:not(.dark) .feature-card p,
+      html:not(.dark) .use-case-card p,
+      html:not(.dark) .roadmap-card p,
+      html:not(.dark) .team-card p {
+        color: #4a4a4a;
+      }
+
+      /* Dark mode text colors */
+      .dark .feature-card h3,
+      .dark .use-case-card h3,
+      .dark .roadmap-card h3,
+      .dark .team-card h3 {
+        color: #ffffff;
+      }
+
+      .dark .feature-card p,
+      .dark .use-case-card p,
+      .dark .roadmap-card p,
+      .dark .team-card p {
+        color: #d4d4d8;
+      }
+
+      .feature-card p, .use-case-card p, .roadmap-card p, .team-card p {
+        font-size: 0.875rem;
+      }
+
+      .roadmap-card .status {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.25rem 0.5rem;
+        border-radius: 1rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Status badge colors for both modes */
+      .roadmap-card .status {
+        color: #8b5cf6;
+        background: rgba(139, 92, 246, 0.1);
+      }
+
+      /* Light mode status badges */
+      html:not(.dark) .roadmap-card .status {
+        color: #8b5cf6;
+        background: rgba(139, 92, 246, 0.1);
+      }
+
+      .section-heading {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        position: relative;
+        opacity: 1;
+      }
+
+      /* Light mode heading color */
+      html:not(.dark) .section-heading {
+        color: #1a1a1a;
+      }
+
+      /* Dark mode heading color */
+      .dark .section-heading {
+        color: #ffffff;
+      }
+
+      .section-heading::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5rem;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(to right, #8b5cf6, #ec4899);
+        border-radius: 1px;
+      }
+
+      @media (min-width: 640px) {
+        .section-heading {
+          font-size: 1.75rem;
+        }
+      }
+
+      .prose p {
+        margin-bottom: 1rem;
+      }
+
+      /* Light mode prose colors */
+      html:not(.dark) .prose p {
+        color: #4a4a4a;
+      }
+
+      html:not(.dark) .prose strong {
+        color: #1a1a1a;
+      }
+
+      /* Dark mode prose colors */
+      .dark .prose p {
+        color: #d4d4d8;
+      }
+
+      .dark .prose strong {
+        color: #ffffff;
+      }
+
+      .prose ul {
+        list-style-type: disc;
+        list-style-position: inside;
+        margin: 1rem 0;
+      }
+
+      .prose li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Light mode list colors */
+      html:not(.dark) .prose ul {
+        color: #4a4a4a;
+      }
+
+      /* Dark mode list colors */
+      .dark .prose ul {
+        color: #d4d4d8;
+      }
+
+      /* Team GitHub link colors */
+      html:not(.dark) .team-card a {
+        color: #8b5cf6;
+      }
+
+      html:not(.dark) .team-card a:hover {
+        color: #a78bfa;
+      }
+
+      .dark .team-card a {
+        color: #ec4899;
+      }
+
+      .dark .team-card a:hover {
+        color: #f472b6;
+      }
+    </style>
+
+    <!-- Main Section -->
+    <div class="darkrunner-section fade-in">
+      <PageHeading
+        title={project.name}
+        description={project.description}
+      />
+
+      <!-- Banner Image -->
+      <div class="my-4">
+        <img
+          src={project.image}
+          alt={project.name}
+          class="banner-image w-full h-auto rounded-lg aspect-[16/9] object-cover glow-pulse"
+        />
+      </div>
+
+      <!-- Tags -->
+      <div class="tags-container slide-in-up">
+        {project.tags.map((tag) => (
+          <span
+            class={`px-2 py-1 text-xs font-semibold rounded-lg bg-gradient-to-r ${tag.gradient} text-black`}
+          >
+            {tag.name}
+          </span>
+        ))}
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="cta-buttons slide-in-up" style="animation-delay: 0.2s;">
+        <a
+          href={project.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
+        >
+          View Project
+        </a>
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-900 dark:text-neutral-200 transition-all duration-300 hover:bg-gray-900 dark:hover:bg-neutral-200 hover:text-white dark:hover:text-neutral-900"
+        >
+          View on GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Overview Section (Paragraphs) -->
+    <div class="darkrunner-section">
+      <h2 class="section-heading slide-in-up">What is DARKRUNNER?</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          DARKRUNNER is an exciting 2D platformer game built using <strong>Java Swing</strong>, designed to explore object-oriented programming and graphical user interfaces. Players navigate through a fast-paced environment filled with dynamic obstacles, all rendered in a nostalgic pixel art style.
+        </p>
+        <p>
+          The game features an endless scrolling background, smooth animations, and the forever classic 'Strobe' by deadmau5 to enhance the immersive experience. With responsive controls, a scaling difficulty system, and real-time collision detection, DARKRUNNER offers a thrilling challenge for players of all levels.
+        </p>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="darkrunner-section">
+      <h2 class="section-heading slide-in-up">Key Features</h2>
+      <div class="features-grid">
+        {project.features.map((feature, index) => (
+          <div class="feature-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <div class="flex items-center">
+              <span class="icon">{feature.icon}</span>
+              <h3>{feature.name}</h3>
+            </div>
+            <p>{feature.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Use Cases Section -->
+    <div class="darkrunner-section">
+      <h2 class="section-heading slide-in-up">Perfect For</h2>
+      <div class="use-cases-grid">
+        {project.useCases.map((useCase, index) => (
+          <div class="use-case-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <span class="emoji">{useCase.emoji}</span>
+            <div>
+              <h3>{useCase.name}</h3>
+              <p>{useCase.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Technology Section (Paragraphs) -->
+    <div class="darkrunner-section">
+      <h2 class="section-heading slide-in-up">Technology & Architecture</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          DARKRUNNER is built entirely with <strong>Java Swing</strong>, leveraging its graphical interface capabilities to create a responsive 2D platformer. A custom timer mechanism ensures smooth animations and real-time gameplay updates, while collision detection handles player-obstacle interactions.
+        </p>
+        <p>
+          The game incorporates pixel art assets and an endless scrolling background for visual immersion, paired with Java's audio systems for high-quality sound playback. The architecture emphasizes object-oriented principles, making it a great example for learning Java GUI development.
+        </p>
+      </div>
+    </div>
+
+    <!-- Roadmap Section -->
+    <div class="darkrunner-section">
+      <h2 class="section-heading slide-in-up">What's Next</h2>
+      <div class="roadmap-grid">
+        {project.roadmap.map((item, index) => (
+          <div class="roadmap-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <span class="status">{item.status}</span>
+            <h3>{item.name}</h3>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="darkrunner-section">
+      <h2 class="section-heading slide-in-up">The Team</h2>
+      <div class="team-grid">
+        {project.team.map((member, index) => (
+          <div class="team-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
+            <h3>{member.name}</h3>
+            <p>{member.institution}</p>
+            <a href={member.github} target="_blank" rel="noopener noreferrer" class="hover:underline">
+              View GitHub
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Final Call to Action -->
+    <div class="darkrunner-section">
+      <h2 class="section-heading slide-in-up">Get Started</h2>
+      <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
+        <p>
+          DARKRUNNER is a fun and challenging 2D platformer that brings retro gaming to life. Check out the project on GitHub to play, contribute, or learn more about Java Swing game development.
+        </p>
+      </div>
+      <div class="cta-buttons slide-in-up" style="animation-delay: 0.4s;">
+        <a
+          href={project.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-900 dark:bg-neutral-200 text-white dark:text-neutral-900 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-neutral-900 hover:text-gray-900 dark:hover:text-neutral-100 glow-pulse"
+        >
+          Explore DARKRUNNER
+        </a>
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block px-4 py-1.5 text-sm font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-900 dark:text-neutral-200 transition-all duration-300 hover:bg-gray-900 dark:hover:bg-neutral-200 hover:text-white dark:hover:text-neutral-900"
+        >
+          Contribute on GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Script for Animations -->
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('slide-in-up');
+            }
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.slide-in-up').forEach(element => {
+          observer.observe(element);
+        });
+
+        // Fallback: Ensure elements are visible after a short delay
+        setTimeout(() => {
+          document.querySelectorAll('.slide-in-up').forEach(element => {
+            element.classList.add('slide-in-up');
+          });
+        }, 1000);
+      });
+    </script>
+  </section>
+</Layout>
