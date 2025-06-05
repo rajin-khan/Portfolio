@@ -12,7 +12,7 @@ const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Rajin Khan",
-  "description": "CS student from Dhaka, Bangladesh focusing on Supervised Machine Learning",
+  "description": "Senior CS Student at North South University, from Dhaka, Bangladesh focusing on Generative AI and Deep Learning, proficient in Full-Stack Web Development and providing end-to-end AI solutions.",
   "url": "https://rajinkhan.com",
   "sameAs": [
     "https://github.com/rajin-khan",
@@ -20,21 +20,36 @@ const personSchema = {
     "https://www.instagram.com/raaajiin/",
     "https://www.facebook.com/rajinisdown/"
   ],
-  "jobTitle": "Senior Computer Science Student",
+  "jobTitle": "AI Engineer",
   "worksFor": {
-    "@type": "The Data Island",
-    "name": "Junior AI Engineer"
+    "@type": "Organization",
+    "name": "The Data Island",
+    "address": { "@type": "PostalAddress", "addressLocality": "Thomson Grand", "addressCountry": "Singapore" },
+    "description": "A company specializing in Private AI and Data Solutions",
+    "url": "https://thedataisland.com", // Optional: Add if the organization has a website
+    "sameAs": ["https://www.linkedin.com/company/the-data-island-tdi/"],
   },
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Dhaka",
     "addressCountry": "Bangladesh"
   },
-  "image": "https://rajinkhan.com/assets/images/rajins-banner.png" // Add image to schema
+  "image": "https://rajinkhan.com/assets/images/rajins-banner.png", // Add image to schema
+  "alumniOf": {
+  "@type": "School",
+  "name": "Sunnydale",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Dhaka",
+    "addressCountry": "Bangladesh"
+  },
+  "knowsAbout": ["Generative AI", "Deep Learning", "Machine Learning", "Computer Vision", "Graphic Design", "Full-Stack Web Development", "Prompt Engineering"],
+  "mainEntityOfPage": "https://rajinkhan.com/about"
+  }
 };
 
-const pageTitle = "Rajin Khan - Computer Science Portfolio | Generative AI & Web Development";
-const pageDescription = "Explore Rajin Khan’s portfolio, a Computer Science student from Dhaka, Bangladesh, specializing in Generative AI, Data Analytics, and Web Development projects.";
+const pageTitle = "Rajin Khan - CS Portfolio | GenAI & Web Dev";
+const pageDescription = "Explore Rajin Khan’s portfolio, a Computer Science student from Dhaka, Bangladesh, specializing in Generative AI, Deep Learning, Web Development, and more.";
 const ogImage = "/assets/images/rajins-banner.png"; // Update to new Open Graph image
 ---
 
