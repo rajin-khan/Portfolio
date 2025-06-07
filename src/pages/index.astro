@@ -1,5 +1,6 @@
 ---
 import Button from "../components/button.astro";
+import ChatButton from "../components/chatbutton.astro";
 import Projects from "../components/home/projects.astro";
 import Separator from "../components/home/separator.astro";
 import Writings from "../components/home/writings.astro";
@@ -49,7 +50,7 @@ const personSchema = {
 };
 
 const pageTitle = "Rajin Khan | GenAI & Web Dev";
-const pageDescription = "Explore Rajin Khan’s portfolio, a Senior CS student specializing in Generative AI, Deep Learning, Web Development, and more.";
+const pageDescription = "Explore Rajin Khan's portfolio, a Senior CS student specializing in Generative AI, Deep Learning, Web Development, and more.";
 const ogImage = "/assets/images/rajins-banner.png"; // Update to new Open Graph image
 ---
 
@@ -77,8 +78,9 @@ const ogImage = "/assets/images/rajins-banner.png"; // Update to new Open Graph 
           <li>Computer Vision</li>
           <li>and Graphic Design</li>
         </ul>
-        <div class="flex items-center gap-6">
-            <Button text="📝 View My Resume" link="/AdibsResume2025.pdf" />
+        <div class="flex items-center gap-4 flex-wrap">
+            <ChatButton />
+            <Button text="📝 Resume" link="/AdibsResume2025.pdf" />
             <div class="mt-5">
                 <StatusIndicator status="online" />
             </div>
