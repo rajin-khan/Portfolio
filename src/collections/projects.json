@@ -12,6 +12,17 @@
     ]
   },
   {
+    "name": "AIris*",
+    "description": "Wearable AI vision assistant for the blind.",
+    "image": "/assets/images/projects/AIrisBantiny.png",
+    "url": "https://github.com/rajin-khan/AIris",
+    "tags": [
+      { "name": "AI", "gradient": "from-green-400 to-blue-600" },
+      { "name": "Hardware", "gradient": "from-pink-500 to-yellow-600" },
+      { "name": "Multimodal", "gradient": "from-indigo-500 to-purple-600" }
+    ]
+  },
+  {
     "name": "Tessro",
     "description": "Real-Time video-sync and stream w/ chat.",
     "image": "/assets/images/projects/Tessro.png",
@@ -20,17 +31,6 @@
       { "name": "Streaming", "gradient": "from-indigo-500 to-purple-600" },
       { "name": "Peer-to-Peer", "gradient": "from-pink-500 to-yellow-600" },
       { "name": "Live Chat", "gradient": "from-green-400 to-blue-600" }
-    ]
-  },
-  {
-    "name": "GridGenius",
-    "description": "AI-Powered Energy Optimization System.",
-    "image": "/assets/images/projects/GridGenius.png",
-    "url": "/projects/gridgenius",
-    "tags": [
-      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "Chatbot", "gradient": "from-green-400 to-blue-600" },
-      { "name": "Research", "gradient": "from-indigo-500 to-purple-600" }
     ]
   },
   {
@@ -45,14 +45,14 @@
     ]
   },
   {
-    "name": "cash",
-    "description": "Custom shell exploring the Kernel and OS.",
-    "image": "/assets/images/projects/cash.png",
-    "url": "/projects/cash",
+    "name": "GridGenius",
+    "description": "AI-Powered Energy Optimization System.",
+    "image": "/assets/images/projects/GridGenius.png",
+    "url": "/projects/gridgenius",
     "tags": [
-      { "name": "Shell", "gradient": "from-green-400 to-blue-600" },
-      { "name": "CLI", "gradient": "from-indigo-500 to-purple-600" },
-      { "name": "C", "gradient": "from-blue-500 to-orange-500" }
+      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
+      { "name": "Chatbot", "gradient": "from-green-400 to-blue-600" },
+      { "name": "Research", "gradient": "from-indigo-500 to-purple-600" }
     ]
   },
   {
@@ -76,6 +76,17 @@
       { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
       { "name": "Cloud", "gradient": "from-green-400 to-blue-600" },
       { "name": "Universal", "gradient": "from-pink-500 to-blue-600" }
+    ]
+  },
+  {
+    "name": "cash",
+    "description": "Custom shell exploring the Kernel and OS.",
+    "image": "/assets/images/projects/cash.png",
+    "url": "/projects/cash",
+    "tags": [
+      { "name": "Shell", "gradient": "from-green-400 to-blue-600" },
+      { "name": "CLI", "gradient": "from-indigo-500 to-purple-600" },
+      { "name": "C", "gradient": "from-blue-500 to-orange-500" }
     ]
   },
   {
