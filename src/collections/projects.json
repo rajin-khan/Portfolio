@@ -2,7 +2,7 @@
   {
     "name": "PuffNotes",
     "description": "Cozy, Minimalist Note Taker with AI.",
-    "image": "/assets/images/projects/PuffNotes.png",
+    "image": "/assets/images/projects/puff.png",
     "url": "/projects/puffnotes",
     "tags": [
       { "name": "Productivity", "gradient": "from-green-400 to-yellow-600" },
@@ -92,7 +92,7 @@
   {
     "name": "DOZR",
     "description": "Real-time drowsiness detection w/ YOLO, OpenCV.",
-    "image": "/assets/images/projects/dozr.png",
+    "image": "/assets/images/projects/dozrtiny.png",
     "url": "/projects/dozr",
     "tags": [
       { "name": "YOLO", "gradient": "from-green-400 to-blue-600" },
