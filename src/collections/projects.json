@@ -1,5 +1,16 @@
 [
   {
+    "name": "Tessro",
+    "description": "Real-Time video-sync and stream w/ chat.",
+    "image": "/assets/images/projects/Tessro.png",
+    "url": "/projects/tessro",
+    "tags": [
+      { "name": "Streaming", "gradient": "from-indigo-500 to-purple-600" },
+      { "name": "Peer-to-Peer", "gradient": "from-pink-500 to-yellow-600" },
+      { "name": "Live Chat", "gradient": "from-green-400 to-blue-600" }
+    ]
+  },
+  {
     "name": "PuffNotes",
     "description": "Cozy, Minimalist Note Taker with AI.",
     "image": "/assets/images/projects/puff.png",
@@ -20,17 +31,6 @@
       { "name": "AI", "gradient": "from-green-400 to-blue-600" },
       { "name": "Hardware", "gradient": "from-pink-500 to-yellow-600" },
       { "name": "Multimodal", "gradient": "from-indigo-500 to-purple-600" }
-    ]
-  },
-  {
-    "name": "Tessro",
-    "description": "Real-Time video-sync and stream w/ chat.",
-    "image": "/assets/images/projects/Tessro.png",
-    "url": "/projects/tessro",
-    "tags": [
-      { "name": "Streaming", "gradient": "from-indigo-500 to-purple-600" },
-      { "name": "Peer-to-Peer", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "Live Chat", "gradient": "from-green-400 to-blue-600" }
     ]
   },
   {
