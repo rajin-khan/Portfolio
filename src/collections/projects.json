@@ -11,6 +11,17 @@
     ]
   },
   {
+    "name": "MillenAI",
+    "description": "Chatbot for OSS LLMs w/ Agentic Tooling.",
+    "image": "/assets/images/projects/MillenAI.png",
+    "url": "https://github.com/rajin-khan/MillenAI",
+    "tags": [
+      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
+      { "name": "ChatBot", "gradient": "from-indigo-500 to-purple-600" },
+      { "name": "Agentic", "gradient": "from-green-400 to-blue-600" }
+    ]
+  },
+  {
     "name": "PuffNotes",
     "description": "Cozy, Minimalist Note Taker with AI.",
     "image": "/assets/images/projects/puff.png",
