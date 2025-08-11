@@ -4,30 +4,30 @@ import PageHeading from "../../components/page-heading.astro";
 
 const project = {
   name: "MillenAI",
-  description: "Performant Chatbot for Open Source LLMs with Agentic Tooling (Web Search and Deep Reasoning).",
-  image: "/assets/images/projects/MillenAI.png", // Make sure to add 'ss2.png' to this path and rename it
+  description: "A high-performance AI workspace featuring the 'AI Council'—a multi-agent system for deep, collaborative reasoning.",
+  image: "/assets/images/projects/MillenAI.png",
   githubUrl: "https://github.com/rajin-khan/MillenAI",
   externalUrl: "https://millen-ai.vercel.app",
   tags: [],
   features: [
-    { name: "Multi-Model Support", description: "Seamlessly switch between Llama 3.1, GPT-OSS, and more.", icon: "🧠" },
-    { name: "Universal Web Search", description: "Enable real-time internet access for any model with a toggle.", icon: "🌐" },
-    { name: "Deep Reasoning Mode", description: "Advanced problem-solving for complex analysis.", icon: "⚙️" },
-    { name: "Persistent & Private", description: "Secure Firebase Auth ensures conversations are saved.", icon: "🔒" },
-    { name: "Live Token Counter", description: "Real-time visualization of context window usage.", icon: "📊" },
-    { name: "File Uploads", description: "Attach and process documents, images, and spreadsheets.", icon: "📎" }
+    { name: "The AI Council", description: "Convene specialized AI agents (Researcher, Analyst, Philosopher, Judge) to tackle complex problems from multiple angles.", icon: "🏛️" },
+    { name: "Advanced Document Processing", description: "Bring your own data. Process images (OCR), PDFs, DOCX, and more, directly in the chat context.", icon: "📎" },
+    { name: "Multi-Model Chat", description: "Seamlessly switch between top open-source models like Llama 3.1 and GPT-OSS in one conversation.", icon: "🧠" },
+    { name: "Agentic Tooling", description: "Equip any model with universal web search or engage deep reasoning mode for complex analysis.", icon: "🛠️" },
+    { name: "Persistent & Private", description: "Secure Firebase Auth saves your chat history. Your API keys never leave your browser.", icon: "🔒" },
+    { name: "Polished UX", description: "A meticulously crafted interface with a real-time token counter, rich Markdown, and stunning animations.", icon: "✨" }
   ],
   useCases: [
-    { name: "AI Power-Users", description: "A unified hub to compare and contrast top-tier LLMs.", emoji: "🚀" },
-    { name: "Developers", description: "A fast, open-source playground for API testing and integration.", emoji: "💻" },
-    { name: "Researchers", description: "Analyze model outputs with persistent, organized history.", emoji: "🔬" },
-    { name: "Content Creators", description: "Draft, refine, and brainstorm with advanced AI tools.", emoji: "✍️" }
+    { name: "Strategic Thinkers", description: "Get comprehensive, multi-faceted answers for complex business or research questions.", emoji: "🚀" },
+    { name: "Developers & Researchers", description: "A fast, open-source playground to test and compare advanced model outputs.", emoji: "🔬" },
+    { name: "Content Creators", description: "Go beyond simple drafts with an AI system that provides research, analysis, and diverse perspectives.", emoji: "✍️" },
+    { name: "AI Power-Users", description: "A unified hub to orchestrate and converse with the world's most powerful LLMs.", emoji: "💻" }
   ],
   roadmap: [
+    { name: "AI Council System", status: "Completed" },
+    { name: "Document Processing", status: "Completed" },
     { name: "Multi-API Support", status: "In Progress" },
     { name: "Streaming Responses", status: "In Progress" },
-    { name: "Collaborative Features", status: "Planned" },
-    { name: "Developer API Inspector", status: "Planned" }
   ],
   team: [
     { name: "Rajin Khan", institution: "North South University", github: "https://github.com/rajin-khan" }
@@ -209,7 +209,7 @@ const project = {
       .dark .team-card h3 {
         color: #ffffff;
       }
-
+      
       .roadmap-card .status {
         font-size: 0.75rem;
         font-weight: 500;
@@ -217,8 +217,16 @@ const project = {
         border-radius: 1rem;
         display: inline-block;
         margin-bottom: 0.5rem;
-        color: #facc15;
-        background: rgba(250, 204, 21, 0.1);
+      }
+
+      .roadmap-card.completed .status {
+        color: #34d399;
+        background: rgba(52, 211, 153, 0.1);
+      }
+
+      .roadmap-card.in-progress .status {
+        color: #60a5fa;
+        background: rgba(96, 165, 250, 0.1);
       }
 
       .section-heading {
@@ -251,6 +259,11 @@ const project = {
         title={project.name}
         description={project.description}
       />
+      <div class="tags-container">
+        {project.tags.map(tag => (
+          <span class="inline-block px-2 py-0.5 text-xs font-medium rounded-full border border-gray-300 dark:border-neutral-700 bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300">{tag}</span>
+        ))}
+      </div>
 
       <!-- Banner Image -->
       <div class="my-4">
@@ -287,13 +300,13 @@ const project = {
       <h2 class="section-heading slide-in-up">What is MillenAI?</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          I was drowning in tabs. Every day, I'd have ChatGPT open in one window, Claude in another, maybe Perplexity for research, and if I wanted to try a new model like Llama or Mistral, that meant yet another interface to learn. I was constantly losing track of conversations, forgetting which model gave me which answer, and worst of all, whenever I closed a tab, hours of valuable back-and-forth would just vanish. I'd think "didn't I have a great conversation about that project yesterday?" only to realize it was gone forever because I'd closed the browser.
+          I was drowning in tabs. ChatGPT in one, a new open-source model in another, Perplexity for research—my workflow was a mess of lost conversations and fragmented context. I built the first version of MillenAI to solve this, creating a unified workspace to seamlessly switch between models without losing momentum. It was a huge improvement, but a new, deeper problem emerged.
         </p>
         <p>
-          The breaking point came when I was working on a complex coding problem. I'd spent two hours with one model, then wanted to get a second opinion from another, but there was no way to continue the same conversation thread. I had to copy-paste context, re-explain everything, and basically start from scratch. That's when I realized we needed a unified AI workspace—one place where you could seamlessly switch between the world's best models without losing context, history, or momentum.
+          When I asked a complex question, like "Should our company invest in decentralized AI?", I realized every AI gave me a single, monolithic answer. One model would be optimistic about the tech, another cautious about the ethics, and a third would focus on the market data. Each answer was useful, but incomplete. To get a truly comprehensive view, I had to manually synthesize these different perspectives, a tedious and error-prone process.
         </p>
         <p>
-          MillenAI became my answer to this chaos. It's the AI interface I wished existed, where you can start a conversation with Llama, get a second opinion from GPT-OSS, maybe add web search capabilities with a simple toggle, all within the same chat thread. Your conversations are permanently saved and organized, your context never gets lost, and switching models feels as natural as changing fonts in a document. No more tab juggling, no more lost insights, no more starting over. Just pure, uninterrupted AI conversation flow.
+          That was the moment it all clicked. Why ask one AI to be a jack-of-all-trades when I could assemble a team of specialists? This led to the creation of the <strong>AI Council</strong>. Instead of just one response, MillenAI now convenes a panel of AIs: a web-savvy <strong>Researcher</strong>, a pragmatic <strong>Analyst</strong>, a contrarian <strong>Philosopher</strong>, and a decisive <strong>Judge</strong>. You watch them work in real-time as they research, debate, and synthesize their findings into a final, multi-faceted verdict. It's not just a chat; it's a collaborative intelligence system.
         </p>
       </div>
     </div>
@@ -335,17 +348,17 @@ const project = {
       <h2 class="section-heading slide-in-up">Technology & Architecture</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          MillenAI is built with a modern, high-performance tech stack. The frontend is powered by <strong>React 19+</strong> and <strong>Vite</strong>, delivering a lightning-fast user experience with concurrent features. Styling is handled with <strong>Tailwind CSS v4</strong>, while fluid animations are crafted using <strong>Framer Motion</strong>.
+          MillenAI is built with a modern, high-performance tech stack. The frontend is powered by <strong>React 19+</strong> and <strong>Vite</strong>, with styling from <strong>Tailwind CSS v4</strong> and fluid animations from <strong>Framer Motion</strong>. Global state for the AI Council is managed efficiently by <strong>Zustand</strong>.
         </p>
         <p>
-          For the backend and user management, it leverages <strong>Firebase Auth</strong> for secure Google Sign-In and <strong>Firestore</strong> for real-time, persistent storage of conversations. The core AI interactions are powered by the ultra-fast <strong>Groq API</strong>, with plans to integrate more providers like OpenRouter and Together AI in the future. The entire application is deployed globally on <strong>Vercel</strong> for low-latency access.
+          The backend leverages <strong>Firebase Auth</strong> for secure Google Sign-In and <strong>Firestore</strong> for real-time conversation storage. The AI Council's complex workflow is orchestrated by a <strong>Vercel Edge Function</strong>, which streams status updates to the client while making sequential calls to the ultra-fast <strong>Groq API</strong>.
         </p>
       </div>
     </div>
 
     <!-- Roadmap Section -->
     <div class="millenai-section">
-      <h2 class="section-heading slide-in-up">What's Next</h2>
+      <h2 class="section-heading slide-in-up">Project Status</h2>
       <div class="roadmap-grid">
         {project.roadmap.map((item, index) => (
           <div class={`roadmap-card slide-in-up ${item.status.toLowerCase().replace(' ', '-')}`} style={`animation-delay: ${0.2 * (index + 1)}s;`}>
@@ -356,28 +369,12 @@ const project = {
       </div>
     </div>
 
-    <!-- Team Section -->
-    <div class="millenai-section">
-      <h2 class="section-heading slide-in-up">The Team</h2>
-      <div class="team-grid" style="grid-template-columns: 1fr;">
-        {project.team.map((member, index) => (
-          <div class="team-card slide-in-up" style={`animation-delay: ${0.2 * (index + 1)}s;`}>
-            <h3>{member.name}</h3>
-            <p>{member.institution}</p>
-            <a href={member.github} target="_blank" rel="noopener noreferrer" class="hover:underline">
-              View GitHub
-            </a>
-          </div>
-        ))}
-      </div>
-    </div>
-
     <!-- Final Call to Action -->
     <div class="millenai-section">
       <h2 class="section-heading slide-in-up">Get Started</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          Ready to experience the future of AI conversation? Launch the app to start chatting or dive into the open-source codebase on GitHub to contribute.
+          Ready to experience a smarter way to interact with AI? Launch the app to convene your own AI Council or dive into the open-source codebase on GitHub to contribute.
         </p>
       </div>
       <div class="cta-buttons slide-in-up" style="animation-delay: 0.4s;">

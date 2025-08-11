@@ -12,7 +12,7 @@
   },
   {
     "name": "MillenAI",
-    "description": "Chatbot for OSS LLMs w/ Agentic Tooling.",
+    "description": "AI Workspace with Multi Agent Workflows.",
     "image": "/assets/images/projects/MillenAI.png",
     "url": "/projects/millenai",
     "tags": [
