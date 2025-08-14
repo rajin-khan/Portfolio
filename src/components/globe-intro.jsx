@@ -214,7 +214,7 @@ const GlobeIntro = () => {
       </div>
       {!isReady && (
         <div className="absolute inset-0 z-30 flex items-center justify-center bg-neutral-950">
-          <p className="text-white animate-pulse">Initializing quantum realm...</p>
+          <p className="text-white animate-pulse">Locating Rajin...</p>
         </div>
       )}
     </div>
