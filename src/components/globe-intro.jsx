@@ -31,15 +31,15 @@ const GlobeIntro = () => {
     // Texture Loading
     const textureLoader = new TextureLoader();
     const profileTexture = textureLoader.load('/assets/images/rajin-main.jpeg');
-
-    // Create a new group for the globe and its wireframe to apply grayscale
+    
+    // Create a new group for the globe and its wireframe
     const globeGroup = new THREE.Group();
     scene.add(globeGroup);
 
     // Earth Sphere
     const earthGeometry = new THREE.SphereGeometry(1.5, 64, 64);
     const earthMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
+      color: 0xffffff, // Base color, will be covered by texture
       bumpScale: 0.02,
       metalness: 0.1,
       roughness: 0.9,
@@ -76,12 +76,11 @@ const GlobeIntro = () => {
     globeGroup.add(wireframe);
 
     // --- IMAGE POSITION FINE-TUNING ---
-    // Adjust these values to move the image spherically AROUND the pin.
-    const imageOrbitAngle = 1;  // degrees: Rotates left/right around the pin (0 = front)
-    const imageTiltAngle = 0;   // degrees: Tilts the image up or down
-    const imageDistance = 0.1; // How far the image is from the pin head's center
+    const imageOrbitAngle = 1;
+    const imageTiltAngle = 0;
+    const imageDistance = 0.1;
 
-    // Profile Image for Pin (Now in COLOR)
+    // Profile Image for Pin
     const imgGeometry = new THREE.CircleGeometry(0.12, 32);
     const imgMaterial = new THREE.MeshBasicMaterial({
       map: profileTexture,
@@ -90,9 +89,9 @@ const GlobeIntro = () => {
       side: THREE.DoubleSide,
     });
     const imgPlane = new THREE.Mesh(imgGeometry, imgMaterial);
-
+    
+    // Re-added fix for image orientation
     imgPlane.rotation.z = Math.PI;
-    // Position the image out from the pivot point
     imgPlane.position.z = imageDistance;
 
     // Create a pivot for the image to achieve spherical rotation
@@ -107,12 +106,11 @@ const GlobeIntro = () => {
     const headMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 });
     const head = new THREE.Mesh(headGeometry, headMaterial);
     pinGroup.add(head);
-    head.add(imagePivot); // Attach the image pivot to the pin head
+    head.add(imagePivot);
 
     // --- PIN POSITION FINE-TUNING ---
-    // Adjust these values in DEGREES to move the pin along the globe's surface.
-    const latOffsetDegrees = 0.0; // Positive moves North (up), Negative moves South (down)
-    const lonOffsetDegrees = 90.0; // Positive moves East (right), Negative moves West (left)
+    const latOffsetDegrees = 0.0;
+    const lonOffsetDegrees = 90.0;
     
     const baseLat = 23.8103;
     const baseLon = 90.4125;
@@ -120,7 +118,6 @@ const GlobeIntro = () => {
 
     const finalLat = baseLat + latOffsetDegrees;
     const finalLon = baseLon + lonOffsetDegrees;
-
     const finalLatRad = finalLat * (Math.PI / 180);
     const finalLonRad = finalLon * (Math.PI / 180);
 
@@ -129,11 +126,11 @@ const GlobeIntro = () => {
     pinGroup.position.copy(pinPosition);
     pinGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), pinPosition.clone().normalize());
     pinGroup.scale.set(0, 0, 0);
-    globeGroup.add(pinGroup); // Attach pin to the globe group
+    globeGroup.add(pinGroup);
 
     // Set initial rotation of the Earth to center the final pin position
     const initialRotationY = -finalLonRad + Math.PI + Math.PI / 2.5 + 1; 
-    const initialRotationX = finalLatRad + 0.05; // Positive value tilts North Pole towards camera (downwards)
+    const initialRotationX = finalLatRad + 0.05;
     
     globeGroup.rotation.y = initialRotationY;
     globeGroup.rotation.x = initialRotationX;
@@ -191,7 +188,9 @@ const GlobeIntro = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden bg-neutral-950 flex items-center">
+    // --- THIS IS THE FIX ---
+    // The "bg-neutral-950" class has been removed from the line below.
+    <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden flex items-center">
       <div 
         className={`relative w-full h-full flex items-center justify-center transition-transform duration-1000 ease-in-out
                     ${animationPhase === 'panned' ? 'md:translate-x-[-20%]' : 'translate-x-0'}`}
