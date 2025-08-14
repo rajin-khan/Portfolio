@@ -149,7 +149,7 @@ const GlobeIntro = () => {
       const elapsed = clock.getElapsedTime();
 
       // Constant gentle rotation
-      globeGroup.rotation.y += 0.001;
+      globeGroup.rotation.y += 0.004;
 
       // Pin animation
       if (elapsed > 0.5 && animationPhase === 'initial') {
