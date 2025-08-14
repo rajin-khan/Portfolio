@@ -15,8 +15,9 @@ sed -i.bak "s/<StatusIndicator status=\"[a-zA-Z]*\" \/>/<StatusIndicator status=
 echo "Status updated in $FILE_PATH."
 
 # --- Git Commands ---
-echo "Adding, committing, and pushing changes..."
+echo "Pulling, Adding, committing, and pushing changes..."
 
+git pull
 git add "$FILE_PATH"
 git commit -m "$COMMIT_MESSAGE"
 git push
