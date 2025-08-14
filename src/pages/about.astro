@@ -1,26 +1,16 @@
 ---
 import experiences from "../collections/experiences.json";
 import AboutExperience from "../components/about-experience.astro";
-import PageHeading from "../components/page-heading.astro";
 import Layout from "../layouts/main.astro";
 import BentoImageSwitcher from "../components/bento-image-switcher.astro";
+import GlobeIntro from "../components/globe-intro.jsx";
 ---
 
 <Layout title="About Me">
+  <!-- The New 3D Globe Intro Component -->
+  <GlobeIntro client:load />
+
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
-    <PageHeading
-      title="About Me"
-      description="Hey! I'm Rajin Khan, a Computer Science student from Dhaka, Bangladesh. I'm proficient with Generative AI, Deep Learning, Web Development, and Graphic Design too! (My formal name is Adib Ar Rahman Khan, in case my resume confused you.)"
-    />
-
-    <BentoImageSwitcher />
-
-    <h2 class="mb-2 text-2xl font-bold dark:text-neutral-200">Short Bio</h2>
-    <p
-      class="text-sm leading-6 text-gray-600 dark:text-neutral-400 sm:leading-7 lg:leading-8 sm:text-base lg:text-lg"
-    >
-        GenAI expert, Full Stack Dev, Design Perfectionist.
-    </p>
 
     <h2
       class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200"
@@ -44,7 +34,7 @@ import BentoImageSwitcher from "../components/bento-image-switcher.astro";
         })
       }
     </div>
-
+<!-- 
     <div class="morphing-container">
         <div class="background-text">rajin khan</div>
         <div class="blob"></div>
@@ -59,7 +49,10 @@ import BentoImageSwitcher from "../components/bento-image-switcher.astro";
         <div class="blob"></div>
         <div class="blob"></div>
         <div class="blob"></div>
-    </div>
+    </div> -->
+
+    <!-- The content now starts here -->
+    <BentoImageSwitcher />
 
     <h2 class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200">Down to Connect?</h2>
     <p
@@ -73,5 +66,6 @@ import BentoImageSwitcher from "../components/bento-image-switcher.astro";
         >email</a
       > and I'll get back to you STAT.
     </p>
+
   </section>
 </Layout>
