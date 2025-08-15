@@ -188,7 +188,6 @@ const GlobeIntro = () => {
   }, []);
 
   return (
-    // --- THIS IS THE FIX ---
     // The "bg-neutral-950" class has been removed from the line below.
     <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden flex items-center">
       <div 
@@ -203,10 +202,10 @@ const GlobeIntro = () => {
                       ${animationPhase === 'panned' ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}
       >
         <div className="text-left max-w-md">
-          <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-5xl lg:text-6xl">
             About Me
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-white md:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-neutral-600 dark:text-white md:text-lg">
             Hey! I'm Rajin Khan, a Computer Science student from Dhaka, Bangladesh. I'm proficient with Generative AI, Deep Learning, Web Development, and Graphic Design too! (My formal name is Adib Ar Rahman Khan, in case my resume confused you.)
           </p>
         </div>
