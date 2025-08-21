@@ -78,7 +78,7 @@ That side project you keep postponing? That app idea you sketched six months ago
 
 🎙️ **Ready to stop making excuses and start building?**
 
-💬 Share what project you've been postponing in the comments, let's hold each other accountable!
+💬 **Share what project you've been postponing in the comments, let's hold each other accountable!**
 
 📲 **Follow along for more constraint-driven development insights!**
 
