@@ -58,7 +58,7 @@ While LLMs live in text land, the real world has **gravity, momentum, and conseq
 
 **Neuromorphic chips** mimic how brains work, using **50x less energy** than traditional AI. Imagine AI running efficiently on your phone, tiny Raspberry Pis, or other small devices instead of burning through server farms.
 
-The best part? Imagine ALL this as **On-device AI** means instant responses, complete privacy, and no monthly subscription fees.
+The best part? Imagine ALL this as **On-device AI**, which means instant responses, complete privacy, and no monthly subscription fees.
 
 ---
 
