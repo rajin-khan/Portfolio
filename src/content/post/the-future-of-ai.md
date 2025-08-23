@@ -4,7 +4,6 @@ description: "Why the smartest investors are moving beyond Large Language Models
 date: 2025-08-23
 tags:
   - "AI"
-  - "Technology"
   - "Innovation"
   - "Future"
 image: "/assets/images/posts/aibllm.png"
