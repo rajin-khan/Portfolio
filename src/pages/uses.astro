@@ -2,29 +2,43 @@
 import Layout from "../layouts/main.astro";
 import PageHeading from "../components/page-heading.astro";
 
-const usesData = {
+// Define a type for a single "uses" item for type safety
+interface UsesItem {
+  name: string;
+  details?: string;
+  description: string;
+  coords?: { x: number; y: number };
+}
+
+// Define a type for an item that is guaranteed to have coordinates
+type InteractiveItem = UsesItem & { coords: { x: number; y: number } };
+
+const usesData: Record<string, UsesItem[]> = {
   workstation: [
-    { name: "MacBook Air 13\"", details: "M1 Air 2020, 16GB Memory, 256GB SSD", description: "This MacBook is one of the best investments I've ever made. I bought the space gray version, and it's been more than enough to meet my coding requirements." },
-    { name: "Raspberry Pi 5", details: "Full Kit, 16GB Memory, 64GB SD", description: "I got the Pi with a friend for my Final Year Project, but it's been very handy in helping us learn about Automation, Self-Hosting, and a lot more!" },
-    { name: "Xiaomi Redmi A27Q", details: "27 Inch, QHD 2K", description: "Probably my favourite purchase ever, the size, the colors, everything is perfect." },
-    { name: "Logitech Pebble Mouse", details: "White", description: "This was a gift from my lovely girlfriend, so it's one of my most prized possessions. I love the minimal, sleek design, and how lightweight it is (Do not scream at me about ergonomics)." },
-    { name: "Fenda F&D F580X", details: "2 Tweeters, 1 Sub Woofer", description: "I like speakers with good bass, and this one comes with a separate Sub Woofer. It's held up well, for over 7 years now." },
-    { name: "Royal Kludge RK71", details: "RGB Backlight, Brown Switches", description: "Also a gift from my beautiful girlfriend! It's my first mechanical keyboard, and I've been loving it a lot. I am yet to customize the full thing." }
+    { name: "MacBook Air 13\"", details: "M1 Base 2020, 16GB Memory, 256GB SSD", description: "This MacBook is one of the best investments I've ever made. I bought the space gray version, and it's been more than enough to meet my coding requirements.", coords: { x: 20, y: 60 } },
+    { name: "MacBook Pro 13\"", details: "Intel i5, 2015, 8GB Memory, 128GB SSD", description: "My trusty old machine, now repurposed into a full-time home server for automation and media.", coords: { x: 35, y: 64.7 }  },
+    { name: "Raspberry Pi 5", details: "Full Kit, 16GB Memory, 64GB SD", description: "I got the Pi with a friend for my Final Year Project, but it's been very handy in helping us learn about Automation, Self-Hosting, and a lot more!", coords: { x: 91.5, y: 95 } },
+    { name: "Xiaomi Redmi A27Q", details: "27 Inch, QHD 2K", description: "Probably my favourite purchase ever, the size, the colors, everything is perfect.", coords: { x: 54.5, y: 26 } },
+    { name: "Logitech Pebble Mouse", details: "White", description: "This was a gift from my lovely girlfriend, so it's one of my most prized possessions. I love the minimal, sleek design, and how lightweight it is (Do not scream at me about ergonomics).", coords: { x: 71, y: 92 } },
+    { name: "Fenda F&D F580X", details: "2 Tweeters, 1 Sub Woofer", description: "I like speakers with good bass, and this one comes with a separate Sub Woofer. It's held up well, for over 7 years now.", coords: { x: 98.2, y: 51.2 } },
+    { name: "Royal Kludge RK71", details: "RGB Backlight, Brown Switches", description: "Also a gift from my beautiful girlfriend! It's my first mechanical keyboard, and I've been loving it a lot. I am yet to customize the full thing.", coords: { x: 49, y: 81 } }
   ],
   accessories: [
-    { name: "Bostitch Office Lamp", description: "A must-have, provides adequate backlighting for my Monitor." },
-    { name: "AirPods Pro (2nd Generation)", description: "Can't really work outside without Lofi Jazz, or Yeat (no in between)." },
-    { name: "Hoco W35 Max", details: "I made the stickers myself.", description: "I mostly use these for listening to Podcasts or watching stuff on Youtube, as they're not really heave on the Bass." },
-    { name: "Scented Candle", details: "Miniso (Vanilla Spice)", description: "Sometimes when I really need to wind down, nothing beats getting on a call with my grilfriend, getting each other food, lighting up these candles, and binge watching stuff together." }
+    { name: "Bostitch Office Lamp", description: "A must-have, provides adequate backlighting for my Monitor.", coords: { x: 26.5, y: 10 } },
+    { name: "Kaloc Monitor Arm", description: "My favorite gift ever (also from my amazing girlfriend). This single arm has changed my entire setup.", coords: { x: 26.5, y: 10 } },
+    { name: "AirPods Pro (2nd Generation)", description: "Can't really work outside without Lofi Jazz, or Yeat (no in between).", coords: { x: 49.5, y: 61.4 } },
+    { name: "Hoco W35 Max", details: "I made the stickers myself.", description: "I mostly use these for listening to Podcasts or watching stuff on Youtube, as they're not really heave on the Bass.", coords: { x: 84, y: 77 } },
+    { name: "Scented Candle", details: "Miniso (Vanilla Spice)", description: "Sometimes when I really need to wind down, nothing beats getting on a call with my grilfriend, getting each other food, lighting up these candles, and binge watching stuff together.", coords: { x: 87.3, y: 66.5 }  },
+    { name: "Transcend M3", details: "1TB HDD", description: "My primary storage for Media, Backups, and everything else. It's held up for over 5 years!", coords: { x: 7.5, y: 79.8 }  }
   ],
   figures: [
     { name: "Kuromi Plushie", details: "Light Colorway", description: "My girlfriend won this for me at a claw machine game!" },
-    { name: "Roronoa Zoro", description: "I got this action figure as a gift from all my friends on my 24th." },
+    { name: "Roronoa Zoro", description: "I got this action figure as a gift from all my friends on my 24th."},
     { name: "Portgas D. Ace", description: "First action figure I ever got, a gift from my girlfriend too!" }
   ],
   applications: [
     { name: "Arc", details: "Daily Browser", description: "My daily driver, coding browser, all in one. Arc's UX is simply unbeatable. Pity they moved on to Dia, but I'll be sticking to this browser till Zen catches up." },
-    { name: "VSCode", details: "Code Editor", description: "I don't like Cursor. Copilot is free and open source, and I have local models running. I started coding on this Editor, and haven't switched since."  },
+    { name: "VSCode", details: "Code Editor", description: "I don't like Cursor.Copilot is free and open source, and I have local models running. I started coding on this Editor, and haven't switched since."  },
     { name: "iTerm2", details: "Terminal", description: "Classic, easy, smooth. I tried Ghostty, but ran into a lot of issues when SSH-ing into other machines, so I haven't been tempted to switch." },
     { name: "Raycast", details: "Spotlight Alternative", description: "This is a must-have. The only software missing on Macs by default. I also use Raycast for AI Chat." }
   ],
@@ -33,32 +47,235 @@ const usesData = {
     { name: "Nothing else, really.", description: "I self host all my media and use open source tools. I like the freedom it gives me." }
   ]
 };
+
+const hasCoords = (item: UsesItem): item is InteractiveItem => !!item.coords;
+const setupDots = Object.values(usesData).flat().filter(hasCoords);
 ---
 
 <Layout title="My Daily Uses">
-  <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
+  <section class="relative z-20 max-w-4xl mx-auto my-12 px-7 lg:px-0">
     <PageHeading
       title="My Daily Uses"
       description="A peek into my workspace and the tools I use every day to build, design, and create."
     />
 
-    <div class="mt-16 space-y-16">
+    <div class="interactive-setup-container mt-16 mb-20">
+      <div class="image-container">
+        <img 
+          src="/assets/images/setup.png" 
+          alt="My workspace setup" 
+          class="setup-visual" 
+        />
+        {setupDots.map(dot => (
+          <div 
+            class="dot" 
+            style={`top: ${dot.coords.y}%; left: ${dot.coords.x}%;`}
+            data-tooltip={`${dot.name}${dot.details ? '|' + dot.details : ''}`}
+          ></div>
+        ))}
+        <div class="tooltip" id="tooltip">
+          <div class="tooltip-title"></div>
+          <div class="tooltip-details"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="space-y-16">
       {Object.entries(usesData).map(([category, items]) => (
-        <div>
-          <h2 class="text-2xl font-bold dark:text-neutral-100 border-b border-neutral-700/60 pb-2 mb-8 capitalize">
-            {category}
-          </h2>
-          <ul class="space-y-8">
-            {items.map(item => (
-              <li>
-                <h3 class="font-semibold text-lg text-neutral-100">{item.name}</h3>
-                {item.details && <p class="text-sm text-neutral-500 -mt-1">{item.details}</p>}
-                {item.description && <p class="mt-2 text-neutral-400 max-w-prose">{item.description}</p>}
-              </li>
-            ))}
-          </ul>
+        <div class="grid grid-cols-1 md:grid-cols-4 md:gap-8">
+          <div class="md:col-span-1">
+            <h2 class="text-2xl font-bold dark:text-neutral-100 capitalize">
+              {category}
+            </h2>
+          </div>
+          <div class="md:col-span-3 mt-4 md:mt-0">
+            <ul class="space-y-8">
+              {items.map(item => (
+                <li>
+                  <h3 class="font-semibold text-lg text-neutral-100">{item.name}</h3>
+                  {item.details && <p class="text-sm text-neutral-500 -mt-1">{item.details}</p>}
+                  {item.description && <p class="mt-2 text-neutral-400 max-w-prose">{item.description}</p>}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       ))}
     </div>
   </section>
+</Layout>
+
+<style>
+.interactive-setup-container {
+  max-width: 900px;
+  margin: 2rem auto;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  border: 1px solid #27272a;
+  aspect-ratio: 16 / 10; /* A bit taller */
+}
+
+.setup-visual {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1.5px solid rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+  z-index: 10;
+  animation: dot-pulse 3s infinite ease-in-out;
+}
+
+.dot:hover {
+  transform: translate(-50%, -50%) scale(1.4);
+  background: white;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  animation-play-state: paused;
+}
+
+@keyframes dot-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+}
+
+.tooltip {
+  position: absolute;
+  background: rgba(23, 23, 23, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 14px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  z-index: 20;
+  max-width: 280px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.tooltip.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.tooltip-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.tooltip-details {
+  color: #a3a3a3;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .dot {
+    width: 12px;
+    height: 12px;
+  }
+  .tooltip {
+    padding: 8px 12px;
+    max-width: 200px;
+  }
+  .tooltip-title {
+    font-size: 0.85rem;
+  }
+  .tooltip-details {
+    font-size: 0.75rem;
+  }
+}
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const dots = document.querySelectorAll<HTMLElement>('.dot');
+    const tooltip = document.getElementById('tooltip') as HTMLElement | null;
+    if (!tooltip) return;
+
+    const tooltipTitle = tooltip.querySelector<HTMLElement>('.tooltip-title');
+    const tooltipDetails = tooltip.querySelector<HTMLElement>('.tooltip-details');
+
+    if (!tooltipTitle || !tooltipDetails) return;
+
+    dots.forEach(dot => {
+      dot.addEventListener('mouseenter', function() {
+        const tooltipData = this.getAttribute('data-tooltip');
+        if (tooltipData) {
+          const [title, details] = tooltipData.split('|');
+          tooltipTitle.textContent = title;
+          tooltipDetails.style.display = details ? 'block' : 'none';
+          if(details) {
+            tooltipDetails.textContent = details;
+          }
+          
+          positionTooltip(this, tooltip);
+          tooltip.classList.add('show');
+        }
+      });
+
+      dot.addEventListener('mouseleave', function() {
+        tooltip.classList.remove('show');
+      });
+    });
+
+    function positionTooltip(dot: HTMLElement, tooltipEl: HTMLElement) {
+      const container = document.querySelector('.image-container');
+      if (!container) return;
+      const containerRect = container.getBoundingClientRect();
+      
+      const dotRect = dot.getBoundingClientRect();
+      
+      tooltipEl.style.visibility = 'hidden';
+      tooltipEl.style.display = 'block';
+      const tooltipRect = tooltipEl.getBoundingClientRect();
+      tooltipEl.style.display = '';
+      tooltipEl.style.visibility = '';
+
+      let top = dotRect.top - containerRect.top - tooltipRect.height - 15;
+      let left = dotRect.left - containerRect.left + (dotRect.width / 2) - (tooltipRect.width / 2);
+
+      if (top < 0) {
+        top = dotRect.top - containerRect.top + dotRect.height + 15;
+      }
+      
+      if (left < 10) {
+        left = 10;
+      }
+      
+      if (left + tooltipRect.width > containerRect.width) {
+        left = containerRect.width - tooltipRect.width - 10;
+      }
+
+      tooltipEl.style.left = `${left}px`;
+      tooltipEl.style.top = `${top}px`;
+    }
+  });
+</script>
 </Layout>
