@@ -54,12 +54,16 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
 
 <Layout title="My Daily Uses">
   <section class="relative z-20 max-w-4xl mx-auto my-12 px-7 lg:px-0">
-    <PageHeading
-      title="My Daily Uses"
-      description="A peek into my workspace and the tools I use every day to build, design, and create."
-    />
+    <!-- Animation applied ONLY to the heading -->
+    <div class="animate-in" style="--animation-delay: 0ms;">
+      <PageHeading
+        title="My Daily Uses"
+        description="A peek into my workspace and the tools I use every day to build, design, and create."
+      />
+    </div>
 
-    <div class="interactive-setup-container mt-16 mb-20">
+    <!-- Animation applied ONLY to the setup image container -->
+    <div class="interactive-setup-container mt-16 mb-20 animate-in" style="--animation-delay: 200ms;">
       <div class="image-container">
         <img 
           src="/assets/images/setup.png" 
@@ -80,6 +84,7 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
       </div>
     </div>
     
+    <!-- NO animation on the list below for better performance -->
     <div class="space-y-16">
       {Object.entries(usesData).map(([category, items]) => (
         <div class="grid grid-cols-1 md:grid-cols-4 md:gap-8">
@@ -106,6 +111,25 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
 </Layout>
 
 <style>
+/* --- Animation Styles (Unchanged but now used more selectively) --- */
+@keyframes subtle-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  opacity: 0; /* Start hidden */
+  animation: subtle-fade-in-up 0.6s ease-out forwards;
+  animation-delay: var(--animation-delay, 0ms);
+}
+/* --- End Animation Styles --- */
+
 .interactive-setup-container {
   max-width: 900px;
   margin: 2rem auto;
@@ -118,7 +142,7 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
   border: 1px solid #27272a;
-  aspect-ratio: 16 / 10; /* A bit taller */
+  aspect-ratio: 16 / 10;
 }
 
 .setup-visual {
