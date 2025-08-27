@@ -14,5 +14,9 @@
 	{
 		"name": "About",
 		"url": "/about"
-	}
+	},
+	{
+		"name": "Uses",
+		"url": "/uses"
+	} 
 ]

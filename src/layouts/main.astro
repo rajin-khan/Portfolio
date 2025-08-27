@@ -8,7 +8,7 @@ const { title, description, ogImage } = Astro.props;
 
 // Ensure the ogImage is an absolute URL
 const siteUrl = "https://rajinkhan.com"; // Base URL of your site
-const absoluteOgImage = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/assets/images/rajins-banner.png`; // Fallback image if ogImage is not provided
+const absoluteOgImage = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/assets/images/rajins-banner-new.png`; // Fallback image if ogImage is not provided
 ---
 
 <!doctype html>
@@ -36,20 +36,9 @@ const absoluteOgImage = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/assets/im
     <title>{title}</title>
 
     <!-- Dark mode initialization script -->
-    <script is:inline>
-      if (typeof Storage !== 'undefined') {
-        // If no preference is set, default to dark mode
-        if (localStorage.getItem('dark_mode') === null) {
-          localStorage.setItem('dark_mode', 'true');
-        }
-        // Apply dark mode if it's set to true
-        if (localStorage.getItem('dark_mode') === 'true') {
-          document.documentElement.classList.add('dark');
-        }
-      } else {
-        // If localStorage is not available, default to dark mode
-        document.documentElement.classList.add('dark');
-      }
+    <script is:inline> 
+      // Always apply dark mode
+      document.documentElement.classList.add('dark');
     </script>
 
     <style>
