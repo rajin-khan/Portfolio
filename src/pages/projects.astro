@@ -7,12 +7,18 @@ import Layout from "../layouts/main.astro";
 
 <Layout title="My Projects">
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
-    <PageHeading
-      title="My Projects"
-      description="A selection from some of the projects I've worked on over the years. I love creating digital solutions for all my problems, while working on impactful projects, or random things that pique my interest."
-    />
+    <!-- Animation applied to the heading -->
+    <div class="animate-in" style="--animation-delay: 0ms;">
+      <PageHeading
+        title="My Projects"
+        description="A selection from some of the projects I've worked on over the years. I love creating digital solutions for all my problems, while working on impactful projects, or random things that pique my interest."
+      />
+    </div>
+
+    <!-- Animation applied to the entire projects grid -->
     <div
-      class="z-50 grid items-stretch w-full grid-cols-1 my-8 gap-7 sm:gap-5 sm:grid-cols-2"
+      class="z-50 grid items-stretch w-full grid-cols-1 my-8 gap-7 sm:gap-5 sm:grid-cols-2 animate-in"
+      style="--animation-delay: 200ms;"
     >
       {
         projects.map((project) => {
@@ -30,3 +36,22 @@ import Layout from "../layouts/main.astro";
     </div>
   </section>
 </Layout>
+
+<style>
+  @keyframes subtle-fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-in {
+    opacity: 0; /* Start hidden */
+    animation: subtle-fade-in-up 0.6s ease-out forwards;
+    animation-delay: var(--animation-delay, 0ms);
+  }
+</style>

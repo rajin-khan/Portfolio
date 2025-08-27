@@ -60,7 +60,8 @@ const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Gr
   ogImage={ogImage}
 >
   <main class="relative z-20 w-full max-w-4xl mx-auto mt-16 px-7 md:mt-24 lg:mt-32 xl:px-0">
-    <section class="flex flex-col-reverse md:flex-row items-center">
+    <!-- Animation applied to the entire hero section -->
+    <section class="flex flex-col-reverse md:flex-row items-center animate-in" style="--animation-delay: 0ms;">
       <div class="relative w-full md:w-1/2">
         <h1 class="mb-5 text-4xl font-bold leading-tight md:text-4xl lg:text-6xl dark:text-white">
           Hey, I'm Rajin.
@@ -102,9 +103,16 @@ const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Gr
     </section>
   </main>
 
-  <Separator text="My projects" />
-  <Projects />
+  <!-- Animation applied to the separator -->
+  <div class="animate-in" style="--animation-delay: 200ms;">
+    <Separator text="My projects" />
+  </div>
 
+  <!-- Animation applied to the Projects section -->
+  <div class="animate-in" style="--animation-delay: 400ms;">
+    <Projects />
+  </div>
+  
   <Separator text="Tech Stack" />
   <TechStack />
 
@@ -116,3 +124,22 @@ const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Gr
 
   <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 </Layout>
+
+<style>
+  @keyframes subtle-fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-in {
+    opacity: 0; /* Start hidden */
+    animation: subtle-fade-in-up 0.6s ease-out forwards;
+    animation-delay: var(--animation-delay, 0ms);
+  }
+</style>

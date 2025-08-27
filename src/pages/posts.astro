@@ -22,14 +22,19 @@ const [visiblePosts, remainingPosts] = [
 
 <Layout title="Blog Posts">
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
-    <PageHeading
-      title="Blog Posts"
-      description="All the things I love. New Tech, Design, or things I learn as I'm growing my skillset."
-    />
+    <!-- Animation applied to the heading -->
+    <div class="animate-in" style="--animation-delay: 0ms;">
+      <PageHeading
+        title="Blog Posts"
+        description="All the things I love. New Tech, Design, or things I learn as I'm growing my skillset."
+      />
+    </div>
 
+    <!-- Animation applied to the posts container -->
     <div
       id="posts-container"
-      class="z-50 flex flex-col items-stretch w-full gap-5 my-8"
+      class="z-50 flex flex-col items-stretch w-full gap-5 my-8 animate-in"
+      style="--animation-delay: 200ms;"
     >
       {
         visiblePosts.map((post) => (
@@ -98,7 +103,8 @@ const [visiblePosts, remainingPosts] = [
     </div>
     {
       remainingPosts.length > 0 && (
-        <div class="flex justify-center mt-8">
+        <!-- Animation applied to the "Load More" button container -->
+        <div class="flex justify-center mt-8 animate-in" style="--animation-delay: 400ms;">
           <button
             id="load-more"
             class="px-4 py-1.5 text-sm font-medium rounded-full border border-neutral-800 dark:border-neutral-200 bg-neutral-800 dark:bg-neutral-200 text-neutral-100 dark:text-neutral-900 transition-all duration-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-neutral-900 dark:hover:text-neutral-100"
@@ -185,3 +191,22 @@ const [visiblePosts, remainingPosts] = [
     });
   }
 </script>
+
+<style>
+  @keyframes subtle-fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-in {
+    opacity: 0; /* Start hidden */
+    animation: subtle-fade-in-up 0.6s ease-out forwards;
+    animation-delay: var(--animation-delay, 0ms);
+  }
+</style>
