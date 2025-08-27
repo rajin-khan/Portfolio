@@ -54,7 +54,6 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
 
 <Layout title="My Daily Uses">
   <section class="relative z-20 max-w-4xl mx-auto my-12 px-7 lg:px-0">
-    <!-- Animation applied ONLY to the heading -->
     <div class="animate-in" style="--animation-delay: 0ms;">
       <PageHeading
         title="My Daily Uses"
@@ -62,9 +61,8 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
       />
     </div>
 
-    <!-- Animation applied ONLY to the setup image container -->
     <div class="interactive-setup-container mt-16 mb-20 animate-in" style="--animation-delay: 200ms;">
-      <div class="image-container">
+      <div class="image-container" id="image-container">
         <img 
           src="/assets/images/setup.png" 
           alt="My workspace setup" 
@@ -84,7 +82,6 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
       </div>
     </div>
     
-    <!-- NO animation on the list below for better performance -->
     <div class="space-y-16">
       {Object.entries(usesData).map(([category, items]) => (
         <div class="grid grid-cols-1 md:grid-cols-4 md:gap-8">
@@ -111,7 +108,6 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
 </Layout>
 
 <style>
-/* --- Animation Styles (Unchanged but now used more selectively) --- */
 @keyframes subtle-fade-in-up {
   from {
     opacity: 0;
@@ -124,11 +120,10 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
 }
 
 .animate-in {
-  opacity: 0; /* Start hidden */
+  opacity: 0;
   animation: subtle-fade-in-up 0.6s ease-out forwards;
   animation-delay: var(--animation-delay, 0ms);
 }
-/* --- End Animation Styles --- */
 
 .interactive-setup-container {
   max-width: 900px;
@@ -164,6 +159,13 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
   transition: all 0.3s ease;
   z-index: 10;
   animation: dot-pulse 3s infinite ease-in-out;
+}
+/* NEW: Style for active/clicked dot */
+.dot.active {
+  transform: translate(-50%, -50%) scale(1.4);
+  background: white;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  animation: none; /* Pause pulse when active */
 }
 
 .dot:hover {
@@ -239,43 +241,91 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('image-container');
     const dots = document.querySelectorAll<HTMLElement>('.dot');
     const tooltip = document.getElementById('tooltip') as HTMLElement | null;
-    if (!tooltip) return;
+    
+    if (!tooltip || !container) return;
 
     const tooltipTitle = tooltip.querySelector<HTMLElement>('.tooltip-title');
     const tooltipDetails = tooltip.querySelector<HTMLElement>('.tooltip-details');
-
+    
     if (!tooltipTitle || !tooltipDetails) return;
+    
+    let activeDot: HTMLElement | null = null;
+    
+    // Function to hide the tooltip and deactivate dot
+    function hideTooltip() {
+      tooltip.classList.remove('show');
+      if (activeDot) {
+        activeDot.classList.remove('active');
+        activeDot = null;
+      }
+    }
+
+    // Hide tooltip when clicking anywhere on the container that isn't a dot
+    container.addEventListener('click', (event) => {
+        if (!(event.target as HTMLElement).classList.contains('dot')) {
+            hideTooltip();
+        }
+    });
 
     dots.forEach(dot => {
-      dot.addEventListener('mouseenter', function() {
-        const tooltipData = this.getAttribute('data-tooltip');
-        if (tooltipData) {
-          const [title, details] = tooltipData.split('|');
-          tooltipTitle.textContent = title;
-          tooltipDetails.style.display = details ? 'block' : 'none';
-          if(details) {
-            tooltipDetails.textContent = details;
+      // Click event for mobile/touch
+      dot.addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent the container click event from firing
+        
+        // If this dot is already active, hide it. Otherwise, show it.
+        if (activeDot === this) {
+          hideTooltip();
+        } else {
+          // Deactivate the previous dot
+          if (activeDot) {
+            activeDot.classList.remove('active');
           }
+
+          // Activate the new dot
+          this.classList.add('active');
+          activeDot = this;
           
-          positionTooltip(this, tooltip);
-          tooltip.classList.add('show');
+          showTooltip(this);
         }
       });
 
+      // Mouseenter for desktop hover
+      dot.addEventListener('mouseenter', function() {
+        showTooltip(this);
+      });
+
+      // Mouseleave for desktop hover
       dot.addEventListener('mouseleave', function() {
-        tooltip.classList.remove('show');
+        // Only hide if it wasn't clicked/activated
+        if (activeDot !== this) {
+            tooltip.classList.remove('show');
+        }
       });
     });
+    
+    function showTooltip(dot: HTMLElement) {
+        const tooltipData = dot.getAttribute('data-tooltip');
+        if (tooltipData) {
+            const [title, details] = tooltipData.split('|');
+            tooltipTitle.textContent = title;
+            tooltipDetails.style.display = details ? 'block' : 'none';
+            if (details) {
+                tooltipDetails.textContent = details;
+            }
+            
+            positionTooltip(dot, tooltip);
+            tooltip.classList.add('show');
+        }
+    }
 
     function positionTooltip(dot: HTMLElement, tooltipEl: HTMLElement) {
-      const container = document.querySelector('.image-container');
-      if (!container) return;
       const containerRect = container.getBoundingClientRect();
-      
       const dotRect = dot.getBoundingClientRect();
       
+      // Temporarily show to measure dimensions
       tooltipEl.style.visibility = 'hidden';
       tooltipEl.style.display = 'block';
       const tooltipRect = tooltipEl.getBoundingClientRect();
@@ -283,12 +333,14 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
       tooltipEl.style.visibility = '';
 
       let top = dotRect.top - containerRect.top - tooltipRect.height - 15;
-      let left = dotRect.left - containerRect.left + (dotRect.width / 2) - (tooltipRect.width / 2);
+      let left = dotRect.left - containerRect.top + (dotRect.width / 2) - (tooltipRect.width / 2);
 
+      // Reposition if it goes off-screen vertically
       if (top < 0) {
         top = dotRect.top - containerRect.top + dotRect.height + 15;
       }
       
+      // Reposition if it goes off-screen horizontally
       if (left < 10) {
         left = 10;
       }
