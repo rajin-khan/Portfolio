@@ -49,6 +49,22 @@ const personSchema = {
   }
 };
 
+// NEW: Added WebSite schema for Google Sitelinks
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Rajin Khan's Portfolio",
+  "url": "https://rajinkhan.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://rajinkhan.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+};
+
 const pageTitle = "Rajin Khan";
 const pageDescription = "Online Portfolio and Blog by Rajin Khan. Includes showcase of my Projects, with musings on AI, Web Dev, and Design.";
 const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Graph image
@@ -123,6 +139,7 @@ const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Gr
   <Writings />
 
   <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 </Layout>
 
 <style>
