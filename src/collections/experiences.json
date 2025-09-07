@@ -1,5 +1,12 @@
 [
 	{
+		"dates": "September 2025 · Present",
+		"role": "Skelementor",
+		"company": "Software Engineer",
+		"description": "Technical Lead, Internal Software Development",
+		"logo": "/assets/images/experiences/skelementor.png"
+	},
+    {
 		"dates": "April 2025 · August 2025",
 		"role": "The Data Island",
 		"company": "AI Engineer",
@@ -7,7 +14,7 @@
 		"logo": "/assets/images/experiences/tdi.png"
 	},
     {
-		"dates": "March 2025 · April 2025",
+		"dates": "March 2025",
 		"role": "The Data Island",
 		"company": "Machine Learning Intern",
 		"description": "Projects on Computer Vision for companies like Unilever BD.",
