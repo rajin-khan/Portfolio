@@ -5,28 +5,28 @@ import PageHeading from "../../components/page-heading.astro";
 // Hardcoded project data
 const project = {
   name: "PuffNotes",
-  description: "Cozy, Minimalist Note Taker with AI.",
+  description: "A cozy, dual-mode note-taking app powered by lightning-fast AI.",
   image: "/assets/images/projects/puff.png",
   githubUrl: "https://github.com/rajin-khan/PuffNotes",
   externalUrl: "https://puff-notes.vercel.app",
   tags: [],
   features: [
-    { name: "AI Beautify", description: "Turn rough ideas into polished notes with one click.", icon: "✨" },
-    { name: "Local First", description: "Saves as .md files on your device, no cloud needed.", icon: "💾" },
-    { name: "Calm UI", description: "Glassmorphism design with focus mode.", icon: "🧘‍♂️" },
-    { name: "Markdown Simplicity", description: "Compatible with any markdown reader.", icon: "🧠" }
+    { name: "AI Beautify", description: "Turn rough ideas into polished, structured notes with a single click using Groq's fast AI.", icon: "✨" },
+    { name: "Online Mode", description: "Sign in with Google to sync your notes securely to a 'puffnotes' folder in your Google Drive.", icon: "☁️" },
+    { name: "Offline Mode", description: "Your notes, your machine. Saves .md files directly to a local folder for ultimate privacy.", icon: "💾" },
+    { name: "PDF Export", description: "Export any note into a clean, beautifully formatted multi-page PDF document.", icon: "📄" }
   ],
   useCases: [
-    { name: "Students", description: "Effortless note-taking for classes.", emoji: "🧠" },
-    { name: "Writers", description: "Distraction-free scratchpad for ideas.", emoji: "✍️" },
-    { name: "Coders", description: "Offline-first app for quick notes.", emoji: "⚡" },
-    { name: "Thinkers", description: "Dump thoughts without fuss.", emoji: "🌙" },
+    { name: "Students", description: "Effortlessly structure lecture notes and study materials.", emoji: "🧠" },
+    { name: "Writers", description: "A distraction-free scratchpad to capture and expand on ideas.", emoji: "✍️" },
+    { name: "Professionals", description: "Quickly draft organized meeting minutes or project outlines.", emoji: "⚡" },
+    { name: "Late-Night Thinkers", description: "Dump thoughts without fuss and let the AI sort them out later.", emoji: "🌙" },
   ],
   roadmap: [
     { name: "Theming", status: "Planned" },
-    { name: "Embeddable AI Prompts", status: "Planned" },
-    { name: "Drag-and-Drop Images", status: "Planned" },
-    { name: "Tag + Folder Organization", status: "Planned" }
+    { name: "Custom AI Prompts", status: "Planned" },
+    { name: "Image Support", status: "Planned" },
+    { name: "Tag Organization", status: "Planned" }
   ]
 };
 ---
@@ -377,10 +377,16 @@ const project = {
       <h2 class="section-heading slide-in-up">What is PuffNotes?</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          I love taking notes. But I hate taking long, long notes. PuffNotes was born to solve this problem. I usually take notes on my laptop in class, but there’s often so much to type out that I end up getting distracted, missing important points, or losing track of what’s happening in the lecture. Frustrated, I decided to create a solution tailored to my exact needs—PuffNotes, a minimalist, local-first, markdown-based note-taking app designed to make your messy, vague ideas look smart and structured with just one click. I kept it minimal, cozy, fun, and easy, ensuring it’s a perfect fit for anyone facing similar challenges. Built for lazy writers, distracted students, and tired creatives, PuffNotes offers a quiet, beautiful space to jot down thoughts without the clutter of traditional productivity tools. Powered with lightning-fast AI, it transforms rough fragments into polished, organized notes in seconds.
+          I love taking notes. But I hate taking long, long notes. PuffNotes was born to solve this problem. I usually take notes on my laptop in class, but there’s often so much to type out that I end up getting distracted, missing important points, or losing track of what’s happening in the lecture. Frustrated, I decided to create a solution tailored to my exact needs: PuffNotes, a minimalist, local-first, markdown-based note-taking app designed to make your messy, vague ideas look smart and structured with just one click.
         </p>
         <p>
-          With PuffNotes, there’s no need for logins, cloud storage, or internet access after the initial load—your notes are saved directly to your device as .md files. Its serene interface, soft animations, and focus mode create a calm writing environment, while features like autosave and AI beautification ensure your thoughts are captured effortlessly. Whether you're a student, writer, or late-night thinker, PuffNotes is your cozy companion for effortless note-taking.
+          I kept it minimal, cozy, fun, and easy, ensuring it’s a perfect fit for anyone facing similar challenges. Built for lazy writers, distracted students, and tired creatives, PuffNotes offers a quiet, beautiful space to jot down thoughts without the clutter of traditional productivity tools. Powered with lightning-fast AI, it transforms rough fragments into polished, organized notes in seconds.
+        </p>
+        <p>
+            PuffNotes respects your workflow by offering two distinct modes. For those who need access everywhere, <strong>Online Mode</strong> securely syncs your notes to a dedicated folder in your Google Drive. For ultimate privacy, <strong>Offline Mode</strong> works without logins or cloud storage, saving your notes directly to your computer.
+        </p>
+        <p>
+          Whichever path you choose, the experience is the same: a serene interface, soft animations, and a dedicated focus mode create a calm writing environment, while features like intelligent autosave and the magical AI beautification ensure your thoughts are captured and polished effortlessly. Whether you're a student, writer, or late-night thinker, PuffNotes is your cozy companion for effortless note-taking.
         </p>
       </div>
     </div>
@@ -422,7 +428,13 @@ const project = {
       <h2 class="section-heading slide-in-up">Privacy & Technology</h2>
       <div class="prose prose-sm sm:prose-base dark:prose-invert slide-in-up" style="animation-delay: 0.2s;">
         <p>
-          Privacy is a cornerstone of PuffNotes. Your notes are saved directly to your device as .md files, with no cloud storage, no accounts, and no tracking. After the initial load, PuffNotes works entirely offline, ensuring your thoughts remain yours. The <strong>AI</strong> beautification feature only activates when you choose to use it, and even then, your data stays secure. This local-first approach makes PuffNotes a safe haven for your ideas.
+          Privacy and user control are cornerstones of PuffNotes. For the ultimate in privacy, <strong>Offline Mode</strong> is a true safe haven; your notes are saved directly to your device as .md files, with no cloud storage, no accounts, and no tracking required. Your thoughts remain yours, always.
+        </p>
+        <p>
+          In <strong>Online Mode</strong>, your notes are synced securely to a dedicated 'puffnotes' folder within your <em>own</em> Google Drive, using a secure Google Sign-In. The app only requests the minimum permissions needed to manage that folder <strong>only</strong>, ensuring you remain in full control.
+        </p>
+        <p>
+          In both modes, the <strong>AI</strong> beautification feature is an opt-in action, processing your note only when you ask it to.
         </p>
         <p>
           PuffNotes is built with a modern tech stack for a seamless experience. The frontend uses <strong>React</strong> and <strong>Vite</strong> for a fast, responsive interface, styled with <strong>Tailwind CSS</strong> for a cozy, relaxing design. AI powers the beautification feature, making your notes polished and professional with minimal effort.
