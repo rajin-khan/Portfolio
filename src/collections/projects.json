@@ -11,17 +11,6 @@
     ]
   },
   {
-    "name": "MillenAI",
-    "description": "AI Workspace with Multi Agent Workflows.",
-    "image": "/assets/images/projects/MillenAI.png",
-    "url": "/projects/millenai",
-    "tags": [
-      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "ChatBot", "gradient": "from-indigo-500 to-purple-600" },
-      { "name": "Agentic", "gradient": "from-green-400 to-blue-600" }
-    ]
-  },
-  {
     "name": "PuffNotes",
     "description": "Cozy, Minimalist Note Taker with AI.",
     "image": "/assets/images/projects/puff.png",
@@ -31,6 +20,17 @@
       { "name": "Notes", "gradient": "from-blue-500 to-blue-600" },
       { "name": "React", "gradient": "from-indigo-500 to-purple-600" },
       { "name": "AI", "gradient": "from-pink-500 to-yellow-600" }
+    ]
+  },
+  {
+    "name": "MillenAI",
+    "description": "AI Workspace with Multi Agent Workflows.",
+    "image": "/assets/images/projects/MillenAI.png",
+    "url": "/projects/millenai",
+    "tags": [
+      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
+      { "name": "ChatBot", "gradient": "from-indigo-500 to-purple-600" },
+      { "name": "Agentic", "gradient": "from-green-400 to-blue-600" }
     ]
   },
   {
