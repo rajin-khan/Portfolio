@@ -1,0 +1,463 @@
+---
+import Layout from "../layouts/main.astro";
+import Button from "../components/button.astro";
+import ChatButton from "../components/chatbutton.astro";
+---
+
+<Layout title="404: Lost in the Cosmos">
+  <main class="relative z-20 flex flex-col items-center justify-center w-full min-h-screen px-4 py-8 sm:px-6 lg:px-8">
+    <div class="w-full max-w-6xl mx-auto space-y-6">
+      <!-- Header Section -->
+      <div class="text-center animate-in" style="--animation-delay: 0ms;">
+        <h1 class="text-6xl font-bold tracking-tighter text-transparent sm:text-7xl lg:text-8xl bg-clip-text bg-gradient-to-tr from-neutral-300 to-neutral-500">
+          404
+        </h1>
+        <h2 class="mt-2 text-xl font-semibold tracking-tight text-neutral-100 sm:text-2xl">
+          Congrats! You're lost.
+        </h2>
+        <p class="mt-3 text-sm text-neutral-400 max-w-2xl mx-auto">
+          But I did code this sick game. Check it out.
+        </p>
+      </div>
+
+      <!-- Game Section - Massive & Beautiful -->
+      <div class="animate-in" style="--animation-delay: 150ms;">
+        <div id="game-container" class="relative w-full overflow-hidden rounded-3xl border border-neutral-800 bg-gradient-to-b from-neutral-950 to-neutral-900" style="height: 75vh; min-height: 600px; max-height: 800px;">
+          <canvas id="game-canvas"></canvas>
+          <div id="start-message" class="absolute inset-0 z-10 flex flex-col items-center justify-center text-white cursor-pointer bg-black/40 backdrop-blur-md transition-opacity duration-300">
+            <div class="px-8 py-10 rounded-3xl bg-neutral-900/60 border border-neutral-700 transform transition-transform hover:scale-105 text-center">
+              <p class="text-3xl sm:text-4xl font-bold"> ✦ Bounce Quest ✦ </p>
+              <p class="mt-4 text-base sm:text-lg text-neutral-300">Move your mouse/finger to control</p>
+              <p class="mt-2 text-xs text-neutral-500">Break all the blocks for something special!</p>
+            </div>
+          </div>
+          <div id="win-message" class="absolute inset-0 z-10 hidden flex-col items-center justify-center text-white cursor-pointer bg-black/60 backdrop-blur-md">
+            <div class="px-10 py-12 rounded-3xl bg-neutral-900/60 border border-neutral-600 transform animate-bounce-in text-center">
+              <p class="text-4xl sm:text-5xl font-bold mb-3"> ✦ "Something Special!" ✦ </p>
+              <p class="text-base sm:text-lg text-neutral-300">Now click on another link and get out of here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-4 animate-in" style="--animation-delay: 300ms;">
+        <Button text="Return Home" link="/" />
+        <ChatButton />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('game-canvas');
+    const container = document.getElementById('game-container');
+    const startMessage = document.getElementById('start-message');
+    const winMessage = document.getElementById('win-message');
+
+    if (!canvas || !container || !startMessage || !winMessage) return;
+
+    const ctx = canvas.getContext('2d');
+    
+    let gameRunning = false;
+    let ball, platform, blocks, particles, trails;
+    const platformWidth = 160, platformHeight = 18;
+    const ballRadius = 14;
+    const blockRows = 3, blockCols = 7;
+    let mouseX = 0;
+    let platformVelocity = 0;
+
+    function resizeCanvas() {
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      if (gameRunning) {
+        draw();
+      }
+    }
+
+    function createBlocks() {
+      blocks = [];
+      const blockWidth = (canvas.width - (blockCols + 1) * 20) / blockCols;
+      const blockHeight = 50;
+      const grays = ['#525252', '#a3a3a3', '#e5e5e5'];
+      
+      for (let row = 0; row < blockRows; row++) {
+        for (let col = 0; col < blockCols; col++) {
+          blocks.push({
+            x: col * (blockWidth + 20) + 20,
+            y: row * (blockHeight + 15) + 80,
+            width: blockWidth,
+            height: blockHeight,
+            color: grays[row],
+            active: true,
+            scale: 1,
+            wobble: 0
+          });
+        }
+      }
+    }
+
+    function resetGame() {
+      ball = {
+        x: canvas.width / 2,
+        y: canvas.height - 150,
+        dx: 6,
+        dy: -6,
+        speed: 6,
+        squash: 1
+      };
+      platform = {
+        x: canvas.width / 2 - platformWidth / 2,
+        y: canvas.height - 60,
+        targetX: canvas.width / 2 - platformWidth / 2
+      };
+      platformVelocity = 0;
+      particles = [];
+      trails = [];
+      createBlocks();
+    }
+
+    function init() {
+      resizeCanvas();
+      resetGame();
+      window.addEventListener('resize', () => {
+        resizeCanvas();
+        if (!gameRunning) resetGame();
+      });
+      
+      // Mouse controls
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+      });
+      
+      // Touch controls
+      canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.touches[0].clientX - rect.left;
+      });
+      
+      startMessage.addEventListener('click', startGame, { once: true });
+    }
+
+    function startGame() {
+      gameRunning = true;
+      startMessage.style.opacity = '0';
+      setTimeout(() => startMessage.style.display = 'none', 300);
+      draw();
+      gameLoop();
+    }
+
+    function createParticles(x, y, color) {
+      for (let i = 0; i < 12; i++) {
+        const angle = (Math.PI * 2 * i) / 12;
+        const speed = Math.random() * 3 + 2;
+        particles.push({
+          x: x,
+          y: y,
+          dx: Math.cos(angle) * speed,
+          dy: Math.sin(angle) * speed,
+          life: 1,
+          size: Math.random() * 4 + 3,
+          color: color
+        });
+      }
+    }
+
+    function update() {
+      // Smooth platform movement
+      platform.targetX = mouseX - platformWidth / 2;
+      platform.targetX = Math.max(0, Math.min(canvas.width - platformWidth, platform.targetX));
+      
+      const diff = platform.targetX - platform.x;
+      platform.x += diff * 0.15;
+      platformVelocity = diff * 0.15;
+
+      // Update ball
+      ball.x += ball.dx;
+      ball.y += ball.dy;
+      
+      // Ball squash effect
+      ball.squash += (1 - ball.squash) * 0.1;
+
+      // Add trail
+      trails.push({ x: ball.x, y: ball.y, life: 1 });
+      if (trails.length > 8) trails.shift();
+
+      // Wall collisions
+      if (ball.x + ballRadius > canvas.width || ball.x - ballRadius < 0) {
+        ball.dx *= -1;
+        ball.squash = 0.8;
+      }
+      if (ball.y - ballRadius < 0) {
+        ball.dy *= -1;
+        ball.squash = 0.8;
+      }
+
+      // Platform collision with bounce
+      if (
+        ball.y + ballRadius > platform.y &&
+        ball.y - ballRadius < platform.y + platformHeight &&
+        ball.x > platform.x &&
+        ball.x < platform.x + platformWidth
+      ) {
+        ball.dy = -Math.abs(ball.dy) * 1.02;
+        ball.squash = 0.7;
+        const hitPos = (ball.x - platform.x) / platformWidth;
+        ball.dx = (hitPos - 0.5) * 12 + platformVelocity * 0.5;
+      }
+
+      // Block collisions with animation
+      blocks.forEach(block => {
+        if (!block.active) return;
+        
+        block.scale += (1 - block.scale) * 0.1;
+        block.wobble *= 0.9;
+        
+        if (
+          ball.x + ballRadius > block.x &&
+          ball.x - ballRadius < block.x + block.width &&
+          ball.y + ballRadius > block.y &&
+          ball.y - ballRadius < block.y + block.height
+        ) {
+          block.active = false;
+          ball.dy *= -1;
+          ball.squash = 0.8;
+          createParticles(block.x + block.width / 2, block.y + block.height / 2, block.color);
+        } else if (
+          ball.x > block.x - 30 &&
+          ball.x < block.x + block.width + 30 &&
+          ball.y > block.y - 30 &&
+          ball.y < block.y + block.height + 30
+        ) {
+          block.wobble = Math.sin(Date.now() * 0.01) * 2;
+        }
+      });
+
+      // Update particles
+      particles = particles.filter(p => {
+        p.x += p.dx;
+        p.y += p.dy;
+        p.dy += 0.15;
+        p.dx *= 0.98;
+        p.life -= 0.02;
+        return p.life > 0;
+      });
+      
+      // Update trails
+      trails.forEach(t => t.life -= 0.125);
+      trails = trails.filter(t => t.life > 0);
+
+      // Check win condition
+      if (blocks.every(b => !b.active)) {
+        gameRunning = false;
+        winMessage.style.display = 'flex';
+        winMessage.addEventListener('click', () => {
+          winMessage.style.display = 'none';
+          resetGame();
+          startGame();
+        }, { once: true });
+      }
+
+      // Game over
+      if (ball.y - ballRadius > canvas.height) {
+        resetGame();
+      }
+    }
+
+    function draw() {
+      // Clear with animated gradient
+      const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      bgGradient.addColorStop(0, '#0f0f0f');
+      bgGradient.addColorStop(0.5, '#1a1a1a');
+      bgGradient.addColorStop(1, '#0f0f0f');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw ball trail with gradient
+      trails.forEach((t, i) => {
+        ctx.globalAlpha = t.life * 0.4;
+        const trailGradient = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, ballRadius * t.life);
+        trailGradient.addColorStop(0, '#ffffff');
+        trailGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = trailGradient;
+        const trailSize = ballRadius * t.life * 0.8;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, trailSize, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      // Draw blocks with animations and subtle shadow
+      ctx.font = 'bold 16px monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      blocks.forEach(block => {
+        if (!block.active) return;
+        
+        ctx.save();
+        ctx.translate(block.x + block.width / 2, block.y + block.height / 2);
+        ctx.rotate(block.wobble * 0.01);
+        ctx.scale(block.scale, block.scale);
+        
+        // Subtle shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.beginPath();
+        ctx.roundRect(-block.width / 2 + 2, -block.height / 2 + 2, block.width, block.height, 12);
+        ctx.fill();
+        
+        // Block with inner gradient for depth
+        const blockGradient = ctx.createLinearGradient(0, -block.height / 2, 0, block.height / 2);
+        blockGradient.addColorStop(0, block.color);
+        blockGradient.addColorStop(1, adjustBrightness(block.color, -20));
+        ctx.fillStyle = blockGradient;
+        ctx.beginPath();
+        ctx.roundRect(-block.width / 2, -block.height / 2, block.width, block.height, 12);
+        ctx.fill();
+        
+        // Highlight
+        ctx.globalAlpha = 0.15;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.roundRect(-block.width / 2 + 8, -block.height / 2 + 4, block.width - 16, 8, 4);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        
+        // Text
+        ctx.fillStyle = '#000';
+        ctx.fillText('404', 0, 0);
+        ctx.restore();
+      });
+
+      // Draw platform with gradient and shine
+      const gradient = ctx.createLinearGradient(platform.x, platform.y, platform.x + platformWidth, platform.y);
+      gradient.addColorStop(0, '#404040');
+      gradient.addColorStop(0.5, '#fafafa');
+      gradient.addColorStop(1, '#404040');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.roundRect(platform.x, platform.y, platformWidth, platformHeight, 10);
+      ctx.fill();
+      
+      // Platform shine
+      ctx.globalAlpha = 0.4;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(platform.x + 15, platform.y + 3, platformWidth - 30, 5, 3);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      
+      // Platform shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.beginPath();
+      ctx.ellipse(platform.x + platformWidth / 2, platform.y + platformHeight + 5, platformWidth / 2, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw ball with gradient and squash effect
+      ctx.save();
+      ctx.translate(ball.x, ball.y);
+      ctx.scale(ball.squash, 1 / ball.squash);
+      
+      const ballGradient = ctx.createRadialGradient(-3, -3, 0, 0, 0, ballRadius);
+      ballGradient.addColorStop(0, '#ffffff');
+      ballGradient.addColorStop(1, '#d4d4d4');
+      ctx.fillStyle = ballGradient;
+      ctx.beginPath();
+      ctx.arc(0, 0, ballRadius, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Ball highlight
+      ctx.globalAlpha = 0.6;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-4, -4, ballRadius * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.restore();
+
+      // Draw particles with gradient
+      particles.forEach(p => {
+        ctx.globalAlpha = p.life * 0.9;
+        const particleGradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+        particleGradient.addColorStop(0, p.color);
+        particleGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = particleGradient;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    }
+    
+    function adjustBrightness(color, amount) {
+      const hex = color.replace('#', '');
+      const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
+      const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
+      const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
+      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function gameLoop() {
+      if (!gameRunning) return;
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    init();
+  });
+</script>
+
+<style>
+  @keyframes subtle-fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0.3);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-in {
+    opacity: 0;
+    animation: subtle-fade-in-up 0.6s ease-out forwards;
+    animation-delay: var(--animation-delay, 0ms);
+  }
+  
+  .animate-bounce-in {
+    animation: bounce-in 0.6s ease-out;
+  }
+  
+  #game-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 1.5rem;
+  }
+  
+  #game-container {
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+  }
+</style>
