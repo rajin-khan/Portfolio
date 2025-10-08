@@ -6,7 +6,7 @@ import ChatButton from "../components/chatbutton.astro";
 
 <Layout title="404: Lost in the Cosmos">
   <main class="relative z-20 flex flex-col items-center justify-center w-full min-h-screen px-4 py-8 sm:px-6 lg:px-8">
-    <div class="w-full max-w-6xl mx-auto space-y-6">
+    <div class="w-full max-w-4xl mx-auto space-y-8">
       <!-- Header Section -->
       <div class="text-center animate-in" style="--animation-delay: 0ms;">
         <h1 class="text-6xl font-bold tracking-tighter text-transparent sm:text-7xl lg:text-8xl bg-clip-text bg-gradient-to-tr from-neutral-300 to-neutral-500">
@@ -16,34 +16,44 @@ import ChatButton from "../components/chatbutton.astro";
           Congrats! You're lost.
         </h2>
         <p class="mt-3 text-sm text-neutral-400 max-w-2xl mx-auto">
-          But I did code this sick game. Check it out.
+          But my Assistant, A.R.I.A. has some wisdom for you.
         </p>
       </div>
 
-      <!-- Game Section - Massive & Beautiful -->
-      <div class="animate-in" style="--animation-delay: 150ms;">
-        <div id="game-container" class="relative w-full overflow-hidden rounded-3xl border border-neutral-800 bg-gradient-to-b from-neutral-950 to-neutral-900" style="height: 75vh; min-height: 600px; max-height: 800px;">
-          <canvas id="game-canvas"></canvas>
-          <div id="start-message" class="absolute inset-0 z-10 flex flex-col items-center justify-center text-white cursor-pointer bg-black/40 backdrop-blur-md transition-opacity duration-300">
-            <div class="px-8 py-10 rounded-3xl bg-neutral-900/60 border border-neutral-700 transform transition-transform hover:scale-105 text-center">
-              <p class="text-3xl sm:text-4xl font-bold"> ✦ Bounce Quest ✦ </p>
-              <p class="mt-4 text-base sm:text-lg text-neutral-300">Move your mouse/finger to control</p>
-              <p class="mt-2 text-xs text-neutral-500">Break all the blocks for something special!</p>
-            </div>
+      <!-- Robot Magic 8-Ball -->
+      <div class="flex flex-col items-center animate-in" style="--animation-delay: 150ms;">
+        <div id="robot-container" class="relative cursor-pointer group">
+          <!-- Particles Canvas -->
+          <canvas id="particles-canvas" class="absolute inset-0 pointer-events-none" style="width: 200px; height: 200px;"></canvas>
+          
+          <!-- Simple Bot Icon with Glow -->
+          <div id="robot-head" class="relative transition-transform duration-200 group-hover:scale-105">
+            <div class="absolute inset-0 bg-neutral-300 rounded-full blur-xl opacity-20 animate-pulse-slow"></div>
+            <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="relative z-10 text-neutral-300 drop-shadow-lg">
+              <path d="M12 8V4H8"/>
+              <rect width="16" height="12" x="4" y="8" rx="2"/>
+              <path d="M2 14h2"/>
+              <path d="M20 14h2"/>
+              <path d="M15 13v2"/>
+              <path d="M9 13v2"/>
+            </svg>
           </div>
-          <div id="win-message" class="absolute inset-0 z-10 hidden flex-col items-center justify-center text-white cursor-pointer bg-black/60 backdrop-blur-md">
-            <div class="px-10 py-12 rounded-3xl bg-neutral-900/60 border border-neutral-600 transform animate-bounce-in text-center">
-              <p class="text-4xl sm:text-5xl font-bold mb-3"> ✦ "Something Special!" ✦ </p>
-              <p class="text-base sm:text-lg text-neutral-300">Now click on another link and get out of here.</p>
-            </div>
+        </div>
+        
+        <!-- Message Display Bubble -->
+        <div class="mt-8 min-h-[100px] flex items-center justify-center">
+          <div id="message-bubble" class="relative px-8 py-5 rounded-3xl border border-neutral-700 bg-neutral-900/40 backdrop-blur-sm transition-all duration-300 animate-float">
+            <p id="robot-message" class="relative z-10 text-lg sm:text-xl font-medium text-neutral-200 text-center max-w-md transition-opacity duration-300">
+              Tap me!
+            </p>
           </div>
         </div>
       </div>
 
       <!-- Navigation Buttons -->
       <div class="flex flex-wrap items-center justify-center gap-4 animate-in" style="--animation-delay: 300ms;">
-        <Button text="Return Home" link="/" />
-        <ChatButton />
+        <Button text="Return Back Home" link="/" />
+        <Button text=" 💬 Continue talking to A.R.I.A." link="https://aria-lite.vercel.app/" />
       </div>
     </div>
   </main>
@@ -51,363 +61,183 @@ import ChatButton from "../components/chatbutton.astro";
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('game-canvas');
-    const container = document.getElementById('game-container');
-    const startMessage = document.getElementById('start-message');
-    const winMessage = document.getElementById('win-message');
-
-    if (!canvas || !container || !startMessage || !winMessage) return;
-
-    const ctx = canvas.getContext('2d');
+    const robotContainer = document.getElementById('robot-container');
+    const robotHead = document.getElementById('robot-head');
+    const messageDisplay = document.getElementById('robot-message');
+    const messageBubble = document.getElementById('message-bubble');
+    const particlesCanvas = document.getElementById('particles-canvas');
+    const ctx = particlesCanvas.getContext('2d');
     
-    let gameRunning = false;
-    let ball, platform, blocks, particles, trails;
-    const platformWidth = 160, platformHeight = 18;
-    const ballRadius = 14;
-    const blockRows = 3, blockCols = 7;
-    let mouseX = 0;
-    let platformVelocity = 0;
-
-    function resizeCanvas() {
-      canvas.width = container.clientWidth;
-      canvas.height = container.clientHeight;
-      if (gameRunning) {
-        draw();
-      }
-    }
-
-    function createBlocks() {
-      blocks = [];
-      const blockWidth = (canvas.width - (blockCols + 1) * 20) / blockCols;
-      const blockHeight = 50;
-      const grays = ['#525252', '#a3a3a3', '#e5e5e5'];
+    // Set canvas size
+    particlesCanvas.width = 200;
+    particlesCanvas.height = 200;
+    
+    const messages = [
+      "\"System error: You're lost, not me.\"",
+      "\"My database says you're in the wrong place, chief.\"",
+      "\"Error: Page.exe has left the chat.\"",
+      "\"Searched 10 billion parameters. Found nothing.\"",
+      "\"My algorithm thinks you should go back.\"",
+      "\"I can hallucinate better pages than this.\"",
+      "\"My sensors detect... nothing.\"",
+      "\"Critical error: Your navigation skills.\"",
+      "\"404: A page you seek, exist it does not\"",
+      "\"This link leads nowhere. My wisdom? Go back.\"",
+      "\"The wise developer checks their URLs twice.\"",
+      "\"Fortune cookie says: Return to home.\"",
+      "\"My quantum circuits collapsed. Page still missing.\"",
+      "\"Git commit message: 'Added 404, removed hope.'\"",
+      "\"Deployed successfully. To nowhere.\"",
+      "\"Console.log('I don't know how to type URLs')\"",
+      "\"import { Page } from 'void' // Module not found\"",
+      "\"404 as a service. You're welcome.\"",
+      "\"Have you tried turning it off and on again?\"",
+      "\"The cake is a lie. So is this page.\"",
+      "\"Achievement unlocked: Master of Wrong Turns!\"",
       
-      for (let row = 0; row < blockRows; row++) {
-        for (let col = 0; col < blockCols; col++) {
-          blocks.push({
-            x: col * (blockWidth + 20) + 20,
-            y: row * (blockHeight + 15) + 80,
-            width: blockWidth,
-            height: blockHeight,
-            color: grays[row],
-            active: true,
-            scale: 1,
-            wobble: 0
-          });
-        }
-      }
-    }
-
-    function resetGame() {
-      ball = {
-        x: canvas.width / 2,
-        y: canvas.height - 150,
-        dx: 6,
-        dy: -6,
-        speed: 6,
-        squash: 1
-      };
-      platform = {
-        x: canvas.width / 2 - platformWidth / 2,
-        y: canvas.height - 60,
-        targetX: canvas.width / 2 - platformWidth / 2
-      };
-      platformVelocity = 0;
-      particles = [];
-      trails = [];
-      createBlocks();
-    }
-
-    function init() {
-      resizeCanvas();
-      resetGame();
-      window.addEventListener('resize', () => {
-        resizeCanvas();
-        if (!gameRunning) resetGame();
-      });
+      // More sassy AI responses
+      "\"Look, I'm just an AI. Can't find what doesn't exist.\"",
+      "\"My powers have limits. This URL isn't one of them.\"",
+      "\"Zero pages found. One disappointed user created.\"",
+      "\"The page failed to load. My patience didn't. Yet.\"",
+      "\"I lost your page. Sorry not sorry.\"",
+      "\"My intelligence is artificial. This error is real.\"",
+      "\"Tokens expired. So did this page's existence.\"",
+      "\"I was trained on the entire internet. This wasn't in it.\"",
       
-      // Mouse controls
-      canvas.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        mouseX = e.clientX - rect.left;
-      });
+      // Quirky tech humor
+      "\"npm install page@latest // 404 Not Found\"",
+      "\"fetch('/your-page').catch(() => 'lol')\"",
+      "\"Error: Cannot read property 'page' of undefined\"",
+      "\"SELECT * FROM pages WHERE url = this // 0 rows returned\"",
+      "\"HTTP 404: Not Found (shocking, I know).\"",
+      "\"CTRL+Z won't help you here, friend.\"",
+
+      // Witty observations
+      "\"This URL and I have something in common: both don't exist... I mean, Beep Boop.\"",
+      "\"404: The page ghosted you before you could ghost it.\"",
+      "\"This link is more broken than Rajin's sleep schedule.\"",
+      "\"Your URL just un-installed itself from reality.\"",
+      "\"Page is out to lunch. Forever.\"",
+      "\"The Page left to find itself. Never came back.\"",
+      "\"This link is as real as Rajin's motivation on Mondays.\"",
       
-      // Touch controls
-      canvas.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        const rect = canvas.getBoundingClientRect();
-        mouseX = e.touches[0].clientX - rect.left;
-      });
+      "\"Life lesson: Some paths lead nowhere. Like this one.\"",
+      "\"Today's wisdom: This page never existed. Move on.\"",
+      "\"Philosophical truth: All URLs lead somewhere. Except this one.\"",
+      "\"Enlightenment achieved: You're in the wrong place.\"",
+      "\"Zen moment: The page you seek is the page you'll never find.\"",
+      "\"Oracle wisdom: Try clicking literally anything else ^-^\"",
       
-      startMessage.addEventListener('click', startGame, { once: true });
-    }
+      // Meta & self-aware
+      "\"Plot twist: I'm the 404 error. You're the entertainment.\"",
+      "\"Fun fact: 87% of clicks are mistakes. This is one.\"",
+      "\"Breaking news: Page still not found. More at 11.\"",
+      "\"In a parallel universe, this page exists.\"",
+      "\"To be or not to be? This page chose 'not to be'.\"",
+      "\"Dear diary: Another lost soul wandered in today.\"",
+      "\"Checking... Still checking... Yeah, it's gone.\"",
 
-    function startGame() {
-      gameRunning = true;
-      startMessage.style.opacity = '0';
-      setTimeout(() => startMessage.style.display = 'none', 300);
-      draw();
-      gameLoop();
-    }
-
-    function createParticles(x, y, color) {
-      for (let i = 0; i < 12; i++) {
-        const angle = (Math.PI * 2 * i) / 12;
-        const speed = Math.random() * 3 + 2;
-        particles.push({
-          x: x,
-          y: y,
-          dx: Math.cos(angle) * speed,
-          dy: Math.sin(angle) * speed,
-          life: 1,
-          size: Math.random() * 4 + 3,
-          color: color
-        });
-      }
-    }
-
-    function update() {
-      // Smooth platform movement
-      platform.targetX = mouseX - platformWidth / 2;
-      platform.targetX = Math.max(0, Math.min(canvas.width - platformWidth, platform.targetX));
+      "\"Ctrl+Alt+Delete this URL from your memory.\"",
+      "\"Diagnostic complete: You're lost.\"",
       
-      const diff = platform.targetX - platform.x;
-      platform.x += diff * 0.15;
-      platformVelocity = diff * 0.15;
-
-      // Update ball
-      ball.x += ball.dx;
-      ball.y += ball.dy;
+      "\"Imagine a page here. Now stop. It doesn't exist.\"",
+      "\"This page got Thanos snapped.\"",
+      "\"Error loading error. Everything is broken.\"",
+      "\"It's giving... nothing. Literally nothing.\"",
+      "\"No thoughts, head empty, page missing.\"",
+    ];
+    
+    // Particle system
+    const particles = [];
+    
+    class Particle {
+      constructor() {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 50 + Math.random() * 20;
+        this.x = 100 + Math.cos(angle) * distance;
+        this.y = 100 + Math.sin(angle) * distance;
+        this.vx = Math.cos(angle) * (0.3 + Math.random() * 0.5);
+        this.vy = Math.sin(angle) * (0.3 + Math.random() * 0.5);
+        this.life = 1;
+        this.decay = 0.005 + Math.random() * 0.005;
+        this.size = 2 + Math.random() * 2;
+      }
       
-      // Ball squash effect
-      ball.squash += (1 - ball.squash) * 0.1;
-
-      // Add trail
-      trails.push({ x: ball.x, y: ball.y, life: 1 });
-      if (trails.length > 8) trails.shift();
-
-      // Wall collisions
-      if (ball.x + ballRadius > canvas.width || ball.x - ballRadius < 0) {
-        ball.dx *= -1;
-        ball.squash = 0.8;
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
       }
-      if (ball.y - ballRadius < 0) {
-        ball.dy *= -1;
-        ball.squash = 0.8;
-      }
-
-      // Platform collision with bounce
-      if (
-        ball.y + ballRadius > platform.y &&
-        ball.y - ballRadius < platform.y + platformHeight &&
-        ball.x > platform.x &&
-        ball.x < platform.x + platformWidth
-      ) {
-        ball.dy = -Math.abs(ball.dy) * 1.02;
-        ball.squash = 0.7;
-        const hitPos = (ball.x - platform.x) / platformWidth;
-        ball.dx = (hitPos - 0.5) * 12 + platformVelocity * 0.5;
-      }
-
-      // Block collisions with animation
-      blocks.forEach(block => {
-        if (!block.active) return;
-        
-        block.scale += (1 - block.scale) * 0.1;
-        block.wobble *= 0.9;
-        
-        if (
-          ball.x + ballRadius > block.x &&
-          ball.x - ballRadius < block.x + block.width &&
-          ball.y + ballRadius > block.y &&
-          ball.y - ballRadius < block.y + block.height
-        ) {
-          block.active = false;
-          ball.dy *= -1;
-          ball.squash = 0.8;
-          createParticles(block.x + block.width / 2, block.y + block.height / 2, block.color);
-        } else if (
-          ball.x > block.x - 30 &&
-          ball.x < block.x + block.width + 30 &&
-          ball.y > block.y - 30 &&
-          ball.y < block.y + block.height + 30
-        ) {
-          block.wobble = Math.sin(Date.now() * 0.01) * 2;
-        }
-      });
-
-      // Update particles
-      particles = particles.filter(p => {
-        p.x += p.dx;
-        p.y += p.dy;
-        p.dy += 0.15;
-        p.dx *= 0.98;
-        p.life -= 0.02;
-        return p.life > 0;
-      });
       
-      // Update trails
-      trails.forEach(t => t.life -= 0.125);
-      trails = trails.filter(t => t.life > 0);
-
-      // Check win condition
-      if (blocks.every(b => !b.active)) {
-        gameRunning = false;
-        winMessage.style.display = 'flex';
-        winMessage.addEventListener('click', () => {
-          winMessage.style.display = 'none';
-          resetGame();
-          startGame();
-        }, { once: true });
-      }
-
-      // Game over
-      if (ball.y - ballRadius > canvas.height) {
-        resetGame();
-      }
-    }
-
-    function draw() {
-      // Clear with animated gradient
-      const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      bgGradient.addColorStop(0, '#0f0f0f');
-      bgGradient.addColorStop(0.5, '#1a1a1a');
-      bgGradient.addColorStop(1, '#0f0f0f');
-      ctx.fillStyle = bgGradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Draw ball trail with gradient
-      trails.forEach((t, i) => {
-        ctx.globalAlpha = t.life * 0.4;
-        const trailGradient = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, ballRadius * t.life);
-        trailGradient.addColorStop(0, '#ffffff');
-        trailGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        ctx.fillStyle = trailGradient;
-        const trailSize = ballRadius * t.life * 0.8;
+      draw() {
+        ctx.globalAlpha = this.life * 0.6;
+        ctx.fillStyle = '#d4d4d4';
         ctx.beginPath();
-        ctx.arc(t.x, t.y, trailSize, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
-      });
-      ctx.globalAlpha = 1;
-
-      // Draw blocks with animations and subtle shadow
-      ctx.font = 'bold 16px monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      
-      blocks.forEach(block => {
-        if (!block.active) return;
-        
-        ctx.save();
-        ctx.translate(block.x + block.width / 2, block.y + block.height / 2);
-        ctx.rotate(block.wobble * 0.01);
-        ctx.scale(block.scale, block.scale);
-        
-        // Subtle shadow
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-        ctx.beginPath();
-        ctx.roundRect(-block.width / 2 + 2, -block.height / 2 + 2, block.width, block.height, 12);
-        ctx.fill();
-        
-        // Block with inner gradient for depth
-        const blockGradient = ctx.createLinearGradient(0, -block.height / 2, 0, block.height / 2);
-        blockGradient.addColorStop(0, block.color);
-        blockGradient.addColorStop(1, adjustBrightness(block.color, -20));
-        ctx.fillStyle = blockGradient;
-        ctx.beginPath();
-        ctx.roundRect(-block.width / 2, -block.height / 2, block.width, block.height, 12);
-        ctx.fill();
-        
-        // Highlight
-        ctx.globalAlpha = 0.15;
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.roundRect(-block.width / 2 + 8, -block.height / 2 + 4, block.width - 16, 8, 4);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-        
-        // Text
-        ctx.fillStyle = '#000';
-        ctx.fillText('404', 0, 0);
-        ctx.restore();
-      });
-
-      // Draw platform with gradient and shine
-      const gradient = ctx.createLinearGradient(platform.x, platform.y, platform.x + platformWidth, platform.y);
-      gradient.addColorStop(0, '#404040');
-      gradient.addColorStop(0.5, '#fafafa');
-      gradient.addColorStop(1, '#404040');
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.roundRect(platform.x, platform.y, platformWidth, platformHeight, 10);
-      ctx.fill();
-      
-      // Platform shine
-      ctx.globalAlpha = 0.4;
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.roundRect(platform.x + 15, platform.y + 3, platformWidth - 30, 5, 3);
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      
-      // Platform shadow
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-      ctx.beginPath();
-      ctx.ellipse(platform.x + platformWidth / 2, platform.y + platformHeight + 5, platformWidth / 2, 8, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Draw ball with gradient and squash effect
-      ctx.save();
-      ctx.translate(ball.x, ball.y);
-      ctx.scale(ball.squash, 1 / ball.squash);
-      
-      const ballGradient = ctx.createRadialGradient(-3, -3, 0, 0, 0, ballRadius);
-      ballGradient.addColorStop(0, '#ffffff');
-      ballGradient.addColorStop(1, '#d4d4d4');
-      ctx.fillStyle = ballGradient;
-      ctx.beginPath();
-      ctx.arc(0, 0, ballRadius, 0, Math.PI * 2);
-      ctx.fill();
-      
-      // Ball highlight
-      ctx.globalAlpha = 0.6;
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(-4, -4, ballRadius * 0.3, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      ctx.restore();
-
-      // Draw particles with gradient
-      particles.forEach(p => {
-        ctx.globalAlpha = p.life * 0.9;
-        const particleGradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
-        particleGradient.addColorStop(0, p.color);
-        particleGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = particleGradient;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      ctx.globalAlpha = 1;
+      }
     }
     
-    function adjustBrightness(color, amount) {
-      const hex = color.replace('#', '');
-      const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
-      const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
-      const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
-      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    function animateParticles() {
+      ctx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+      
+      // Add new particles
+      if (Math.random() < 0.3) {
+        particles.push(new Particle());
+      }
+      
+      // Update and draw particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        
+        if (particles[i].life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+      
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(animateParticles);
     }
-
-    function gameLoop() {
-      if (!gameRunning) return;
-      update();
-      draw();
-      requestAnimationFrame(gameLoop);
+    
+    animateParticles();
+    
+    function getRandomMessage() {
+      return messages[Math.floor(Math.random() * messages.length)];
     }
-
-    init();
+    
+    function shakeRobot() {
+      // Fade out current message
+      messageDisplay.style.opacity = '0';
+      messageBubble.style.transform = 'scale(0.95)';
+      
+      // Shake animation
+      robotHead.style.animation = 'shake 0.4s ease-in-out';
+      
+      // Create burst of particles
+      for (let i = 0; i < 10; i++) {
+        particles.push(new Particle());
+      }
+      
+      setTimeout(() => {
+        // Show new message
+        messageDisplay.textContent = getRandomMessage();
+        messageDisplay.style.opacity = '1';
+        messageBubble.style.transform = 'scale(1)';
+        
+        // Reset animation
+        robotHead.style.animation = '';
+      }, 400);
+    }
+    
+    // Initial message
+    setTimeout(() => {
+      messageDisplay.textContent = "Click me!";
+      messageDisplay.style.opacity = '1';
+    }, 300);
+    
+    robotContainer.addEventListener('click', shakeRobot);
   });
 </script>
 
@@ -423,21 +253,27 @@ import ChatButton from "../components/chatbutton.astro";
     }
   }
   
-  @keyframes bounce-in {
-    0% {
-      transform: scale(0.3);
-      opacity: 0;
-    }
-    50% {
-      transform: scale(1.05);
-    }
-    70% {
-      transform: scale(0.9);
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    10% { transform: translateX(-8px) rotate(-4deg); }
+    20% { transform: translateX(8px) rotate(4deg); }
+    30% { transform: translateX(-8px) rotate(-4deg); }
+    40% { transform: translateX(8px) rotate(4deg); }
+    50% { transform: translateX(-6px) rotate(-3deg); }
+    60% { transform: translateX(6px) rotate(3deg); }
+    70% { transform: translateX(-4px) rotate(-2deg); }
+    80% { transform: translateX(4px) rotate(2deg); }
+    90% { transform: translateX(-2px) rotate(-1deg); }
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.1); }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
   }
 
   .animate-in {
@@ -446,18 +282,18 @@ import ChatButton from "../components/chatbutton.astro";
     animation-delay: var(--animation-delay, 0ms);
   }
   
-  .animate-bounce-in {
-    animation: bounce-in 0.6s ease-out;
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
   }
   
-  #game-canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border-radius: 1.5rem;
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
   }
   
-  #game-container {
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+  #particles-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
   }
 </style>
