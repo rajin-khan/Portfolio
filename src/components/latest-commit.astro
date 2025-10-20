@@ -27,9 +27,10 @@ const GITHUB_EVENTS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/event
     return `${days}d ago`;
   }
 
-  // Fetch the latest commit
+  // Fetch the latest commit with full details
   async function fetchLatestCommit() {
     try {
+      // First, get the latest PushEvent
       const response = await fetch(GITHUB_EVENTS_URL, {
         headers: {
           Accept: "application/vnd.github.v3+json",
@@ -49,14 +50,43 @@ const GITHUB_EVENTS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/event
         throw new Error("Invalid API response: Expected an array of events");
       }
 
-      return (
-        events.find(
-          (event) =>
-            event.type === "PushEvent" &&
-            Array.isArray(event.payload.commits) &&
-            event.payload.commits.length > 0
-        ) || null
-      );
+      const latestPushEvent = events.find((event) => event.type === "PushEvent");
+      
+      if (!latestPushEvent) {
+        return null;
+      }
+
+      // Now fetch the actual commit details to get the message
+      const commitSha = latestPushEvent.payload.head;
+      const repoName = latestPushEvent.repo.name;
+      const commitUrl = `https://api.github.com/repos/${repoName}/commits/${commitSha}`;
+
+      const commitResponse = await fetch(commitUrl, {
+        headers: {
+          Accept: "application/vnd.github.v3+json",
+        },
+        cache: "no-store",
+      });
+
+      if (!commitResponse.ok) {
+        throw new Error(`Failed to fetch commit details`);
+      }
+
+      const commitData = await commitResponse.json();
+
+      return {
+        repo: {
+          name: repoName,
+        },
+        payload: {
+          commits: [
+            {
+              message: commitData.commit.message,
+            },
+          ],
+        },
+        created_at: latestPushEvent.created_at,
+      };
     } catch (error) {
       console.error("Error fetching GitHub events:", error);
       throw error;
