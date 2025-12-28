@@ -1,0 +1,536 @@
+e---
+import Layout from "../layouts/main.astro";
+import Carousel from "../components/curated/Carousel";
+import { readdirSync } from "fs";
+import { join } from "path";
+
+// Function to calculate date from issue number
+// curated-001 = Dec 25', curated-002 = Jan 26', etc.
+function getDateFromIssueNumber(issueNumber: number): string {
+  const startDate = new Date(2025, 11, 1); // December 2025 (month is 0-indexed)
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  // Calculate months from start (issue 1 = Dec 25', issue 2 = Jan 26', etc.)
+  const monthOffset = issueNumber - 1;
+  const targetDate = new Date(startDate);
+  targetDate.setMonth(startDate.getMonth() + monthOffset);
+
+  const month = months[targetDate.getMonth()];
+  const year = targetDate.getFullYear();
+  const yearShort = year.toString().slice(-2);
+
+  return `${month} ${yearShort}'`;
+}
+
+function getNextDate(lastIssueNumber: number): string {
+  return getDateFromIssueNumber(lastIssueNumber + 1);
+}
+
+// Get all PDF files from public/newsletters directory
+let newsletterFiles: Array<{ filename: string; issueNumber: number }> = [];
+
+try {
+  const newslettersDir = join(process.cwd(), "public", "newsletters");
+  const files = readdirSync(newslettersDir);
+
+  newsletterFiles = files
+    .filter((file) => file.endsWith(".pdf") && file.startsWith("curated-"))
+    .map((file) => {
+      const match = file.match(/curated-(\d+)\.pdf/);
+      if (match) {
+        return {
+          filename: file,
+          issueNumber: parseInt(match[1], 10),
+        };
+      }
+      return null;
+    })
+    .filter(
+      (item): item is { filename: string; issueNumber: number } => item !== null
+    )
+    .sort((a, b) => a.issueNumber - b.issueNumber);
+} catch (error) {
+  console.warn("Could not read newsletters directory:", error);
+  // Fallback to manual list if directory doesn't exist
+  newsletterFiles = [{ filename: "curated-001.pdf", issueNumber: 1 }];
+}
+
+const newsletters = newsletterFiles.map(({ filename, issueNumber }) => ({
+  issueNumber: issueNumber.toString().padStart(3, "0"),
+  date: getDateFromIssueNumber(issueNumber),
+  pdfPath: `/newsletters/${filename}`,
+}));
+
+const lastIssueNumber =
+  newsletterFiles.length > 0
+    ? newsletterFiles[newsletterFiles.length - 1].issueNumber
+    : 0;
+const nextIssueNumber = (lastIssueNumber + 1).toString().padStart(3, "0");
+const nextDate = getNextDate(lastIssueNumber);
+---
+
+<Layout title="Curated Newsletter">
+  <div class="curated-page">
+    <!-- Animated light streaks -->
+    <div class="light-streak streak-1"></div>
+    <div class="light-streak streak-2"></div>
+    <div class="light-streak streak-3"></div>
+    <div class="light-streak streak-4"></div>
+    <div class="light-streak streak-5"></div>
+    <div class="light-streak streak-6"></div>
+
+    <a href="/" class="back-button" aria-label="Back to home">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M19 12H5M12 19l-7-7 7-7"></path>
+      </svg>
+    </a>
+    <Carousel
+      client:load
+      newsletters={newsletters}
+      nextDate={nextDate}
+      nextIssueNumber={nextIssueNumber}
+    />
+  </div>
+</Layout>
+
+<style>
+  /* Import fonts */
+  @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap");
+  @import url("https://fonts.cdnfonts.com/css/satoshi");
+
+  .curated-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000000;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    z-index: 9999;
+  }
+
+  /* Light streaks animation */
+  .light-streak {
+    position: absolute;
+    width: 3px;
+    height: 200%;
+    opacity: 0;
+    background: linear-gradient(
+      30deg,
+      transparent,
+      rgba(59, 130, 246, 0.6),
+      rgba(34, 197, 94, 0.6),
+      rgba(250, 204, 21, 0.6),
+      rgba(249, 115, 22, 0.6),
+      transparent
+    );
+    filter: blur(8px);
+    transform-origin: center center;
+    animation: streakMove 8s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .streak-1 {
+    left: 10%;
+    animation-delay: 0s;
+  }
+
+  .streak-2 {
+    left: 35%;
+    animation-delay: 2s;
+    width: 4px;
+    background: linear-gradient(
+      30deg,
+      transparent,
+      rgba(147, 51, 234, 0.6),
+      rgba(59, 130, 246, 0.6),
+      rgba(34, 197, 94, 0.6),
+      rgba(250, 204, 21, 0.6),
+      transparent
+    );
+  }
+
+  .streak-3 {
+    left: 60%;
+    animation-delay: 4s;
+    width: 2px;
+  }
+
+  .streak-4 {
+    right: 15%;
+    animation-delay: 1.5s;
+    width: 3px;
+    background: linear-gradient(
+      30deg,
+      transparent,
+      rgba(249, 115, 22, 0.6),
+      rgba(239, 68, 68, 0.6),
+      transparent
+    );
+  }
+
+  .streak-5 {
+    left: 5%;
+    animation-delay: 3s;
+    width: 2.5px;
+    background: linear-gradient(
+      30deg,
+      transparent,
+      rgba(59, 130, 246, 0.5),
+      rgba(147, 51, 234, 0.5),
+      rgba(239, 68, 68, 0.5),
+      transparent
+    );
+  }
+
+  .streak-6 {
+    right: 5%;
+    animation-delay: 5.5s;
+    width: 3.5px;
+    background: linear-gradient(
+      30deg,
+      transparent,
+      rgba(34, 197, 94, 0.6),
+      rgba(59, 130, 246, 0.6),
+      rgba(147, 51, 234, 0.6),
+      transparent
+    );
+  }
+
+  @keyframes streakMove {
+    0% {
+      transform: rotate(30deg) translateY(150%) translateX(150%);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: rotate(30deg) translateY(-150%) translateX(-150%);
+      opacity: 0;
+    }
+  }
+
+  /* Hide header and footer on curated page */
+  :global(header),
+  :global(footer),
+  :global(.square-lines) {
+    display: none !important;
+  }
+
+  :global(body) {
+    overflow: hidden;
+  }
+
+  /* Back Button */
+  .back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10000;
+    width: auto;
+    height: auto;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    padding: 8px;
+  }
+
+  .back-button:hover {
+    color: rgba(255, 255, 255, 1);
+    transform: translateX(-2px);
+  }
+
+  .back-button:active {
+    transform: translateX(-4px);
+  }
+
+  .back-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Carousel Wrapper */
+  :global(.carousel-wrapper) {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+    z-index: 2;
+  }
+
+  /* Carousel Container */
+  :global(.carousel-container) {
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  :global(.carousel-container::-webkit-scrollbar) {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  /* Carousel Track */
+  :global(.carousel-track) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    padding: 0;
+    gap: 40px;
+    transform-style: preserve-3d;
+    width: max-content;
+    min-width: 100%;
+    position: relative;
+    /* Viewport-based centering: center first item using margin */
+    margin-left: calc(50vw - 175px);
+    /* Add right margin to center last item and ensure full scrollability */
+    margin-right: calc(50vw - 175px);
+  }
+
+  /* Carousel Item */
+  :global(.carousel-item) {
+    cursor: pointer;
+    transition:
+      transform 0.15s ease-out,
+      opacity 0.15s ease-out;
+    transform-origin: center center;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    will-change: transform, opacity;
+  }
+
+  :global(.carousel-item:hover .carousel-item-inner) {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+  }
+
+  :global(.carousel-item-inner) {
+    width: 350px;
+    height: 495px; /* A4 aspect ratio: 350 * (297/210) */
+    background: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+  }
+
+  :global(.carousel-item-image) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :global(.carousel-item-placeholder) {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+  }
+
+  :global(.carousel-item-date) {
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    margin-bottom: 16px;
+    width: 100%;
+    order: 1;
+    flex-shrink: 0;
+  }
+
+  :global(.carousel-item-inner) {
+    order: 2;
+  }
+
+  :global(.carousel-item-number) {
+    font-family:
+      "Satoshi",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    margin-top: 16px;
+    width: 100%;
+    order: 3;
+    flex-shrink: 0;
+  }
+
+  /* Placeholder Card */
+  :global(.placeholder-card .carousel-item-inner) {
+    background: #2a2a2a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  :global(.placeholder-inner) {
+    position: relative;
+  }
+
+  :global(.placeholder-logo-container) {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  :global(.placeholder-logo) {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    opacity: 0.6;
+  }
+
+  /* Navigation Arrows */
+  :global(.carousel-nav-button) {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  :global(.carousel-nav-button:hover) {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  :global(.carousel-nav-button:active) {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  :global(.carousel-nav-left) {
+    left: 20px;
+  }
+
+  :global(.carousel-nav-right) {
+    right: 20px;
+  }
+
+  :global(.carousel-nav-button svg) {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .back-button {
+      top: 16px;
+      left: 16px;
+      padding: 6px;
+    }
+
+    .back-button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    :global(.carousel-item-inner) {
+      width: 250px;
+      height: 354px; /* Maintain A4 ratio */
+    }
+
+    :global(.carousel-track) {
+      gap: 20px;
+      padding: 0;
+      /* Viewport-based centering for mobile: center 250px item */
+      margin-left: calc(50vw - 125px);
+      /* Add right margin to center last item and ensure full scrollability */
+      margin-right: calc(50vw - 125px);
+    }
+
+    :global(.carousel-nav-button) {
+      width: 40px;
+      height: 40px;
+    }
+
+    :global(.carousel-nav-left) {
+      left: 10px;
+    }
+
+    :global(.carousel-nav-right) {
+      right: 10px;
+    }
+
+    :global(.carousel-item-date) {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    :global(.carousel-item-number) {
+      font-size: 12px;
+      margin-top: 12px;
+    }
+  }
+</style>

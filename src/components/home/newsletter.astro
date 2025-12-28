@@ -1,0 +1,613 @@
+---
+
+---
+
+<div class="newsletter-wrapper">
+  <div class="newsletter-container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <div class="subscription-form" id="subscription-form">
+          <input
+            type="email"
+            id="newsletter-email"
+            class="newsletter-email-input"
+            placeholder="Enter your email"
+            autocomplete="email"
+          />
+          <button type="button" class="subscribe-button" id="subscribe-button">
+            SUBSCRIBE
+          </button>
+          <svg
+            class="checkmark"
+            id="checkmark"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="display: none;"
+          >
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+        </div>
+        <div class="newsletter-logo">
+          <img
+            src="/assets/images/curatedlogo.png"
+            alt="Curated Logo"
+            class="logo-image"
+          />
+          <a href="/curated" class="curated-link">
+            <svg
+              class="chevron-icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Animated light streaks -->
+      <div class="light-streak streak-1"></div>
+      <div class="light-streak streak-2"></div>
+      <div class="light-streak streak-3"></div>
+      <div class="light-streak streak-4"></div>
+
+      <!-- Rainbow shimmer overlay -->
+      <div class="rainbow-shimmer"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    // Wait for DOM to be ready
+    function init() {
+      const emailInput = document.getElementById("newsletter-email");
+      const subscribeButton = document.getElementById("subscribe-button");
+      const checkmark = document.getElementById("checkmark");
+
+      // Check if elements exist
+      if (!emailInput || !subscribeButton || !checkmark) {
+        console.error("Newsletter form elements not found");
+        return;
+      }
+
+      // Subscribe button click handler
+      subscribeButton.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        const email = emailInput.value.trim();
+
+        if (!email) {
+          return;
+        }
+
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          alert("Please enter a valid email address");
+          return;
+        }
+
+        try {
+          subscribeButton.style.opacity = "0.5";
+          subscribeButton.style.pointerEvents = "none";
+
+          const response = await fetch("/api/subscribe", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            // Success: hide button, show checkmark temporarily
+            subscribeButton.style.display = "none";
+            checkmark.style.display = "block";
+            checkmark.classList.add("checkmark-visible");
+
+            // Clear input
+            emailInput.value = "";
+
+            // After 2.5 seconds, revert back to subscribe button
+            setTimeout(() => {
+              checkmark.style.display = "none";
+              checkmark.classList.remove("checkmark-visible");
+              subscribeButton.style.display = "block";
+              subscribeButton.style.opacity = "1";
+              subscribeButton.style.pointerEvents = "auto";
+            }, 2500);
+          } else {
+            alert(data.error || "Something went wrong. Please try again.");
+            subscribeButton.style.opacity = "1";
+            subscribeButton.style.pointerEvents = "auto";
+          }
+        } catch (error) {
+          console.error("Error subscribing:", error);
+          alert("Failed to subscribe. Please try again.");
+          subscribeButton.style.opacity = "1";
+          subscribeButton.style.pointerEvents = "auto";
+        }
+      });
+
+      // Allow Enter key to submit
+      emailInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          subscribeButton.click();
+        }
+      });
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<style>
+  @import url("https://fonts.cdnfonts.com/css/satoshi");
+
+  .newsletter-wrapper {
+    width: 100%;
+    max-width: 56.32rem; /* ~88% of max-w-4xl (51.2rem * 1.1) */
+    margin: 0 auto;
+    padding: 0 1.75rem; /* px-7 */
+    display: block;
+  }
+
+  @media (min-width: 1280px) {
+    .newsletter-wrapper {
+      padding: 0; /* xl:px-0 */
+    }
+  }
+
+  .newsletter-container {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    margin: 48px 0;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+    overflow: visible;
+    filter: brightness(1.5) saturate(1.5);
+    transform-style: preserve-3d;
+  }
+
+  .newsletter-inner {
+    position: relative;
+    width: calc(100% - 6px);
+    height: calc(100% - 6px);
+    margin: 3px;
+    border-radius: 21px;
+    background: #0a0a0a;
+    background-image: url("/assets/images/light-leak-effect-black-background_53876-142963.jpg");
+    background-size: cover;
+    background-position: center top;
+    background-blend-mode: overlay;
+    overflow: hidden;
+    animation: backgroundMove 20s linear infinite;
+    z-index: 2;
+    filter: brightness(1.125) saturate(1.125);
+  }
+
+  .newsletter-container:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-color: transparent;
+  }
+
+  .newsletter-container:hover .newsletter-inner {
+    transform: translateY(-2px);
+  }
+
+  /* Vivid rainbow gradient border on hover */
+  .newsletter-container::after {
+    content: "";
+    position: absolute;
+    top: -0.1px;
+    left: 0px;
+    right: 0px;
+    bottom: 3.5px;
+    border-radius: 24px;
+    background: linear-gradient(
+      90deg,
+      #ff0000 0%,
+      #ff7f00 14.28%,
+      #ffff00 28.56%,
+      #00ff00 42.84%,
+      #0000ff 57.12%,
+      #4b0082 71.4%,
+      #9400d3 85.68%,
+      #ff0000 100%
+    );
+    background-size: 200% 100%;
+    opacity: 0;
+    z-index: -1;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+    animation: rainbowBorder 3s linear infinite;
+  }
+
+  .newsletter-container:hover::after {
+    opacity: 0.45;
+  }
+
+  @keyframes rainbowBorder {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
+  }
+
+  @keyframes backgroundMove {
+    0% {
+      background-position: center top;
+    }
+    100% {
+      background-position: center bottom;
+    }
+  }
+
+  .newsletter-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .newsletter-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 20px 40px;
+  }
+
+  .subscription-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 11;
+    flex: 0 0 auto;
+    pointer-events: auto;
+  }
+
+  .newsletter-email-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-family:
+      "Satoshi",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+    font-size: 13px;
+    padding: 4px 0;
+    outline: none;
+    transition: border-color 0.2s ease;
+    min-width: 180px;
+    width: auto;
+    flex: 0 1 auto;
+  }
+
+  .newsletter-email-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    font-family:
+      "Satoshi",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+  }
+
+  .newsletter-email-input:focus {
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .subscribe-button {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-family:
+      "Satoshi",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 11;
+  }
+
+  .subscribe-button:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+
+  .checkmark {
+    color: #22c55e;
+    filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.6));
+    animation: checkmarkAppear 0.4s ease-out;
+    position: relative;
+    z-index: 11;
+  }
+
+  .checkmark-visible {
+    display: block !important;
+  }
+
+  @keyframes checkmarkAppear {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .newsletter-logo {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    pointer-events: auto;
+    gap: 0;
+  }
+
+  .curated-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    padding: 0;
+    margin-left: 4px;
+  }
+
+  .curated-link:hover {
+    color: #ffffff;
+    transform: translateX(2px);
+  }
+
+  .chevron-icon {
+    display: block;
+  }
+
+  .logo-image {
+    max-height: 60px;
+    max-width: 150px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+  }
+
+  /* Light streaks animation */
+  .light-streak {
+    position: absolute;
+    width: 3px;
+    height: 200%;
+    opacity: 0;
+    background: linear-gradient(
+      30deg,
+      transparent,
+      rgba(59, 130, 246, 0.6),
+      rgba(34, 197, 94, 0.6),
+      rgba(250, 204, 21, 0.6),
+      rgba(249, 115, 22, 0.6),
+      transparent
+    );
+    filter: blur(8px);
+    transform-origin: center center;
+    animation: streakMove 8s ease-in-out infinite;
+  }
+
+  .streak-1 {
+    left: 10%;
+    animation-delay: 0s;
+  }
+
+  .streak-2 {
+    left: 35%;
+    animation-delay: 2s;
+    width: 4px;
+    background: linear-gradient(
+      30deg,
+      transparent,
+      rgba(147, 51, 234, 0.6),
+      rgba(59, 130, 246, 0.6),
+      rgba(34, 197, 94, 0.6),
+      rgba(250, 204, 21, 0.6),
+      transparent
+    );
+  }
+
+  .streak-3 {
+    left: 60%;
+    animation-delay: 4s;
+    width: 2px;
+  }
+
+  .streak-4 {
+    right: 15%;
+    animation-delay: 1.5s;
+    width: 3px;
+    background: linear-gradient(
+      30deg,
+      transparent,
+      rgba(249, 115, 22, 0.6),
+      rgba(239, 68, 68, 0.6),
+      transparent
+    );
+  }
+
+  @keyframes streakMove {
+    0% {
+      transform: rotate(30deg) translateY(150%) translateX(150%);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: rotate(30deg) translateY(-150%) translateX(-150%);
+      opacity: 0;
+    }
+  }
+
+  /* Rainbow shimmer effect */
+  .rainbow-shimmer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      30deg,
+      rgba(59, 130, 246, 0.1) 0%,
+      rgba(147, 51, 234, 0.1) 25%,
+      rgba(34, 197, 94, 0.1) 50%,
+      rgba(250, 204, 21, 0.1) 75%,
+      rgba(249, 115, 22, 0.1) 100%
+    );
+    background-size: 200% 200%;
+    animation: shimmer 6s ease-in-out infinite;
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+  }
+
+  @keyframes shimmer {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .newsletter-container {
+      height: 80px;
+      margin: 32px 0;
+    }
+
+    .newsletter-content {
+      padding: 16px 20px;
+      gap: 12px;
+    }
+
+    .subscription-form {
+      gap: 10px;
+      flex-shrink: 1;
+      min-width: 0;
+    }
+
+    .newsletter-email-input {
+      min-width: 0;
+      width: 100%;
+      max-width: 160px;
+      font-size: 12px;
+      padding: 3px 0;
+    }
+
+    .subscribe-button {
+      font-size: 9px;
+      letter-spacing: 0.4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .checkmark {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+
+    .newsletter-logo {
+      flex-shrink: 0;
+    }
+
+    .logo-image {
+      max-height: 50px;
+      max-width: 100px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .newsletter-content {
+      padding: 12px 16px;
+      gap: 8px;
+    }
+
+    .subscription-form {
+      gap: 8px;
+    }
+
+    .newsletter-email-input {
+      max-width: 130px;
+      font-size: 11px;
+    }
+
+    .subscribe-button {
+      font-size: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .checkmark {
+      width: 11px;
+      height: 11px;
+    }
+
+    .logo-image {
+      max-height: 45px;
+      max-width: 90px;
+    }
+  }
+</style>

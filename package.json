@@ -24,8 +24,10 @@
 	"dependencies": {
 		"@astrojs/react": "^4.3.0",
 		"@astrojs/sitemap": "^3.4.0",
+		"@upstash/redis": "^1.35.8",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
+		"resend": "^6.6.0",
 		"three": "^0.179.1"
 	}
 }

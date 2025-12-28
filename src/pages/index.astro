@@ -8,104 +8,130 @@ import Layout from "../layouts/main.astro";
 import StatusIndicator from "../components/status-indicator.astro";
 import TechStack from "../components/tech-stack.astro";
 import LatestCommit from "../components/latest-commit.astro";
+import Newsletter from "../components/home/newsletter.astro";
 
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "Rajin Khan",
-  "description": "Senior CS Student at North South University, from Dhaka, Bangladesh focusing on Generative AI and Deep Learning, proficient in Full-Stack Web Development and providing end-to-end AI solutions.",
-  "url": "https://rajinkhan.com",
-  "sameAs": [
+  name: "Rajin Khan",
+  description:
+    "Senior CS Student at North South University, from Dhaka, Bangladesh focusing on Generative AI and Deep Learning, proficient in Full-Stack Web Development and providing end-to-end AI solutions.",
+  url: "https://rajinkhan.com",
+  sameAs: [
     "https://github.com/rajin-khan",
     "https://www.linkedin.com/in/rajin-khan",
     "https://www.instagram.com/raaajiin/",
-    "https://www.facebook.com/rajinisdown/"
+    "https://www.facebook.com/rajinisdown/",
   ],
-  "jobTitle": "AI Engineer",
-  "worksFor": {
+  jobTitle: "AI Engineer",
+  worksFor: {
     "@type": "Organization",
-    "name": "The Data Island",
-    "address": { "@type": "PostalAddress", "addressLocality": "Thomson Grand", "addressCountry": "Singapore" },
-    "description": "A company specializing in Private AI and Data Solutions",
-    "url": "https://thedataisland.com", // Optional: Add if the organization has a website
-    "sameAs": ["https://www.linkedin.com/company/the-data-island-tdi/"],
+    name: "The Data Island",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Thomson Grand",
+      addressCountry: "Singapore",
+    },
+    description: "A company specializing in Private AI and Data Solutions",
+    url: "https://thedataisland.com", // Optional: Add if the organization has a website
+    sameAs: ["https://www.linkedin.com/company/the-data-island-tdi/"],
   },
-  "address": {
+  address: {
     "@type": "PostalAddress",
-    "addressLocality": "Dhaka",
-    "addressCountry": "Bangladesh"
+    addressLocality: "Dhaka",
+    addressCountry: "Bangladesh",
   },
-  "image": "https://rajinkhan.com/assets/images/rajins-banner-new.png", // Add image to schema
-  "alumniOf": {
-  "@type": "School",
-  "name": "Sunnydale",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Dhaka",
-    "addressCountry": "Bangladesh"
+  image: "https://rajinkhan.com/assets/images/rajins-banner-new.png", // Add image to schema
+  alumniOf: {
+    "@type": "School",
+    name: "Sunnydale",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Dhaka",
+      addressCountry: "Bangladesh",
+    },
+    knowsAbout: [
+      "Generative AI",
+      "Deep Learning",
+      "Machine Learning",
+      "Computer Vision",
+      "Graphic Design",
+      "Full-Stack Web Development",
+      "Prompt Engineering",
+    ],
+    mainEntityOfPage: "https://rajinkhan.com/about",
   },
-  "knowsAbout": ["Generative AI", "Deep Learning", "Machine Learning", "Computer Vision", "Graphic Design", "Full-Stack Web Development", "Prompt Engineering"],
-  "mainEntityOfPage": "https://rajinkhan.com/about"
-  }
 };
 
 // NEW: Added WebSite schema for Google Sitelinks
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "Rajin Khan's Portfolio",
-  "url": "https://rajinkhan.com",
-  "potentialAction": {
+  name: "Rajin Khan's Portfolio",
+  url: "https://rajinkhan.com",
+  potentialAction: {
     "@type": "SearchAction",
-    "target": {
+    target: {
       "@type": "EntryPoint",
-      "urlTemplate": "https://rajinkhan.com/search?q={search_term_string}"
+      urlTemplate: "https://rajinkhan.com/search?q={search_term_string}",
     },
-    "query-input": "required name=search_term_string"
-  }
+    "query-input": "required name=search_term_string",
+  },
 };
 
 const pageTitle = "Rajin Khan";
-const pageDescription = "Online Portfolio and Blog by Rajin Khan. Includes showcase of my Projects, with musings on AI, Web Dev, and Design.";
+const pageDescription =
+  "Online Portfolio and Blog by Rajin Khan. Includes showcase of my Projects, with musings on AI, Web Dev, and Design.";
 const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Graph image
 ---
 
-<Layout 
-  title={pageTitle} 
-  description={pageDescription} 
-  ogImage={ogImage}
->
-  <main class="relative z-20 w-full max-w-4xl mx-auto mt-16 px-7 md:mt-24 lg:mt-32 xl:px-0">
+<Layout title={pageTitle} description={pageDescription} ogImage={ogImage}>
+  <main
+    class="relative z-20 w-full max-w-4xl mx-auto mt-16 px-7 md:mt-24 lg:mt-32 xl:px-0"
+  >
     <!-- Animation applied to the entire hero section -->
-    <section class="flex flex-col-reverse md:flex-row items-center animate-in" style="--animation-delay: 0ms;">
+    <section
+      class="flex flex-col-reverse md:flex-row items-center animate-in"
+      style="--animation-delay: 0ms;"
+    >
       <div class="relative w-full md:w-1/2">
-        <h1 class="mb-5 text-4xl font-bold leading-tight md:text-4xl lg:text-6xl dark:text-white">
+        <h1
+          class="mb-5 text-4xl font-bold leading-tight md:text-4xl lg:text-6xl dark:text-white"
+        >
           Hey, I'm Rajin.
         </h1>
         <p class="mb-6 text-base text-neutral-600 dark:text-neutral-400">
-          A Full-Stack Dev & AI Engineer from Dhaka. <br class="hidden lg:block" />
+          A Full-Stack Dev & AI Engineer from Dhaka. <br
+            class="hidden lg:block"
+          />
           I craft beautiful, privacy-first, AI-powered solutions.
         </p>
         <h2 class="mb-2 font-semibold text-neutral-800 dark:text-neutral-200">
           I excel in:
         </h2>
-        <ul class="py-2 space-y-[3px] text-sm list-disc list-inside text-neutral-500 dark:text-neutral-400">
+        <ul
+          class="py-2 space-y-[3px] text-sm list-disc list-inside text-neutral-500 dark:text-neutral-400"
+        >
           <li>Generative AI</li>
           <li>Web Development</li>
           <li>Computer Vision</li>
           <li>and Graphic Design</li>
         </ul>
         <div class="flex items-center gap-4 flex-wrap">
-            <ChatButton />
-            <Button text="📝 Resume" link="/ARKResume2025.pdf" />
-            <div class="mt-5">
-                <StatusIndicator status="online" />
-            </div>
+          <ChatButton />
+          <Button text="📝 Resume" link="/ARKResume2025.pdf" />
+          <div class="mt-5">
+            <StatusIndicator status="online" />
+          </div>
         </div>
       </div>
-      
-      <div class="relative flex justify-center w-full mt-10 md:mt-0 md:w-1/2 md:translate-y-4 xl:translate-y-0 order-first md:order-none">
-        <div class="relative flex items-center justify-center w-[280px] h-[280px] lg:w-[360px] lg:h-[360px] border-2 border-dashed rounded-full border-neutral-300 dark:border-neutral-700">
+
+      <div
+        class="relative flex justify-center w-full mt-10 md:mt-0 md:w-1/2 md:translate-y-4 xl:translate-y-0 order-first md:order-none"
+      >
+        <div
+          class="relative flex items-center justify-center w-[280px] h-[280px] lg:w-[360px] lg:h-[360px] border-2 border-dashed rounded-full border-neutral-300 dark:border-neutral-700"
+        >
           <img
             src="/assets/images/rajin-darkbg-tiny.png"
             class="w-[265px] h-[265px] lg:w-[335px] lg:h-[335px] rounded-full object-cover"
@@ -119,6 +145,12 @@ const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Gr
     </section>
   </main>
 
+  <!-- Newsletter Section -->
+  <Separator text="newsletter" />
+  <div class="animate-in" style="--animation-delay: 150ms;">
+    <Newsletter />
+  </div>
+
   <!-- Animation applied to the separator -->
   <div class="animate-in" style="--animation-delay: 200ms;">
     <Separator text="My projects" />
@@ -128,13 +160,13 @@ const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Gr
   <div class="animate-in" style="--animation-delay: 400ms;">
     <Projects />
   </div>
-  
+
   <Separator text="Tech Stack" />
   <TechStack />
 
   <Separator text="Latest Activity" />
   <LatestCommit />
-  
+
   <Separator text="Oh, and I talk a lot" />
   <Writings />
 
