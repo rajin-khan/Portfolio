@@ -1,19 +1,21 @@
 import type { APIRoute } from 'astro';
-import { Redis } from '@upstash/redis';
 
 // Mark this route as dynamic (not prerendered)
 export const prerender = false;
 
 // Lazy initialization of Redis to prevent function crashes on startup
-let redisInstance: Redis | null = null;
+let redisInstance: any = null;
 
-function getRedis(): Redis | null {
+async function getRedis() {
   // Return cached instance if already initialized
   if (redisInstance !== null) {
     return redisInstance;
   }
 
   try {
+    // Dynamic import to ensure the module is available
+    const { Redis } = await import('@upstash/redis');
+    
     // Initialize Redis with environment variables from Upstash
     // Vercel automatically adds these when you connect Upstash Redis
     const redisUrl = import.meta.env.REDIS_URL || import.meta.env.KV_REST_API_URL || import.meta.env.UPSTASH_REDIS_REST_URL;
@@ -30,6 +32,7 @@ function getRedis(): Redis | null {
       console.error('❌ Missing or invalid Redis environment variables');
       console.error('Required: REDIS_URL (or KV_REST_API_URL or UPSTASH_REDIS_REST_URL) - must start with https://');
       console.error('Required: KV_REST_API_TOKEN (or UPSTASH_REDIS_REST_TOKEN)');
+      console.error('Available env vars:', Object.keys(import.meta.env).filter(k => k.includes('REDIS') || k.includes('KV')));
       return null;
     }
 
@@ -44,6 +47,7 @@ function getRedis(): Redis | null {
     return null;
   } catch (error) {
     console.error('Error initializing Redis:', error);
+    console.error('Error details:', error instanceof Error ? error.stack : String(error));
     return null;
   }
 }
@@ -82,14 +86,17 @@ export const POST: APIRoute = async ({ request }) => {
     // Normalize email (lowercase)
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Initialize Redis (lazy loading)
-    const redis = getRedis();
+    // Initialize Redis (lazy loading with dynamic import)
+    const redis = await getRedis();
     
     // Check if Redis is configured
     if (!redis) {
-      console.error('Redis not configured');
+      console.error('Redis not configured - check environment variables');
       return new Response(
-        JSON.stringify({ error: 'Service temporarily unavailable' }),
+        JSON.stringify({ 
+          error: 'Service temporarily unavailable',
+          message: 'Redis connection not available. Please check server configuration.'
+        }),
         { status: 503, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -103,6 +110,7 @@ export const POST: APIRoute = async ({ request }) => {
     );
   } catch (error) {
     console.error('Error subscribing email:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     return new Response(
       JSON.stringify({ 
         error: 'Failed to subscribe. Please try again.',

@@ -1,14 +1,15 @@
-import { Redis } from '@upstash/redis';
-export { r as renderers } from '../../chunks/_@astro-renderers_BUaR2p-v.mjs';
+export { renderers } from '../../renderers.mjs';
 
+const __vite_import_meta_env__ = {"ASSETS_PREFIX": undefined, "BASE_URL": "/", "DEV": false, "MODE": "production", "PROD": true, "SITE": "https://rajinkhan.com", "SSR": true};
 const prerender = false;
 let redisInstance = null;
-function getRedis() {
+async function getRedis() {
   if (redisInstance !== null) {
     return redisInstance;
   }
   try {
-    const redisUrl = undefined                          || "https://sought-treefrog-40997.upstash.io";
+    const { Redis } = await import('@upstash/redis');
+    const redisUrl = Object.assign(__vite_import_meta_env__, { KV_REST_API_URL: "https://sought-treefrog-40997.upstash.io", KV_REST_API_TOKEN: "AaAlAAIncDFhMTE3Mzk3NTE0NmI0YWRlODE2YjRlNzA0MDZjZGU2MHAxNDA5OTc" }).REDIS_URL || "https://sought-treefrog-40997.upstash.io";
     const redisToken = "AaAlAAIncDFhMTE3Mzk3NTE0NmI0YWRlODE2YjRlNzA0MDZjZGU2MHAxNDA5OTc";
     if (redisUrl && (redisUrl.startsWith("rediss://") || redisUrl.startsWith("redis://"))) {
       console.warn("⚠️  Redis URL uses redis:// protocol. Upstash REST API requires https://");
@@ -26,6 +27,7 @@ function getRedis() {
     return null;
   } catch (error) {
     console.error("Error initializing Redis:", error);
+    console.error("Error details:", error instanceof Error ? error.stack : String(error));
     return null;
   }
 }
@@ -55,11 +57,14 @@ const POST = async ({ request }) => {
       );
     }
     const normalizedEmail = email.toLowerCase().trim();
-    const redis = getRedis();
+    const redis = await getRedis();
     if (!redis) {
-      console.error("Redis not configured");
+      console.error("Redis not configured - check environment variables");
       return new Response(
-        JSON.stringify({ error: "Service temporarily unavailable" }),
+        JSON.stringify({
+          error: "Service temporarily unavailable",
+          message: "Redis connection not available. Please check server configuration."
+        }),
         { status: 503, headers: { "Content-Type": "application/json" } }
       );
     }
@@ -70,6 +75,7 @@ const POST = async ({ request }) => {
     );
   } catch (error) {
     console.error("Error subscribing email:", error);
+    console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
     return new Response(
       JSON.stringify({
         error: "Failed to subscribe. Please try again.",

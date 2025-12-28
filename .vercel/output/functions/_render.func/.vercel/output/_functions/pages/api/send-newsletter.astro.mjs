@@ -1,6 +1,6 @@
 import { Redis } from '@upstash/redis';
 import { Resend } from 'resend';
-export { r as renderers } from '../../chunks/_@astro-renderers_BUaR2p-v.mjs';
+export { renderers } from '../../renderers.mjs';
 
 const prerender = false;
 let redisUrl = "https://sought-treefrog-40997.upstash.io";
