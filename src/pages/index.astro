@@ -170,8 +170,16 @@ const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Gr
   <Separator text="Oh, and I talk a lot" />
   <Writings />
 
-  <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(personSchema)}
+  />
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(websiteSchema)}
+  />
 </Layout>
 
 <style>
