@@ -1,29 +1,32 @@
-import { Redis } from '@upstash/redis';
 export { renderers } from '../../renderers.mjs';
 
 const prerender = false;
-let redisUrl = "https://sought-treefrog-40997.upstash.io";
-const redisToken = "AaAlAAIncDFhMTE3Mzk3NTE0NmI0YWRlODE2YjRlNzA0MDZjZGU2MHAxNDA5OTc";
-if (redisUrl && (redisUrl.startsWith("rediss://") || redisUrl.startsWith("redis://"))) {
-  console.warn("⚠️  Redis URL uses redis:// protocol. Upstash REST API requires https://");
-  console.warn("Please use the REST API URL from Upstash dashboard (starts with https://)");
-  redisUrl = null;
+let redisInstance = null;
+async function getRedis() {
+  if (redisInstance !== null) {
+    return redisInstance;
+  }
+  try {
+    const { Redis } = await import('@upstash/redis');
+    const redisUrl = undefined                          || "https://sought-treefrog-40997.upstash.io";
+    const redisToken = "AaAlAAIncDFhMTE3Mzk3NTE0NmI0YWRlODE2YjRlNzA0MDZjZGU2MHAxNDA5OTc";
+    if (!redisUrl || !redisToken) ;
+    if (redisUrl.startsWith("rediss://") || redisUrl.startsWith("redis://")) {
+      console.error("❌ Redis URL must use https:// protocol");
+      return null;
+    }
+    if (redisUrl.startsWith("https://")) {
+      redisInstance = new Redis({ url: redisUrl, token: redisToken });
+      return redisInstance;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error initializing Redis:", error);
+    return null;
+  }
 }
-if (!redisUrl || !redisToken) {
-  console.error("❌ Missing or invalid Redis environment variables");
-}
-const redis = redisUrl && redisToken && redisUrl.startsWith("https://") ? new Redis({
-  url: redisUrl,
-  token: redisToken
-}) : null;
 const GET = async ({ url }) => {
   try {
-    if (!redis) {
-      return new Response(
-        JSON.stringify({ error: "Service temporarily unavailable: Redis not configured" }),
-        { status: 503, headers: { "Content-Type": "application/json" } }
-      );
-    }
     const email = url.searchParams.get("email");
     if (!email || typeof email !== "string") {
       return new Response(
@@ -36,6 +39,13 @@ const GET = async ({ url }) => {
       return new Response(
         JSON.stringify({ error: "Invalid email format" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+    const redis = await getRedis();
+    if (!redis) {
+      return new Response(
+        JSON.stringify({ error: "Service temporarily unavailable: Redis not configured" }),
+        { status: 503, headers: { "Content-Type": "application/json" } }
       );
     }
     const normalizedEmail = email.toLowerCase().trim();

@@ -1,63 +1,62 @@
 import type { APIRoute } from 'astro';
-import { Redis } from '@upstash/redis';
-import { Resend } from 'resend';
 
 // Mark this route as dynamic (not prerendered)
 export const prerender = false;
 
-// Initialize Redis with environment variables from Upstash
-let redisUrl = import.meta.env.REDIS_URL || import.meta.env.KV_REST_API_URL || import.meta.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL || process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const redisToken = import.meta.env.KV_REST_API_TOKEN || import.meta.env.KV_REST_API_READ_ONLY_TOKEN || import.meta.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.KV_REST_API_READ_ONLY_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+// Lazy initialization to prevent function crashes on startup
+let redisInstance: any = null;
+let resendInstance: any = null;
 
-// Convert rediss:// or redis:// URLs to https:// (Upstash REST API requires https://)
-if (redisUrl && (redisUrl.startsWith('rediss://') || redisUrl.startsWith('redis://'))) {
-    console.warn('⚠️  Redis URL uses redis:// protocol. Upstash REST API requires https://');
-    console.warn('Please use the REST API URL from Upstash dashboard (starts with https://)');
-    redisUrl = null;
+async function getRedis() {
+    if (redisInstance !== null) return redisInstance;
+
+    try {
+        const { Redis } = await import('@upstash/redis');
+        const redisUrl = import.meta.env.KV_REST_API_URL || process.env.KV_REST_API_URL;
+        const redisToken = import.meta.env.KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN;
+
+        if (!redisUrl || !redisToken || !redisUrl.startsWith('https://')) {
+            console.error('❌ Missing or invalid Redis environment variables');
+            return null;
+        }
+
+        redisInstance = new Redis({ url: redisUrl, token: redisToken });
+        return redisInstance;
+    } catch (error) {
+        console.error('Error initializing Redis:', error);
+        return null;
+    }
 }
 
-if (!redisUrl || !redisToken) {
-    console.error('❌ Missing or invalid Redis environment variables');
+async function getResend() {
+    if (resendInstance !== null) return resendInstance;
+
+    try {
+        const { Resend } = await import('resend');
+        const apiKey = import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY;
+
+        if (!apiKey) {
+            console.error('❌ Missing RESEND_API_KEY');
+            return null;
+        }
+
+        resendInstance = new Resend(apiKey);
+        return resendInstance;
+    } catch (error) {
+        console.error('Error initializing Resend:', error);
+        return null;
+    }
 }
-
-const redis = redisUrl && redisToken && redisUrl.startsWith('https://')
-    ? new Redis({
-        url: redisUrl,
-        token: redisToken,
-    })
-    : null;
-
-// Initialize Resend
-const resendApiKey = import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY;
-const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 // Function to calculate date from issue number
-// curated-001 = Dec 25', curated-002 = Jan 26', etc.
 function getDateFromIssueNumber(issueNumber: number): string {
-    const startDate = new Date(2025, 11, 1); // December 2025 (month is 0-indexed)
-    const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-    ];
-
+    const startDate = new Date(2025, 11, 1); // December 2025
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const monthOffset = issueNumber - 1;
     const targetDate = new Date(startDate);
     targetDate.setMonth(startDate.getMonth() + monthOffset);
-
     const month = months[targetDate.getMonth()];
-    const year = targetDate.getFullYear();
-    const yearShort = year.toString().slice(-2);
-
+    const yearShort = targetDate.getFullYear().toString().slice(-2);
     return `${month} ${yearShort}'`;
 }
 
@@ -73,56 +72,42 @@ function generateEmailHTML(issueNumber: string, date: string, email: string, sit
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>curated. #${issueNumber}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet">
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; background-color: #0a0a0a; color: #ffffff;">
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; background-color: #0a0a0a; color: #ffffff;">
   <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #0a0a0a;">
     <tr>
       <td style="padding: 40px 20px;">
         <table role="presentation" style="max-width: 600px; margin: 0 auto; background-color: #0a0a0a; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; overflow: hidden;">
-          <!-- Inner container with background -->
           <tr>
             <td style="background-color: #0a0a0a; padding: 3px;">
               <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #0a0a0a; border-radius: 21px; overflow: hidden;">
-                <!-- Header with curated. branding -->
                 <tr>
                   <td style="padding: 40px 40px 30px; text-align: center;">
-                    <div style="font-family: 'Instrument Serif', serif; font-style: italic; font-size: 32px; font-weight: 500; color: #ffffff; margin: 0 0 8px; letter-spacing: -0.5px;">curated.</div>
-                    <div style="font-family: 'Satoshi', sans-serif; font-size: 13px; color: rgba(255, 255, 255, 0.6); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Issue #${issueNumber} • ${date}</div>
+                    <div style="font-style: italic; font-size: 32px; font-weight: 500; color: #ffffff; margin: 0 0 8px;">curated.</div>
+                    <div style="font-size: 13px; color: rgba(255, 255, 255, 0.6); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Issue #${issueNumber} • ${date}</div>
                   </td>
                 </tr>
-                
-                <!-- Main Content -->
                 <tr>
                   <td style="padding: 0 40px 40px; text-align: center;">
-                    <p style="margin: 0 0 20px; font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); font-family: 'Satoshi', sans-serif;">Hey there,</p>
-                    
-                    <p style="margin: 0 0 30px; font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); font-family: 'Satoshi', sans-serif;">
-                      Welcome to the first issue of curated. I won't be sending you new issues every month, just whenever I find cool enough stuff to share.
-                      Hope you enjoy the read (and if you don't, you can unsubscribe anytime).
+                    <p style="margin: 0 0 20px; font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">Hey there,</p>
+                    <p style="margin: 0 0 30px; font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">
+                      A new issue of curated is here! Hope you enjoy the read.
                     </p>
-                    
-                    <!-- CTA Button -->
                     <table role="presentation" style="width: 100%; margin: 30px 0;">
                       <tr>
                         <td style="text-align: center;">
-                          <a href="${pdfUrl}" style="display: inline-block; padding: 12px 28px; background: #ffffff; border: none; color: #0a0a0a; text-decoration: none; border-radius: 12px; font-weight: 400; font-size: 10px; font-family: 'Satoshi', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease;">view newsletter</a>
+                          <a href="${pdfUrl}" style="display: inline-block; padding: 12px 28px; background: #ffffff; color: #0a0a0a; text-decoration: none; border-radius: 12px; font-weight: 400; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">view newsletter</a>
                         </td>
                       </tr>
                     </table>
                   </td>
                 </tr>
-                
-                <!-- Footer -->
                 <tr>
                   <td style="padding: 30px 40px; background-color: #0a0a0a; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                    <p style="margin: 0 0 12px; font-size: 11px; color: rgba(255, 255, 255, 0.4); text-align: center; font-family: 'Satoshi', sans-serif;">
-                      You're receiving this because you subscribed to curated, and have really good taste.
+                    <p style="margin: 0 0 12px; font-size: 11px; color: rgba(255, 255, 255, 0.4); text-align: center;">
+                      You're receiving this because you subscribed to curated.
                     </p>
-                    <p style="margin: 0; font-size: 11px; text-align: center; font-family: 'Satoshi', sans-serif;">
+                    <p style="margin: 0; font-size: 11px; text-align: center;">
                       <a href="${unsubscribeUrl}" style="color: rgba(255, 255, 255, 0.5); text-decoration: underline;">unsubscribe</a>
                     </p>
                   </td>
@@ -131,12 +116,10 @@ function generateEmailHTML(issueNumber: string, date: string, email: string, sit
             </td>
           </tr>
         </table>
-        
-        <!-- Bottom Spacing -->
         <table role="presentation" style="width: 100%; margin-top: 20px;">
           <tr>
             <td style="text-align: center; padding: 20px;">
-              <p style="margin: 0; font-size: 11px; color: rgba(255, 255, 255, 0.3); font-family: 'Satoshi', sans-serif;">
+              <p style="margin: 0; font-size: 11px; color: rgba(255, 255, 255, 0.3);">
                 by <a href="${siteUrl}" style="color: rgba(255, 255, 255, 0.5); text-decoration: none;">rajin khan</a>
               </p>
             </td>
@@ -155,8 +138,9 @@ export const POST: APIRoute = async ({ request }) => {
         // Validate ADMIN_SECRET
         const authHeader = request.headers.get('Authorization');
         const adminSecret = authHeader?.replace('Bearer ', '') || authHeader;
+        const expectedSecret = import.meta.env.ADMIN_SECRET || process.env.ADMIN_SECRET;
 
-        if (!adminSecret || adminSecret !== (import.meta.env.ADMIN_SECRET || process.env.ADMIN_SECRET)) {
+        if (!adminSecret || adminSecret !== expectedSecret) {
             return new Response(
                 JSON.stringify({ error: 'Unauthorized' }),
                 { status: 401, headers: { 'Content-Type': 'application/json' } }
@@ -176,7 +160,6 @@ export const POST: APIRoute = async ({ request }) => {
 
         const { issueNumber } = body || {};
 
-        // Validate issue number
         if (!issueNumber || typeof issueNumber !== 'string') {
             return new Response(
                 JSON.stringify({ error: 'Issue number is required' }),
@@ -184,7 +167,6 @@ export const POST: APIRoute = async ({ request }) => {
             );
         }
 
-        // Validate issue number format (should be numeric)
         const issueNum = parseInt(issueNumber, 10);
         if (isNaN(issueNum) || issueNum < 1) {
             return new Response(
@@ -193,49 +175,38 @@ export const POST: APIRoute = async ({ request }) => {
             );
         }
 
-        // Check if Redis is configured
+        // Lazy load Redis
+        const redis = await getRedis();
         if (!redis) {
-            console.error('Redis not configured');
             return new Response(
                 JSON.stringify({ error: 'Service temporarily unavailable: Redis not configured' }),
                 { status: 503, headers: { 'Content-Type': 'application/json' } }
             );
         }
 
-        // Check if Resend is configured
+        // Lazy load Resend
+        const resend = await getResend();
         if (!resend) {
-            console.error('Resend not configured');
             return new Response(
                 JSON.stringify({ error: 'Service temporarily unavailable: Resend not configured' }),
                 { status: 503, headers: { 'Content-Type': 'application/json' } }
             );
         }
 
-        // Get site URL
         const siteUrl = import.meta.env.SITE_URL || process.env.SITE_URL || 'https://rajinkhan.com';
-
-        // Get all subscribers
         const subscribers = await redis.smembers('newsletter:subscribers');
         const total = subscribers.length;
 
         if (total === 0) {
             return new Response(
-                JSON.stringify({
-                    success: true,
-                    sent: 0,
-                    failed: 0,
-                    total: 0,
-                    message: 'No subscribers found'
-                }),
+                JSON.stringify({ success: true, sent: 0, failed: 0, total: 0, message: 'No subscribers found' }),
                 { status: 200, headers: { 'Content-Type': 'application/json' } }
             );
         }
 
-        // Calculate date for this issue
         const date = getDateFromIssueNumber(issueNum);
         const formattedIssueNumber = issueNumber.padStart(3, '0');
 
-        // Send emails
         let sent = 0;
         let failed = 0;
         const errors: string[] = [];
@@ -243,9 +214,6 @@ export const POST: APIRoute = async ({ request }) => {
         for (const email of subscribers) {
             try {
                 const emailHTML = generateEmailHTML(formattedIssueNumber, date, email, siteUrl);
-
-                // Get from email - use environment variable or default to newsletter@rajinkhan.com
-                // Since domain is verified, any email at rajinkhan.com works
                 const fromEmail = import.meta.env.RESEND_FROM_EMAIL || process.env.RESEND_FROM_EMAIL || '[email protected]';
 
                 const result = await resend.emails.send({
@@ -255,28 +223,15 @@ export const POST: APIRoute = async ({ request }) => {
                     html: emailHTML,
                 });
 
-                // Log Resend response for debugging
-                console.log(`Resend response for ${email}:`, JSON.stringify(result, null, 2));
-
-                // Check if Resend returned an error
                 if (result.error) {
                     failed++;
-                    const errorMessage = result.error.message || JSON.stringify(result.error);
-                    errors.push(`${email}: ${errorMessage}`);
-                    console.error(`Resend error for ${email}:`, result.error);
+                    errors.push(`${email}: ${result.error.message || JSON.stringify(result.error)}`);
                 } else {
                     sent++;
-                    console.log(`Successfully sent email to ${email}, ID: ${result.data?.id || 'unknown'}`);
                 }
             } catch (error) {
                 failed++;
-                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-                errors.push(`${email}: ${errorMessage}`);
-                console.error(`Failed to send email to ${email}:`, error);
-                // Log full error details
-                if (error instanceof Error) {
-                    console.error('Error stack:', error.stack);
-                }
+                errors.push(`${email}: ${error instanceof Error ? error.message : 'Unknown error'}`);
             }
         }
 
@@ -288,7 +243,7 @@ export const POST: APIRoute = async ({ request }) => {
                 total,
                 issueNumber: formattedIssueNumber,
                 date,
-                ...(errors.length > 0 && { errors: errors.slice(0, 10) }), // Limit errors in response
+                ...(errors.length > 0 && { errors: errors.slice(0, 10) }),
             }),
             { status: 200, headers: { 'Content-Type': 'application/json' } }
         );
@@ -303,4 +258,3 @@ export const POST: APIRoute = async ({ request }) => {
         );
     }
 };
-

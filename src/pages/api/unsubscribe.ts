@@ -1,45 +1,48 @@
 import type { APIRoute } from 'astro';
-import { Redis } from '@upstash/redis';
 
 // Mark this route as dynamic (not prerendered)
 export const prerender = false;
 
-// Initialize Redis with environment variables from Upstash
-let redisUrl = import.meta.env.REDIS_URL || import.meta.env.KV_REST_API_URL || import.meta.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL || process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const redisToken = import.meta.env.KV_REST_API_TOKEN || import.meta.env.KV_REST_API_READ_ONLY_TOKEN || import.meta.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.KV_REST_API_READ_ONLY_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+// Lazy initialization of Redis to prevent function crashes on startup
+let redisInstance: any = null;
 
-// Convert rediss:// or redis:// URLs to https:// (Upstash REST API requires https://)
-if (redisUrl && (redisUrl.startsWith('rediss://') || redisUrl.startsWith('redis://'))) {
-    console.warn('⚠️  Redis URL uses redis:// protocol. Upstash REST API requires https://');
-    console.warn('Please use the REST API URL from Upstash dashboard (starts with https://)');
-    redisUrl = null;
+async function getRedis() {
+    if (redisInstance !== null) {
+        return redisInstance;
+    }
+
+    try {
+        const { Redis } = await import('@upstash/redis');
+
+        const redisUrl = import.meta.env.REDIS_URL || import.meta.env.KV_REST_API_URL || import.meta.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL || process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+        const redisToken = import.meta.env.KV_REST_API_TOKEN || import.meta.env.KV_REST_API_READ_ONLY_TOKEN || import.meta.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.KV_REST_API_READ_ONLY_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+
+        if (!redisUrl || !redisToken) {
+            console.error('❌ Missing Redis environment variables');
+            return null;
+        }
+
+        if (redisUrl.startsWith('rediss://') || redisUrl.startsWith('redis://')) {
+            console.error('❌ Redis URL must use https:// protocol');
+            return null;
+        }
+
+        if (redisUrl.startsWith('https://')) {
+            redisInstance = new Redis({ url: redisUrl, token: redisToken });
+            return redisInstance;
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error initializing Redis:', error);
+        return null;
+    }
 }
-
-if (!redisUrl || !redisToken) {
-    console.error('❌ Missing or invalid Redis environment variables');
-}
-
-const redis = redisUrl && redisToken && redisUrl.startsWith('https://')
-    ? new Redis({
-        url: redisUrl,
-        token: redisToken,
-    })
-    : null;
 
 export const GET: APIRoute = async ({ url }) => {
     try {
-        // Check if Redis is configured
-        if (!redis) {
-            return new Response(
-                JSON.stringify({ error: 'Service temporarily unavailable: Redis not configured' }),
-                { status: 503, headers: { 'Content-Type': 'application/json' } }
-            );
-        }
-
-        // Get email from query parameter
         const email = url.searchParams.get('email');
 
-        // Validate email
         if (!email || typeof email !== 'string') {
             return new Response(
                 JSON.stringify({ error: 'Email parameter is required' }),
@@ -47,7 +50,6 @@ export const GET: APIRoute = async ({ url }) => {
             );
         }
 
-        // Basic email format validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return new Response(
@@ -56,14 +58,18 @@ export const GET: APIRoute = async ({ url }) => {
             );
         }
 
-        // Normalize email (lowercase, trimmed)
-        const normalizedEmail = email.toLowerCase().trim();
+        const redis = await getRedis();
 
-        // Remove from Redis set
+        if (!redis) {
+            return new Response(
+                JSON.stringify({ error: 'Service temporarily unavailable: Redis not configured' }),
+                { status: 503, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        const normalizedEmail = email.toLowerCase().trim();
         const removed = await redis.srem('newsletter:subscribers', normalizedEmail);
 
-        // Return success regardless of whether email was in the list
-        // This prevents email enumeration attacks
         return new Response(
             JSON.stringify({
                 success: true,
@@ -83,4 +89,3 @@ export const GET: APIRoute = async ({ url }) => {
         );
     }
 };
-
