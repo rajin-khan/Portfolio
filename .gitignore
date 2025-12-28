@@ -23,4 +23,7 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
+# Vercel build output (force clean builds)
+.vercel/
+
 posts_templates/

@@ -1,5 +1,5 @@
-import { A as AstroError, f as NoImageMetadata, F as FailedToFetchRemoteImageDimensions, g as ExpectedImageOptions, h as ExpectedImage, j as ExpectedNotESMImage, k as resolveSrc, l as isRemoteImage, i as isRemotePath, m as isESMImportedImage, n as isLocalService, D as DEFAULT_HASH_PROPS, o as InvalidImageService, q as ImageMissingAlt, s as isRemoteAllowed } from '../chunks/astro/assets-service_Dc-0vceD.mjs';
-import { c as createAstro, a as createComponent, m as maybeRenderHead, b as addAttribute, s as spreadAttributes, r as renderTemplate } from '../chunks/astro/server_CvXnGYFB.mjs';
+import { A as AstroError, f as NoImageMetadata, F as FailedToFetchRemoteImageDimensions, g as ExpectedImageOptions, h as ExpectedImage, j as ExpectedNotESMImage, k as resolveSrc, l as isRemoteImage, i as isCoreRemotePath, m as isESMImportedImage, n as isLocalService, D as DEFAULT_HASH_PROPS, o as InvalidImageService, q as ImageMissingAlt, s as isRemoteAllowed } from '../chunks/astro/assets-service_BalpQIi0.mjs';
+import { c as createAstro, a as createComponent, m as maybeRenderHead, b as addAttribute, s as spreadAttributes, r as renderTemplate } from '../chunks/astro/server_BaAhDtgC.mjs';
 import 'clsx';
 import * as mime from 'mrmime';
 export { renderers } from '../renderers.mjs';
@@ -842,7 +842,7 @@ async function getConfiguredImageService() {
   if (!globalThis?.astroAsset?.imageService) {
     const { default: service } = await import(
       // @ts-expect-error
-      '../chunks/astro/assets-service_Dc-0vceD.mjs'
+      '../chunks/astro/assets-service_BalpQIi0.mjs'
     ).then(n => n.a1).catch((e) => {
       const error = new AstroError(InvalidImageService);
       error.cause = e;
@@ -879,7 +879,7 @@ async function getImage$1(options, imageConfig) {
     ...options,
     src: await resolveSrc(options.src)
   };
-  if (options.inferSize && isRemoteImage(resolvedOptions.src) && isRemotePath(resolvedOptions.src)) {
+  if (options.inferSize && isRemoteImage(resolvedOptions.src) && isCoreRemotePath(resolvedOptions.src)) {
     const result = await inferRemoteSize(resolvedOptions.src);
     resolvedOptions.width ??= result.width;
     resolvedOptions.height ??= result.height;
@@ -1064,7 +1064,7 @@ const GET = async ({ request }) => {
       throw new Error("Incorrect transform returned by `parseURL`");
     }
     let inputBuffer = void 0;
-    const isRemoteImage = isRemotePath(transform.src);
+    const isRemoteImage = isCoreRemotePath(transform.src);
     const sourceUrl = isRemoteImage ? new URL(transform.src) : new URL(transform.src, url.origin);
     if (isRemoteImage && isRemoteAllowed(transform.src, imageConfig) === false) {
       return new Response("Forbidden", { status: 403 });
