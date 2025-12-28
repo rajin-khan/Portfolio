@@ -31,7 +31,7 @@ const redis = redisUrl && redisToken && redisUrl.startsWith('https://')
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    let body;
+    let body: { email?: string };
     try {
       body = await request.json();
     } catch (error) {

@@ -164,7 +164,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Parse request body
-    let body;
+    let body: { issueNumber?: string };
     try {
       body = await request.json();
     } catch (error) {

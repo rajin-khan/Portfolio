@@ -19,7 +19,7 @@ const redis = redisUrl && redisToken && redisUrl.startsWith('https://')
     })
   : null;
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async () => {
   try {
     // Check if Redis is configured
     if (!redis) {
