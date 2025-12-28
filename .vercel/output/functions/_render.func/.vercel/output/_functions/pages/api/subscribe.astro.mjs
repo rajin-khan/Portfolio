@@ -1,23 +1,34 @@
-import { R as Redis2 } from '../../chunks/nodejs_B6mB2F9q.mjs';
+import { Redis } from '@upstash/redis';
 export { r as renderers } from '../../chunks/_@astro-renderers_BUaR2p-v.mjs';
 
 const prerender = false;
-let redisUrl = "https://sought-treefrog-40997.upstash.io";
-const redisToken = "AaAlAAIncDFhMTE3Mzk3NTE0NmI0YWRlODE2YjRlNzA0MDZjZGU2MHAxNDA5OTc";
-if (redisUrl && (redisUrl.startsWith("rediss://") || redisUrl.startsWith("redis://"))) {
-  console.warn("⚠️  Redis URL uses redis:// protocol. Upstash REST API requires https://");
-  console.warn("Please use the REST API URL from Upstash dashboard (starts with https://)");
-  redisUrl = null;
+let redisInstance = null;
+function getRedis() {
+  if (redisInstance !== null) {
+    return redisInstance;
+  }
+  try {
+    const redisUrl = undefined                          || "https://sought-treefrog-40997.upstash.io";
+    const redisToken = "AaAlAAIncDFhMTE3Mzk3NTE0NmI0YWRlODE2YjRlNzA0MDZjZGU2MHAxNDA5OTc";
+    if (redisUrl && (redisUrl.startsWith("rediss://") || redisUrl.startsWith("redis://"))) {
+      console.warn("⚠️  Redis URL uses redis:// protocol. Upstash REST API requires https://");
+      console.warn("Please use the REST API URL from Upstash dashboard (starts with https://)");
+      return null;
+    }
+    if (!redisUrl || !redisToken) ;
+    if (redisUrl.startsWith("https://")) {
+      redisInstance = new Redis({
+        url: redisUrl,
+        token: redisToken
+      });
+      return redisInstance;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error initializing Redis:", error);
+    return null;
+  }
 }
-if (!redisUrl || !redisToken) {
-  console.error("❌ Missing or invalid Redis environment variables");
-  console.error("Required: REDIS_URL (or KV_REST_API_URL or UPSTASH_REDIS_REST_URL) - must start with https://");
-  console.error("Required: KV_REST_API_TOKEN (or UPSTASH_REDIS_REST_TOKEN)");
-}
-const redis = redisUrl && redisToken && redisUrl.startsWith("https://") ? new Redis2({
-  url: redisUrl,
-  token: redisToken
-}) : null;
 const POST = async ({ request }) => {
   try {
     let body;
@@ -44,6 +55,7 @@ const POST = async ({ request }) => {
       );
     }
     const normalizedEmail = email.toLowerCase().trim();
+    const redis = getRedis();
     if (!redis) {
       console.error("Redis not configured");
       return new Response(
@@ -59,7 +71,10 @@ const POST = async ({ request }) => {
   } catch (error) {
     console.error("Error subscribing email:", error);
     return new Response(
-      JSON.stringify({ error: "Failed to subscribe. Please try again." }),
+      JSON.stringify({
+        error: "Failed to subscribe. Please try again.",
+        details: error instanceof Error ? error.message : "Unknown error"
+      }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
