@@ -10,4 +10,12 @@ export default defineConfig({
   output: 'hybrid', // Enable API routes while keeping static pages
   adapter: vercel(),
   integrations: [tailwind(), sitemap(), react()],
+  vite: {
+    ssr: {
+      noExternal: ['react', 'react-dom', '@astrojs/react'],
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom'],
+    },
+  },
 });
