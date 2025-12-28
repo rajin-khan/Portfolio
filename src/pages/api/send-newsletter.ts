@@ -6,67 +6,67 @@ import { Resend } from 'resend';
 export const prerender = false;
 
 // Initialize Redis with environment variables from Upstash
-let redisUrl = import.meta.env.REDIS_URL || import.meta.env.KV_REST_API_URL || import.meta.env.UPSTASH_REDIS_REST_URL;
-const redisToken = import.meta.env.KV_REST_API_TOKEN || import.meta.env.KV_REST_API_READ_ONLY_TOKEN || import.meta.env.UPSTASH_REDIS_REST_TOKEN;
+let redisUrl = import.meta.env.REDIS_URL || import.meta.env.KV_REST_API_URL || import.meta.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL || process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = import.meta.env.KV_REST_API_TOKEN || import.meta.env.KV_REST_API_READ_ONLY_TOKEN || import.meta.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.KV_REST_API_READ_ONLY_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 
 // Convert rediss:// or redis:// URLs to https:// (Upstash REST API requires https://)
 if (redisUrl && (redisUrl.startsWith('rediss://') || redisUrl.startsWith('redis://'))) {
-  console.warn('⚠️  Redis URL uses redis:// protocol. Upstash REST API requires https://');
-  console.warn('Please use the REST API URL from Upstash dashboard (starts with https://)');
-  redisUrl = null;
+    console.warn('⚠️  Redis URL uses redis:// protocol. Upstash REST API requires https://');
+    console.warn('Please use the REST API URL from Upstash dashboard (starts with https://)');
+    redisUrl = null;
 }
 
 if (!redisUrl || !redisToken) {
-  console.error('❌ Missing or invalid Redis environment variables');
+    console.error('❌ Missing or invalid Redis environment variables');
 }
 
 const redis = redisUrl && redisToken && redisUrl.startsWith('https://')
-  ? new Redis({
-      url: redisUrl,
-      token: redisToken,
+    ? new Redis({
+        url: redisUrl,
+        token: redisToken,
     })
-  : null;
+    : null;
 
 // Initialize Resend
-const resendApiKey = import.meta.env.RESEND_API_KEY;
+const resendApiKey = import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 // Function to calculate date from issue number
 // curated-001 = Dec 25', curated-002 = Jan 26', etc.
 function getDateFromIssueNumber(issueNumber: number): string {
-  const startDate = new Date(2025, 11, 1); // December 2025 (month is 0-indexed)
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
+    const startDate = new Date(2025, 11, 1); // December 2025 (month is 0-indexed)
+    const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+    ];
 
-  const monthOffset = issueNumber - 1;
-  const targetDate = new Date(startDate);
-  targetDate.setMonth(startDate.getMonth() + monthOffset);
+    const monthOffset = issueNumber - 1;
+    const targetDate = new Date(startDate);
+    targetDate.setMonth(startDate.getMonth() + monthOffset);
 
-  const month = months[targetDate.getMonth()];
-  const year = targetDate.getFullYear();
-  const yearShort = year.toString().slice(-2);
+    const month = months[targetDate.getMonth()];
+    const year = targetDate.getFullYear();
+    const yearShort = year.toString().slice(-2);
 
-  return `${month} ${yearShort}'`;
+    return `${month} ${yearShort}'`;
 }
 
 // Generate email HTML template
 function generateEmailHTML(issueNumber: string, date: string, email: string, siteUrl: string): string {
-  const pdfUrl = `${siteUrl}/newsletters/curated-${issueNumber.padStart(3, '0')}.pdf`;
-  const unsubscribeUrl = `${siteUrl}/api/unsubscribe?email=${encodeURIComponent(email)}`;
+    const pdfUrl = `${siteUrl}/newsletters/curated-${issueNumber.padStart(3, '0')}.pdf`;
+    const unsubscribeUrl = `${siteUrl}/api/unsubscribe?email=${encodeURIComponent(email)}`;
 
-  return `
+    return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,156 +151,156 @@ function generateEmailHTML(issueNumber: string, date: string, email: string, sit
 }
 
 export const POST: APIRoute = async ({ request }) => {
-  try {
-    // Validate ADMIN_SECRET
-    const authHeader = request.headers.get('Authorization');
-    const adminSecret = authHeader?.replace('Bearer ', '') || authHeader;
-    
-    if (!adminSecret || adminSecret !== import.meta.env.ADMIN_SECRET) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Parse request body
-    let body: { issueNumber?: string };
     try {
-      body = await request.json();
+        // Validate ADMIN_SECRET
+        const authHeader = request.headers.get('Authorization');
+        const adminSecret = authHeader?.replace('Bearer ', '') || authHeader;
+
+        if (!adminSecret || adminSecret !== (import.meta.env.ADMIN_SECRET || process.env.ADMIN_SECRET)) {
+            return new Response(
+                JSON.stringify({ error: 'Unauthorized' }),
+                { status: 401, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        // Parse request body
+        let body: { issueNumber?: string };
+        try {
+            body = await request.json();
+        } catch (error) {
+            return new Response(
+                JSON.stringify({ error: 'Invalid JSON in request body' }),
+                { status: 400, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        const { issueNumber } = body || {};
+
+        // Validate issue number
+        if (!issueNumber || typeof issueNumber !== 'string') {
+            return new Response(
+                JSON.stringify({ error: 'Issue number is required' }),
+                { status: 400, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        // Validate issue number format (should be numeric)
+        const issueNum = parseInt(issueNumber, 10);
+        if (isNaN(issueNum) || issueNum < 1) {
+            return new Response(
+                JSON.stringify({ error: 'Invalid issue number format' }),
+                { status: 400, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        // Check if Redis is configured
+        if (!redis) {
+            console.error('Redis not configured');
+            return new Response(
+                JSON.stringify({ error: 'Service temporarily unavailable: Redis not configured' }),
+                { status: 503, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        // Check if Resend is configured
+        if (!resend) {
+            console.error('Resend not configured');
+            return new Response(
+                JSON.stringify({ error: 'Service temporarily unavailable: Resend not configured' }),
+                { status: 503, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        // Get site URL
+        const siteUrl = import.meta.env.SITE_URL || process.env.SITE_URL || 'https://rajinkhan.com';
+
+        // Get all subscribers
+        const subscribers = await redis.smembers('newsletter:subscribers');
+        const total = subscribers.length;
+
+        if (total === 0) {
+            return new Response(
+                JSON.stringify({
+                    success: true,
+                    sent: 0,
+                    failed: 0,
+                    total: 0,
+                    message: 'No subscribers found'
+                }),
+                { status: 200, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        // Calculate date for this issue
+        const date = getDateFromIssueNumber(issueNum);
+        const formattedIssueNumber = issueNumber.padStart(3, '0');
+
+        // Send emails
+        let sent = 0;
+        let failed = 0;
+        const errors: string[] = [];
+
+        for (const email of subscribers) {
+            try {
+                const emailHTML = generateEmailHTML(formattedIssueNumber, date, email, siteUrl);
+
+                // Get from email - use environment variable or default to newsletter@rajinkhan.com
+                // Since domain is verified, any email at rajinkhan.com works
+                const fromEmail = import.meta.env.RESEND_FROM_EMAIL || process.env.RESEND_FROM_EMAIL || '[email protected]';
+
+                const result = await resend.emails.send({
+                    from: `Curated. <${fromEmail}>`,
+                    to: email,
+                    subject: `Issue ${formattedIssueNumber}`,
+                    html: emailHTML,
+                });
+
+                // Log Resend response for debugging
+                console.log(`Resend response for ${email}:`, JSON.stringify(result, null, 2));
+
+                // Check if Resend returned an error
+                if (result.error) {
+                    failed++;
+                    const errorMessage = result.error.message || JSON.stringify(result.error);
+                    errors.push(`${email}: ${errorMessage}`);
+                    console.error(`Resend error for ${email}:`, result.error);
+                } else {
+                    sent++;
+                    console.log(`Successfully sent email to ${email}, ID: ${result.data?.id || 'unknown'}`);
+                }
+            } catch (error) {
+                failed++;
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+                errors.push(`${email}: ${errorMessage}`);
+                console.error(`Failed to send email to ${email}:`, error);
+                // Log full error details
+                if (error instanceof Error) {
+                    console.error('Error stack:', error.stack);
+                }
+            }
+        }
+
+        return new Response(
+            JSON.stringify({
+                success: true,
+                sent,
+                failed,
+                total,
+                issueNumber: formattedIssueNumber,
+                date,
+                ...(errors.length > 0 && { errors: errors.slice(0, 10) }), // Limit errors in response
+            }),
+            { status: 200, headers: { 'Content-Type': 'application/json' } }
+        );
     } catch (error) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid JSON in request body' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+        console.error('Error sending newsletter:', error);
+        return new Response(
+            JSON.stringify({
+                error: 'Failed to send newsletter',
+                details: error instanceof Error ? error.message : 'Unknown error'
+            }),
+            { status: 500, headers: { 'Content-Type': 'application/json' } }
+        );
     }
-
-    const { issueNumber } = body || {};
-
-    // Validate issue number
-    if (!issueNumber || typeof issueNumber !== 'string') {
-      return new Response(
-        JSON.stringify({ error: 'Issue number is required' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Validate issue number format (should be numeric)
-    const issueNum = parseInt(issueNumber, 10);
-    if (isNaN(issueNum) || issueNum < 1) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid issue number format' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Check if Redis is configured
-    if (!redis) {
-      console.error('Redis not configured');
-      return new Response(
-        JSON.stringify({ error: 'Service temporarily unavailable: Redis not configured' }),
-        { status: 503, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Check if Resend is configured
-    if (!resend) {
-      console.error('Resend not configured');
-      return new Response(
-        JSON.stringify({ error: 'Service temporarily unavailable: Resend not configured' }),
-        { status: 503, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Get site URL
-    const siteUrl = import.meta.env.SITE_URL || 'https://rajinkhan.com';
-
-    // Get all subscribers
-    const subscribers = await redis.smembers('newsletter:subscribers');
-    const total = subscribers.length;
-
-    if (total === 0) {
-      return new Response(
-        JSON.stringify({ 
-          success: true,
-          sent: 0,
-          failed: 0,
-          total: 0,
-          message: 'No subscribers found'
-        }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Calculate date for this issue
-    const date = getDateFromIssueNumber(issueNum);
-    const formattedIssueNumber = issueNumber.padStart(3, '0');
-
-    // Send emails
-    let sent = 0;
-    let failed = 0;
-    const errors: string[] = [];
-
-    for (const email of subscribers) {
-      try {
-        const emailHTML = generateEmailHTML(formattedIssueNumber, date, email, siteUrl);
-        
-        // Get from email - use environment variable or default to newsletter@rajinkhan.com
-        // Since domain is verified, any email at rajinkhan.com works
-        const fromEmail = import.meta.env.RESEND_FROM_EMAIL || '[email protected]';
-        
-        const result = await resend.emails.send({
-          from: `Curated. <${fromEmail}>`,
-          to: email,
-          subject: `Issue ${formattedIssueNumber}`,
-          html: emailHTML,
-        });
-
-        // Log Resend response for debugging
-        console.log(`Resend response for ${email}:`, JSON.stringify(result, null, 2));
-
-        // Check if Resend returned an error
-        if (result.error) {
-          failed++;
-          const errorMessage = result.error.message || JSON.stringify(result.error);
-          errors.push(`${email}: ${errorMessage}`);
-          console.error(`Resend error for ${email}:`, result.error);
-        } else {
-          sent++;
-          console.log(`Successfully sent email to ${email}, ID: ${result.data?.id || 'unknown'}`);
-        }
-      } catch (error) {
-        failed++;
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        errors.push(`${email}: ${errorMessage}`);
-        console.error(`Failed to send email to ${email}:`, error);
-        // Log full error details
-        if (error instanceof Error) {
-          console.error('Error stack:', error.stack);
-        }
-      }
-    }
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        sent,
-        failed,
-        total,
-        issueNumber: formattedIssueNumber,
-        date,
-        ...(errors.length > 0 && { errors: errors.slice(0, 10) }), // Limit errors in response
-      }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
-    );
-  } catch (error) {
-    console.error('Error sending newsletter:', error);
-    return new Response(
-      JSON.stringify({ 
-        error: 'Failed to send newsletter',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
 };
 
