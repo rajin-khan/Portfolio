@@ -376,11 +376,6 @@ class AstroError extends Error {
   }
 }
 
-const URL_PROTOCOL_REGEX = /^(?:(?:http|ftp|https|ws):?\/\/|\/\/)/;
-function isCoreRemotePath(path) {
-  return URL_PROTOCOL_REGEX.test(path) || isRemotePath(path);
-}
-
 const VALID_INPUT_FORMATS = [
   "jpeg",
   "jpg",
@@ -457,7 +452,7 @@ function isRemoteAllowed(src, {
   domains = [],
   remotePatterns = []
 }) {
-  if (!isCoreRemotePath(src)) return false;
+  if (!isRemotePath(src)) return false;
   const url = new URL(src);
   return domains.some((domain) => matchHostname(url, domain)) || remotePatterns.some((remotePattern) => matchPattern(url, remotePattern));
 }
@@ -488,7 +483,7 @@ const baseService = {
       });
     }
     if (!isESMImportedImage(options.src)) {
-      if (options.src.startsWith("/@fs/") || !isCoreRemotePath(options.src) && !options.src.startsWith("/")) {
+      if (options.src.startsWith("/@fs/") || !isRemotePath(options.src) && !options.src.startsWith("/")) {
         throw new AstroError({
           ...LocalImageUsedWrongly,
           message: LocalImageUsedWrongly.message(options.src)
@@ -727,4 +722,4 @@ const sharp$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: sharp_default
 }, Symbol.toStringTag, { value: 'Module' }));
 
-export { fileExtension as $, AstroError as A, InvalidGetStaticPathsEntry as B, GetStaticPathsExpectedParams as C, DEFAULT_HASH_PROPS as D, EndpointDidNotReturnAResponse as E, FailedToFetchRemoteImageDimensions as F, GetEntryDeprecationError as G, GetStaticPathsInvalidRouteParam as H, InvalidComponentArgs as I, trimSlashes as J, NoMatchingStaticPathFound as K, PrerenderDynamicEndpointPathCollide as L, MissingMediaQueryDirective as M, NoMatchingImport as N, OnlyResponseCanBeReturned as O, PageNumberParamNotFound as P, ReservedSlotName as Q, ResponseSentError as R, removeTrailingForwardSlash as S, RewriteWithBodyUsed as T, UnknownContentCollectionError as U, VALID_INPUT_FORMATS as V, LocalsNotAnObject as W, PrerenderClientAddressNotAvailable as X, ClientAddressNotAvailable as Y, StaticClientAddressNotAvailable as Z, AstroResponseHeadersReassigned as _, AstroGlobUsedOutside as a, slash as a0, sharp$1 as a1, AstroGlobNoMatch as b, NoMatchingRenderer as c, NoClientOnlyHint as d, NoClientEntrypoint as e, NoImageMetadata as f, ExpectedImageOptions as g, ExpectedImage as h, isCoreRemotePath as i, ExpectedNotESMImage as j, resolveSrc as k, isRemoteImage as l, isESMImportedImage as m, isLocalService as n, InvalidImageService as o, prependForwardSlash as p, ImageMissingAlt as q, removeBase as r, isRemoteAllowed as s, appendForwardSlash as t, joinPaths as u, i18nNoLocaleFoundInPath as v, MiddlewareNoDataOrNextCalled as w, MiddlewareNotAResponse as x, GetStaticPathsRequired as y, InvalidGetStaticPathsReturn as z };
+export { fileExtension as $, AstroError as A, InvalidGetStaticPathsEntry as B, GetStaticPathsExpectedParams as C, DEFAULT_HASH_PROPS as D, EndpointDidNotReturnAResponse as E, FailedToFetchRemoteImageDimensions as F, GetEntryDeprecationError as G, GetStaticPathsInvalidRouteParam as H, InvalidComponentArgs as I, trimSlashes as J, NoMatchingStaticPathFound as K, PrerenderDynamicEndpointPathCollide as L, MissingMediaQueryDirective as M, NoMatchingImport as N, OnlyResponseCanBeReturned as O, PageNumberParamNotFound as P, ReservedSlotName as Q, ResponseSentError as R, removeTrailingForwardSlash as S, RewriteWithBodyUsed as T, UnknownContentCollectionError as U, VALID_INPUT_FORMATS as V, LocalsNotAnObject as W, PrerenderClientAddressNotAvailable as X, ClientAddressNotAvailable as Y, StaticClientAddressNotAvailable as Z, AstroResponseHeadersReassigned as _, AstroGlobUsedOutside as a, slash as a0, sharp$1 as a1, AstroGlobNoMatch as b, NoMatchingRenderer as c, NoClientOnlyHint as d, NoClientEntrypoint as e, NoImageMetadata as f, ExpectedImageOptions as g, ExpectedImage as h, isRemotePath as i, ExpectedNotESMImage as j, resolveSrc as k, isRemoteImage as l, isESMImportedImage as m, isLocalService as n, InvalidImageService as o, prependForwardSlash as p, ImageMissingAlt as q, removeBase as r, isRemoteAllowed as s, appendForwardSlash as t, joinPaths as u, i18nNoLocaleFoundInPath as v, MiddlewareNoDataOrNextCalled as w, MiddlewareNotAResponse as x, GetStaticPathsRequired as y, InvalidGetStaticPathsReturn as z };

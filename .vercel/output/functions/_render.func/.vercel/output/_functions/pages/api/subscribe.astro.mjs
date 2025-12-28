@@ -9,7 +9,7 @@ async function getRedis() {
   }
   try {
     const { Redis } = await import('@upstash/redis');
-    const redisUrl = Object.assign(__vite_import_meta_env__, { KV_REST_API_URL: "https://sought-treefrog-40997.upstash.io", KV_REST_API_TOKEN: "AaAlAAIncDFhMTE3Mzk3NTE0NmI0YWRlODE2YjRlNzA0MDZjZGU2MHAxNDA5OTc" }).REDIS_URL || "https://sought-treefrog-40997.upstash.io";
+    const redisUrl = Object.assign(__vite_import_meta_env__, { KV_REST_API_URL: "https://sought-treefrog-40997.upstash.io", KV_REST_API_TOKEN: "AaAlAAIncDFhMTE3Mzk3NTE0NmI0YWRlODE2YjRlNzA0MDZjZGU2MHAxNDA5OTc", _: process.env._ }).REDIS_URL || "https://sought-treefrog-40997.upstash.io";
     const redisToken = "AaAlAAIncDFhMTE3Mzk3NTE0NmI0YWRlODE2YjRlNzA0MDZjZGU2MHAxNDA5OTc";
     if (redisUrl && (redisUrl.startsWith("rediss://") || redisUrl.startsWith("redis://"))) {
       console.warn("⚠️  Redis URL uses redis:// protocol. Upstash REST API requires https://");

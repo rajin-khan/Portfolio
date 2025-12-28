@@ -1,1 +1,0 @@
-import"./hoisted.BjKdDTeR.js";function l(){const t=document.querySelectorAll(".slide");let e=0;function n(){t[e].style.opacity="0",e=(e+1)%t.length,t[e].style.opacity="1"}setInterval(n,3e3)}document.addEventListener("DOMContentLoaded",l);
