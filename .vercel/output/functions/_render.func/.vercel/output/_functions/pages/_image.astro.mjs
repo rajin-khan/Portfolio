@@ -2,7 +2,7 @@ import { A as AstroError, f as NoImageMetadata, F as FailedToFetchRemoteImageDim
 import { c as createAstro, a as createComponent, m as maybeRenderHead, b as addAttribute, s as spreadAttributes, r as renderTemplate } from '../chunks/astro/server_BaAhDtgC.mjs';
 import 'clsx';
 import * as mime from 'mrmime';
-export { renderers } from '../renderers.mjs';
+export { r as renderers } from '../chunks/_@astro-renderers_BUaR2p-v.mjs';
 
 function isImageMetadata(src) {
   return src.fsPath && !("fsPath" in src);

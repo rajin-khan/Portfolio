@@ -1,5 +1,5 @@
-import { Redis } from '@upstash/redis';
-export { renderers } from '../../renderers.mjs';
+import { R as Redis2 } from '../../chunks/nodejs_B6mB2F9q.mjs';
+export { r as renderers } from '../../chunks/_@astro-renderers_BUaR2p-v.mjs';
 
 const prerender = false;
 let redisUrl = "https://sought-treefrog-40997.upstash.io";
@@ -12,7 +12,7 @@ if (redisUrl && (redisUrl.startsWith("rediss://") || redisUrl.startsWith("redis:
 if (!redisUrl || !redisToken) {
   console.error("❌ Missing or invalid Redis environment variables");
 }
-const redis = redisUrl && redisToken && redisUrl.startsWith("https://") ? new Redis({
+const redis = redisUrl && redisToken && redisUrl.startsWith("https://") ? new Redis2({
   url: redisUrl,
   token: redisToken
 }) : null;

@@ -12,7 +12,7 @@ export default defineConfig({
   integrations: [tailwind(), sitemap(), react()],
   vite: {
     ssr: {
-      noExternal: ['react', 'react-dom', '@astrojs/react'],
+      noExternal: ['react', 'react-dom', '@astrojs/react', '@upstash/redis', 'resend'],
     },
     optimizeDeps: {
       include: ['react', 'react-dom'],

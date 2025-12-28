@@ -1,5 +1,5 @@
-import { Redis } from '@upstash/redis';
-export { renderers } from '../../renderers.mjs';
+import { R as Redis2 } from '../../chunks/nodejs_B6mB2F9q.mjs';
+export { r as renderers } from '../../chunks/_@astro-renderers_BUaR2p-v.mjs';
 
 const prerender = false;
 let redisUrl = "https://sought-treefrog-40997.upstash.io";
@@ -14,7 +14,7 @@ if (!redisUrl || !redisToken) {
   console.error("Required: REDIS_URL (or KV_REST_API_URL or UPSTASH_REDIS_REST_URL) - must start with https://");
   console.error("Required: KV_REST_API_TOKEN (or UPSTASH_REDIS_REST_TOKEN)");
 }
-const redis = redisUrl && redisToken && redisUrl.startsWith("https://") ? new Redis({
+const redis = redisUrl && redisToken && redisUrl.startsWith("https://") ? new Redis2({
   url: redisUrl,
   token: redisToken
 }) : null;
