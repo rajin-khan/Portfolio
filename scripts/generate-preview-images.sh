@@ -45,8 +45,11 @@ for pdf in curated-*.pdf; do
         # -scale-to-x and -scale-to-y: scale for better quality
         pdftoppm -f 1 -l 1 -jpeg -jpegopt quality=$QUALITY -scale-to-x 1200 -scale-to-y -1 "$pdf" "curated-${issue_number}-preview" 2>/dev/null
         
-        # Rename the output file (pdftoppm creates curated-XXX-preview-1.jpg)
-        if [ -f "curated-${issue_number}-preview-1.jpg" ]; then
+        # Rename the output file (pdftoppm creates curated-XXX-preview-01.jpg or curated-XXX-preview-1.jpg)
+        if [ -f "curated-${issue_number}-preview-01.jpg" ]; then
+            mv "curated-${issue_number}-preview-01.jpg" "$output_file"
+            echo "  ✓ Created $output_file"
+        elif [ -f "curated-${issue_number}-preview-1.jpg" ]; then
             mv "curated-${issue_number}-preview-1.jpg" "$output_file"
             echo "  ✓ Created $output_file"
         else
