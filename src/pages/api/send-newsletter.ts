@@ -63,6 +63,7 @@ function getDateFromIssueNumber(issueNumber: number): string {
 // Generate email HTML template
 function generateEmailHTML(issueNumber: string, date: string, email: string, siteUrl: string): string {
     const pdfUrl = `${siteUrl}/newsletters/curated-${issueNumber.padStart(3, '0')}.pdf`;
+    const previewImageUrl = `${siteUrl}/newsletters/curated-${issueNumber.padStart(3, '0')}-preview.jpg`;
     const unsubscribeUrl = `${siteUrl}/api/unsubscribe?email=${encodeURIComponent(email)}`;
 
     return `
@@ -103,6 +104,22 @@ function generateEmailHTML(issueNumber: string, date: string, email: string, sit
                       Welcome to the first issue of curated. I won't be sending you new issues every month, just whenever I find cool enough stuff to share.
                       Hope you enjoy the read (and if you don't, you can unsubscribe anytime).
                     </p>
+                    
+                    <!-- Preview Image -->
+                    <table role="presentation" style="width: 100%; margin: 30px 0;">
+                      <tr>
+                        <td style="text-align: center;">
+                          <a href="${pdfUrl}" style="display: block; text-decoration: none;">
+                            <img 
+                              src="${previewImageUrl}" 
+                              alt="curated. Issue ${issueNumber} Preview" 
+                              style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); display: block; margin: 0 auto;"
+                              width="600"
+                            />
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
                     
                     <!-- CTA Button -->
                     <table role="presentation" style="width: 100%; margin: 30px 0;">
