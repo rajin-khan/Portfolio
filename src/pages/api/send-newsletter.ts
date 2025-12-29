@@ -72,42 +72,56 @@ function generateEmailHTML(issueNumber: string, date: string, email: string, sit
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>curated. #${issueNumber}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet">
 </head>
-<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; background-color: #0a0a0a; color: #ffffff;">
+<body style="margin: 0; padding: 0; font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; background-color: #0a0a0a; color: #ffffff;">
   <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #0a0a0a;">
     <tr>
       <td style="padding: 40px 20px;">
         <table role="presentation" style="max-width: 600px; margin: 0 auto; background-color: #0a0a0a; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; overflow: hidden;">
+          <!-- Inner container with background -->
           <tr>
             <td style="background-color: #0a0a0a; padding: 3px;">
               <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #0a0a0a; border-radius: 21px; overflow: hidden;">
+                <!-- Header with curated. branding -->
                 <tr>
                   <td style="padding: 40px 40px 30px; text-align: center;">
-                    <div style="font-style: italic; font-size: 32px; font-weight: 500; color: #ffffff; margin: 0 0 8px;">curated.</div>
-                    <div style="font-size: 13px; color: rgba(255, 255, 255, 0.6); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Issue #${issueNumber} • ${date}</div>
+                    <div style="font-family: 'Instrument Serif', serif; font-style: italic; font-size: 32px; font-weight: 500; color: #ffffff; margin: 0 0 8px; letter-spacing: -0.5px;">curated.</div>
+                    <div style="font-family: 'Satoshi', sans-serif; font-size: 13px; color: rgba(255, 255, 255, 0.6); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Issue #${issueNumber} • ${date}</div>
                   </td>
                 </tr>
+                
+                <!-- Main Content -->
                 <tr>
                   <td style="padding: 0 40px 40px; text-align: center;">
-                    <p style="margin: 0 0 20px; font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">Hey there,</p>
-                    <p style="margin: 0 0 30px; font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">
-                      A new issue of curated is here! Hope you enjoy the read.
+                    <p style="margin: 0 0 20px; font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); font-family: 'Satoshi', sans-serif;">Hey there,</p>
+                    
+                    <p style="margin: 0 0 30px; font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); font-family: 'Satoshi', sans-serif;">
+                      Welcome to the first issue of curated. I won't be sending you new issues every month, just whenever I find cool enough stuff to share.
+                      Hope you enjoy the read (and if you don't, you can unsubscribe anytime).
                     </p>
+                    
+                    <!-- CTA Button -->
                     <table role="presentation" style="width: 100%; margin: 30px 0;">
                       <tr>
                         <td style="text-align: center;">
-                          <a href="${pdfUrl}" style="display: inline-block; padding: 12px 28px; background: #ffffff; color: #0a0a0a; text-decoration: none; border-radius: 12px; font-weight: 400; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">view newsletter</a>
+                          <a href="${pdfUrl}" style="display: inline-block; padding: 12px 28px; background: #ffffff; border: none; color: #0a0a0a; text-decoration: none; border-radius: 12px; font-weight: 400; font-size: 10px; font-family: 'Satoshi', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease;">view newsletter</a>
                         </td>
                       </tr>
                     </table>
                   </td>
                 </tr>
+                
+                <!-- Footer -->
                 <tr>
                   <td style="padding: 30px 40px; background-color: #0a0a0a; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                    <p style="margin: 0 0 12px; font-size: 11px; color: rgba(255, 255, 255, 0.4); text-align: center;">
-                      You're receiving this because you subscribed to curated.
+                    <p style="margin: 0 0 12px; font-size: 11px; color: rgba(255, 255, 255, 0.4); text-align: center; font-family: 'Satoshi', sans-serif;">
+                      You're receiving this because you subscribed to curated, and have really good taste.
                     </p>
-                    <p style="margin: 0; font-size: 11px; text-align: center;">
+                    <p style="margin: 0; font-size: 11px; text-align: center; font-family: 'Satoshi', sans-serif;">
                       <a href="${unsubscribeUrl}" style="color: rgba(255, 255, 255, 0.5); text-decoration: underline;">unsubscribe</a>
                     </p>
                   </td>
@@ -116,10 +130,12 @@ function generateEmailHTML(issueNumber: string, date: string, email: string, sit
             </td>
           </tr>
         </table>
+        
+        <!-- Bottom Spacing -->
         <table role="presentation" style="width: 100%; margin-top: 20px;">
           <tr>
             <td style="text-align: center; padding: 20px;">
-              <p style="margin: 0; font-size: 11px; color: rgba(255, 255, 255, 0.3);">
+              <p style="margin: 0; font-size: 11px; color: rgba(255, 255, 255, 0.3); font-family: 'Satoshi', sans-serif;">
                 by <a href="${siteUrl}" style="color: rgba(255, 255, 255, 0.5); text-decoration: none;">rajin khan</a>
               </p>
             </td>
