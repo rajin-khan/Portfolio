@@ -2,7 +2,8 @@ import type { APIRoute } from 'astro';
 import { Redis } from '@upstash/redis';
 
 // Initialize Redis with environment variables from Upstash
-let redisUrl = import.meta.env.REDIS_URL || import.meta.env.KV_REST_API_URL || import.meta.env.UPSTASH_REDIS_REST_URL;
+// Prioritize KV_REST_API_URL first (Upstash REST API) over REDIS_URL (which may be redis://)
+let redisUrl = import.meta.env.KV_REST_API_URL || import.meta.env.UPSTASH_REDIS_REST_URL || import.meta.env.REDIS_URL;
 const redisToken = import.meta.env.KV_REST_API_TOKEN || import.meta.env.KV_REST_API_READ_ONLY_TOKEN || import.meta.env.UPSTASH_REDIS_REST_TOKEN;
 
 // Convert rediss:// or redis:// URLs to https:// (Upstash REST API requires https://)
