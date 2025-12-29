@@ -11,6 +11,7 @@ async function getRedis() {
     if (redisInstance !== null) return redisInstance;
 
     try {
+        // @ts-expect-error - Dynamic import, types resolved at runtime
         const { Redis } = await import('@upstash/redis');
         const redisUrl = import.meta.env.KV_REST_API_URL || process.env.KV_REST_API_URL;
         const redisToken = import.meta.env.KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN;
@@ -32,6 +33,7 @@ async function getResend() {
     if (resendInstance !== null) return resendInstance;
 
     try {
+        // @ts-expect-error - Dynamic import, types resolved at runtime
         const { Resend } = await import('resend');
         const apiKey = import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY;
 
