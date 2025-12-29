@@ -73,9 +73,15 @@
   (function () {
     // Wait for DOM to be ready
     function init() {
-      const emailInput = document.getElementById("newsletter-email") as HTMLInputElement | null;
-      const subscribeButton = document.getElementById("subscribe-button") as HTMLButtonElement | null;
-      const checkmark = document.getElementById("checkmark") as HTMLElement | null;
+      const emailInput = document.getElementById(
+        "newsletter-email"
+      ) as HTMLInputElement | null;
+      const subscribeButton = document.getElementById(
+        "subscribe-button"
+      ) as HTMLButtonElement | null;
+      const checkmark = document.getElementById(
+        "checkmark"
+      ) as HTMLElement | null;
 
       // Check if elements exist
       if (!emailInput || !subscribeButton || !checkmark) {
@@ -115,7 +121,7 @@
           // Check if response is JSON before parsing
           const contentType = response.headers.get("content-type");
           let data;
-          
+
           if (contentType && contentType.includes("application/json")) {
             data = await response.json();
           } else {

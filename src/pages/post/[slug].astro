@@ -1,5 +1,5 @@
 ---
-import { getEntryBySlug, getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import PostLayout from "../../layouts/post.astro";
 
 // Define the static paths for dynamic routes
@@ -11,12 +11,11 @@ export async function getStaticPaths() {
   }));
 }
 
-const { slug } = Astro.params;
-const entry = await getEntryBySlug("post", slug);
+type Props = {
+  entry: CollectionEntry<"post">;
+};
 
-if (!entry) {
-  throw new Error(`Post not found: ${slug}`);
-}
+const { entry } = Astro.props;
 
 const { Content } = await entry.render();
 const { title, description, date } = entry.data;
