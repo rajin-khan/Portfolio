@@ -201,6 +201,7 @@
     height: 100px;
     margin: 48px 0;
     border-radius: 24px;
+    -webkit-border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     transition:
       transform 0.3s ease,
@@ -208,6 +209,11 @@
     overflow: visible;
     filter: brightness(1.5) saturate(1.5);
     transform-style: preserve-3d;
+    -webkit-mask-image: -webkit-radial-gradient(white, white);
+    mask-image: radial-gradient(white, white);
+    /* Force Safari to respect border-radius */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 
   .newsletter-inner {
@@ -216,6 +222,7 @@
     height: calc(100% - 6px);
     margin: 3px;
     border-radius: 21px;
+    -webkit-border-radius: 21px;
     background: #0a0a0a;
     background-image: url("/assets/images/light-leak-effect-black-background_53876-142963.jpg");
     background-size: cover;
@@ -225,6 +232,14 @@
     animation: backgroundMove 20s linear infinite;
     z-index: 2;
     filter: brightness(1.125) saturate(1.125);
+    -webkit-mask-image: -webkit-radial-gradient(white, white);
+    mask-image: radial-gradient(white, white);
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    isolation: isolate;
+    /* Safari-specific clip-path for better border-radius support */
+    clip-path: inset(0 round 21px);
+    -webkit-clip-path: inset(0 round 21px);
   }
 
   .newsletter-container:hover {
@@ -245,6 +260,7 @@
     right: 0px;
     bottom: 3.5px;
     border-radius: 24px;
+    -webkit-border-radius: 24px;
     background: linear-gradient(
       90deg,
       #ff0000 0%,
@@ -263,6 +279,14 @@
       opacity 0.3s ease,
       transform 0.3s ease;
     animation: rainbowBorder 3s linear infinite;
+    -webkit-mask-image: -webkit-radial-gradient(white, white);
+    mask-image: radial-gradient(white, white);
+    overflow: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    /* Safari-specific clip-path for better border-radius support */
+    clip-path: inset(0 round 24px);
+    -webkit-clip-path: inset(0 round 24px);
   }
 
   .newsletter-container:hover::after {
@@ -453,8 +477,13 @@
       transparent
     );
     filter: blur(8px);
+    -webkit-filter: blur(8px);
     transform-origin: center center;
+    -webkit-transform-origin: center center;
     animation: streakMove 8s ease-in-out infinite;
+    border-radius: 21px;
+    -webkit-border-radius: 21px;
+    overflow: hidden;
   }
 
   .streak-1 {
@@ -535,6 +564,11 @@
     animation: shimmer 6s ease-in-out infinite;
     mix-blend-mode: overlay;
     opacity: 0.6;
+    border-radius: 21px;
+    -webkit-border-radius: 21px;
+    overflow: hidden;
+    -webkit-mask-image: -webkit-radial-gradient(white, white);
+    mask-image: radial-gradient(white, white);
   }
 
   @keyframes shimmer {
