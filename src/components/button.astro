@@ -4,7 +4,8 @@ const { link, text } = Astro.props;
 
 <a
   href={link}
-  class="inline-flex w-auto px-4 py-2 mt-5 text-xs font-semibold duration-300 ease-out border rounded-full bg-neutral-900 dark:bg-white dark:text-neutral-900 text-neutral-100 hover:border-neutral-700 border-neutral-900 dark:hover:border-neutral-300 hover:bg-white dark:hover:bg-black dark:hover:text-white hover:text-neutral-900"
+  class="relative inline-flex items-center justify-center px-5 py-2 mt-5 text-sm font-medium text-white transition-all duration-300 bg-neutral-900 border border-neutral-800 rounded-full hover:bg-neutral-800 hover:border-neutral-700 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95 group"
 >
-  {text}
+  <span class="relative z-10">{text}</span>
+  <div class="absolute inset-0 rounded-full bg-gradient-to-b from-white/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
 </a>

@@ -32,12 +32,12 @@ const statusConfig = {
 const currentStatus = statusConfig[status] || statusConfig.offline;
 ---
 
-<div class="inline-flex items-center gap-2">
-  <div class="relative flex">
-    <div class="status-dot w-2.5 h-2.5 rounded-full transition-colors duration-300"></div>
-    <div class="status-dot-ping absolute inset-0 w-2.5 h-2.5 rounded-full animate-ping transition-colors duration-300 opacity-30"></div>
+<div class="inline-flex items-center gap-2 mt-5">
+  <div class="relative flex items-center justify-center w-2.5 h-2.5">
+    <div class="status-dot w-2 h-2 rounded-full transition-colors duration-300"></div>
+    <div class="status-dot-ping absolute inset-0 w-2.5 h-2.5 rounded-full animate-ping transition-colors duration-300 opacity-75"></div>
   </div>
-  <span class="text-sm font-medium text-black dark:text-white">
+  <span class="text-xs font-medium text-neutral-600 dark:text-neutral-300">
     {currentStatus.text}
   </span>
 </div>
@@ -48,6 +48,7 @@ const currentStatus = statusConfig[status] || statusConfig.offline;
 }}>
   .status-dot {
     background-color: var(--statusColorLight);
+    box-shadow: 0 0 8px var(--statusColorLight);
   }
   
   .status-dot-ping {
@@ -56,6 +57,7 @@ const currentStatus = statusConfig[status] || statusConfig.offline;
 
   :global(.dark) .status-dot {
     background-color: var(--statusColorDark);
+    box-shadow: 0 0 12px var(--statusColorDark);
   }
 
   :global(.dark) .status-dot-ping {
