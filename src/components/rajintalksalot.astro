@@ -109,36 +109,94 @@ const srcset = (stem: string) =>
 
 <script>
   function initRajinTalksALotCard() {
+    const SPOTLIT_CLASS = "is-spotlit";
+    const TOUCH_POINTER_TYPES = new Set(["touch", "pen"]);
+    const suppressedClicks = new WeakSet<HTMLAnchorElement>();
+    let lastPointerType: string | null = null;
+
     const cards = document.querySelectorAll<HTMLAnchorElement>(
       "[data-rajintalksalot-card]"
     );
 
     if (!cards.length) return;
 
-    const touchFirst =
-      window.matchMedia("(pointer: coarse)").matches ||
-      navigator.maxTouchPoints > 0;
+    const hasTouchCapability = () => {
+      const nav = navigator as Navigator & { msMaxTouchPoints?: number };
+      return (
+        window.matchMedia("(pointer: coarse)").matches ||
+        window.matchMedia("(any-pointer: coarse)").matches ||
+        window.matchMedia("(hover: none)").matches ||
+        nav.maxTouchPoints > 0 ||
+        (nav.msMaxTouchPoints ?? 0) > 0
+      );
+    };
+
+    const prefersTapFirst = () => {
+      if (lastPointerType) {
+        return TOUCH_POINTER_TYPES.has(lastPointerType);
+      }
+
+      return window.matchMedia("(max-width: 767px)").matches || hasTouchCapability();
+    };
 
     const clearActiveCards = (except?: HTMLAnchorElement) => {
       cards.forEach((card) => {
-        if (card !== except) card.classList.remove("is-spotlit");
+        if (card !== except) card.classList.remove(SPOTLIT_CLASS);
       });
     };
+
+    const spotlightCard = (card: HTMLAnchorElement) => {
+      clearActiveCards(card);
+      card.classList.add(SPOTLIT_CLASS);
+    };
+
+    const shouldHoldFirstTap = (card: HTMLAnchorElement) =>
+      prefersTapFirst() && !card.classList.contains(SPOTLIT_CLASS);
 
     cards.forEach((card) => {
       if (card.dataset.rajintalksalotBound === "true") return;
       card.dataset.rajintalksalotBound = "true";
 
       card.addEventListener(
-        "click",
+        "pointerdown",
         (event) => {
-          if (!touchFirst) return;
-          if (card.classList.contains("is-spotlit")) return;
+          if (event.pointerType) {
+            lastPointerType = event.pointerType;
+          }
+        },
+        { capture: true }
+      );
+
+      card.addEventListener(
+        "touchstart",
+        (event) => {
+          lastPointerType = "touch";
+          if (!shouldHoldFirstTap(card)) return;
 
           event.preventDefault();
           event.stopPropagation();
-          clearActiveCards(card);
-          card.classList.add("is-spotlit");
+          suppressedClicks.add(card);
+          spotlightCard(card);
+          window.setTimeout(() => suppressedClicks.delete(card), 500);
+        },
+        { capture: true, passive: false }
+      );
+
+      card.addEventListener(
+        "click",
+        (event) => {
+          if (suppressedClicks.has(card)) {
+            event.preventDefault();
+            event.stopPropagation();
+            suppressedClicks.delete(card);
+            return;
+          }
+
+          if (!shouldHoldFirstTap(card)) return;
+
+          event.preventDefault();
+          event.stopPropagation();
+          spotlightCard(card);
         },
         { capture: true }
       );
@@ -150,18 +208,17 @@ const srcset = (stem: string) =>
       document.addEventListener(
         "pointerdown",
         (event) => {
-          const shouldUseTouchFirst =
-            window.matchMedia("(pointer: coarse)").matches ||
-            navigator.maxTouchPoints > 0;
-
-          if (!shouldUseTouchFirst) return;
+          if (event.pointerType) {
+            lastPointerType = event.pointerType;
+          }
+          if (!prefersTapFirst()) return;
           const target = event.target;
           if (!(target instanceof Element)) return;
           if (target.closest("[data-rajintalksalot-card]")) return;
 
           document
             .querySelectorAll("[data-rajintalksalot-card]")
-            .forEach((card) => card.classList.remove("is-spotlit"));
+            .forEach((card) => card.classList.remove(SPOTLIT_CLASS));
         },
         { capture: true }
       );
@@ -170,7 +227,7 @@ const srcset = (stem: string) =>
         if (event.key !== "Escape") return;
         document
           .querySelectorAll("[data-rajintalksalot-card]")
-          .forEach((card) => card.classList.remove("is-spotlit"));
+          .forEach((card) => card.classList.remove(SPOTLIT_CLASS));
       });
     }
   }
@@ -208,7 +265,7 @@ const srcset = (stem: string) =>
     position: relative;
     display: block;
     width: calc(100% - 1.25rem);
-    max-width: 22rem;
+    max-width: 20.5rem;
     margin: 0.35rem auto;
     isolation: isolate;
     overflow: visible;
@@ -273,9 +330,9 @@ const srcset = (stem: string) =>
     left: 50%;
     z-index: 4;
     width: calc(100% - 1.25rem);
-    max-width: 17rem;
+    max-width: 16rem;
     color: rgb(82 82 82);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 300;
     line-height: 1.35;
     text-align: center;
@@ -297,7 +354,7 @@ const srcset = (stem: string) =>
     left: 50%;
     z-index: 4;
     display: block;
-    width: min(12rem, 68%);
+    width: min(11rem, 64%);
     opacity: 0;
     pointer-events: none;
     transform: translate(-50%, -0.35rem);
@@ -384,13 +441,93 @@ const srcset = (stem: string) =>
   .rajintalksalot-card:focus-visible {
     outline: 2px solid rgb(212 212 212);
     outline-offset: 6px;
-    border-radius: 18px;
   }
 
   @media (max-width: 767px) {
-    .rajintalksalot-card__stack,
+    .rajintalksalot-card {
+      display: grid;
+      justify-items: center;
+      gap: 1.05rem;
+      padding-block: 1.2rem 1.35rem;
+      transform: none;
+    }
+
     .rajintalksalot-card__hover-copy {
-      max-width: min(23rem, 88vw);
+      order: 1;
+      position: static;
+      width: min(15rem, 78vw);
+      max-width: none;
+      font-size: 0.66rem;
+      transform: translateY(0.25rem);
+    }
+
+    .rajintalksalot-card__stack {
+      order: 2;
+      width: min(17rem, 72vw);
+      max-width: none;
+      margin: 0.05rem auto;
+    }
+
+    .rajintalksalot-card__hover-logo {
+      order: 3;
+      position: static;
+      width: min(8.25rem, 48vw);
+      transform: translateY(-0.25rem);
+    }
+
+    .rajintalksalot-card:hover:not(.is-spotlit):not(:focus-visible) {
+      transform: none;
+    }
+
+    .rajintalksalot-card:focus-visible,
+    .rajintalksalot-card.is-spotlit {
+      transform: none;
+    }
+
+    .rajintalksalot-card:focus-visible {
+      outline: none;
+    }
+
+    .rajintalksalot-card:hover:not(.is-spotlit):not(:focus-visible)
+      .rajintalksalot-card__layer--far {
+      transform: translate(
+        calc(cos(var(--stack-dir)) * var(--stack-step) * 2),
+        calc(sin(var(--stack-dir)) * var(--stack-step) * 2)
+      );
+    }
+
+    .rajintalksalot-card:hover:not(.is-spotlit):not(:focus-visible)
+      .rajintalksalot-card__layer--near {
+      transform: translate(
+        calc(cos(var(--stack-dir)) * var(--stack-step) * 1),
+        calc(sin(var(--stack-dir)) * var(--stack-step) * 1)
+      );
+    }
+
+    .rajintalksalot-card:hover:not(.is-spotlit):not(:focus-visible)
+      .rajintalksalot-card__front {
+      border-color: var(--line-color);
+      box-shadow: 0 16px 36px rgb(0 0 0 / 0.22);
+      transform: rotate(0deg);
+    }
+
+    .rajintalksalot-card:hover:not(.is-spotlit):not(:focus-visible)
+      .rajintalksalot-card__hover-copy {
+      opacity: 0;
+      transform: translateY(0.25rem);
+    }
+
+    .rajintalksalot-card:hover:not(.is-spotlit):not(:focus-visible)
+      .rajintalksalot-card__hover-logo {
+      opacity: 0;
+      transform: translateY(-0.25rem);
+    }
+
+    .rajintalksalot-card:focus-visible .rajintalksalot-card__hover-copy,
+    .rajintalksalot-card.is-spotlit .rajintalksalot-card__hover-copy,
+    .rajintalksalot-card:focus-visible .rajintalksalot-card__hover-logo,
+    .rajintalksalot-card.is-spotlit .rajintalksalot-card__hover-logo {
+      transform: translateY(0);
     }
   }
 
