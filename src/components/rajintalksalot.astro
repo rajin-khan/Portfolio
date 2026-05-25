@@ -1,0 +1,413 @@
+---
+const destination = "https://rajintalksalot.vercel.app";
+const basePath = "/assets/rajintalksalot/vincent-van-gogh/media";
+const logoPath = "/assets/rajintalksalot/brand";
+
+const images = {
+  front: {
+    stem: "8a",
+    alt: "RAJINTALKSALOT Vincent Van Gogh post cover",
+  },
+  near: {
+    stem: "8b",
+    alt: "",
+  },
+  far: {
+    stem: "8c",
+    alt: "",
+  },
+};
+
+const srcset = (stem: string) =>
+  [720, 1080, 1600]
+    .map((width) => `${basePath}/${stem}-${width}.webp ${width}w`)
+    .join(", ");
+---
+
+<a
+  href={destination}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="rajintalksalot-card"
+  data-rajintalksalot-card
+  aria-label="Open RAJINTALKSALOT"
+  style="--stack-dir: 222deg; --stack-tilt: 1.15deg; --front-tilt: -0.65deg;"
+>
+  <span class="rajintalksalot-card__stack">
+    <span class="rajintalksalot-card__layer rajintalksalot-card__layer--far" aria-hidden="true">
+      <picture>
+        <source srcset={`${basePath}/${images.far.stem}-1080.avif`} type="image/avif" />
+        <source
+          srcset={srcset(images.far.stem)}
+          sizes="(min-width: 768px) 42vw, 88vw"
+          type="image/webp"
+        />
+        <img
+          src={`${basePath}/${images.far.stem}-1080.webp`}
+          width="1080"
+          height="1080"
+          alt={images.far.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+    </span>
+    <span class="rajintalksalot-card__layer rajintalksalot-card__layer--near" aria-hidden="true">
+      <picture>
+        <source srcset={`${basePath}/${images.near.stem}-1080.avif`} type="image/avif" />
+        <source
+          srcset={srcset(images.near.stem)}
+          sizes="(min-width: 768px) 42vw, 88vw"
+          type="image/webp"
+        />
+        <img
+          src={`${basePath}/${images.near.stem}-1080.webp`}
+          width="1080"
+          height="1080"
+          alt={images.near.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+    </span>
+    <picture class="rajintalksalot-card__front">
+      <source srcset={`${basePath}/${images.front.stem}-1080.avif`} type="image/avif" />
+      <source
+        srcset={srcset(images.front.stem)}
+        sizes="(min-width: 768px) 42vw, 88vw"
+        type="image/webp"
+      />
+      <img
+        src={`${basePath}/${images.front.stem}-1080.webp`}
+        width="1080"
+        height="1080"
+        alt={images.front.alt}
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+  </span>
+
+  <span class="rajintalksalot-card__hover-copy" aria-hidden="true">
+    Alt blog where all the creative stuff is.
+  </span>
+  <span class="rajintalksalot-card__hover-logo" aria-hidden="true">
+    <picture class="rajintalksalot-card__logo">
+      <source srcset={`${logoPath}/logo-900.avif`} type="image/avif" />
+      <source srcset={`${logoPath}/logo-900.webp`} type="image/webp" />
+      <img
+        src={`${logoPath}/main-logo.png`}
+        width="900"
+        height="256"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+  </span>
+</a>
+
+<script>
+  function initRajinTalksALotCard() {
+    const cards = document.querySelectorAll<HTMLAnchorElement>(
+      "[data-rajintalksalot-card]"
+    );
+
+    if (!cards.length) return;
+
+    const touchFirst =
+      window.matchMedia("(pointer: coarse)").matches ||
+      navigator.maxTouchPoints > 0;
+
+    const clearActiveCards = (except?: HTMLAnchorElement) => {
+      cards.forEach((card) => {
+        if (card !== except) card.classList.remove("is-spotlit");
+      });
+    };
+
+    cards.forEach((card) => {
+      if (card.dataset.rajintalksalotBound === "true") return;
+      card.dataset.rajintalksalotBound = "true";
+
+      card.addEventListener(
+        "click",
+        (event) => {
+          if (!touchFirst) return;
+          if (card.classList.contains("is-spotlit")) return;
+
+          event.preventDefault();
+          event.stopPropagation();
+          clearActiveCards(card);
+          card.classList.add("is-spotlit");
+        },
+        { capture: true }
+      );
+    });
+
+    if (document.documentElement.dataset.rajintalksalotGlobalBound !== "true") {
+      document.documentElement.dataset.rajintalksalotGlobalBound = "true";
+
+      document.addEventListener(
+        "pointerdown",
+        (event) => {
+          const shouldUseTouchFirst =
+            window.matchMedia("(pointer: coarse)").matches ||
+            navigator.maxTouchPoints > 0;
+
+          if (!shouldUseTouchFirst) return;
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          if (target.closest("[data-rajintalksalot-card]")) return;
+
+          document
+            .querySelectorAll("[data-rajintalksalot-card]")
+            .forEach((card) => card.classList.remove("is-spotlit"));
+        },
+        { capture: true }
+      );
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return;
+        document
+          .querySelectorAll("[data-rajintalksalot-card]")
+          .forEach((card) => card.classList.remove("is-spotlit"));
+      });
+    }
+  }
+
+  initRajinTalksALotCard();
+  document.addEventListener("astro:page-load", initRajinTalksALotCard);
+</script>
+
+<style>
+  .rajintalksalot-card {
+    --stack-step: clamp(0.32rem, 0.9vw, 0.48rem);
+    --label-color: rgb(115 115 115);
+    --line-color: rgb(212 212 212 / 0.7);
+    --line-strong: rgb(163 163 163 / 0.9);
+    --surface: rgb(250 250 250);
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    color: var(--label-color);
+    outline: none;
+    transition:
+      transform 320ms cubic-bezier(0.2, 0.85, 0.35, 1),
+      color 200ms ease;
+  }
+
+  :global(.dark) .rajintalksalot-card {
+    --label-color: rgb(163 163 163);
+    --line-color: rgb(82 82 82 / 0.9);
+    --line-strong: rgb(115 115 115);
+    --surface: rgb(10 10 10);
+  }
+
+  .rajintalksalot-card__stack {
+    position: relative;
+    display: block;
+    width: calc(100% - 1.25rem);
+    max-width: 22rem;
+    margin: 0.35rem auto;
+    isolation: isolate;
+    overflow: visible;
+  }
+
+  .rajintalksalot-card__layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .rajintalksalot-card__layer--far {
+    z-index: 0;
+    transform: translate(
+      calc(cos(var(--stack-dir)) * var(--stack-step) * 2),
+      calc(sin(var(--stack-dir)) * var(--stack-step) * 2)
+    );
+    transition: transform 320ms cubic-bezier(0.2, 0.85, 0.35, 1);
+  }
+
+  .rajintalksalot-card__layer--near {
+    z-index: 1;
+    transform: translate(
+      calc(cos(var(--stack-dir)) * var(--stack-step) * 1),
+      calc(sin(var(--stack-dir)) * var(--stack-step) * 1)
+    );
+    transition: transform 320ms cubic-bezier(0.2, 0.85, 0.35, 1);
+  }
+
+  .rajintalksalot-card__layer picture,
+  .rajintalksalot-card__front {
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--line-color);
+    box-shadow: 0 16px 36px rgb(0 0 0 / 0.22);
+  }
+
+  .rajintalksalot-card__front {
+    position: relative;
+    z-index: 3;
+    transform: rotate(0deg);
+    transform-origin: center center;
+    transition:
+      border-color 320ms cubic-bezier(0.2, 0.85, 0.35, 1),
+      box-shadow 320ms cubic-bezier(0.2, 0.85, 0.35, 1),
+      transform 320ms cubic-bezier(0.2, 0.85, 0.35, 1);
+  }
+
+  .rajintalksalot-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .rajintalksalot-card__hover-copy {
+    position: absolute;
+    bottom: calc(100% + 1.8rem);
+    left: 50%;
+    z-index: 4;
+    width: calc(100% - 1.25rem);
+    max-width: 17rem;
+    color: rgb(82 82 82);
+    font-size: 0.72rem;
+    font-weight: 300;
+    line-height: 1.35;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 0.35rem);
+    transition:
+      opacity 320ms cubic-bezier(0.2, 0.85, 0.35, 1),
+      transform 320ms cubic-bezier(0.2, 0.85, 0.35, 1);
+  }
+
+  :global(.dark) .rajintalksalot-card__hover-copy {
+    color: rgb(163 163 163);
+  }
+
+  .rajintalksalot-card__hover-logo {
+    position: absolute;
+    top: calc(100% + 0.9rem);
+    left: 50%;
+    z-index: 4;
+    display: block;
+    width: min(12rem, 68%);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -0.35rem);
+    transition:
+      opacity 320ms cubic-bezier(0.2, 0.85, 0.35, 1),
+      transform 320ms cubic-bezier(0.2, 0.85, 0.35, 1);
+  }
+
+  .rajintalksalot-card__logo {
+    display: block;
+    width: 100%;
+    line-height: 0;
+  }
+
+  .rajintalksalot-card__logo img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgb(0 0 0 / 0.28));
+  }
+
+  .rajintalksalot-card:hover,
+  .rajintalksalot-card:focus-visible,
+  .rajintalksalot-card.is-spotlit {
+    color: rgb(64 64 64);
+    transform: translateY(-5px);
+  }
+
+  :global(.dark) .rajintalksalot-card:hover,
+  :global(.dark) .rajintalksalot-card:focus-visible,
+  :global(.dark) .rajintalksalot-card.is-spotlit {
+    color: rgb(229 229 229);
+  }
+
+  .rajintalksalot-card:hover .rajintalksalot-card__layer--far,
+  .rajintalksalot-card:focus-visible .rajintalksalot-card__layer--far,
+  .rajintalksalot-card.is-spotlit .rajintalksalot-card__layer--far {
+    transform:
+      translate(
+        calc(cos(var(--stack-dir)) * var(--stack-step) * 2.45),
+        calc(sin(var(--stack-dir)) * var(--stack-step) * 2.45)
+      )
+      rotate(calc(-2.1deg + var(--stack-tilt, 0deg)));
+  }
+
+  .rajintalksalot-card:hover .rajintalksalot-card__layer--near,
+  .rajintalksalot-card:focus-visible .rajintalksalot-card__layer--near,
+  .rajintalksalot-card.is-spotlit .rajintalksalot-card__layer--near {
+    transform:
+      translate(
+        calc(cos(var(--stack-dir)) * var(--stack-step) * 1.3),
+        calc(sin(var(--stack-dir)) * var(--stack-step) * 1.3)
+      )
+      rotate(calc(1.85deg + var(--stack-tilt, 0deg)));
+  }
+
+  .rajintalksalot-card:hover .rajintalksalot-card__front,
+  .rajintalksalot-card:focus-visible .rajintalksalot-card__front,
+  .rajintalksalot-card.is-spotlit .rajintalksalot-card__front {
+    border-color: var(--line-strong);
+    box-shadow:
+      0 22px 52px rgb(0 0 0 / 0.48),
+      0 0 0 1px rgb(223 194 122 / 0.14),
+      0 0 38px 8px rgb(223 194 122 / 0.16),
+      0 0 64px 22px rgb(223 194 122 / 0.1),
+      0 0 100px 36px rgb(223 194 122 / 0.07);
+    transform: rotate(var(--front-tilt, 0deg));
+  }
+
+  .rajintalksalot-card:hover .rajintalksalot-card__hover-copy,
+  .rajintalksalot-card:focus-visible .rajintalksalot-card__hover-copy,
+  .rajintalksalot-card.is-spotlit .rajintalksalot-card__hover-copy {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .rajintalksalot-card:hover .rajintalksalot-card__hover-logo,
+  .rajintalksalot-card:focus-visible .rajintalksalot-card__hover-logo,
+  .rajintalksalot-card.is-spotlit .rajintalksalot-card__hover-logo {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .rajintalksalot-card:focus-visible {
+    outline: 2px solid rgb(212 212 212);
+    outline-offset: 6px;
+    border-radius: 18px;
+  }
+
+  @media (max-width: 767px) {
+    .rajintalksalot-card__stack,
+    .rajintalksalot-card__hover-copy {
+      max-width: min(23rem, 88vw);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rajintalksalot-card,
+    .rajintalksalot-card__layer--far,
+    .rajintalksalot-card__layer--near,
+    .rajintalksalot-card__front,
+    .rajintalksalot-card__hover-copy,
+    .rajintalksalot-card__hover-logo {
+      transition: none;
+    }
+
+    .rajintalksalot-card:hover,
+    .rajintalksalot-card:focus-visible,
+    .rajintalksalot-card.is-spotlit {
+      transform: none;
+    }
+  }
+</style>
