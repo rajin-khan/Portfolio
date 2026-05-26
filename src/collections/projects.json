@@ -18,19 +18,18 @@
     "tags": [
       { "name": "Productivity", "gradient": "from-green-400 to-yellow-600" },
       { "name": "Notes", "gradient": "from-blue-500 to-blue-600" },
-      { "name": "React", "gradient": "from-indigo-500 to-purple-600" },
       { "name": "AI", "gradient": "from-pink-500 to-yellow-600" }
     ]
   },
   {
-    "name": "MillenAI",
-    "description": "AI Workspace with Multi Agent Workflows.",
-    "image": "/assets/images/projects/MillenAI.png",
-    "url": "/projects/millenai",
+    "name": "rajintalksalot",
+    "description": "Visual blog for original work.",
+    "image": "/assets/images/projects/rajintalksalot.png",
+    "url": "/projects/rajintalksalot",
     "tags": [
-      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "ChatBot", "gradient": "from-indigo-500 to-purple-600" },
-      { "name": "Agentic", "gradient": "from-green-400 to-blue-600" }
+      { "name": "Visual", "gradient": "from-green-400 to-blue-600" },
+      { "name": "Blog", "gradient": "from-pink-500 to-yellow-600" },
+      { "name": "UI/UX", "gradient": "from-indigo-500 to-purple-600" }
     ]
   },
   {
@@ -64,6 +63,17 @@
       { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
       { "name": "Chatbot", "gradient": "from-green-400 to-blue-600" },
       { "name": "Research", "gradient": "from-indigo-500 to-purple-600" }
+    ]
+  },
+  {
+    "name": "MillenAI",
+    "description": "AI Workspace with Multi Agent Workflows.",
+    "image": "/assets/images/projects/MillenAI.png",
+    "url": "/projects/millenai",
+    "tags": [
+      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
+      { "name": "ChatBot", "gradient": "from-indigo-500 to-purple-600" },
+      { "name": "Agentic", "gradient": "from-green-400 to-blue-600" }
     ]
   },
   {
