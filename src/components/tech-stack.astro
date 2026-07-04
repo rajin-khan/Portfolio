@@ -61,16 +61,31 @@ const animationDuration = techStackItems.length * 3;
   
   <style define:vars={{ animationDuration: `${animationDuration}s` }}>
     .scroller-container {
-      overflow: hidden;
+      position: relative;
+      block-size: 2.5rem;
+      overflow: clip;
+      overflow-clip-margin: 0;
+      max-width: 100%;
+      contain: layout paint;
       -webkit-mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
               mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
     }
   
     .scroller-inner {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 0;
       display: flex;
       flex-wrap: nowrap;
+      align-items: center;
       width: max-content; 
       animation: scroll var(--animationDuration) linear infinite;
+    }
+
+    @media (min-width: 768px) {
+      .scroller-container {
+        block-size: 3rem;
+      }
     }
   
     .tech-item {

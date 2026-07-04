@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/heartbeat-sticker",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}

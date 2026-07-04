@@ -42,6 +42,12 @@ const absoluteOgImage = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/assets/im
     </script>
 
     <style>
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: clip;
+      }
+
       .prose img {
         border-radius: 20px;
       }

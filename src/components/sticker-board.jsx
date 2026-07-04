@@ -861,14 +861,6 @@ export default function StickerBoard() {
           container: sticker-board / inline-size;
         }
 
-        @media (min-width: 761px) and (max-width: 1459px) {
-          .sticker-board-section {
-            width: min(72rem, calc(100vw - 1rem));
-            margin-left: calc(50% - min(36rem, calc(50vw - 0.5rem)));
-            margin-right: 0;
-          }
-        }
-
         html.dark .sticker-board-section {
           color: rgb(245 245 245);
         }
@@ -1774,7 +1766,7 @@ export default function StickerBoard() {
         @container sticker-board (max-width: 64rem) {
           .sticker-board-shell {
             --board-block-size: clamp(30rem, min(68cqw, 70dvh), 38.5rem);
-            --composer-inline: clamp(10.5rem, 23cqw, 13.2rem);
+            --composer-inline: clamp(9.75rem, 20cqw, 12rem);
             grid-template-columns: 1fr;
           }
 
@@ -1787,7 +1779,7 @@ export default function StickerBoard() {
             position: absolute;
             z-index: 6;
             inset-block: 0;
-            inset-inline-end: clamp(-1.1rem, -1.7cqw, -0.35rem);
+            inset-inline-end: clamp(0.45rem, 1.6cqw, 1.15rem);
             justify-self: end;
             width: var(--composer-inline);
             padding: 0;
