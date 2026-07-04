@@ -9,12 +9,23 @@ const LEGACY_LOCAL_STORAGE_KEYS = [
   "rajin-sticker-board-placements-v1",
 ];
 const MESSAGE_LIMIT = 180;
+const NAME_LIMIT = 32;
 const BOARD_ROWS = 3;
 const ROW_GROUP_SIZE = 4;
 const GROUP_SIZE = BOARD_ROWS * ROW_GROUP_SIZE;
 const MAX_PLACEMENTS = 240;
 const MAX_GROUPS = Math.ceil(MAX_PLACEMENTS / GROUP_SIZE);
 const MIN_RENDER_GROUPS = 2;
+const NOTE_DOODLES = [
+  "/assets/images/stickers/doodles/doodle-1.png",
+  "/assets/images/stickers/doodles/doodle-2.webp",
+  "/assets/images/stickers/doodles/doodle-3.webp",
+];
+const NOTE_DOODLE_VARIANTS = [
+  { x: "7.4%", y: "7.2%", rotate: "-7deg", scale: "0.92", opacity: "0.62" },
+  { x: "8.6%", y: "8%", rotate: "4deg", scale: "0.84", opacity: "0.56" },
+  { x: "6.8%", y: "8.8%", rotate: "-2deg", scale: "0.98", opacity: "0.58" },
+];
 
 const SHAPE_CONFIG = {
   portrait: {
@@ -181,7 +192,30 @@ function formatStickerDate(value) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = String(date.getFullYear()).slice(-2);
 
-  return `~ ${day}.${month}.${year}`;
+  return `${day}.${month}.${year}`;
+}
+
+function hashString(value) {
+  return String(value || "").split("").reduce((hash, character) => {
+    return (hash * 31 + character.charCodeAt(0)) >>> 0;
+  }, 2166136261);
+}
+
+function noteDoodleFor(placement, sticker) {
+  const key = placement?.id || `${sticker?.id || "preview"}-${sticker?.src || ""}`;
+  const hash = hashString(key);
+  const variant = NOTE_DOODLE_VARIANTS[hash % NOTE_DOODLE_VARIANTS.length];
+
+  return {
+    src: NOTE_DOODLES[hash % NOTE_DOODLES.length],
+    style: {
+      "--note-doodle-x": variant.x,
+      "--note-doodle-y": variant.y,
+      "--note-doodle-rotate": variant.rotate,
+      "--note-doodle-scale": variant.scale,
+      "--note-doodle-opacity": variant.opacity,
+    },
+  };
 }
 
 function normalizePlacement(placement) {
@@ -193,6 +227,7 @@ function normalizePlacement(placement) {
     stickerId: placement.stickerId,
     stickerSrc: sticker.src,
     message: placement.message || "",
+    authorName: String(placement.authorName || "").slice(0, NAME_LIMIT),
     slotId,
     createdAt: placement.createdAt || new Date().toISOString(),
     pending: Boolean(placement.pending),
@@ -408,6 +443,14 @@ function validateNote(text) {
   return "";
 }
 
+function validateName(text) {
+  const name = text.trim();
+
+  if (!name) return "";
+  if (noteHasBlockedLanguage(name)) return "Please keep the name kind.";
+  return "";
+}
+
 export default function StickerBoard() {
   const pendingRequestRef = useRef(0);
   const noteInputRef = useRef(null);
@@ -415,6 +458,7 @@ export default function StickerBoard() {
   const [placements, setPlacements] = useState([]);
   const [selectedSticker, setSelectedSticker] = useState(null);
   const [message, setMessage] = useState("");
+  const [authorName, setAuthorName] = useState("");
   const [, setStatus] = useState("loading");
   const [modalPlacement, setModalPlacement] = useState(null);
   const [previewSticker, setPreviewSticker] = useState(null);
@@ -433,7 +477,9 @@ export default function StickerBoard() {
   const modalMessage =
     modalPlacement?.message ||
     (previewSticker ? message.trim() || "Write something small for the sticker to carry." : "");
+  const modalAuthorName = modalPlacement?.authorName || "";
   const modalTimestamp = modalPlacement ? formatStickerDate(modalPlacement.createdAt) : "";
+  const modalDoodle = modalSticker ? noteDoodleFor(modalPlacement, modalSticker) : null;
   const noteCharactersLeft = MESSAGE_LIMIT - message.length;
   const showNoteLimitWarning = Boolean(previewSticker && noteCharactersLeft <= 15);
   const noteDensityClass = message.length > 125 ? "is-dense" : message.length > 75 ? "is-compact" : "";
@@ -506,6 +552,7 @@ export default function StickerBoard() {
       if (event.key === "Escape") {
         setModalPlacement(null);
         setPreviewSticker(null);
+        setAuthorName("");
         setNoteError("");
       }
     };
@@ -532,6 +579,7 @@ export default function StickerBoard() {
         body: JSON.stringify({
           stickerId: placement.stickerId,
           message: placement.message,
+          authorName: placement.authorName || "",
           slotId: placement.slotId,
         }),
       });
@@ -541,7 +589,11 @@ export default function StickerBoard() {
       if (!response.ok) {
         if (
           requestId === pendingRequestRef.current &&
-          (data?.error === "Write a note first." || data?.error === "Please keep the note kind.")
+          (
+            data?.error === "Write a note first." ||
+            data?.error === "Please keep the note kind." ||
+            data?.error === "Please keep the name kind."
+          )
         ) {
           const rolledBackPlacements = optimisticPlacements.filter((item) => item.id !== placement.id);
           const rejectedSticker = findSticker(placement.stickerId);
@@ -550,6 +602,7 @@ export default function StickerBoard() {
           setLocalPlacements(rolledBackPlacements);
           setSelectedSticker(rejectedSticker);
           setMessage(placement.message);
+          setAuthorName(placement.authorName || "");
           setPreviewSticker(rejectedSticker);
           setNoteError(data.error);
           setModalFlipped(true);
@@ -604,6 +657,11 @@ export default function StickerBoard() {
     if (noteError) setNoteError("");
   }
 
+  function updateAuthorName(value) {
+    setAuthorName(value.slice(0, NAME_LIMIT));
+    if (noteError) setNoteError("");
+  }
+
   function placeSticker() {
     const stickerForPlacement = previewSticker || selectedSticker;
     const slotId = stickerForPlacement ? findPlacementSlot(placements, stickerForPlacement) : undefined;
@@ -619,7 +677,8 @@ export default function StickerBoard() {
     }
 
     const noteText = (noteInputRef.current?.value ?? message).trim();
-    const validationError = validateNote(noteText);
+    const trimmedAuthorName = authorName.trim();
+    const validationError = validateNote(noteText) || validateName(trimmedAuthorName);
 
     if (validationError) {
       setNoteError(validationError);
@@ -633,6 +692,7 @@ export default function StickerBoard() {
       stickerId: stickerForPlacement.id,
       stickerSrc: stickerForPlacement.src,
       message: noteText,
+      authorName: trimmedAuthorName,
       slotId,
       createdAt: new Date().toISOString(),
       pending: true,
@@ -642,6 +702,7 @@ export default function StickerBoard() {
     setPlacements(optimisticPlacements);
     setLocalPlacements(optimisticPlacements);
     setMessage("");
+    setAuthorName("");
     setNoteError("");
     setPreviewSticker(null);
     setSelectedSticker((currentSticker) => chooseSticker(optimisticPlacements, currentSticker));
@@ -699,7 +760,10 @@ export default function StickerBoard() {
                                 className={`placed-sticker ${placement.pending ? "is-pending" : ""} ${
                                   newPlacementSlotId === placement.slotId ? "is-new" : ""
                                 }`}
-                                onClick={() => setModalPlacement(placement)}
+                                onClick={() => {
+                                  setAuthorName("");
+                                  setModalPlacement(placement);
+                                }}
                                 onPointerMove={setPointerTilt}
                                 onPointerLeave={clearPointerTilt}
                                 style={stickerStyle(sticker)}
@@ -743,6 +807,7 @@ export default function StickerBoard() {
                       className="selected-sticker-main"
                       onClick={() => {
                         setNoteError("");
+                        setAuthorName("");
                         setPreviewSticker(selectedSticker);
                       }}
                       aria-label="Open selected sticker note"
@@ -762,6 +827,7 @@ export default function StickerBoard() {
                       className="sticker-pencil-action"
                       onClick={() => {
                         setNoteError("");
+                        setAuthorName("");
                         setPreviewSticker(selectedSticker);
                       }}
                       aria-label="Write a note for this sticker"
@@ -794,6 +860,7 @@ export default function StickerBoard() {
             onClick={() => {
               setModalPlacement(null);
               setPreviewSticker(null);
+              setAuthorName("");
               setNoteError("");
             }}
           />
@@ -806,6 +873,7 @@ export default function StickerBoard() {
                 onClick={() => {
                   setModalPlacement(null);
                   setPreviewSticker(null);
+                  setAuthorName("");
                   setNoteError("");
                 }}
               >
@@ -832,6 +900,15 @@ export default function StickerBoard() {
                   <img src={modalPlacement?.stickerSrc || previewSticker?.src} alt="" />
                 </span>
                 <span className="sticker-flip-face sticker-flip-back">
+                  {modalDoodle ? (
+                    <img
+                      className="sticker-note-doodle"
+                      src={modalDoodle.src}
+                      alt=""
+                      aria-hidden="true"
+                      style={modalDoodle.style}
+                    />
+                  ) : null}
                   {previewSticker ? (
                     <span className={`sticker-note-editor ${noteDensityClass}`}>
                       <textarea
@@ -847,11 +924,29 @@ export default function StickerBoard() {
                         aria-invalid={Boolean(noteError)}
                         aria-describedby={showNoteLimitWarning ? "sticker-note-limit" : undefined}
                       />
+                      <input
+                        className="sticker-note-name-input"
+                        value={authorName}
+                        maxLength={NAME_LIMIT}
+                        onInput={(event) => updateAuthorName(event.currentTarget.value)}
+                        onChange={(event) => updateAuthorName(event.target.value)}
+                        placeholder="your name (optional)"
+                        aria-label="Your name, optional"
+                      />
                     </span>
                   ) : (
-                    <span>{modalMessage || "No note left. Just a sticker passing through."}</span>
+                    <span className="sticker-note-copy">
+                      {modalMessage || "No note left. Just a sticker passing through."}
+                    </span>
                   )}
-                  {modalTimestamp ? <time className="sticker-note-date">{modalTimestamp}</time> : null}
+                  {modalAuthorName || modalTimestamp ? (
+                    <span className="sticker-note-meta">
+                      {modalAuthorName ? <span className="sticker-note-author">~ {modalAuthorName}</span> : null}
+                      {modalTimestamp ? (
+                        <time className="sticker-note-date">{modalAuthorName ? modalTimestamp : `~ ${modalTimestamp}`}</time>
+                      ) : null}
+                    </span>
+                  ) : null}
                 </span>
               </div>
             </div>
@@ -1582,37 +1677,85 @@ export default function StickerBoard() {
           overflow-wrap: anywhere;
           opacity: 0;
           pointer-events: none;
+          overflow: hidden;
           transform: rotateY(180deg) translateZ(1px);
         }
 
-        .sticker-flip-back > span:not(.sticker-note-editor) {
-          display: block;
-          max-width: 90%;
-          transform: rotate(-1deg);
+        .sticker-note-doodle {
+          position: absolute;
+          top: var(--note-doodle-y);
+          left: var(--note-doodle-x);
+          width: clamp(2.25rem, 12.5%, 4.05rem);
+          max-width: 20%;
+          height: auto;
+          object-fit: contain;
+          opacity: var(--note-doodle-opacity);
+          mix-blend-mode: multiply;
+          filter: sepia(0.14) saturate(0.92) contrast(1.04);
+          pointer-events: none;
+          transform: rotate(var(--note-doodle-rotate)) scale(var(--note-doodle-scale));
+          transform-origin: 45% 50%;
+          z-index: 0;
         }
 
-        .sticker-note-date {
+        .sticker-note-copy {
+          display: block;
+          max-width: 90%;
+          position: relative;
+          transform: rotate(-1deg);
+          z-index: 1;
+        }
+
+        .sticker-note-meta {
           position: absolute;
-          right: clamp(0.92rem, 5.4%, 1.35rem);
-          bottom: clamp(0.58rem, 4%, 0.95rem);
+          right: clamp(1.18rem, 7.2%, 1.9rem);
+          bottom: clamp(1.02rem, 6.4%, 1.5rem);
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.34rem;
           color: rgb(44 41 36 / 0.64);
           font: inherit;
-          font-size: clamp(0.82rem, 3.1vw, 1.08rem);
-          line-height: 1;
           letter-spacing: 0;
           pointer-events: none;
           transform: rotate(-2deg);
+          z-index: 2;
+        }
+
+        .sticker-note-author,
+        .sticker-note-date {
+          display: block;
+          max-width: min(10rem, 42vw);
+          line-height: 1.22;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .sticker-note-author {
+          color: rgb(44 41 36 / 0.74);
+          font-size: clamp(0.9rem, 3.3vw, 1.15rem);
+          padding-bottom: 0.18em;
+          transform: translateY(-0.28rem);
+        }
+
+        .sticker-note-date {
+          color: rgb(44 41 36 / 0.64);
+          font-size: clamp(0.82rem, 3.1vw, 1.08rem);
+          transform: translateY(-0.08rem);
         }
 
         .sticker-note-editor {
           --note-font-scale: 1;
           display: grid;
           place-items: center;
+          gap: clamp(0.32rem, 1.2vw, 0.52rem);
           width: 88%;
           min-height: 72%;
           max-height: 78%;
           font-size: calc(1em * var(--note-font-scale));
           transform: rotate(-1deg);
+          z-index: 1;
         }
 
         .sticker-note-editor.is-compact {
@@ -1646,6 +1789,28 @@ export default function StickerBoard() {
 
         .sticker-note-input::-webkit-scrollbar {
           display: none;
+        }
+
+        .sticker-note-name-input {
+          width: min(72%, 15rem);
+          border: 0;
+          border-bottom: 1px solid rgb(44 41 36 / 0.2);
+          background: transparent;
+          color: rgb(44 41 36 / 0.82);
+          font: inherit;
+          font-size: 0.72em;
+          line-height: 1.15;
+          text-align: center;
+          outline: none;
+        }
+
+        .sticker-note-name-input::placeholder {
+          color: rgb(44 41 36 / 0.3);
+          opacity: 1;
+        }
+
+        .sticker-note-name-input:focus {
+          border-bottom-color: rgb(44 41 36 / 0.42);
         }
 
         .sticker-note-error,

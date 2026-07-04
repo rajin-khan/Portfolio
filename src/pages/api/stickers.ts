@@ -6,6 +6,7 @@ export const prerender = false;
 const BOARD_KEY = "sticker-board:placements";
 const MAX_PLACEMENTS = 240;
 const MESSAGE_LIMIT = 180;
+const NAME_LIMIT = 32;
 const STICKER_ID_REGEX = /^sticker-\d{3}$/;
 const NOTE_LEET_MAP: Record<string, string> = {
   "0": "o",
@@ -97,6 +98,14 @@ function validateNote(text: string) {
   return "";
 }
 
+function validateName(text: string) {
+  const name = text.trim();
+
+  if (!name) return "";
+  if (noteHasBlockedLanguage(name)) return "Please keep the name kind.";
+  return "";
+}
+
 async function getRedis() {
   if (redisInstance !== null) return redisInstance;
 
@@ -155,6 +164,7 @@ function normalizePlacements(value: unknown) {
       stickerId: placement.stickerId,
       stickerSrc: stickerSrcFor(placement.stickerId),
       message: String(placement.message || "").slice(0, MESSAGE_LIMIT),
+      authorName: String(placement.authorName || "").slice(0, NAME_LIMIT),
       slotId: placement.slotId,
       createdAt: String(placement.createdAt || new Date().toISOString()),
     }));
@@ -194,7 +204,7 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: "Sticker board storage unavailable" }, 503);
   }
 
-  let body: { stickerId?: string; message?: string; slotId?: number };
+  let body: { stickerId?: string; message?: string; authorName?: string; slotId?: number };
   try {
     body = await request.json();
   } catch {
@@ -203,6 +213,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   const stickerId = typeof body.stickerId === "string" ? body.stickerId : "";
   const message = typeof body.message === "string" ? body.message.trim().slice(0, MESSAGE_LIMIT) : "";
+  const authorName = typeof body.authorName === "string" ? body.authorName.trim().slice(0, NAME_LIMIT) : "";
   const requestedSlotId = Number.isInteger(body.slotId) ? body.slotId : undefined;
 
   if (!STICKER_ID_REGEX.test(stickerId) || !isKnownSticker(stickerId)) {
@@ -212,6 +223,11 @@ export const POST: APIRoute = async ({ request }) => {
   const noteError = validateNote(message);
   if (noteError) {
     return json({ error: noteError }, 400);
+  }
+
+  const nameError = validateName(authorName);
+  if (nameError) {
+    return json({ error: nameError }, 400);
   }
 
   try {
@@ -239,6 +255,7 @@ export const POST: APIRoute = async ({ request }) => {
       stickerId,
       stickerSrc: stickerSrcFor(stickerId),
       message,
+      authorName,
       slotId,
       createdAt: new Date().toISOString(),
     };
