@@ -9,6 +9,7 @@ import StatusIndicator from "../components/status-indicator.astro";
 import TechStack from "../components/tech-stack.astro";
 import LatestCommit from "../components/latest-commit.astro";
 import Newsletter from "../components/home/newsletter.astro";
+import StickerBoard from "../components/sticker-board.jsx";
 
 const personSchema = {
   "@context": "https://schema.org",
@@ -172,6 +173,9 @@ const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Gr
 
   <Separator text="Oh, and I talk a lot" />
   <Writings />
+
+  <Separator text="Guestbook" />
+  <StickerBoard client:load />
 
   <script
     type="application/ld+json"

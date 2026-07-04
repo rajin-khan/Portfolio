@@ -1,0 +1,751 @@
+[
+  {
+    "id": "sticker-001",
+    "src": "/assets/images/stickers/curated/sticker-001.jpg",
+    "width": 1179,
+    "height": 888,
+    "aspectRatio": 1.328
+  },
+  {
+    "id": "sticker-002",
+    "src": "/assets/images/stickers/curated/sticker-002.jpg",
+    "width": 736,
+    "height": 438,
+    "aspectRatio": 1.68
+  },
+  {
+    "id": "sticker-003",
+    "src": "/assets/images/stickers/curated/sticker-003.jpg",
+    "width": 735,
+    "height": 392,
+    "aspectRatio": 1.875
+  },
+  {
+    "id": "sticker-004",
+    "src": "/assets/images/stickers/curated/sticker-004.jpg",
+    "width": 1170,
+    "height": 1463,
+    "aspectRatio": 0.8
+  },
+  {
+    "id": "sticker-005",
+    "src": "/assets/images/stickers/curated/sticker-005.jpg",
+    "width": 997,
+    "height": 625,
+    "aspectRatio": 1.595
+  },
+  {
+    "id": "sticker-006",
+    "src": "/assets/images/stickers/curated/sticker-006.jpg",
+    "width": 736,
+    "height": 920,
+    "aspectRatio": 0.8
+  },
+  {
+    "id": "sticker-007",
+    "src": "/assets/images/stickers/curated/sticker-007.jpg",
+    "width": 1080,
+    "height": 1350,
+    "aspectRatio": 0.8
+  },
+  {
+    "id": "sticker-008",
+    "src": "/assets/images/stickers/curated/sticker-008.jpg",
+    "width": 602,
+    "height": 456,
+    "aspectRatio": 1.32
+  },
+  {
+    "id": "sticker-009",
+    "src": "/assets/images/stickers/curated/sticker-009.jpg",
+    "width": 736,
+    "height": 981,
+    "aspectRatio": 0.75
+  },
+  {
+    "id": "sticker-010",
+    "src": "/assets/images/stickers/curated/sticker-010.jpg",
+    "width": 750,
+    "height": 600,
+    "aspectRatio": 1.25
+  },
+  {
+    "id": "sticker-011",
+    "src": "/assets/images/stickers/curated/sticker-011.jpg",
+    "width": 736,
+    "height": 414,
+    "aspectRatio": 1.778
+  },
+  {
+    "id": "sticker-012",
+    "src": "/assets/images/stickers/curated/sticker-012.jpg",
+    "width": 736,
+    "height": 414,
+    "aspectRatio": 1.778
+  },
+  {
+    "id": "sticker-013",
+    "src": "/assets/images/stickers/curated/sticker-013.jpg",
+    "width": 736,
+    "height": 1041,
+    "aspectRatio": 0.707
+  },
+  {
+    "id": "sticker-014",
+    "src": "/assets/images/stickers/curated/sticker-014.jpg",
+    "width": 1200,
+    "height": 675,
+    "aspectRatio": 1.778
+  },
+  {
+    "id": "sticker-015",
+    "src": "/assets/images/stickers/curated/sticker-015.jpg",
+    "width": 736,
+    "height": 736,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-016",
+    "src": "/assets/images/stickers/curated/sticker-016.jpg",
+    "width": 849,
+    "height": 1200,
+    "aspectRatio": 0.708
+  },
+  {
+    "id": "sticker-017",
+    "src": "/assets/images/stickers/curated/sticker-017.jpg",
+    "width": 1077,
+    "height": 1077,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-018",
+    "src": "/assets/images/stickers/curated/sticker-018.jpg",
+    "width": 736,
+    "height": 736,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-019",
+    "src": "/assets/images/stickers/curated/sticker-019.png",
+    "width": 736,
+    "height": 981,
+    "aspectRatio": 0.75
+  },
+  {
+    "id": "sticker-020",
+    "src": "/assets/images/stickers/curated/sticker-020.png",
+    "width": 736,
+    "height": 736,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-021",
+    "src": "/assets/images/stickers/curated/sticker-021.jpg",
+    "width": 736,
+    "height": 414,
+    "aspectRatio": 1.778
+  },
+  {
+    "id": "sticker-022",
+    "src": "/assets/images/stickers/curated/sticker-022.jpg",
+    "width": 1200,
+    "height": 720,
+    "aspectRatio": 1.667
+  },
+  {
+    "id": "sticker-023",
+    "src": "/assets/images/stickers/curated/sticker-023.jpg",
+    "width": 729,
+    "height": 900,
+    "aspectRatio": 0.81
+  },
+  {
+    "id": "sticker-024",
+    "src": "/assets/images/stickers/curated/sticker-024.jpg",
+    "width": 1200,
+    "height": 600,
+    "aspectRatio": 2
+  },
+  {
+    "id": "sticker-025",
+    "src": "/assets/images/stickers/curated/sticker-025.jpg",
+    "width": 1200,
+    "height": 2000,
+    "aspectRatio": 0.6
+  },
+  {
+    "id": "sticker-026",
+    "src": "/assets/images/stickers/curated/sticker-026.jpg",
+    "width": 786,
+    "height": 442,
+    "aspectRatio": 1.778
+  },
+  {
+    "id": "sticker-027",
+    "src": "/assets/images/stickers/curated/sticker-027.jpg",
+    "width": 736,
+    "height": 832,
+    "aspectRatio": 0.885
+  },
+  {
+    "id": "sticker-028",
+    "src": "/assets/images/stickers/curated/sticker-028.jpg",
+    "width": 736,
+    "height": 977,
+    "aspectRatio": 0.753
+  },
+  {
+    "id": "sticker-029",
+    "src": "/assets/images/stickers/curated/sticker-029.jpg",
+    "width": 362,
+    "height": 550,
+    "aspectRatio": 0.658
+  },
+  {
+    "id": "sticker-030",
+    "src": "/assets/images/stickers/curated/sticker-030.jpg",
+    "width": 1200,
+    "height": 403,
+    "aspectRatio": 2.978
+  },
+  {
+    "id": "sticker-031",
+    "src": "/assets/images/stickers/curated/sticker-031.jpg",
+    "width": 1200,
+    "height": 551,
+    "aspectRatio": 2.178
+  },
+  {
+    "id": "sticker-032",
+    "src": "/assets/images/stickers/curated/sticker-032.jpg",
+    "width": 640,
+    "height": 640,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-033",
+    "src": "/assets/images/stickers/curated/sticker-033.jpg",
+    "width": 736,
+    "height": 473,
+    "aspectRatio": 1.556
+  },
+  {
+    "id": "sticker-034",
+    "src": "/assets/images/stickers/curated/sticker-034.jpg",
+    "width": 736,
+    "height": 736,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-035",
+    "src": "/assets/images/stickers/curated/sticker-035.jpg",
+    "width": 736,
+    "height": 512,
+    "aspectRatio": 1.438
+  },
+  {
+    "id": "sticker-036",
+    "src": "/assets/images/stickers/curated/sticker-036.jpg",
+    "width": 720,
+    "height": 509,
+    "aspectRatio": 1.415
+  },
+  {
+    "id": "sticker-037",
+    "src": "/assets/images/stickers/curated/sticker-037.jpg",
+    "width": 622,
+    "height": 1085,
+    "aspectRatio": 0.573
+  },
+  {
+    "id": "sticker-038",
+    "src": "/assets/images/stickers/curated/sticker-038.jpg",
+    "width": 735,
+    "height": 424,
+    "aspectRatio": 1.733
+  },
+  {
+    "id": "sticker-039",
+    "src": "/assets/images/stickers/curated/sticker-039.jpg",
+    "width": 736,
+    "height": 920,
+    "aspectRatio": 0.8
+  },
+  {
+    "id": "sticker-040",
+    "src": "/assets/images/stickers/curated/sticker-040.jpg",
+    "width": 1200,
+    "height": 403,
+    "aspectRatio": 2.978
+  },
+  {
+    "id": "sticker-041",
+    "src": "/assets/images/stickers/curated/sticker-041.jpg",
+    "width": 1200,
+    "height": 1500,
+    "aspectRatio": 0.8
+  },
+  {
+    "id": "sticker-042",
+    "src": "/assets/images/stickers/curated/sticker-042.jpg",
+    "width": 736,
+    "height": 552,
+    "aspectRatio": 1.333
+  },
+  {
+    "id": "sticker-043",
+    "src": "/assets/images/stickers/curated/sticker-043.jpg",
+    "width": 736,
+    "height": 860,
+    "aspectRatio": 0.856
+  },
+  {
+    "id": "sticker-044",
+    "src": "/assets/images/stickers/curated/sticker-044.jpg",
+    "width": 735,
+    "height": 412,
+    "aspectRatio": 1.784
+  },
+  {
+    "id": "sticker-045",
+    "src": "/assets/images/stickers/curated/sticker-045.jpg",
+    "width": 736,
+    "height": 736,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-046",
+    "src": "/assets/images/stickers/curated/sticker-046.jpg",
+    "width": 735,
+    "height": 722,
+    "aspectRatio": 1.018
+  },
+  {
+    "id": "sticker-047",
+    "src": "/assets/images/stickers/curated/sticker-047.jpg",
+    "width": 736,
+    "height": 449,
+    "aspectRatio": 1.639
+  },
+  {
+    "id": "sticker-048",
+    "src": "/assets/images/stickers/curated/sticker-048.jpg",
+    "width": 736,
+    "height": 460,
+    "aspectRatio": 1.6
+  },
+  {
+    "id": "sticker-049",
+    "src": "/assets/images/stickers/curated/sticker-049.jpg",
+    "width": 1200,
+    "height": 829,
+    "aspectRatio": 1.448
+  },
+  {
+    "id": "sticker-050",
+    "src": "/assets/images/stickers/curated/sticker-050.jpg",
+    "width": 1170,
+    "height": 1167,
+    "aspectRatio": 1.003
+  },
+  {
+    "id": "sticker-051",
+    "src": "/assets/images/stickers/curated/sticker-051.jpg",
+    "width": 640,
+    "height": 988,
+    "aspectRatio": 0.648
+  },
+  {
+    "id": "sticker-052",
+    "src": "/assets/images/stickers/curated/sticker-052.jpg",
+    "width": 736,
+    "height": 414,
+    "aspectRatio": 1.778
+  },
+  {
+    "id": "sticker-053",
+    "src": "/assets/images/stickers/curated/sticker-053.jpg",
+    "width": 735,
+    "height": 900,
+    "aspectRatio": 0.817
+  },
+  {
+    "id": "sticker-054",
+    "src": "/assets/images/stickers/curated/sticker-054.jpg",
+    "width": 735,
+    "height": 558,
+    "aspectRatio": 1.317
+  },
+  {
+    "id": "sticker-055",
+    "src": "/assets/images/stickers/curated/sticker-055.jpg",
+    "width": 736,
+    "height": 1235,
+    "aspectRatio": 0.596
+  },
+  {
+    "id": "sticker-056",
+    "src": "/assets/images/stickers/curated/sticker-056.jpg",
+    "width": 736,
+    "height": 723,
+    "aspectRatio": 1.018
+  },
+  {
+    "id": "sticker-057",
+    "src": "/assets/images/stickers/curated/sticker-057.jpg",
+    "width": 923,
+    "height": 1499,
+    "aspectRatio": 0.616
+  },
+  {
+    "id": "sticker-058",
+    "src": "/assets/images/stickers/curated/sticker-058.jpg",
+    "width": 736,
+    "height": 736,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-059",
+    "src": "/assets/images/stickers/curated/sticker-059.jpg",
+    "width": 735,
+    "height": 729,
+    "aspectRatio": 1.008
+  },
+  {
+    "id": "sticker-060",
+    "src": "/assets/images/stickers/curated/sticker-060.jpg",
+    "width": 1200,
+    "height": 485,
+    "aspectRatio": 2.474
+  },
+  {
+    "id": "sticker-061",
+    "src": "/assets/images/stickers/curated/sticker-061.jpg",
+    "width": 736,
+    "height": 736,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-062",
+    "src": "/assets/images/stickers/curated/sticker-062.jpg",
+    "width": 960,
+    "height": 1200,
+    "aspectRatio": 0.8
+  },
+  {
+    "id": "sticker-063",
+    "src": "/assets/images/stickers/curated/sticker-063.jpg",
+    "width": 288,
+    "height": 422,
+    "aspectRatio": 0.682
+  },
+  {
+    "id": "sticker-064",
+    "src": "/assets/images/stickers/curated/sticker-064.jpg",
+    "width": 540,
+    "height": 440,
+    "aspectRatio": 1.227
+  },
+  {
+    "id": "sticker-065",
+    "src": "/assets/images/stickers/curated/sticker-065.jpg",
+    "width": 1199,
+    "height": 640,
+    "aspectRatio": 1.873
+  },
+  {
+    "id": "sticker-066",
+    "src": "/assets/images/stickers/curated/sticker-066.jpg",
+    "width": 500,
+    "height": 319,
+    "aspectRatio": 1.567
+  },
+  {
+    "id": "sticker-067",
+    "src": "/assets/images/stickers/curated/sticker-067.jpg",
+    "width": 736,
+    "height": 736,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-068",
+    "src": "/assets/images/stickers/curated/sticker-068.jpg",
+    "width": 575,
+    "height": 713,
+    "aspectRatio": 0.806
+  },
+  {
+    "id": "sticker-069",
+    "src": "/assets/images/stickers/curated/sticker-069.jpg",
+    "width": 1200,
+    "height": 1200,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-070",
+    "src": "/assets/images/stickers/curated/sticker-070.jpg",
+    "width": 735,
+    "height": 1129,
+    "aspectRatio": 0.651
+  },
+  {
+    "id": "sticker-071",
+    "src": "/assets/images/stickers/curated/sticker-071.jpg",
+    "width": 710,
+    "height": 952,
+    "aspectRatio": 0.746
+  },
+  {
+    "id": "sticker-072",
+    "src": "/assets/images/stickers/curated/sticker-072.png",
+    "width": 735,
+    "height": 1009,
+    "aspectRatio": 0.728
+  },
+  {
+    "id": "sticker-073",
+    "src": "/assets/images/stickers/curated/sticker-073.jpg",
+    "width": 1200,
+    "height": 400,
+    "aspectRatio": 3
+  },
+  {
+    "id": "sticker-074",
+    "src": "/assets/images/stickers/curated/sticker-074.jpg",
+    "width": 736,
+    "height": 981,
+    "aspectRatio": 0.75
+  },
+  {
+    "id": "sticker-075",
+    "src": "/assets/images/stickers/curated/sticker-075.jpg",
+    "width": 1080,
+    "height": 540,
+    "aspectRatio": 2
+  },
+  {
+    "id": "sticker-076",
+    "src": "/assets/images/stickers/curated/sticker-076.jpg",
+    "width": 925,
+    "height": 925,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-077",
+    "src": "/assets/images/stickers/curated/sticker-077.jpg",
+    "width": 1200,
+    "height": 805,
+    "aspectRatio": 1.491
+  },
+  {
+    "id": "sticker-078",
+    "src": "/assets/images/stickers/curated/sticker-078.jpg",
+    "width": 736,
+    "height": 1308,
+    "aspectRatio": 0.563
+  },
+  {
+    "id": "sticker-079",
+    "src": "/assets/images/stickers/curated/sticker-079.jpg",
+    "width": 736,
+    "height": 727,
+    "aspectRatio": 1.012
+  },
+  {
+    "id": "sticker-080",
+    "src": "/assets/images/stickers/curated/sticker-080.jpg",
+    "width": 735,
+    "height": 693,
+    "aspectRatio": 1.061
+  },
+  {
+    "id": "sticker-081",
+    "src": "/assets/images/stickers/curated/sticker-081.jpg",
+    "width": 735,
+    "height": 441,
+    "aspectRatio": 1.667
+  },
+  {
+    "id": "sticker-082",
+    "src": "/assets/images/stickers/curated/sticker-082.jpg",
+    "width": 735,
+    "height": 574,
+    "aspectRatio": 1.28
+  },
+  {
+    "id": "sticker-083",
+    "src": "/assets/images/stickers/curated/sticker-083.jpg",
+    "width": 1200,
+    "height": 1209,
+    "aspectRatio": 0.993
+  },
+  {
+    "id": "sticker-084",
+    "src": "/assets/images/stickers/curated/sticker-084.jpg",
+    "width": 735,
+    "height": 588,
+    "aspectRatio": 1.25
+  },
+  {
+    "id": "sticker-085",
+    "src": "/assets/images/stickers/curated/sticker-085.jpg",
+    "width": 1066,
+    "height": 635,
+    "aspectRatio": 1.679
+  },
+  {
+    "id": "sticker-086",
+    "src": "/assets/images/stickers/curated/sticker-086.jpg",
+    "width": 1000,
+    "height": 1000,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-087",
+    "src": "/assets/images/stickers/curated/sticker-087.jpg",
+    "width": 1200,
+    "height": 1200,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-088",
+    "src": "/assets/images/stickers/curated/sticker-088.jpg",
+    "width": 736,
+    "height": 920,
+    "aspectRatio": 0.8
+  },
+  {
+    "id": "sticker-089",
+    "src": "/assets/images/stickers/curated/sticker-089.png",
+    "width": 700,
+    "height": 476,
+    "aspectRatio": 1.471
+  },
+  {
+    "id": "sticker-090",
+    "src": "/assets/images/stickers/curated/sticker-090.jpg",
+    "width": 620,
+    "height": 824,
+    "aspectRatio": 0.752
+  },
+  {
+    "id": "sticker-091",
+    "src": "/assets/images/stickers/curated/sticker-091.jpg",
+    "width": 1199,
+    "height": 672,
+    "aspectRatio": 1.784
+  },
+  {
+    "id": "sticker-092",
+    "src": "/assets/images/stickers/curated/sticker-092.jpg",
+    "width": 1200,
+    "height": 733,
+    "aspectRatio": 1.637
+  },
+  {
+    "id": "sticker-093",
+    "src": "/assets/images/stickers/curated/sticker-093.jpg",
+    "width": 736,
+    "height": 837,
+    "aspectRatio": 0.879
+  },
+  {
+    "id": "sticker-094",
+    "src": "/assets/images/stickers/curated/sticker-094.jpg",
+    "width": 736,
+    "height": 1308,
+    "aspectRatio": 0.563
+  },
+  {
+    "id": "sticker-095",
+    "src": "/assets/images/stickers/curated/sticker-095.jpg",
+    "width": 735,
+    "height": 414,
+    "aspectRatio": 1.775
+  },
+  {
+    "id": "sticker-096",
+    "src": "/assets/images/stickers/curated/sticker-096.jpg",
+    "width": 1170,
+    "height": 1059,
+    "aspectRatio": 1.105
+  },
+  {
+    "id": "sticker-097",
+    "src": "/assets/images/stickers/curated/sticker-097.jpg",
+    "width": 736,
+    "height": 729,
+    "aspectRatio": 1.01
+  },
+  {
+    "id": "sticker-098",
+    "src": "/assets/images/stickers/curated/sticker-098.jpg",
+    "width": 1200,
+    "height": 1800,
+    "aspectRatio": 0.667
+  },
+  {
+    "id": "sticker-099",
+    "src": "/assets/images/stickers/curated/sticker-099.jpg",
+    "width": 736,
+    "height": 981,
+    "aspectRatio": 0.75
+  },
+  {
+    "id": "sticker-100",
+    "src": "/assets/images/stickers/curated/sticker-100.jpg",
+    "width": 1200,
+    "height": 850,
+    "aspectRatio": 1.412
+  },
+  {
+    "id": "sticker-101",
+    "src": "/assets/images/stickers/curated/sticker-101.jpg",
+    "width": 735,
+    "height": 412,
+    "aspectRatio": 1.784
+  },
+  {
+    "id": "sticker-102",
+    "src": "/assets/images/stickers/curated/sticker-102.jpg",
+    "width": 564,
+    "height": 564,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-103",
+    "src": "/assets/images/stickers/curated/sticker-103.jpg",
+    "width": 736,
+    "height": 736,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-104",
+    "src": "/assets/images/stickers/curated/sticker-104.jpg",
+    "width": 736,
+    "height": 736,
+    "aspectRatio": 1
+  },
+  {
+    "id": "sticker-105",
+    "src": "/assets/images/stickers/curated/sticker-105.jpg",
+    "width": 736,
+    "height": 1030,
+    "aspectRatio": 0.715
+  },
+  {
+    "id": "sticker-106",
+    "src": "/assets/images/stickers/curated/sticker-106.jpg",
+    "width": 322,
+    "height": 443,
+    "aspectRatio": 0.727
+  },
+  {
+    "id": "sticker-107",
+    "src": "/assets/images/stickers/curated/sticker-107.jpg",
+    "width": 1199,
+    "height": 730,
+    "aspectRatio": 1.642
+  }
+]
