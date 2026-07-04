@@ -173,6 +173,17 @@ function flipFrameFor(sticker) {
   };
 }
 
+function formatStickerDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear()).slice(-2);
+
+  return `~ ${day}.${month}.${year}`;
+}
+
 function normalizePlacement(placement) {
   const sticker = findSticker(placement.stickerId);
   const slotId = Number.isInteger(placement.slotId) && placement.slotId >= 0 ? placement.slotId : 0;
@@ -422,6 +433,10 @@ export default function StickerBoard() {
   const modalMessage =
     modalPlacement?.message ||
     (previewSticker ? message.trim() || "Write something small for the sticker to carry." : "");
+  const modalTimestamp = modalPlacement ? formatStickerDate(modalPlacement.createdAt) : "";
+  const noteCharactersLeft = MESSAGE_LIMIT - message.length;
+  const showNoteLimitWarning = Boolean(previewSticker && noteCharactersLeft <= 15);
+  const noteDensityClass = message.length > 125 ? "is-dense" : message.length > 75 ? "is-compact" : "";
 
   useEffect(() => {
     let isMounted = true;
@@ -498,6 +513,14 @@ export default function StickerBoard() {
     document.addEventListener("keydown", closeOnEscape);
     return () => document.removeEventListener("keydown", closeOnEscape);
   }, [modalPlacement, previewSticker]);
+
+  useEffect(() => {
+    const input = noteInputRef.current;
+    if (!input || !previewSticker) return;
+
+    input.style.height = "0px";
+    input.style.height = `${input.scrollHeight}px`;
+  }, [message, previewSticker, modalFlipped]);
 
   async function persistPlacement(placement, optimisticPlacements) {
     const requestId = ++pendingRequestRef.current;
@@ -632,7 +655,7 @@ export default function StickerBoard() {
     <section id="sticker-board" className="sticker-board-section" aria-labelledby="sticker-board-title">
       <div className="sticker-board-heading">
         <h2 id="sticker-board-title">Guestbook</h2>
-        <p>A tiny sticker found you. Give it a thought to carry, then tuck it onto the board.</p>
+        <p>A little board where you can leave a piece of yourself. It stays forever! 🤍</p>
       </div>
 
       <div className="sticker-board-shell">
@@ -793,11 +816,11 @@ export default function StickerBoard() {
                 tabIndex={0}
                 className={`sticker-flip-object ${modalFlipped ? "is-flipped" : ""}`}
                 onClick={(event) => {
-                  if (event.target instanceof HTMLElement && event.target.closest(".sticker-note-input")) return;
+                  if (event.target instanceof HTMLElement && event.target.closest(".sticker-note-editor")) return;
                   setModalFlipped((value) => !value);
                 }}
                 onKeyDown={(event) => {
-                  if (event.target instanceof HTMLElement && event.target.closest(".sticker-note-input")) return;
+                  if (event.target instanceof HTMLElement && event.target.closest(".sticker-note-editor")) return;
                   if (event.key === "Enter" || event.key === " ") {
                     event.preventDefault();
                     setModalFlipped((value) => !value);
@@ -810,26 +833,36 @@ export default function StickerBoard() {
                 </span>
                 <span className="sticker-flip-face sticker-flip-back">
                   {previewSticker ? (
-                    <textarea
-                      ref={noteInputRef}
-                      className="sticker-note-input"
-                      value={message}
-                      maxLength={MESSAGE_LIMIT}
-                      onInput={(event) => updateMessage(event.currentTarget.value)}
-                      onChange={(event) => updateMessage(event.target.value)}
-                      placeholder="write something tiny"
-                      aria-label="Sticker note"
-                      aria-invalid={Boolean(noteError)}
-                    />
+                    <span className={`sticker-note-editor ${noteDensityClass}`}>
+                      <textarea
+                        ref={noteInputRef}
+                        className="sticker-note-input"
+                        value={message}
+                        rows={1}
+                        maxLength={MESSAGE_LIMIT}
+                        onInput={(event) => updateMessage(event.currentTarget.value)}
+                        onChange={(event) => updateMessage(event.target.value)}
+                        placeholder="write something tiny"
+                        aria-label="Sticker note"
+                        aria-invalid={Boolean(noteError)}
+                        aria-describedby={showNoteLimitWarning ? "sticker-note-limit" : undefined}
+                      />
+                    </span>
                   ) : (
                     <span>{modalMessage || "No note left. Just a sticker passing through."}</span>
                   )}
+                  {modalTimestamp ? <time className="sticker-note-date">{modalTimestamp}</time> : null}
                 </span>
               </div>
             </div>
             {previewSticker && noteError ? (
               <p className="sticker-note-error" role="alert">
                 {noteError}
+              </p>
+            ) : null}
+            {showNoteLimitWarning ? (
+              <p id="sticker-note-limit" className="sticker-note-limit" role="status" aria-live="polite">
+                {noteCharactersLeft > 0 ? `${noteCharactersLeft} characters left` : "No room left"}
               </p>
             ) : null}
             {previewSticker ? (
@@ -1552,15 +1585,48 @@ export default function StickerBoard() {
           transform: rotateY(180deg) translateZ(1px);
         }
 
-        .sticker-flip-back span {
+        .sticker-flip-back > span:not(.sticker-note-editor) {
           display: block;
           max-width: 90%;
           transform: rotate(-1deg);
         }
 
-        .sticker-note-input {
+        .sticker-note-date {
+          position: absolute;
+          right: clamp(0.92rem, 5.4%, 1.35rem);
+          bottom: clamp(0.58rem, 4%, 0.95rem);
+          color: rgb(44 41 36 / 0.64);
+          font: inherit;
+          font-size: clamp(0.82rem, 3.1vw, 1.08rem);
+          line-height: 1;
+          letter-spacing: 0;
+          pointer-events: none;
+          transform: rotate(-2deg);
+        }
+
+        .sticker-note-editor {
+          --note-font-scale: 1;
+          display: grid;
+          place-items: center;
           width: 88%;
           min-height: 72%;
+          max-height: 78%;
+          font-size: calc(1em * var(--note-font-scale));
+          transform: rotate(-1deg);
+        }
+
+        .sticker-note-editor.is-compact {
+          --note-font-scale: 0.86;
+        }
+
+        .sticker-note-editor.is-dense {
+          --note-font-scale: 0.72;
+        }
+
+        .sticker-note-input {
+          display: block;
+          width: 100%;
+          max-height: 100%;
           resize: none;
           border: 0;
           background: transparent;
@@ -1569,20 +1635,38 @@ export default function StickerBoard() {
           line-height: 1.32;
           text-align: center;
           outline: none;
-          transform: rotate(-1deg);
+          overflow: hidden;
+          scrollbar-width: none;
         }
 
         .sticker-note-input::placeholder {
           color: rgb(44 41 36 / 0.36);
+          opacity: 1;
         }
 
-        .sticker-note-error {
+        .sticker-note-input::-webkit-scrollbar {
+          display: none;
+        }
+
+        .sticker-note-error,
+        .sticker-note-limit {
           margin: -0.35rem 0 0;
           color: rgb(255 219 176);
           font-size: 0.82rem;
           font-weight: 600;
           line-height: 1.45;
           text-align: center;
+        }
+
+        .sticker-note-limit {
+          color: rgb(245 245 245 / 0.58);
+          font-size: 0.76rem;
+          font-weight: 500;
+          letter-spacing: 0;
+        }
+
+        .sticker-note-error + .sticker-note-limit {
+          margin-top: 0.1rem;
         }
 
         .sticker-flip-object.is-flipped .sticker-flip-front {
