@@ -662,6 +662,13 @@ export default function StickerBoard() {
     if (noteError) setNoteError("");
   }
 
+  function openSelectedStickerNote() {
+    if (!selectedSticker || allStickersUsed) return;
+    setNoteError("");
+    setAuthorName("");
+    setPreviewSticker(selectedSticker);
+  }
+
   function placeSticker() {
     const stickerForPlacement = previewSticker || selectedSticker;
     const slotId = stickerForPlacement ? findPlacementSlot(placements, stickerForPlacement) : undefined;
@@ -796,20 +803,21 @@ export default function StickerBoard() {
             <div className="selected-sticker-stage">
               <div
                 className={`selected-sticker ${!selectedSticker || allStickersUsed ? "is-disabled" : ""}`}
+                onClick={(event) => {
+                  if (event.target instanceof HTMLElement && event.target.closest("button")) return;
+                  openSelectedStickerNote();
+                }}
                 onPointerMove={setPointerTilt}
                 onPointerLeave={clearPointerTilt}
                 style={selectedSticker ? stickerStyle(selectedSticker) : undefined}
               >
                 {selectedSticker ? (
                   <span className="selected-sticker-float">
+                    <span className="selected-sticker-callout">here&apos;s your sticker.</span>
                     <button
                       type="button"
                       className="selected-sticker-main"
-                      onClick={() => {
-                        setNoteError("");
-                        setAuthorName("");
-                        setPreviewSticker(selectedSticker);
-                      }}
+                      onClick={openSelectedStickerNote}
                       aria-label="Open selected sticker note"
                       disabled={allStickersUsed}
                     >
@@ -825,11 +833,7 @@ export default function StickerBoard() {
                     <button
                       type="button"
                       className="sticker-pencil-action"
-                      onClick={() => {
-                        setNoteError("");
-                        setAuthorName("");
-                        setPreviewSticker(selectedSticker);
-                      }}
+                      onClick={openSelectedStickerNote}
                       aria-label="Write a note for this sticker"
                       disabled={allStickersUsed}
                     >
@@ -1407,6 +1411,25 @@ export default function StickerBoard() {
           transform: translateY(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
           transform-style: preserve-3d;
           transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .selected-sticker-callout {
+          position: absolute;
+          z-index: 3;
+          bottom: calc(100% + clamp(0.62rem, 1.65cqw, 1rem));
+          left: 50%;
+          width: max-content;
+          max-width: min(14rem, 72vw);
+          color: rgb(245 245 245 / 0.76);
+          font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+          font-size: clamp(1rem, 2.4cqw, 1.28rem);
+          font-weight: 400;
+          line-height: 1;
+          letter-spacing: 0;
+          text-align: center;
+          pointer-events: none;
+          text-shadow: 0 7px 22px rgb(0 0 0 / 0.46);
+          transform: translateX(-50%) rotate(-2deg);
         }
 
         .selected-sticker-image {
@@ -2066,6 +2089,11 @@ export default function StickerBoard() {
             width: min(var(--sticker-selected-inline, 11.6rem), 88%);
           }
 
+          .selected-sticker-callout {
+            bottom: calc(100% + 0.56rem);
+            font-size: clamp(0.88rem, 1.8cqw, 1.02rem);
+          }
+
           .sticker-pencil-action {
             --sticker-action-nudge-x: -0.55rem;
             width: 2.42rem;
@@ -2150,6 +2178,11 @@ export default function StickerBoard() {
 
           .selected-sticker-image {
             max-height: none;
+          }
+
+          .selected-sticker-callout {
+            bottom: calc(100% + 0.52rem);
+            font-size: clamp(0.9rem, 4.2vw, 1.08rem);
           }
 
           .sticker-board-panel {
