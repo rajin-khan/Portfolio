@@ -3,6 +3,8 @@ const { name, description, url, image, tags } = Astro.props;
 
 // Determine if the link is external (for target="_blank")
 const isExternal = url.startsWith("http");
+type ProjectTag = string | { name?: string };
+const projectTags = ((tags || []) as ProjectTag[]).map((tag) => (typeof tag === "string" ? tag : tag?.name)).filter(Boolean);
 ---
 
 <a
@@ -24,11 +26,11 @@ const isExternal = url.startsWith("http");
       <img src={image} class="w-full h-auto rounded-lg aspect-[16/9] object-cover" alt={name} />
     </span>
 
-    <!-- Tags Section with Custom Gradient Colors -->
+    <!-- Tags -->
     <div class="flex flex-wrap gap-1 mt-3">
-      {(tags || []).map((tag) => (
-        <span class={`px-2 py-1 text-xs font-semibold rounded-lg bg-gradient-to-r ${tag.gradient} text-white`}>
-          {tag.name}
+      {projectTags.map((tag) => (
+        <span class="inline-flex items-center rounded-[0.35rem] border border-white/[0.08] bg-neutral-700/55 px-1.5 py-0.5 text-[0.65rem] font-medium leading-none text-neutral-100/90">
+          {tag}
         </span>
       ))}
     </div>

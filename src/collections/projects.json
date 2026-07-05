@@ -5,9 +5,9 @@
     "image": "/assets/images/projects/Tessro.png",
     "url": "/projects/tessro",
     "tags": [
-      { "name": "Streaming", "gradient": "from-indigo-500 to-purple-600" },
-      { "name": "Peer-to-Peer", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "Live Chat", "gradient": "from-green-400 to-blue-600" }
+      "Streaming",
+      "Peer-to-Peer",
+      "Live Chat"
     ]
   },
   {
@@ -16,9 +16,9 @@
     "image": "/assets/images/projects/puff.png",
     "url": "/projects/puffnotes",
     "tags": [
-      { "name": "Productivity", "gradient": "from-green-400 to-yellow-600" },
-      { "name": "Notes", "gradient": "from-blue-500 to-blue-600" },
-      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" }
+      "Productivity",
+      "Notes",
+      "AI"
     ]
   },
   {
@@ -27,9 +27,9 @@
     "image": "/assets/images/projects/rajintalksalot.png",
     "url": "/projects/rajintalksalot",
     "tags": [
-      { "name": "Visual", "gradient": "from-green-400 to-blue-600" },
-      { "name": "Blog", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "UI/UX", "gradient": "from-indigo-500 to-purple-600" }
+      "Visual",
+      "Blog",
+      "UI/UX"
     ]
   },
   {
@@ -38,9 +38,9 @@
     "image": "/assets/images/projects/AIrisBantiny.png",
     "url": "https://github.com/rajin-khan/AIris",
     "tags": [
-      { "name": "AI", "gradient": "from-green-400 to-blue-600" },
-      { "name": "Hardware", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "Multimodal", "gradient": "from-indigo-500 to-purple-600" }
+      "AI",
+      "Hardware",
+      "Multimodal"
     ]
   },
   {
@@ -49,9 +49,9 @@
     "image": "/assets/images/projects/TapSense.png",
     "url": "/projects/tapsense",
     "tags": [
-      { "name": "Mobile", "gradient": "from-green-400 to-yellow-600" },
-      { "name": "Flutter", "gradient": "from-blue-500 to-blue-600" },
-      { "name": "Accessibility", "gradient": "from-pink-500 to-yellow-600" }
+      "Mobile",
+      "Flutter",
+      "Accessibility"
     ]
   },
   {
@@ -60,9 +60,9 @@
     "image": "/assets/images/projects/GridGenius.png",
     "url": "/projects/gridgenius",
     "tags": [
-      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "Chatbot", "gradient": "from-green-400 to-blue-600" },
-      { "name": "Research", "gradient": "from-indigo-500 to-purple-600" }
+      "AI",
+      "Chatbot",
+      "Research"
     ]
   },
   {
@@ -71,9 +71,9 @@
     "image": "/assets/images/projects/MillenAI.png",
     "url": "/projects/millenai",
     "tags": [
-      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "ChatBot", "gradient": "from-indigo-500 to-purple-600" },
-      { "name": "Agentic", "gradient": "from-green-400 to-blue-600" }
+      "AI",
+      "ChatBot",
+      "Agentic"
     ]
   },
   {
@@ -82,10 +82,10 @@
     "image": "/assets/images/projects/ubl.png",
     "url": "/projects/ublretail",
     "tags": [
-      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "ML", "gradient": "from-green-400 to-blue-600" },
-      { "name": "DL", "gradient": "from-indigo-500 to-purple-600" },
-      { "name": "YOLO", "gradient": "from-indigo-500 to-purple-600" }
+      "AI",
+      "ML",
+      "DL",
+      "YOLO"
     ]
   },
   {
@@ -94,9 +94,9 @@
     "image": "/assets/images/projects/Syncly.png",
     "url": "/projects/syncly",
     "tags": [
-      { "name": "AI", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "Cloud", "gradient": "from-green-400 to-blue-600" },
-      { "name": "Universal", "gradient": "from-pink-500 to-blue-600" }
+      "AI",
+      "Cloud",
+      "Universal"
     ]
   },
   {
@@ -105,9 +105,9 @@
     "image": "/assets/images/projects/cash.png",
     "url": "/projects/cash",
     "tags": [
-      { "name": "Shell", "gradient": "from-green-400 to-blue-600" },
-      { "name": "CLI", "gradient": "from-indigo-500 to-purple-600" },
-      { "name": "C", "gradient": "from-blue-500 to-orange-500" }
+      "Shell",
+      "CLI",
+      "C"
     ]
   },
   {
@@ -116,9 +116,9 @@
     "image": "/assets/images/projects/DarkRunner.png",
     "url": "/projects/darkrunner",
     "tags": [
-      { "name": "Java", "gradient": "from-pink-500 to-blue-600" },
-      { "name": "Swing", "gradient": "from-green-400 to-blue-600" },
-      { "name": "Game", "gradient": "from-pink-500 to-yellow-600" }
+      "Java",
+      "Swing",
+      "Game"
     ]
   },
   {
@@ -127,9 +127,9 @@
     "image": "/assets/images/projects/dozrtiny.png",
     "url": "/projects/dozr",
     "tags": [
-      { "name": "YOLO", "gradient": "from-green-400 to-blue-600" },
-      { "name": "PyTorch", "gradient": "from-pink-500 to-yellow-600" },
-      { "name": "OpenCV", "gradient": "from-pink-400 to-purple-600" }
+      "YOLO",
+      "PyTorch",
+      "OpenCV"
     ]
   },
   {
@@ -138,9 +138,9 @@
     "image": "/assets/images/projects/UNIX.png",
     "url": "/projects/unix",
     "tags": [
-      { "name": "C", "gradient": "from-blue-500 to-blue-600" },
-      { "name": "CRUD", "gradient": "from-green-400 to-blue-600" },
-      { "name": "Terminal", "gradient": "from-indigo-500 to-purple-600" }
+      "C",
+      "CRUD",
+      "Terminal"
     ]
   }
 ]
