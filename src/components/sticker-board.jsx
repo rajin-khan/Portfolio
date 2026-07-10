@@ -390,8 +390,6 @@ function setPointerTilt(event) {
 
     target.style.setProperty("--tilt-x", `${(-y * 13).toFixed(2)}deg`);
     target.style.setProperty("--tilt-y", `${(x * 15).toFixed(2)}deg`);
-    target.style.setProperty("--glint-x", `${(pointer.clientX - rect.left).toFixed(1)}px`);
-    target.style.setProperty("--glint-y", `${(pointer.clientY - rect.top).toFixed(1)}px`);
     tiltFrameByElement.delete(target);
   });
 
@@ -410,8 +408,6 @@ function clearPointerTilt(event) {
   lastPointerByElement.delete(target);
   target.style.removeProperty("--tilt-x");
   target.style.removeProperty("--tilt-y");
-  target.style.removeProperty("--glint-x");
-  target.style.removeProperty("--glint-y");
 }
 
 function normalizeNoteForFilter(text) {
@@ -465,6 +461,12 @@ export default function StickerBoard() {
   const [modalFlipped, setModalFlipped] = useState(false);
   const [noteError, setNoteError] = useState("");
   const [newPlacementSlotId, setNewPlacementSlotId] = useState(null);
+  const [composerStickerDeparting, setComposerStickerDeparting] = useState(false);
+  const [composerStickerReturning, setComposerStickerReturning] = useState(false);
+  const [departingPlacementId, setDepartingPlacementId] = useState(null);
+  const [returningPlacementId, setReturningPlacementId] = useState(null);
+  const [modalEntryKind, setModalEntryKind] = useState("default");
+  const [modalClosing, setModalClosing] = useState(false);
 
   const rows = useMemo(() => boardRows(placements), [placements]);
   const availableStickers = useMemo(() => {
@@ -526,7 +528,7 @@ export default function StickerBoard() {
   }, [newPlacementSlotId]);
 
   useEffect(() => {
-    if (!modalPlacement && !previewSticker) return;
+    if ((!modalPlacement && !previewSticker) || modalClosing) return;
 
     setModalFlipped(false);
 
@@ -543,17 +545,14 @@ export default function StickerBoard() {
       window.clearTimeout(flipTimeout);
       window.clearTimeout(focusTimeout);
     };
-  }, [modalPlacement, previewSticker]);
+  }, [modalPlacement, previewSticker, modalClosing]);
 
   useEffect(() => {
     if (!modalPlacement && !previewSticker) return;
 
     const closeOnEscape = (event) => {
       if (event.key === "Escape") {
-        setModalPlacement(null);
-        setPreviewSticker(null);
-        setAuthorName("");
-        setNoteError("");
+        closeStickerModal();
       }
     };
 
@@ -663,10 +662,136 @@ export default function StickerBoard() {
   }
 
   function openSelectedStickerNote() {
-    if (!selectedSticker || allStickersUsed) return;
+    if (
+      !selectedSticker ||
+      allStickersUsed ||
+      composerStickerDeparting ||
+      composerStickerReturning ||
+      departingPlacementId ||
+      returningPlacementId ||
+      modalClosing
+    ) {
+      return;
+    }
     setNoteError("");
     setAuthorName("");
-    setPreviewSticker(selectedSticker);
+    setModalClosing(false);
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setModalEntryKind("from-composer");
+      setPreviewSticker(selectedSticker);
+      return;
+    }
+
+    setComposerStickerDeparting(true);
+  }
+
+  function openPlacedStickerNote(placement) {
+    if (
+      composerStickerDeparting ||
+      composerStickerReturning ||
+      departingPlacementId ||
+      returningPlacementId ||
+      modalClosing
+    ) {
+      return;
+    }
+    setAuthorName("");
+    setModalClosing(false);
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setModalEntryKind("from-board");
+      setModalPlacement(placement);
+      return;
+    }
+
+    setDepartingPlacementId(placement.id);
+  }
+
+  function closeStickerModal() {
+    if (modalClosing || (!modalPlacement && !previewSticker)) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reducedMotion) {
+      setModalPlacement(null);
+      setPreviewSticker(null);
+      setComposerStickerDeparting(false);
+      setComposerStickerReturning(false);
+      setDepartingPlacementId(null);
+      setReturningPlacementId(null);
+      setModalClosing(false);
+      setModalEntryKind("default");
+      setAuthorName("");
+      setNoteError("");
+      return;
+    }
+
+    setModalClosing(true);
+  }
+
+  function handleSelectedStickerJourneyEnd(event) {
+    if (event.target !== event.currentTarget) return;
+
+    if (composerStickerReturning && event.animationName === "selected-sticker-return-right") {
+      setComposerStickerReturning(false);
+      setModalEntryKind("default");
+      return;
+    }
+
+    if (
+      composerStickerDeparting &&
+      !previewSticker &&
+      event.animationName === "selected-sticker-depart-right"
+    ) {
+      setModalEntryKind("from-composer");
+      setPreviewSticker(selectedSticker);
+    }
+  }
+
+  function handlePlacedStickerJourneyEnd(event, placement) {
+    if (returningPlacementId === placement.id && event.animationName === "placed-sticker-return") {
+      setReturningPlacementId(null);
+      setModalEntryKind("default");
+      return;
+    }
+
+    if (
+      departingPlacementId === placement.id &&
+      !modalPlacement &&
+      event.animationName === "placed-sticker-depart"
+    ) {
+      setModalEntryKind("from-board");
+      setModalPlacement(placement);
+    }
+  }
+
+  function handleModalJourneyEnd(event) {
+    if (event.target !== event.currentTarget || !modalClosing) return;
+    if (
+      event.animationName !== "sticker-modal-leave-to-bottom" &&
+      event.animationName !== "sticker-modal-leave-to-board"
+    ) {
+      return;
+    }
+
+    const returningId = modalPlacement?.id || null;
+    const returningToComposer = modalEntryKind === "from-composer";
+
+    setModalPlacement(null);
+    setPreviewSticker(null);
+    setModalClosing(false);
+    setAuthorName("");
+    setNoteError("");
+
+    if (returningToComposer) {
+      setComposerStickerDeparting(false);
+      setComposerStickerReturning(true);
+      return;
+    }
+
+    setDepartingPlacementId(null);
+    setReturningPlacementId(returningId);
   }
 
   function placeSticker() {
@@ -712,6 +837,12 @@ export default function StickerBoard() {
     setAuthorName("");
     setNoteError("");
     setPreviewSticker(null);
+    setComposerStickerDeparting(false);
+    setComposerStickerReturning(false);
+    setDepartingPlacementId(null);
+    setReturningPlacementId(null);
+    setModalClosing(false);
+    setModalEntryKind("default");
     setSelectedSticker((currentSticker) => chooseSticker(optimisticPlacements, currentSticker));
     setNewPlacementSlotId(optimisticPlacement.slotId);
     setStatus("saving");
@@ -766,11 +897,11 @@ export default function StickerBoard() {
                                 type="button"
                                 className={`placed-sticker ${placement.pending ? "is-pending" : ""} ${
                                   newPlacementSlotId === placement.slotId ? "is-new" : ""
+                                } ${departingPlacementId === placement.id ? "is-departing-to-focus" : ""} ${
+                                  returningPlacementId === placement.id ? "is-returning-from-focus" : ""
                                 }`}
-                                onClick={() => {
-                                  setAuthorName("");
-                                  setModalPlacement(placement);
-                                }}
+                                onClick={() => openPlacedStickerNote(placement)}
+                                onAnimationEnd={(event) => handlePlacedStickerJourneyEnd(event, placement)}
                                 onPointerMove={setPointerTilt}
                                 onPointerLeave={clearPointerTilt}
                                 style={stickerStyle(sticker)}
@@ -802,7 +933,10 @@ export default function StickerBoard() {
           <div className="selected-sticker-card">
             <div className="selected-sticker-stage">
               <div
-                className={`selected-sticker ${!selectedSticker || allStickersUsed ? "is-disabled" : ""}`}
+                className={`selected-sticker ${!selectedSticker || allStickersUsed ? "is-disabled" : ""} ${
+                  composerStickerDeparting ? "is-departing-right" : ""
+                } ${composerStickerReturning ? "is-returning-from-right" : ""}`}
+                onAnimationEnd={handleSelectedStickerJourneyEnd}
                 onClick={(event) => {
                   if (event.target instanceof HTMLElement && event.target.closest("button")) return;
                   openSelectedStickerNote();
@@ -856,30 +990,39 @@ export default function StickerBoard() {
       </div>
 
       {modalSticker ? (
-        <div className="sticker-modal" role="dialog" aria-modal="true" aria-label="Sticker note">
+        <div
+          className={`sticker-modal ${modalClosing ? "is-closing" : ""}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Sticker note"
+        >
           <button
             type="button"
             className="sticker-modal-backdrop"
             aria-label="Close sticker note"
-            onClick={() => {
-              setModalPlacement(null);
-              setPreviewSticker(null);
-              setAuthorName("");
-              setNoteError("");
-            }}
+            onClick={closeStickerModal}
           />
-          <div className={`sticker-modal-card ${previewSticker ? "is-writing" : ""}`} style={modalFrame || undefined}>
+          <div
+            className={`sticker-modal-card ${previewSticker ? "is-writing" : ""} ${
+              modalClosing
+                ? modalEntryKind === "from-composer"
+                  ? "is-leaving-to-bottom"
+                  : "is-leaving-to-board"
+                : modalEntryKind === "from-composer"
+                  ? "is-arriving-from-bottom"
+                  : modalEntryKind === "from-board"
+                    ? "is-arriving-from-board"
+                    : ""
+            }`}
+            style={modalFrame || undefined}
+            onAnimationEnd={handleModalJourneyEnd}
+          >
             <div className="sticker-modal-frame">
               <button
                 type="button"
                 className="sticker-modal-close"
                 aria-label="Close sticker note"
-                onClick={() => {
-                  setModalPlacement(null);
-                  setPreviewSticker(null);
-                  setAuthorName("");
-                  setNoteError("");
-                }}
+                onClick={closeStickerModal}
               >
                 ×
               </button>
@@ -1147,7 +1290,6 @@ export default function StickerBoard() {
           border-radius: 999px;
           opacity: 0.1;
           background: radial-gradient(ellipse at center, rgb(var(--row-tone) / 0.32), transparent 68%);
-          filter: blur(24px);
         }
 
         .sticker-slot {
@@ -1168,7 +1310,6 @@ export default function StickerBoard() {
           border-radius: 999px;
           opacity: 0.035;
           background: rgb(255 255 255 / 0.16);
-          filter: blur(8px);
           transform: scale(0.8);
           transition:
             opacity 220ms cubic-bezier(0.2, 0.85, 0.35, 1),
@@ -1204,10 +1345,11 @@ export default function StickerBoard() {
             rotateX(var(--tilt-x))
             rotateY(var(--tilt-y));
           transform-style: preserve-3d;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
           transition:
             transform 180ms cubic-bezier(0.2, 0.85, 0.35, 1),
-            opacity 120ms ease,
-            filter 120ms ease;
+            opacity 120ms ease;
         }
 
         .placed-sticker {
@@ -1238,6 +1380,26 @@ export default function StickerBoard() {
             rotate(var(--slot-rotation, 0deg));
         }
 
+        .placed-sticker.is-departing-to-focus {
+          z-index: 20;
+          animation: none !important;
+        }
+
+        .placed-sticker.is-returning-from-focus {
+          z-index: 20;
+          animation: none !important;
+        }
+
+        .placed-sticker.is-departing-to-focus .placed-sticker-shape {
+          animation: placed-sticker-depart 220ms cubic-bezier(0.4, 0, 0.2, 1) both;
+          will-change: transform, opacity;
+        }
+
+        .placed-sticker.is-returning-from-focus .placed-sticker-shape {
+          animation: placed-sticker-return 220ms cubic-bezier(0.4, 0, 0.2, 1) both;
+          will-change: transform, opacity;
+        }
+
         .placed-sticker:focus-visible,
         .selected-sticker-main:focus-visible,
         .sticker-pencil-action:focus-visible,
@@ -1249,7 +1411,7 @@ export default function StickerBoard() {
         }
 
         .placed-sticker.is-pending {
-          filter: saturate(0.92);
+          opacity: 0.92;
         }
 
         .placed-sticker.is-new {
@@ -1266,6 +1428,8 @@ export default function StickerBoard() {
           max-height: 100%;
           isolation: isolate;
           transform: translateZ(42px);
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
         }
 
         .placed-sticker-shape::before,
@@ -1294,13 +1458,11 @@ export default function StickerBoard() {
           opacity: 0;
           pointer-events: none;
           background: radial-gradient(
-            ellipse at var(--glint-x, 50%) var(--glint-y, 50%),
+            ellipse at 50% 50%,
             rgb(255 255 255 / 0.058),
             rgb(255 255 255 / 0.024) 28%,
             transparent 62%
           );
-          filter: blur(24px);
-          mix-blend-mode: screen;
           transition: opacity 120ms ease;
         }
 
@@ -1324,9 +1486,8 @@ export default function StickerBoard() {
           object-fit: contain;
           user-select: none;
           -webkit-user-drag: none;
-          filter:
-            drop-shadow(0 18px 26px rgb(0 0 0 / 0.32))
-            drop-shadow(0 2px 0 rgb(255 255 255 / 0.08));
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
         }
 
         .sticker-composer {
@@ -1372,7 +1533,6 @@ export default function StickerBoard() {
           inset: 14% 4% 4%;
           pointer-events: none;
           background: radial-gradient(ellipse at center, rgb(0 0 0 / 0.32), transparent 58%);
-          filter: blur(22px);
           transform: translateY(1.6rem);
         }
 
@@ -1411,6 +1571,7 @@ export default function StickerBoard() {
           transform: translateY(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
           transform-style: preserve-3d;
           transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+          will-change: transform;
         }
 
         .selected-sticker-callout {
@@ -1444,9 +1605,8 @@ export default function StickerBoard() {
           object-fit: contain;
           user-select: none;
           -webkit-user-drag: none;
-          filter:
-            drop-shadow(0 18px 26px rgb(0 0 0 / 0.32))
-            drop-shadow(0 2px 0 rgb(255 255 255 / 0.08));
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
           transform-origin: center;
         }
 
@@ -1454,6 +1614,34 @@ export default function StickerBoard() {
         .selected-sticker:focus-within {
           --hover-lift: -5px;
           --hover-scale: 1.055;
+        }
+
+        .selected-sticker.is-departing-right {
+          z-index: 20;
+          pointer-events: none;
+          animation: selected-sticker-depart-right 720ms cubic-bezier(0.55, 0, 0.25, 1) both;
+          will-change: transform, opacity;
+        }
+
+        .selected-sticker.is-returning-from-right {
+          z-index: 20;
+          pointer-events: none;
+          animation: selected-sticker-return-right 720ms cubic-bezier(0.55, 0, 0.25, 1) both;
+          will-change: transform, opacity;
+        }
+
+        .selected-sticker.is-departing-right .selected-sticker-float,
+        .selected-sticker.is-returning-from-right .selected-sticker-float {
+          animation: none !important;
+        }
+
+        .selected-sticker-stage:has(.selected-sticker.is-departing-right)::before {
+          animation: none;
+          opacity: 0;
+          transform: translate(2.5rem, 2rem) scale(0.62);
+          transition:
+            opacity 220ms ease,
+            transform 360ms cubic-bezier(0.65, 0, 0.35, 1);
         }
 
         .selected-sticker:hover .selected-sticker-float,
@@ -1572,6 +1760,15 @@ export default function StickerBoard() {
           cursor: pointer;
         }
 
+        .sticker-modal.is-closing .sticker-modal-backdrop {
+          pointer-events: none;
+          animation: sticker-modal-backdrop-out 560ms ease-in both;
+        }
+
+        .sticker-modal.is-closing:has(.is-leaving-to-board) .sticker-modal-backdrop {
+          animation-duration: 280ms;
+        }
+
         .sticker-modal-card {
           position: relative;
           z-index: 1;
@@ -1584,7 +1781,31 @@ export default function StickerBoard() {
           background: transparent;
           color: rgb(245 245 245);
           box-shadow: none;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
           animation: sticker-modal-in 260ms cubic-bezier(0.2, 0.85, 0.35, 1) both;
+        }
+
+        .sticker-modal-card.is-arriving-from-bottom {
+          animation: sticker-modal-arrive-from-bottom 700ms cubic-bezier(0.18, 0.82, 0.28, 1) both;
+          will-change: transform, opacity;
+        }
+
+        .sticker-modal-card.is-arriving-from-board {
+          animation: sticker-modal-arrive-from-board 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+          will-change: transform, opacity;
+        }
+
+        .sticker-modal-card.is-leaving-to-bottom {
+          pointer-events: none;
+          animation: sticker-modal-leave-to-bottom 560ms cubic-bezier(0.55, 0, 0.8, 0.45) both;
+          will-change: transform, opacity;
+        }
+
+        .sticker-modal-card.is-leaving-to-board {
+          pointer-events: none;
+          animation: sticker-modal-leave-to-board 280ms cubic-bezier(0.55, 0, 0.8, 0.45) both;
+          will-change: transform, opacity;
         }
 
         .sticker-modal-frame {
@@ -1665,6 +1886,7 @@ export default function StickerBoard() {
             opacity 160ms ease,
             transform 460ms cubic-bezier(0.2, 0.85, 0.35, 1);
           transform-style: preserve-3d;
+          will-change: transform, opacity;
         }
 
         .sticker-flip-front {
@@ -1679,7 +1901,8 @@ export default function StickerBoard() {
           max-width: 100%;
           max-height: 100%;
           object-fit: contain;
-          filter: drop-shadow(0 20px 30px rgb(0 0 0 / 0.28));
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
         }
 
         .sticker-flip-back {
@@ -1713,8 +1936,6 @@ export default function StickerBoard() {
           height: auto;
           object-fit: contain;
           opacity: var(--note-doodle-opacity);
-          mix-blend-mode: multiply;
-          filter: sepia(0.14) saturate(0.92) contrast(1.04);
           pointer-events: none;
           transform: rotate(var(--note-doodle-rotate)) scale(var(--note-doodle-scale));
           transform-origin: 45% 50%;
@@ -1968,6 +2189,130 @@ export default function StickerBoard() {
           }
         }
 
+        @keyframes placed-sticker-depart {
+          0% {
+            opacity: 1;
+            transform: translateZ(42px) scale(1);
+          }
+          62% {
+            opacity: 0.72;
+            transform: translateZ(42px) scale(0.58);
+          }
+          100% {
+            opacity: 0;
+            transform: translateZ(42px) scale(0.06);
+          }
+        }
+
+        @keyframes placed-sticker-return {
+          0% {
+            opacity: 0;
+            transform: translateZ(42px) scale(0.06);
+          }
+          38% {
+            opacity: 0.72;
+            transform: translateZ(42px) scale(0.58);
+          }
+          100% {
+            opacity: 1;
+            transform: translateZ(42px) scale(1);
+          }
+        }
+
+        @keyframes selected-sticker-depart-right {
+          0% {
+            opacity: 1;
+            transform:
+              perspective(860px)
+              translateX(0)
+              translateY(var(--hover-lift))
+              rotateX(calc(var(--resting-tilt-x) + var(--tilt-x)))
+              rotateY(calc(var(--resting-tilt-y) + var(--tilt-y)))
+              rotateZ(var(--resting-turn))
+              scale(calc(var(--sticker-presence, 1) * var(--hover-scale)));
+          }
+          22% {
+            opacity: 1;
+            transform:
+              perspective(860px)
+              translateX(-0.32rem)
+              translateY(0.12rem)
+              rotateX(0.5deg)
+              rotateY(-3deg)
+              rotateZ(-2deg)
+              scale(calc(var(--sticker-presence, 1) * 0.99));
+          }
+          62% {
+            opacity: 1;
+            transform:
+              perspective(860px)
+              translateX(44vw)
+              translateY(-0.55rem)
+              rotateX(0deg)
+              rotateY(1deg)
+              rotateZ(3.5deg)
+              scale(calc(var(--sticker-presence, 1) * 1.01));
+          }
+          100% {
+            opacity: 0;
+            transform:
+              perspective(860px)
+              translateX(142vw)
+              translateY(-0.8rem)
+              rotateX(0deg)
+              rotateY(0deg)
+              rotateZ(7deg)
+              scale(calc(var(--sticker-presence, 1) * 0.92));
+          }
+        }
+
+        @keyframes selected-sticker-return-right {
+          0% {
+            opacity: 0;
+            transform:
+              perspective(860px)
+              translateX(142vw)
+              translateY(-0.8rem)
+              rotateX(0deg)
+              rotateY(0deg)
+              rotateZ(7deg)
+              scale(calc(var(--sticker-presence, 1) * 0.92));
+          }
+          38% {
+            opacity: 1;
+            transform:
+              perspective(860px)
+              translateX(44vw)
+              translateY(-0.55rem)
+              rotateX(0deg)
+              rotateY(1deg)
+              rotateZ(3.5deg)
+              scale(calc(var(--sticker-presence, 1) * 1.01));
+          }
+          78% {
+            opacity: 1;
+            transform:
+              perspective(860px)
+              translateX(-0.32rem)
+              translateY(0.12rem)
+              rotateX(0.5deg)
+              rotateY(-3deg)
+              rotateZ(-2deg)
+              scale(calc(var(--sticker-presence, 1) * 0.99));
+          }
+          100% {
+            opacity: 1;
+            transform:
+              perspective(860px)
+              translateX(0)
+              translateY(0)
+              rotateX(var(--resting-tilt-x))
+              rotateY(var(--resting-tilt-y))
+              rotateZ(var(--resting-turn))
+              scale(var(--sticker-presence, 1));
+          }
+        }
+
         @keyframes sticker-modal-in {
           from {
             opacity: 0;
@@ -1976,6 +2321,83 @@ export default function StickerBoard() {
           to {
             opacity: 1;
             transform: translateY(0) scale(1);
+          }
+        }
+
+        @keyframes sticker-modal-backdrop-out {
+          from {
+            opacity: 1;
+          }
+          to {
+            opacity: 0;
+          }
+        }
+
+        @keyframes sticker-modal-arrive-from-bottom {
+          0% {
+            opacity: 0;
+            transform: translateY(46vh) rotate(3deg) scale(0.86);
+          }
+          76% {
+            opacity: 1;
+            transform: translateY(-0.38rem) rotate(-0.3deg) scale(1.008);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) rotate(0deg) scale(1);
+          }
+        }
+
+        @keyframes sticker-modal-leave-to-bottom {
+          0% {
+            opacity: 1;
+            transform: translateY(0) rotate(0deg) scale(1);
+          }
+          24% {
+            opacity: 1;
+            transform: translateY(-0.38rem) rotate(-0.3deg) scale(1.008);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(46vh) rotate(3deg) scale(0.86);
+          }
+        }
+
+        @keyframes sticker-modal-arrive-from-board {
+          0% {
+            opacity: 0;
+            transform: translateY(2.4rem) rotate(-2.6deg) scale(0.8);
+          }
+          64% {
+            opacity: 1;
+            transform: translateY(-0.42rem) rotate(0.5deg) scale(1.025);
+          }
+          82% {
+            opacity: 1;
+            transform: translateY(0.16rem) rotate(-0.15deg) scale(0.995);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) rotate(0deg) scale(1);
+          }
+        }
+
+        @keyframes sticker-modal-leave-to-board {
+          0% {
+            opacity: 1;
+            transform: translateY(0) rotate(0deg) scale(1);
+          }
+          18% {
+            opacity: 1;
+            transform: translateY(0.16rem) rotate(-0.15deg) scale(0.995);
+          }
+          36% {
+            opacity: 1;
+            transform: translateY(-0.42rem) rotate(0.5deg) scale(1.025);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(2.4rem) rotate(-2.6deg) scale(0.8);
           }
         }
 
