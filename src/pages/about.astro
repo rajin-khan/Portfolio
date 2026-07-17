@@ -4,9 +4,40 @@ import AboutExperience from "../components/about-experience.astro";
 import Layout from "../layouts/main.astro";
 import BentoImageSwitcher from "../components/bento-image-switcher.astro";
 import GlobeIntro from "../components/globe-intro.jsx";
+
+const pageDescription =
+  "Meet Rajin Khan, an AI engineer, developer, and Computer Science student in Dhaka working across generative AI, computer vision, and thoughtful digital products.";
+const profileSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": "https://rajinkhan.com/about/#profile",
+  url: "https://rajinkhan.com/about/",
+  name: "About Rajin Khan",
+  description: pageDescription,
+  mainEntity: {
+    "@type": "Person",
+    "@id": "https://rajinkhan.com/#person",
+    name: "Rajin Khan",
+    alternateName: "Adib Ar Rahman Khan",
+    jobTitle: "AI Engineer",
+    image: "https://rajinkhan.com/assets/images/rajin-darkbg-tiny.png",
+    url: "https://rajinkhan.com/",
+    sameAs: [
+      "https://github.com/rajin-khan",
+      "https://www.linkedin.com/in/rajin-khan/",
+      "https://www.instagram.com/raaajiin/",
+    ],
+  },
+};
 ---
 
-<Layout title="About Me">
+<Layout
+  title="About"
+  description={pageDescription}
+  ogImage="/assets/images/rajin-darkbg-tiny.png"
+  ogImageAlt="Portrait of Rajin Khan"
+  structuredData={profileSchema}
+>
   <!-- The New 3D Globe Intro Component -->
   <GlobeIntro client:load />
 

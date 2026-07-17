@@ -2,7 +2,7 @@
 import Logo from "../components/logo.astro";
 ---
 
-<section
+<footer
   class="text-gray-700 bg-white border-t sm:mt-20 dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800"
 >
   <div
@@ -14,13 +14,15 @@ import Logo from "../components/logo.astro";
     >
       © {new Date().getFullYear()} Rajin Khan (a.k.a Adib Ar Rahman Khan)
     </p>
-    <span
+    <nav
+      aria-label="Social links"
       class="inline-flex justify-center mt-4 space-x-5 sm:ml-auto sm:mt-0 sm:justify-start"
     >
 
         <a
         href="https://github.com/rajin-khan"
         target="_blank"
+        rel="me noopener noreferrer"
         class="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
       >
         <span class="sr-only">GitHub</span>
@@ -39,6 +41,7 @@ import Logo from "../components/logo.astro";
       <a
         href="https://www.linkedin.com/in/rajin-khan/"
         target="_blank"
+        rel="me noopener noreferrer"
         class="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
       >
         <span class="sr-only">LinkedIn</span>
@@ -57,6 +60,7 @@ import Logo from "../components/logo.astro";
       <a
         href="https://www.instagram.com/raaajiin/"
         target="_blank"
+        rel="me noopener noreferrer"
         class="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
       >
         <span class="sr-only">Instagram</span>
@@ -75,6 +79,7 @@ import Logo from "../components/logo.astro";
       <a
         href="https://www.facebook.com/rajinisdown/"
         target="_blank"
+        rel="me noopener noreferrer"
         class="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
       >
         <span class="sr-only">Facebook</span>
@@ -83,6 +88,7 @@ import Logo from "../components/logo.astro";
           viewBox="0 0 24 24"
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
         >
           <path
             d="M22.675 0h-21.35C.595 0 0 .594 0 1.325v21.351C0 23.405.595 24 1.325 24h11.495V14.709h-3.13v-3.622h3.13V8.414c0-3.1 1.893-4.787 4.657-4.787 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.794.714-1.794 1.76v2.309h3.59l-.467 3.622h-3.123V24h6.126C23.405 24 24 23.406 24 22.675V1.325C24 .594 23.405 0 22.675 0z"
@@ -90,6 +96,6 @@ import Logo from "../components/logo.astro";
         </svg>
       </a>
 
-    </span>
+    </nav>
   </div>
-</section>
+</footer>

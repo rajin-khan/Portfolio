@@ -1,88 +1,84 @@
-// Add your javascript here
-
-const stickyClasses = ["fixed", "h-14"];
-const unstickyClasses = ["absolute", "h-20"];
-const stickyClassesContainer = [
-	"border-neutral-300/50",
-	"bg-white/80",
-	"dark:border-neutral-600/40",
-	"dark:bg-neutral-900/60",
-	"backdrop-blur-2xl",
+const stickyContainerClasses = [
+  "border-neutral-300/50",
+  "bg-white/80",
+  "dark:border-neutral-600/40",
+  "dark:bg-neutral-900/60",
+  "backdrop-blur-2xl",
 ];
-const unstickyClassesContainer = ["border-transparent"];
-let headerElement = null;
 
-document.addEventListener("DOMContentLoaded", () => {
-	headerElement = document.getElementById("header");
-	stickyHeaderFuncionality();
-	applyMenuItemClasses();
-	evaluateHeaderPosition();
-	mobileMenuFunctionality();
-});
+function initializeHeader() {
+  const header = document.getElementById("header");
+  const headerContainer = header?.firstElementChild;
+  const menu = document.getElementById("menu");
+  const openButton = document.getElementById("openMenu");
+  const closeButton = document.getElementById("closeMenu");
+  const backdrop = document.getElementById("mobileMenuBackground");
 
-window.stickyHeaderFuncionality = () => {
-	window.addEventListener("scroll", () => {
-		evaluateHeaderPosition();
-	});
-};
+  if (!header || !headerContainer || !menu || !openButton || !closeButton || !backdrop) {
+    return;
+  }
 
-window.evaluateHeaderPosition = () => {
-	if (window.scrollY > 16) {
-		headerElement.firstElementChild.classList.add(...stickyClassesContainer);
-		headerElement.firstElementChild.classList.remove(
-			...unstickyClassesContainer,
-		);
-		headerElement.classList.add(...stickyClasses);
-		headerElement.classList.remove(...unstickyClasses);
-		document.getElementById("menu").classList.add("top-[56px]");
-		document.getElementById("menu").classList.remove("top-[75px]");
-	} else {
-		headerElement.firstElementChild.classList.remove(...stickyClassesContainer);
-		headerElement.firstElementChild.classList.add(...unstickyClassesContainer);
-		headerElement.classList.add(...unstickyClasses);
-		headerElement.classList.remove(...stickyClasses);
-		document.getElementById("menu").classList.remove("top-[56px]");
-		document.getElementById("menu").classList.add("top-[75px]");
-	}
-};
+  let stickyState = null;
+  let scrollFrame = 0;
 
-window.applyMenuItemClasses = () => {
-	const menuItems = document.querySelectorAll("#menu a");
-	for (let i = 0; i < menuItems.length; i++) {
-		if (menuItems[i].pathname === window.location.pathname) {
-			menuItems[i].classList.add("text-neutral-900", "dark:text-white");
-		}
-	}
-	//:class="{ 'text-neutral-900 dark:text-white': window.location.pathname == '{menu.url}', 'text-neutral-700 dark:text-neutral-400': window.location.pathname != '{menu.url}' }"
-};
+  const updateHeader = () => {
+    scrollFrame = 0;
+    const shouldStick = window.scrollY > 16;
+    if (stickyState === shouldStick) return;
+    stickyState = shouldStick;
 
-function mobileMenuFunctionality() {
-	document.getElementById("openMenu").addEventListener("click", () => {
-		openMobileMenu();
-	});
+    header.classList.toggle("fixed", shouldStick);
+    header.classList.toggle("h-14", shouldStick);
+    header.classList.toggle("absolute", !shouldStick);
+    header.classList.toggle("h-20", !shouldStick);
+    headerContainer.classList.toggle("border-transparent", !shouldStick);
 
-	document.getElementById("closeMenu").addEventListener("click", () => {
-		closeMobileMenu();
-	});
+    for (const className of stickyContainerClasses) {
+      headerContainer.classList.toggle(className, shouldStick);
+    }
+
+    menu.classList.toggle("top-[56px]", shouldStick);
+    menu.classList.toggle("top-[75px]", !shouldStick);
+  };
+
+  const queueHeaderUpdate = () => {
+    if (scrollFrame) return;
+    scrollFrame = window.requestAnimationFrame(updateHeader);
+  };
+
+  const setMenuOpen = (isOpen, restoreFocus = false) => {
+    openButton.classList.toggle("hidden", isOpen);
+    closeButton.classList.toggle("hidden", !isOpen);
+    menu.classList.toggle("hidden", !isOpen);
+    backdrop.classList.toggle("hidden", !isOpen);
+    openButton.setAttribute("aria-expanded", String(isOpen));
+    closeButton.setAttribute("aria-expanded", String(isOpen));
+
+    if (isOpen) {
+      backdrop.classList.add("opacity-0");
+      window.requestAnimationFrame(() => backdrop.classList.remove("opacity-0"));
+      closeButton.focus();
+    } else {
+      backdrop.classList.add("opacity-0");
+      if (restoreFocus) openButton.focus();
+    }
+  };
+
+  openButton.addEventListener("click", () => setMenuOpen(true));
+  closeButton.addEventListener("click", () => setMenuOpen(false, true));
+  backdrop.addEventListener("click", () => setMenuOpen(false, true));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !menu.classList.contains("hidden")) {
+      setMenuOpen(false, true);
+    }
+  });
+  window.addEventListener("scroll", queueHeaderUpdate, { passive: true });
+
+  updateHeader();
 }
 
-window.openMobileMenu = () => {
-	document.getElementById("openMenu").classList.add("hidden");
-	document.getElementById("closeMenu").classList.remove("hidden");
-	document.getElementById("menu").classList.remove("hidden");
-	document.getElementById("mobileMenuBackground").classList.add("opacity-0");
-	document.getElementById("mobileMenuBackground").classList.remove("hidden");
-
-	setTimeout(() => {
-		document
-			.getElementById("mobileMenuBackground")
-			.classList.remove("opacity-0");
-	}, 1);
-};
-
-window.closeMobileMenu = () => {
-	document.getElementById("closeMenu").classList.add("hidden");
-	document.getElementById("openMenu").classList.remove("hidden");
-	document.getElementById("menu").classList.add("hidden");
-	document.getElementById("mobileMenuBackground").classList.add("hidden");
-};
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeHeader, { once: true });
+} else {
+  initializeHeader();
+}

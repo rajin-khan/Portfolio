@@ -6,10 +6,10 @@ tags:
   - "Productivity"
   - "Workspace"
   - "Developer"
-image: "/assets/images/posts/dynafs.png"
+image: "/assets/images/posts/dynafs.jpg"
 ---
 
-![Programmer Desktop Setup](/assets/images/posts/dynafs.png)
+![Programmer Desktop Setup](/assets/images/posts/dynafs.jpg)
 
 ## Well, do you?
 
@@ -63,7 +63,7 @@ Ergonomic chair, monitor arm, cable management: these aren't day-one purchases, 
 
 Before we dive into suggestions or lists, here's what I'm actually working with:
 
-![My Current Desktop Setup](/assets/images/posts/rajins-setup-25.png)
+![My Current Desktop Setup](/assets/images/rajins-setup-25.jpg)
 *My current setup: just create something that works over time (and sparks joy).*
 
 [Details about the setup are here if you're curious](https://rajinkhan.com/uses).

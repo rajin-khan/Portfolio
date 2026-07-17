@@ -1,0 +1,168 @@
+{
+  "slug": "unix",
+  "order": 12,
+  "detail": true,
+  "name": "UNIX",
+  "cardName": "UNIX",
+  "description": "A lightweight terminal-based grocery management system built with C for efficient inventory tracking.",
+  "cardDescription": "A terminal-based CRUD system to explore C.",
+  "image": {
+    "src": "/assets/images/projects/UNIX.png",
+    "width": 1318,
+    "height": 614
+  },
+  "href": "/projects/unix",
+  "tags": [
+    "C",
+    "CRUD",
+    "Terminal"
+  ],
+  "accents": {
+    "primary": "#1e3a8a",
+    "secondary": "#4b5563"
+  },
+  "heroActions": [
+    {
+      "label": "View Project",
+      "href": "https://github.com/rajin-khan/UNIX",
+      "primary": true
+    },
+    {
+      "label": "View on GitHub",
+      "href": "https://github.com/rajin-khan/UNIX",
+      "primary": false
+    }
+  ],
+  "sections": [
+    {
+      "type": "prose",
+      "title": "What is UNIX?",
+      "paragraphs": [
+        "UNIX is a lightweight and efficient terminal-based grocery management system built in <strong>C</strong>, designed to streamline inventory tracking for small retail or personal use. It offers a simple interface to add, view, search, delete, and update products, optimized for minimal memory usage.",
+        "The system uses file-based storage to persist inventory data, ensuring data integrity with features like input validation and array management to prevent overflows. UNIX is ideal for users seeking a fast, no-frills solution for managing grocery stock or learning C programming."
+      ]
+    },
+    {
+      "type": "features",
+      "title": "Key Features",
+      "items": [
+        {
+          "name": "Add Products",
+          "description": "Insert new products into the inventory.",
+          "icon": "🛒"
+        },
+        {
+          "name": "View Products",
+          "description": "Display all inventory items with details.",
+          "icon": "📋"
+        },
+        {
+          "name": "Search Products",
+          "description": "Find products by name efficiently.",
+          "icon": "🔍"
+        },
+        {
+          "name": "Delete/Update Products",
+          "description": "Remove or modify inventory items.",
+          "icon": "✏️"
+        }
+      ]
+    },
+    {
+      "type": "use-cases",
+      "title": "Perfect For",
+      "items": [
+        {
+          "name": "Small Retail",
+          "description": "Manage grocery stock for small stores.",
+          "emoji": "🏪"
+        },
+        {
+          "name": "Personal Inventory",
+          "description": "Track household grocery supplies.",
+          "emoji": "🛍️"
+        },
+        {
+          "name": "Learning C",
+          "description": "Study file-based storage and C programming.",
+          "emoji": "📚"
+        },
+        {
+          "name": "Low-Resource Systems",
+          "description": "Run on minimal hardware efficiently.",
+          "emoji": "💻"
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "Technology & Architecture",
+      "paragraphs": [
+        "UNIX is built entirely in <strong>C</strong>, leveraging its efficiency for a lightweight terminal-based application. The system uses file-based storage (`INVENTORY.txt`) to persist product data, with string-based price storage to avoid integer overflow issues.",
+        "The architecture is designed for simplicity, with a structured menu-driven interface and robust error handling to prevent inventory overflow and memory corruption. Functions like `strcmp()` for searching and array shifting for deletions ensure reliable performance on low-resource systems."
+      ]
+    },
+    {
+      "type": "roadmap",
+      "title": "What's Next",
+      "items": [
+        {
+          "name": "GUI Interface",
+          "status": "Planned"
+        },
+        {
+          "name": "Cloud Sync",
+          "status": "Planned"
+        },
+        {
+          "name": "Barcode Support",
+          "status": "Planned"
+        },
+        {
+          "name": "Multi-user Access",
+          "status": "Planned"
+        }
+      ]
+    },
+    {
+      "type": "team",
+      "title": "Meet the Team",
+      "items": [
+        {
+          "name": "Rajin Khan",
+          "institution": "North South University",
+          "github": "https://github.com/rajin-khan"
+        },
+        {
+          "name": "Saumik Saha Kabbya",
+          "institution": "North South University",
+          "github": "https://github.com/Kabbya04"
+        },
+        {
+          "name": "Samiyeel Alim Binaaf",
+          "institution": "North South University",
+          "github": "https://github.com/Pronaaf2k"
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "Get Started",
+      "paragraphs": [
+        "UNIX is a simple yet powerful tool for managing grocery inventories with minimal resources. Explore the project on GitHub to try it out, contribute, or learn C programming through practical application."
+      ],
+      "actions": [
+        {
+          "label": "Explore UNIX",
+          "href": "https://github.com/rajin-khan/UNIX",
+          "primary": true
+        },
+        {
+          "label": "Contribute on GitHub",
+          "href": "https://github.com/rajin-khan/UNIX",
+          "primary": false
+        }
+      ]
+    }
+  ]
+}

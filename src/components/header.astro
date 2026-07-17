@@ -1,27 +1,35 @@
 ---
 import menus from "../collections/menu.json";
 import Logo from "../components/logo.astro";
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
-<!-- This is an invisible div with relative position so that it takes up the height of the menu (because menu is absolute/fixed) -->
-<div class="relative w-full h-20 opacity-0 pointer-events-none"></div>
+<div class="relative w-full h-20 opacity-0 pointer-events-none" aria-hidden="true"></div>
 <header id="header" class="absolute top-0 z-50 w-full h-20">
   <div
     class="flex items-center justify-between h-full max-w-5xl pl-6 pr-4 mx-auto border-b border-l-0 border-r-0 border-transparent select-none lg:border-r lg:border-l lg:rounded-b-xl"
   >
     <Logo />
-    <div
+    <button
+      type="button"
       id="mobileMenuBackground"
-      onclick="closeMobileMenu()"
-      class="fixed inset-0 z-20 hidden w-screen h-screen duration-300 ease-out bg-white/90 dark:bg-neutral-950/90"
+      aria-label="Close navigation menu"
+      tabindex="-1"
+      class="fixed inset-0 z-20 hidden duration-300 ease-out bg-white/90 dark:bg-neutral-950/90"
     >
-    </div>
+    </button>
     <nav
+      aria-label="Primary navigation"
       class="relative z-30 flex flex-row-reverse justify-start w-full text-sm sm:justify-end text-neutral-500 dark:text-neutral-400 sm:flex-row"
     >
-      <div
+      <button
+        type="button"
         id="openMenu"
-        class="flex flex-col items-end justify-center w-6 h-6 ml-4 cursor-pointer sm:hidden"
+        aria-label="Open navigation menu"
+        aria-controls="menu"
+        aria-expanded="false"
+        class="flex flex-col items-end justify-center w-8 h-8 p-0 ml-4 bg-transparent cursor-pointer sm:hidden"
       >
         <svg
           class="w-8 h-8 dark:text-neutral-200"
@@ -30,12 +38,17 @@ import Logo from "../components/logo.astro";
           stroke-linejoin="round"
           stroke-width="2"
           viewBox="0 0 24 24"
+          aria-hidden="true"
           stroke="currentColor"><path d="M4 8h16M4 16h16"></path></svg
         >
-      </div>
-      <div
+      </button>
+      <button
+        type="button"
         id="closeMenu"
-        class="flex flex-col items-end justify-center hidden w-6 h-6 ml-4 -translate-x-1 cursor-pointer sm:hidden"
+        aria-label="Close navigation menu"
+        aria-controls="menu"
+        aria-expanded="false"
+        class="flex flex-col items-end justify-center hidden w-8 h-8 p-0 ml-4 -translate-x-1 bg-transparent cursor-pointer sm:hidden"
       >
         <svg
           class="w-6 h-6 text-neutral-600 dark:text-neutral-200"
@@ -44,9 +57,10 @@ import Logo from "../components/logo.astro";
           stroke-linejoin="round"
           stroke-width="2"
           viewBox="0 0 24 24"
+          aria-hidden="true"
           stroke="currentColor"><path d="M6 18L18 6M6 6l12 12"></path></svg
         >
-      </div>
+      </button>
       <div
         id="menu"
         class="fixed top-[75px] ease-out duration-300 sm:top-0 w-full left-0 sm:py-0 pt-7 pb-4 dm:mx-0 left-0 z-40 flex-col items-end justify-start hidden w-full h-auto text-sm sm:text-base sm:h-auto sm:relative sm:flex-row sm:flex sm:text-sm sm:w-auto sm:pr-0 sm:pt-0"
@@ -61,13 +75,23 @@ import Logo from "../components/logo.astro";
         </div>
         {
           menus.map((menu) => {
+            const menuPath = menu.url.replace(/\/$/, "") || "/";
+            const isBlogPath = menu.name === "Blog" && currentPath.startsWith("/post/");
+            const isActive = menuPath === "/"
+              ? currentPath === "/"
+              : isBlogPath || currentPath === menuPath || currentPath.startsWith(`${menuPath}/`);
+
             return (
               <a
                 href={menu.url}
-                class="relative flex items-center justify-center w-full px-4 py-2 font-medium tracking-wide text-center duration-200 ease-out sm:py-0 sm:mb-0 md:w-auto hover:text-neutral-900 dark:hover:text-white"
+                aria-current={isActive ? "page" : undefined}
+                class:list={[
+                  "relative flex items-center justify-center w-full px-4 py-2 font-medium tracking-wide text-center duration-200 ease-out sm:py-0 sm:mb-0 md:w-auto hover:text-neutral-900 dark:hover:text-white",
+                  isActive && "text-neutral-900 dark:text-white",
+                ]}
               >
                 {menu.name === "Uses" && (
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" />
                   </svg>
                 )}

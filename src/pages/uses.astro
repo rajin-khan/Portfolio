@@ -53,7 +53,12 @@ const hasCoords = (item: UsesItem): item is InteractiveItem => !!item.coords;
 const setupDots = Object.values(usesData).flat().filter(hasCoords);
 ---
 
-<Layout title="My Daily Uses">
+<Layout
+  title="Uses"
+  description="The hardware, software, self-hosted tools, and everyday setup Rajin Khan uses to build, design, and create."
+  ogImage="/assets/images/rajins-setup-25.jpg"
+  ogImageAlt="Rajin Khan's workspace and daily setup"
+>
   <section class="relative z-20 max-w-4xl mx-auto my-12 px-7 lg:px-0">
     <div class="animate-in" style="--animation-delay: 0ms;">
       <PageHeading
@@ -64,19 +69,26 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
 
     <div class="interactive-setup-container mt-16 mb-20 animate-in" style="--animation-delay: 200ms;">
       <div class="image-container" id="image-container">
-        <img 
-          src="/assets/images/rajins-setup-25.png" 
-          alt="My workspace setup" 
-          class="setup-visual" 
+        <img
+          src="/assets/images/rajins-setup-25.jpg"
+          alt="My workspace setup"
+          class="setup-visual"
+          width="1280"
+          height="855"
+          decoding="async"
         />
         {setupDots.map(dot => (
-          <div 
+          <button
+            type="button"
             class="dot" 
             style={`top: ${dot.coords.y}%; left: ${dot.coords.x}%;`}
             data-tooltip={`${dot.name}${dot.details ? '|' + dot.details : ''}`}
-          ></div>
+            aria-label={`Show details for ${dot.name}`}
+            aria-describedby="setup-tooltip"
+            aria-expanded="false"
+          ></button>
         ))}
-        <div class="tooltip" id="tooltip">
+        <div class="tooltip" id="setup-tooltip" role="tooltip" aria-hidden="true">
           <div class="tooltip-title"></div>
           <div class="tooltip-details"></div>
         </div>
@@ -109,23 +121,6 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
 </Layout>
 
 <style>
-@keyframes subtle-fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(1rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-in {
-  opacity: 0;
-  animation: subtle-fade-in-up 0.6s ease-out forwards;
-  animation-delay: var(--animation-delay, 0ms);
-}
-
 .interactive-setup-container {
   max-width: 900px;
   margin: 2rem auto;
@@ -157,7 +152,9 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
   border: 1.5px solid rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transform: translate(-50%, -50%);
-  transition: all 0.3s ease;
+  padding: 0;
+  appearance: none;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
   z-index: 10;
   animation: dot-pulse 3s infinite ease-in-out;
 }
@@ -169,11 +166,17 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
   animation: none; /* Pause pulse when active */
 }
 
-.dot:hover {
+.dot:hover,
+.dot:focus-visible {
   transform: translate(-50%, -50%) scale(1.4);
   background: white;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
   animation-play-state: paused;
+}
+
+.dot:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 3px;
 }
 
 @keyframes dot-pulse {
@@ -238,15 +241,25 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
     font-size: 0.75rem;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .dot {
+    animation: none;
+    opacity: 1;
+  }
+}
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  function initSetupHotspots() {
     const container = document.getElementById('image-container');
     const dots = document.querySelectorAll<HTMLElement>('.dot');
-    const tooltip = document.getElementById('tooltip') as HTMLElement | null;
+    const tooltip = document.getElementById('setup-tooltip') as HTMLElement | null;
     
     if (!tooltip || !container) return;
+    if (container.dataset.hotspotsBound === 'true') return;
+    container.dataset.hotspotsBound = 'true';
 
     const tooltipTitle = tooltip.querySelector<HTMLElement>('.tooltip-title');
     const tooltipDetails = tooltip.querySelector<HTMLElement>('.tooltip-details');
@@ -258,8 +271,10 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
     // Function to hide the tooltip and deactivate dot
     function hideTooltip() {
       tooltip.classList.remove('show');
+      tooltip.setAttribute('aria-hidden', 'true');
       if (activeDot) {
         activeDot.classList.remove('active');
+        activeDot.setAttribute('aria-expanded', 'false');
         activeDot = null;
       }
     }
@@ -271,25 +286,26 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
         }
     });
 
+    function activateDot(dot: HTMLElement) {
+      if (activeDot && activeDot !== dot) {
+        activeDot.classList.remove('active');
+        activeDot.setAttribute('aria-expanded', 'false');
+      }
+
+      dot.classList.add('active');
+      dot.setAttribute('aria-expanded', 'true');
+      activeDot = dot;
+      showTooltip(dot);
+    }
+
     dots.forEach(dot => {
       // Click event for mobile/touch
       dot.addEventListener('click', function(event) {
         event.stopPropagation(); // Prevent the container click event from firing
-        
-        // If this dot is already active, hide it. Otherwise, show it.
         if (activeDot === this) {
           hideTooltip();
         } else {
-          // Deactivate the previous dot
-          if (activeDot) {
-            activeDot.classList.remove('active');
-          }
-
-          // Activate the new dot
-          this.classList.add('active');
-          activeDot = this;
-          
-          showTooltip(this);
+          activateDot(this);
         }
       });
 
@@ -302,8 +318,17 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
       dot.addEventListener('mouseleave', function() {
         // Only hide if it wasn't clicked/activated
         if (activeDot !== this) {
-            tooltip.classList.remove('show');
+          tooltip.classList.remove('show');
+          tooltip.setAttribute('aria-hidden', 'true');
         }
+      });
+
+      dot.addEventListener('focus', function() {
+        if (this.matches(':focus-visible')) activateDot(this);
+      });
+
+      dot.addEventListener('blur', function() {
+        if (activeDot === this) hideTooltip();
       });
     });
     
@@ -319,6 +344,7 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
             
             positionTooltip(dot, tooltip);
             tooltip.classList.add('show');
+            tooltip.setAttribute('aria-hidden', 'false');
         }
     }
 
@@ -334,7 +360,7 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
       tooltipEl.style.visibility = '';
 
       let top = dotRect.top - containerRect.top - tooltipRect.height - 15;
-      let left = dotRect.left - containerRect.top + (dotRect.width / 2) - (tooltipRect.width / 2);
+      let left = dotRect.left - containerRect.left + (dotRect.width / 2) - (tooltipRect.width / 2);
 
       // Reposition if it goes off-screen vertically
       if (top < 0) {
@@ -353,6 +379,12 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
       tooltipEl.style.left = `${left}px`;
       tooltipEl.style.top = `${top}px`;
     }
-  });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') hideTooltip();
+    });
+  }
+
+  initSetupHotspots();
+  document.addEventListener('astro:page-load', initSetupHotspots);
 </script>
-</Layout>

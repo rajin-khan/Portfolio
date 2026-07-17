@@ -120,10 +120,8 @@ async function getRedis() {
       process.env.REDIS_URL;
     const redisToken =
       import.meta.env.KV_REST_API_TOKEN ||
-      import.meta.env.KV_REST_API_READ_ONLY_TOKEN ||
       import.meta.env.UPSTASH_REDIS_REST_TOKEN ||
       process.env.KV_REST_API_TOKEN ||
-      process.env.KV_REST_API_READ_ONLY_TOKEN ||
       process.env.UPSTASH_REDIS_REST_TOKEN;
 
     if (!redisUrl || !redisToken || redisUrl.startsWith("redis://") || redisUrl.startsWith("rediss://")) {
@@ -199,6 +197,11 @@ export const GET: APIRoute = async () => {
 };
 
 export const POST: APIRoute = async ({ request }) => {
+  const contentLength = Number(request.headers.get("content-length") || 0);
+  if (contentLength > 4096) {
+    return json({ error: "Request body is too large" }, 413);
+  }
+
   const redis = await getRedis();
   if (!redis) {
     return json({ error: "Sticker board storage unavailable" }, 503);

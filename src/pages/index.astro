@@ -14,10 +14,12 @@ import StickerBoard from "../components/sticker-board.jsx";
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": "https://rajinkhan.com/#person",
   name: "Rajin Khan",
+  alternateName: "Adib Ar Rahman Khan",
   description:
-    "Senior CS Student at North South University, from Dhaka, Bangladesh focusing on Generative AI and Deep Learning, proficient in Full-Stack Web Development and providing end-to-end AI solutions.",
-  url: "https://rajinkhan.com",
+    "AI engineer, developer, and Computer Science student in Dhaka building thoughtful products across generative AI, computer vision, and the web.",
+  url: "https://rajinkhan.com/",
   sameAs: [
     "https://github.com/rajin-khan",
     "https://www.linkedin.com/in/rajin-khan",
@@ -25,69 +27,56 @@ const personSchema = {
     "https://www.facebook.com/rajinisdown/",
   ],
   jobTitle: "AI Engineer",
+  image: "https://rajinkhan.com/assets/images/rajin-darkbg-tiny.png",
+  knowsAbout: [
+    "Generative AI",
+    "Deep Learning",
+    "Machine Learning",
+    "Computer Vision",
+    "Full-Stack Web Development",
+    "UI Design",
+  ],
   worksFor: {
     "@type": "Organization",
-    name: "The Data Island",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Thomson Grand",
-      addressCountry: "Singapore",
-    },
-    description: "A company specializing in Private AI and Data Solutions",
-    url: "https://thedataisland.com", // Optional: Add if the organization has a website
-    sameAs: ["https://www.linkedin.com/company/the-data-island-tdi/"],
+    name: "Skelementor",
   },
   address: {
     "@type": "PostalAddress",
     addressLocality: "Dhaka",
     addressCountry: "Bangladesh",
   },
-  image: "https://rajinkhan.com/assets/images/rajins-banner-new.png", // Add image to schema
   alumniOf: {
     "@type": "School",
     name: "Sunnydale",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Dhaka",
-      addressCountry: "Bangladesh",
-    },
-    knowsAbout: [
-      "Generative AI",
-      "Deep Learning",
-      "Machine Learning",
-      "Computer Vision",
-      "Graphic Design",
-      "Full-Stack Web Development",
-      "Prompt Engineering",
-    ],
-    mainEntityOfPage: "https://rajinkhan.com/about",
   },
+  mainEntityOfPage: "https://rajinkhan.com/about/",
 };
 
-// NEW: Added WebSite schema for Google Sitelinks
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Rajin Khan's Portfolio",
-  url: "https://rajinkhan.com",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: "https://rajinkhan.com/search?q={search_term_string}",
-    },
-    "query-input": "required name=search_term_string",
-  },
+  "@id": "https://rajinkhan.com/#website",
+  name: "Rajin Khan",
+  alternateName: ["rajin", "Rajin Khan Portfolio"],
+  url: "https://rajinkhan.com/",
+  inLanguage: "en",
+  publisher: { "@id": "https://rajinkhan.com/#person" },
 };
 
-const pageTitle = "Rajin Khan";
+const pageTitle = "Rajin Khan | AI Engineer, Developer & Designer";
 const pageDescription =
-  "Online Portfolio and Blog by Rajin Khan. Includes showcase of my Projects, with musings on AI, Web Dev, and Design.";
-const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Graph image
+  "Portfolio and writing by Rajin Khan, an AI engineer and developer in Dhaka building thoughtful products across AI, computer vision, and the web.";
+const ogImage = "/assets/images/rajins-banner-new.png";
 ---
 
-<Layout title={pageTitle} description={pageDescription} ogImage={ogImage}>
-  <main
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  ogImage={ogImage}
+  ogImageAlt="Rajin Khan, AI engineer, developer, and designer"
+  structuredData={[websiteSchema, personSchema]}
+>
+  <div
     class="relative z-20 w-full max-w-4xl mx-auto mt-16 px-7 md:mt-24 lg:mt-32 xl:px-0"
   >
     <!-- Animation applied to the entire hero section -->
@@ -143,15 +132,17 @@ const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Gr
             width="390"
             height="390"
             loading="eager"
+            decoding="async"
+            fetchpriority="high"
           />
         </div>
       </div>
     </section>
-  </main>
+  </div>
 
   <!-- Newsletter Section -->
   <Separator text="newsletter" />
-  <div class="animate-in" style="--animation-delay: 150ms;">
+  <div class="animate-in defer-render" style="--animation-delay: 150ms;">
     <Newsletter />
   </div>
 
@@ -161,49 +152,20 @@ const ogImage = "/assets/images/rajins-banner-new.png"; // Update to new Open Gr
   </div>
 
   <!-- Animation applied to the Projects section -->
-  <div class="animate-in" style="--animation-delay: 400ms;">
+  <div class="animate-in defer-render" style="--animation-delay: 400ms;">
     <Projects />
   </div>
 
   <Separator text="Tech Stack" />
-  <TechStack />
+  <div class="defer-render"><TechStack /></div>
 
   <Separator text="Latest Activity" />
-  <LatestCommit />
+  <div class="defer-render"><LatestCommit /></div>
 
   <Separator text="Oh, and I talk a lot" />
-  <Writings />
+  <div class="defer-render"><Writings /></div>
 
   <Separator text="Guest Book" />
-  <StickerBoard client:load />
-
-  <script
-    type="application/ld+json"
-    is:inline
-    set:html={JSON.stringify(personSchema)}
-  />
-  <script
-    type="application/ld+json"
-    is:inline
-    set:html={JSON.stringify(websiteSchema)}
-  />
+  <!-- A fixed modal cannot live inside content-visibility containment. -->
+  <StickerBoard client:visible={{ rootMargin: "500px" }} />
 </Layout>
-
-<style>
-  @keyframes subtle-fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(1rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-in {
-    opacity: 0; /* Start hidden */
-    animation: subtle-fade-in-up 0.6s ease-out forwards;
-    animation-delay: var(--animation-delay, 0ms);
-  }
-</style>

@@ -29,6 +29,10 @@ export default function PlaceholderCard({ nextDate, nextIssueNumber, position, i
             src="/assets/images/curatedlogo.png"
             alt="Curated Logo"
             className="placeholder-logo"
+            width="1049"
+            height="280"
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </div>
@@ -36,4 +40,3 @@ export default function PlaceholderCard({ nextDate, nextIssueNumber, position, i
     </div>
   );
 }
-

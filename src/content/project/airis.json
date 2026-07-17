@@ -1,0 +1,20 @@
+{
+  "slug": "airis",
+  "order": 3,
+  "detail": false,
+  "name": "AIris*",
+  "cardName": "AIris*",
+  "description": "Wearable AI vision assistant for the blind.",
+  "cardDescription": "Wearable AI vision assistant for the blind.",
+  "image": {
+    "src": "/assets/images/projects/AIrisBantiny.png",
+    "width": 2680,
+    "height": 1080
+  },
+  "href": "https://github.com/rajin-khan/AIris",
+  "tags": [
+    "AI",
+    "Hardware",
+    "Multimodal"
+  ]
+}

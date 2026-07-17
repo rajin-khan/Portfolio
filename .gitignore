@@ -30,3 +30,6 @@ pnpm-debug.log*
 
 posts_templates/
 .vercel
+
+# full-resolution source asset masters
+/source-assets/

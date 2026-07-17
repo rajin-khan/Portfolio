@@ -6,10 +6,10 @@ tags:
   - CLI
   - Productivity
   - Developer Skills
-image: "/assets/images/posts/cli.png"
+image: "/assets/images/posts/cli.jpg"
 ---
 
-![Command Window](/assets/images/posts/cli.png)
+![Command Window](/assets/images/posts/cli.jpg)
 
 ## So, what is the Command Line?  
 
@@ -33,7 +33,7 @@ If you've ever watched shows like **Mr. Robot**, or movies like **The Matrix**, 
 And that’s it! Now you have a command line where you can start typing commands.
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/cli.png" autoplay loop muted>
+  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay preload="none" playsinline loop muted>
     <source src="/assets/videos/posts/cli1.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -60,9 +60,9 @@ Windows has **multiple** command-line options:
    wsl --install
    ```
 
-![A screenshot of CMD](/assets/images/posts/cmd.png)
-![A Screenshot of PowerShell](/assets/images/posts/pws.png)
-![A screenshot of WSL](/assets/images/posts/wsl.png)
+![A screenshot of CMD](/assets/images/posts/cmd.jpg)
+![A Screenshot of PowerShell](/assets/images/posts/pws.jpg)
+![A screenshot of WSL](/assets/images/posts/wsl.jpg)
 
 *I would **highly recommend** you install **WSL**. Many basic CLI commands mentioned here (and in most guides online) **may/may not work in CMD and PowerShell**, but **WSL** offers a unified environment that **emulates Unix based shells (like on Linux and Mac).***
 
@@ -120,14 +120,14 @@ ls -la
 #### See for yourself:
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/cli.png" autoplay loop muted>
+  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay preload="none" playsinline loop muted>
     <source src="/assets/videos/posts/cli2.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 </div>
 
 <div class="video-container">
-  <video id="myVideo" width="100%" poster="/assets/images/posts/cli.png" autoplay muted>
+  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay preload="none" playsinline muted>
     <source src="/assets/videos/posts/cli3.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -187,7 +187,7 @@ networkquality -v
 You can monitor your entire system from just one window:
 
 <div class="video-container">
-  <video id="myVideo" width="100%" poster="/assets/images/posts/cli.png" autoplay muted>
+  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay preload="none" playsinline muted>
     <source src="/assets/videos/posts/cli4.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -221,7 +221,7 @@ From there, you can **run commands** on that computer **as if you were sitting i
 It's **like teleporting into another machine**, and it's a huge part of being a real power user.
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/cli.png" autoplay loop muted>
+  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay preload="none" playsinline loop muted>
     <source src="/assets/videos/posts/cli5.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -251,7 +251,7 @@ CLI gives you **batch power** — change, move, delete, or organize hundreds of 
 
 On **macOS**, the best way to install CLI tools is **Homebrew**.  
 
-![Screenshot of Homebrew.](/assets/images/posts/cli2.png) 
+![Screenshot of Homebrew.](/assets/images/posts/cli2.jpg)
 
 #### To Install Homebrew:
 
@@ -269,7 +269,7 @@ Open the **Terminal** and run:
 
 On **Windows**, the best way to install CLI tools is **Scoop** or **Chocolatey**.  
 
-![Screenshot of Scoop.](/assets/images/posts/scoop.png)
+![Screenshot of Scoop.](/assets/images/posts/scoop.jpg)
 
 #### Install Scoop (Recommended):
 
@@ -286,7 +286,7 @@ iwr -useb get.scoop.sh | iex
 
 #### Install Chocolatey (Alternative):
 
-![Screenshot of Scoop.](/assets/images/posts/choc.png)
+![Screenshot of Scoop.](/assets/images/posts/choc.jpg)
 
 Open **PowerShell** as **Administrator** and run:  
 
@@ -348,4 +348,4 @@ The CLI **isn’t just for developers**—it’s for **anyone** who wants to wor
 
 From **Mr. Robot style hacking** to **real-life productivity boosts**, the command line truly gives you superpowers and is both the first and final step in becoming a true power user.
 
-💬 **What’s the first CLI command you learned? Drop it in the comments!**  
+💬 **What’s the first CLI command you learned? Drop it in the comments!**

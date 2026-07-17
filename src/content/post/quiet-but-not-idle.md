@@ -6,17 +6,17 @@ tags:
   - "Personal"
   - "Development"
   - "Journey"
-image: "/assets/images/posts/qbni2.png"
+image: "/assets/images/posts/qbni2.jpg"
 ---
 
-![Quiet, but Not Idle](/assets/images/posts/qbni2.png)
+![Quiet, but Not Idle](/assets/images/posts/qbni2.jpg)
 
 ## I just noticed I hit 3,000+ GitHub contributions this year.
 
 ---
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/qbni1.png" autoplay loop muted>
+  <video width="100%" poster="/assets/images/posts/qbni1.jpg" data-autoplay preload="none" playsinline loop muted>
     <source src="/assets/videos/posts/qbni1.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>

@@ -6,15 +6,21 @@
   <div class="newsletter-container">
     <div class="newsletter-inner">
       <div class="newsletter-content">
-        <div class="subscription-form" id="subscription-form">
+        <form class="subscription-form" id="subscription-form">
+          <label class="sr-only" for="newsletter-email">Email address</label>
           <input
             type="email"
             id="newsletter-email"
+            name="email"
             class="newsletter-email-input"
             placeholder="Enter your email"
             autocomplete="email"
+            inputmode="email"
+            spellcheck="false"
+            aria-describedby="newsletter-status"
+            required
           />
-          <button type="button" class="subscribe-button" id="subscribe-button">
+          <button type="submit" class="subscribe-button" id="subscribe-button">
             SUBSCRIBE
           </button>
           <svg
@@ -29,17 +35,23 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             style="display: none;"
+            aria-hidden="true"
           >
             <path d="M20 6L9 17l-5-5"></path>
           </svg>
-        </div>
+          <p id="newsletter-status" class="newsletter-status" role="status" aria-live="polite"></p>
+        </form>
         <div class="newsletter-logo">
           <img
             src="/assets/images/curatedlogo.png"
             alt="Curated Logo"
             class="logo-image"
+            width="1049"
+            height="280"
+            loading="lazy"
+            decoding="async"
           />
-          <a href="/curated" class="curated-link">
+          <a href="/curated" class="curated-link" aria-label="Open Curated newsletter archive">
             <svg
               class="chevron-icon"
               width="16"
@@ -58,13 +70,13 @@
       </div>
 
       <!-- Animated light streaks -->
-      <div class="light-streak streak-1"></div>
-      <div class="light-streak streak-2"></div>
-      <div class="light-streak streak-3"></div>
-      <div class="light-streak streak-4"></div>
+      <div class="light-streak streak-1" aria-hidden="true"></div>
+      <div class="light-streak streak-2" aria-hidden="true"></div>
+      <div class="light-streak streak-3" aria-hidden="true"></div>
+      <div class="light-streak streak-4" aria-hidden="true"></div>
 
       <!-- Rainbow shimmer overlay -->
-      <div class="rainbow-shimmer"></div>
+      <div class="rainbow-shimmer" aria-hidden="true"></div>
     </div>
   </div>
 </div>
@@ -79,36 +91,34 @@
       const subscribeButton = document.getElementById(
         "subscribe-button"
       ) as HTMLButtonElement | null;
+      const subscriptionForm = document.getElementById(
+        "subscription-form"
+      ) as HTMLFormElement | null;
       const checkmark = document.getElementById(
         "checkmark"
       ) as HTMLElement | null;
+      const status = document.getElementById("newsletter-status");
 
       // Check if elements exist
-      if (!emailInput || !subscribeButton || !checkmark) {
+      if (!emailInput || !subscribeButton || !subscriptionForm || !checkmark || !status) {
         console.error("Newsletter form elements not found");
         return;
       }
 
-      // Subscribe button click handler
-      subscribeButton.addEventListener("click", async (e) => {
+      subscriptionForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const email = emailInput.value.trim();
-
-        if (!email) {
-          return;
-        }
-
-        // Basic email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-          alert("Please enter a valid email address");
+        if (!emailInput.reportValidity()) {
+          status.textContent = "A valid email works best.";
+          status.dataset.state = "error";
           return;
         }
 
         try {
-          subscribeButton.style.opacity = "0.5";
-          subscribeButton.style.pointerEvents = "none";
+          status.textContent = "Joining...";
+          status.dataset.state = "pending";
+          subscribeButton.disabled = true;
 
           const response = await fetch("/api/subscribe", {
             method: "POST",
@@ -120,7 +130,7 @@
 
           // Check if response is JSON before parsing
           const contentType = response.headers.get("content-type");
-          let data;
+          let data: { error?: string } = {};
 
           if (contentType && contentType.includes("application/json")) {
             data = await response.json();
@@ -135,6 +145,8 @@
             subscribeButton.style.display = "none";
             checkmark.style.display = "block";
             checkmark.classList.add("checkmark-visible");
+            status.textContent = "You're in.";
+            status.dataset.state = "success";
 
             // Clear input
             emailInput.value = "";
@@ -144,27 +156,20 @@
               checkmark.style.display = "none";
               checkmark.classList.remove("checkmark-visible");
               subscribeButton.style.display = "block";
-              subscribeButton.style.opacity = "1";
-              subscribeButton.style.pointerEvents = "auto";
+              subscribeButton.disabled = false;
+              status.textContent = "";
+              delete status.dataset.state;
             }, 2500);
           } else {
-            alert(data.error || "Something went wrong. Please try again.");
-            subscribeButton.style.opacity = "1";
-            subscribeButton.style.pointerEvents = "auto";
+            status.textContent = data.error || "Something went wrong. Try again.";
+            status.dataset.state = "error";
+            subscribeButton.disabled = false;
           }
         } catch (error) {
           console.error("Error subscribing:", error);
-          alert("Failed to subscribe. Please try again.");
-          subscribeButton.style.opacity = "1";
-          subscribeButton.style.pointerEvents = "auto";
-        }
-      });
-
-      // Allow Enter key to submit
-      emailInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          subscribeButton.click();
+          status.textContent = "Couldn't subscribe just now. Try again.";
+          status.dataset.state = "error";
+          subscribeButton.disabled = false;
         }
       });
     }
@@ -179,7 +184,13 @@
 </script>
 
 <style>
-  @import url("https://fonts.cdnfonts.com/css/satoshi");
+  @font-face {
+    font-family: "Satoshi";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/assets/fonts/satoshi-regular.woff") format("woff");
+  }
 
   .newsletter-wrapper {
     width: 100%;
@@ -387,9 +398,35 @@
     cursor: pointer;
     padding: 0;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, opacity 0.2s ease;
     position: relative;
     z-index: 11;
+  }
+
+  .subscribe-button:disabled {
+    cursor: wait;
+    opacity: 0.45;
+  }
+
+  .newsletter-status {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: max-content;
+    max-width: 210px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 9px;
+    line-height: 1.2;
+  }
+
+  .newsletter-status[data-state="error"] {
+    color: rgba(254, 202, 202, 0.9);
+  }
+
+  .newsletter-status[data-state="success"] {
+    color: rgba(187, 247, 208, 0.9);
   }
 
   .subscribe-button:hover {
@@ -440,7 +477,7 @@
     justify-content: center;
     color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, transform 0.2s ease;
     padding: 0;
     margin-left: 4px;
   }
@@ -658,6 +695,16 @@
     .logo-image {
       max-height: 45px;
       max-width: 90px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .newsletter-inner,
+    .newsletter-container::after,
+    .light-streak,
+    .rainbow-shimmer,
+    .checkmark {
+      animation: none;
     }
   }
 </style>

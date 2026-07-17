@@ -1,0 +1,147 @@
+{
+  "slug": "cash",
+  "order": 9,
+  "detail": true,
+  "name": "CASH",
+  "cardName": "cash",
+  "description": "Custom Shell Exploring the Kernel and OS.",
+  "cardDescription": "Custom shell exploring the Kernel and OS.",
+  "image": {
+    "src": "/assets/images/projects/cash.png",
+    "width": 2374,
+    "height": 1472
+  },
+  "href": "/projects/cash",
+  "tags": [
+    "Shell",
+    "CLI",
+    "C"
+  ],
+  "accents": {
+    "primary": "#e6d5a3",
+    "secondary": "#1a1a1a"
+  },
+  "heroActions": [
+    {
+      "label": "View Project",
+      "href": "https://github.com/rajin-khan/CASH",
+      "primary": true
+    },
+    {
+      "label": "View on GitHub",
+      "href": "https://github.com/rajin-khan/CASH",
+      "primary": false
+    }
+  ],
+  "sections": [
+    {
+      "type": "prose",
+      "title": "What is CASH?",
+      "paragraphs": [
+        "The story behind CASH is a little stupid, honestly. When I first shared the idea of building my own shell, the sheer shock on people's faces made me want to get started on building it. And honestly, it worked out pretty well. CASH (Command and Script Shell) is a minimalist, lightweight shell built in C to explore kernel processes, system calls, and shell internals. Designed as a learning tool, it provides a foundation for understanding how shells interact with the operating system, manage processes, and execute commands.",
+        "CASH supports essential shell features like command execution, background processes, input/output redirection, and piping. Compatible with Linux and macOS, it offers an extensible design for adding modern features, making it a great starting point for developers interested in OS-level programming."
+      ]
+    },
+    {
+      "type": "features",
+      "title": "Key Features",
+      "items": [
+        {
+          "name": "Command Execution",
+          "description": "Run commands with argument parsing.",
+          "icon": "💻"
+        },
+        {
+          "name": "Background Processes",
+          "description": "Execute tasks in the background with &. ",
+          "icon": "⚙️"
+        },
+        {
+          "name": "Redirection",
+          "description": "Support for input/output redirection (> <).",
+          "icon": "➡️"
+        },
+        {
+          "name": "Piping",
+          "description": "Chain commands using pipes (|).",
+          "icon": "🔗"
+        }
+      ]
+    },
+    {
+      "type": "use-cases",
+      "title": "Perfect For",
+      "items": [
+        {
+          "name": "System Exploration",
+          "description": "Learn kernel and OS interactions.",
+          "emoji": "🔍"
+        },
+        {
+          "name": "Process Management",
+          "description": "Handle processes with system calls.",
+          "emoji": "⚡"
+        },
+        {
+          "name": "Scripting",
+          "description": "Automate tasks with simple scripts.",
+          "emoji": "📝"
+        },
+        {
+          "name": "Development",
+          "description": "Test and debug shell features.",
+          "emoji": "🛠️"
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "Technology & Architecture",
+      "paragraphs": [
+        "CASH is built entirely in <strong>C</strong>, leveraging system calls for process management, command execution, and I/O operations. It uses standard C libraries to handle file descriptors for redirection and piping, ensuring efficient communication between processes.",
+        "The shell is designed to be lightweight and extensible, with a modular structure that supports adding new features like scripting and command history. It runs on Linux and macOS, utilizing the POSIX standard for portability and compatibility with system-level operations."
+      ]
+    },
+    {
+      "type": "roadmap",
+      "title": "What's Next",
+      "items": [
+        {
+          "name": "Auto-Completion",
+          "status": "Planned"
+        },
+        {
+          "name": "Alias Support",
+          "status": "Planned"
+        },
+        {
+          "name": "Advanced Scripting",
+          "status": "Planned"
+        },
+        {
+          "name": "Configuration File",
+          "status": "Planned"
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "Get Started",
+      "paragraphs": [
+        "Ready to explore the internals of a shell? Clone CASH, build it, and start experimenting with kernel processes and system calls. Contributions are welcome—check out the project on GitHub!"
+      ],
+      "actions": [
+        {
+          "label": "Explore CASH",
+          "href": "https://github.com/rajin-khan/CASH",
+          "primary": true
+        },
+        {
+          "label": "Contribute on GitHub",
+          "href": "https://github.com/rajin-khan/CASH",
+          "primary": false
+        }
+      ]
+    }
+  ]
+}

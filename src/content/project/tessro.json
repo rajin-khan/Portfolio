@@ -1,0 +1,165 @@
+{
+  "slug": "tessro",
+  "order": 0,
+  "detail": true,
+  "name": "Tessro",
+  "cardName": "Tessro",
+  "description": "Real-time video sync & streaming with live chat.",
+  "cardDescription": "Real-Time video-sync and stream w/ chat.",
+  "image": {
+    "src": "/assets/images/projects/Tessro.jpg",
+    "width": 2600,
+    "height": 1320
+  },
+  "href": "/projects/tessro",
+  "tags": [
+    "Streaming",
+    "Peer-to-Peer",
+    "Live Chat"
+  ],
+  "accents": {
+    "primary": "#a855f7",
+    "secondary": "#3b82f6"
+  },
+  "heroActions": [
+    {
+      "label": "Visit Live Site",
+      "href": "https://tessro.com/",
+      "primary": true
+    },
+    {
+      "label": "View on GitHub",
+      "href": "https://github.com/rajin-khan/Tessro",
+      "primary": false
+    }
+  ],
+  "sections": [
+    {
+      "type": "prose",
+      "title": "What is Tessro?",
+      "paragraphs": [
+        "Tessro was born out of a personal need—I used to watch movies with my girlfriend over long-distance calls, and we’d struggle to sync our playback. We’d constantly tell each other, \"Pause now,\" or \"Play at 3...2...1,\" trying to match up by talking it through. It was frustrating, and I got tired of the hassle. So, I created Tessro, a cutting-edge platform designed to bring people together through real-time video synchronization and streaming. Imagine hosting a movie night with friends scattered across the globe, or conducting a training session where everyone's video playback is perfectly in sync—Tessro makes it happen effortlessly. It offers two powerful modes: Sync Mode, where participants use the same local video file and Tessro ensures flawless synchronization, and Stream Mode, where the host streams their video live to others using WebRTC's peer-to-peer technology.",
+        "What sets Tessro apart is its commitment to simplicity and privacy. There's no need to upload videos, create accounts, or worry about tracking—Tessro operates on a privacy-first principle, ensuring your data stays secure. With integrated live chat, secure password-protected sessions, and a mobile-friendly design, Tessro is the ultimate tool for collaborative viewing experiences, whether you're watching a film with family or reviewing footage with a remote team."
+      ]
+    },
+    {
+      "type": "features",
+      "title": "Key Features",
+      "items": [
+        {
+          "name": "Sync Mode",
+          "description": "Sync local video playback across devices.",
+          "icon": "🔄"
+        },
+        {
+          "name": "Stream Mode",
+          "description": "Host streams via WebRTC in real-time.",
+          "icon": "📺"
+        },
+        {
+          "name": "Live Chat",
+          "description": "Real-time chat with timestamps.",
+          "icon": "💬"
+        },
+        {
+          "name": "Secure Sessions",
+          "description": "Password-protected access.",
+          "icon": "🔒"
+        },
+        {
+          "name": "Privacy First",
+          "description": "No uploads, no tracking.",
+          "icon": "🛡️"
+        },
+        {
+          "name": "Mobile-Friendly",
+          "description": "Seamless on all devices.",
+          "icon": "📱"
+        }
+      ]
+    },
+    {
+      "type": "use-cases",
+      "title": "Perfect For",
+      "items": [
+        {
+          "name": "Movie Nights",
+          "description": "Sync movies with friends globally.",
+          "emoji": "🎞️"
+        },
+        {
+          "name": "Online Training",
+          "description": "Synchronized video for training.",
+          "emoji": "🎓"
+        },
+        {
+          "name": "Film Reviews",
+          "description": "Collaborate on reviews remotely.",
+          "emoji": "📽️"
+        },
+        {
+          "name": "Family Time",
+          "description": "Share videos with loved ones.",
+          "emoji": "🤝"
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "Privacy & Technology",
+      "paragraphs": [
+        "Privacy is at the core of Tessro's design. Unlike traditional video platforms, Tessro ensures your videos never leave your device—there are no uploads to servers, no trackers monitoring your activity, and no need to create an account. Everything operates through direct WebRTC peer-to-peer connections, meaning your sessions are private and secure. Sessions are password-protected, and participants join using nicknames, adding an extra layer of anonymity. Looking ahead, Tessro plans to implement a self-hosted TURN server to further enhance privacy by improving NAT traversal without relying on third-party services.",
+        "Tessro is built with a modern tech stack to deliver a seamless experience. The frontend leverages <strong>React</strong> and <strong>Vite</strong> for a fast, responsive interface, while the backend uses <strong>Node.js</strong> and <strong>Express</strong> to manage sessions and synchronization. <strong>WebRTC</strong> powers the peer-to-peer streaming, ensuring low latency and privacy, and <strong>Socket.IO</strong> enables real-time chat and sync. Styling is handled with <strong>Tailwind CSS</strong> for a sleek, responsive design, and the platform is deployed on <strong>Railway</strong> for scalability. This combination ensures Tessro is both powerful and user-friendly."
+      ]
+    },
+    {
+      "type": "roadmap",
+      "title": "What's Next",
+      "items": [
+        {
+          "name": "Voice Chat",
+          "status": "In Progress"
+        },
+        {
+          "name": "Emoji Reactions",
+          "status": "In Progress"
+        },
+        {
+          "name": "Subtitle Syncing",
+          "status": "Planned"
+        },
+        {
+          "name": "Self-hosted TURN",
+          "status": "Planned"
+        },
+        {
+          "name": "Mobile App",
+          "status": "Planned"
+        },
+        {
+          "name": "Offline Mode",
+          "status": "Planned"
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "Get Started",
+      "paragraphs": [
+        "Ready to sync up with friends or collaborate with your team? Start a Tessro session today and experience seamless video sharing. Want to contribute or explore the code? Check out the project on GitHub!"
+      ],
+      "actions": [
+        {
+          "label": "Start a Session",
+          "href": "https://tessro.com/",
+          "primary": true
+        },
+        {
+          "label": "Contribute on GitHub",
+          "href": "https://github.com/rajin-khan/Tessro",
+          "primary": false
+        }
+      ]
+    }
+  ]
+}

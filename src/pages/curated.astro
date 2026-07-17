@@ -1,4 +1,4 @@
-e---
+---
 import Layout from "../layouts/main.astro";
 import Carousel from "../components/curated/Carousel";
 import { readdirSync } from "fs";
@@ -72,6 +72,7 @@ const newsletters = newsletterFiles.map(({ filename, issueNumber }) => ({
   issueNumber: issueNumber.toString().padStart(3, "0"),
   date: getDateFromIssueNumber(issueNumber),
   pdfPath: `/newsletters/${filename}`,
+  previewPath: `/newsletters/${filename.replace(/\.pdf$/, "-preview.jpg")}`,
 }));
 
 const lastIssueNumber =
@@ -82,8 +83,14 @@ const nextIssueNumber = (lastIssueNumber + 1).toString().padStart(3, "0");
 const nextDate = getNextDate(lastIssueNumber);
 ---
 
-<Layout title="Curated Newsletter">
+<Layout
+  title="Curated Newsletter"
+  description="Curated is Rajin Khan's occasional visual newsletter: a small collection of ideas, links, design, and other things worth sharing."
+  ogImage="/newsletters/curated-001-preview.jpg"
+  ogImageAlt="Cover of the Curated newsletter by Rajin Khan"
+>
   <div class="curated-page">
+    <h1 class="sr-only">Curated Newsletter</h1>
     <!-- Animated light streaks -->
     <div class="light-streak streak-1"></div>
     <div class="light-streak streak-2"></div>
@@ -117,8 +124,21 @@ const nextDate = getNextDate(lastIssueNumber);
 
 <style>
   /* Import fonts */
-  @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap");
-  @import url("https://fonts.cdnfonts.com/css/satoshi");
+  @font-face {
+    font-family: "Instrument Serif";
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/assets/fonts/instrument-serif-italic-latin.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Satoshi";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/assets/fonts/satoshi-regular.woff") format("woff");
+  }
 
   .curated-page {
     position: fixed;

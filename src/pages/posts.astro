@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import Layout from "../layouts/main.astro";
 import PageHeading from "../components/page-heading.astro";
 
-const POSTS_PER_PAGE = 5;
+const POSTS_PER_BATCH = 5;
 const allPosts = await getCollection("post");
 
 const sortedPosts = allPosts
@@ -13,14 +13,12 @@ const sortedPosts = allPosts
   }))
   .sort((a, b) => b.date.getTime() - a.date.getTime());
 
-// Initial posts
-const [visiblePosts, remainingPosts] = [
-  sortedPosts.slice(0, POSTS_PER_PAGE),
-  sortedPosts.slice(POSTS_PER_PAGE),
-];
 ---
 
-<Layout title="Blog Posts">
+<Layout
+  title="Blog"
+  description="Essays and practical notes from Rajin Khan about AI, software, design, creative work, and learning in public."
+>
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
     <!-- Animation applied to the heading -->
     <div class="animate-in" style="--animation-delay: 0ms;">
@@ -37,11 +35,16 @@ const [visiblePosts, remainingPosts] = [
       style="--animation-delay: 200ms;"
     >
       {
-        visiblePosts.map((post) => (
-          <a
-            href={`/post/${post.slug}`}
-            class="relative flex flex-col md:flex-row items-stretch md:justify-between duration-300 ease-out p-7 group h-100 rounded-2xl"
+        sortedPosts.map((post, index) => (
+          <article
+            class="post-card"
+            data-blog-post
+            hidden={index >= POSTS_PER_BATCH}
           >
+            <a
+              href={`/post/${post.slug}`}
+              class="relative flex w-full flex-col md:flex-row items-stretch md:justify-between duration-300 ease-out p-7 group h-100 rounded-2xl"
+            >
             <span
               class="absolute inset-0 z-20 block w-full h-full duration-300 ease-out bg-transparent border border-transparent border-dashed group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:border group-hover:border-neutral-300 dark:group-hover:border-neutral-600 group-hover:bg-white dark:group-hover:bg-neutral-950 rounded-2xl"
             ></span>
@@ -52,14 +55,9 @@ const [visiblePosts, remainingPosts] = [
             <div class="relative z-30 duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1 w-full">
               <div class="flex flex-col md:flex-row items-stretch gap-6 w-full">
                 <div class="flex-1">
-                  <div class="flex flex-wrap gap-3 mb-3">
+                  <div class="flex flex-wrap gap-1.5 mb-3">
                     {post.data.tags?.map((tag) => (
-                      <span
-                        class="px-3 py-1 text-xs font-bold rounded-md border-neutral-300 dark:border-neutral-600 text-white"
-                        style={{
-                          background: `linear-gradient(135deg, hsl(${Math.random() * 360}, 100%, 70%), hsl(${Math.random() * 360}, 100%, 15%))`,
-                        }}
-                      >
+                      <span class="inline-flex items-center rounded-[0.35rem] border border-white/[0.08] bg-neutral-700/55 px-1.5 py-0.5 text-[0.65rem] font-medium leading-none text-neutral-100/90">
                         {tag}
                       </span>
                     ))}
@@ -77,11 +75,13 @@ const [visiblePosts, remainingPosts] = [
                   </span>
                   <p class="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
                     Posted on{" "}
-                    {post.date.toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
+                    <time datetime={post.date.toISOString()}>
+                      {post.date.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </time>
                   </p>
                 </div>
                 {post.data.image && (
@@ -92,121 +92,122 @@ const [visiblePosts, remainingPosts] = [
                       class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
                       decoding="async"
+                      width="208"
+                      height="144"
                     />
                   </div>
                 )}
               </div>
             </div>
-          </a>
+            </a>
+          </article>
         ))
       }
     </div>
     {
-      remainingPosts.length > 0 && (
-        <!-- Animation applied to the "Load More" button container -->
-        <div class="flex justify-center mt-8 animate-in" style="--animation-delay: 400ms;">
+      sortedPosts.length > POSTS_PER_BATCH && (
+        <div
+          id="post-archive-controls"
+          class="post-archive-controls flex justify-center mt-8 animate-in"
+          style="--animation-delay: 400ms;"
+        >
           <button
-            id="load-more"
-            class="px-4 py-1.5 text-sm font-medium rounded-full border border-neutral-800 dark:border-neutral-200 bg-neutral-800 dark:bg-neutral-200 text-neutral-100 dark:text-neutral-900 transition-all duration-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-neutral-900 dark:hover:text-neutral-100"
+            id="load-older-posts"
+            type="button"
+            class="inline-flex items-center justify-center px-4 py-1.5 text-sm font-medium rounded-full border border-neutral-800 dark:border-neutral-200 bg-neutral-800 dark:bg-neutral-200 text-neutral-100 dark:text-neutral-900 transition-[background-color,color,border-color,transform] duration-200 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-neutral-900 dark:hover:text-neutral-100 active:scale-[0.98]"
+            aria-controls="posts-container"
+            aria-expanded="false"
+            data-batch-size={POSTS_PER_BATCH}
           >
-            Previous Posts
+            Load older posts
           </button>
+          <span id="post-archive-status" class="sr-only" aria-live="polite">
+            Showing {POSTS_PER_BATCH} of {sortedPosts.length} posts.
+          </span>
         </div>
       )
     }
   </section>
 </Layout>
 
-<script define:vars={{ remainingPosts, POSTS_PER_PAGE }}>
-  let currentPosts = remainingPosts;
-  const loadMoreButton = document.getElementById("load-more");
-  const postsContainer = document.getElementById("posts-container");
+<noscript>
+  <style>
+    [data-blog-post][hidden] {
+      display: block !important;
+    }
 
-  if (loadMoreButton) {
-    loadMoreButton.addEventListener("click", () => {
-      const postsToAdd = currentPosts.slice(0, POSTS_PER_PAGE);
-      currentPosts = currentPosts.slice(POSTS_PER_PAGE);
+    .post-archive-controls {
+      display: none !important;
+    }
+  </style>
+</noscript>
 
-      postsToAdd.forEach((post) => {
-        const postElement = document.createElement("a");
-        postElement.href = `/post/${post.slug}`;
-        postElement.className =
-          "relative flex flex-col md:flex-row items-stretch md:justify-between duration-300 ease-out p-7 group h-100 rounded-2xl";
-        postElement.innerHTML = `
-          <span
-            class="absolute inset-0 z-20 block w-full h-full duration-300 ease-out bg-transparent border border-transparent border-dashed group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:border group-hover:border-neutral-300 dark:group-hover:border-neutral-600 group-hover:bg-white dark:group-hover:bg-neutral-950 rounded-2xl"
-          ></span>
-          <span
-            class="absolute inset-0 z-10 block w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-300 dark:border-neutral-600 group-hover:translate-x-1 group-hover:translate-y-1"
-          ></span>
-          <div class="relative z-30 duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1 w-full">
-            <div class="flex flex-col md:flex-row items-stretch gap-6 w-full">
-              <div class="flex-1">
-                <div class="flex flex-wrap gap-3 mb-3">
-                  ${post.data.tags
-                    ?.map(
-                      (tag) => `
-                    <span class="px-3 py-1 text-xs font-bold rounded-md border-neutral-300 dark:border-neutral-600 text-white"
-                          style="background: linear-gradient(135deg, hsl(${Math.random() * 360}, 100%, 70%), hsl(${Math.random() * 360}, 100%, 15%))">
-                      ${tag}
-                    </span>
-                  `
-                    )
-                    .join("")}
-                </div>
-                <span class="block w-full px-1 mt-3 mb-1">
-                  <span class="flex items-center mb-0 text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-                    ${post.data.title}
-                    <span class="ml-1 inline-block transition-transform duration-300 translate-x-0 group-hover:translate-x-1">→</span>
-                  </span>
-                </span>
-                <span class="text-xs text-neutral-600 dark:text-neutral-400 block truncate overflow-hidden break-words w-full max-w-full">
-                  ${post.data.description}
-                </span>
-                <p class="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
-                  Posted on ${new Date(post.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
-              ${
-                post.data.image
-                  ? `
-                <div class="relative z-30 w-full sm:w-52 h-36 rounded-xl overflow-hidden ml-auto">
-                  <img src="${post.data.image}" alt="${post.data.title}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                </div>
-              `
-                  : ""
-              }
-            </div>
-          </div>`;
-        postsContainer.appendChild(postElement);
+<script>
+  function initializePostArchive() {
+    const button = document.getElementById("load-older-posts");
+    const postsContainer = document.getElementById("posts-container");
+    const controls = document.getElementById("post-archive-controls");
+    const status = document.getElementById("post-archive-status");
+
+    if (
+      !(button instanceof HTMLButtonElement) ||
+      !(postsContainer instanceof HTMLElement) ||
+      !(controls instanceof HTMLElement) ||
+      button.dataset.bound === "true"
+    ) {
+      return;
+    }
+
+    button.dataset.bound = "true";
+    const batchSize = Number(button.dataset.batchSize) || 5;
+    const allPosts = Array.from(
+      postsContainer.querySelectorAll<HTMLElement>("[data-blog-post]")
+    );
+
+    button.addEventListener("click", () => {
+      const postsToReveal = allPosts
+        .filter((post) => post.hidden)
+        .slice(0, batchSize);
+
+      postsToReveal.forEach((post) => {
+        post.hidden = false;
+        requestAnimationFrame(() => post.classList.add("is-revealed"));
       });
 
-      if (currentPosts.length === 0) {
-        loadMoreButton.style.display = "none";
+      const remainingCount = allPosts.filter((post) => post.hidden).length;
+      const visibleCount = allPosts.length - remainingCount;
+
+      if (status) {
+        status.textContent = `Showing ${visibleCount} of ${allPosts.length} posts.`;
+      }
+
+      if (remainingCount === 0) {
+        button.setAttribute("aria-expanded", "true");
+        controls.hidden = true;
       }
     });
   }
+
+  initializePostArchive();
+  document.addEventListener("astro:page-load", initializePostArchive);
 </script>
 
 <style>
-  @keyframes subtle-fade-in-up {
+  @media (prefers-reduced-motion: no-preference) {
+    .post-card.is-revealed {
+      animation: reveal-post 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+  }
+
+  @keyframes reveal-post {
     from {
       opacity: 0;
-      transform: translateY(1rem);
+      transform: translateY(0.5rem);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
-  }
-
-  .animate-in {
-    opacity: 0; /* Start hidden */
-    animation: subtle-fade-in-up 0.6s ease-out forwards;
-    animation-delay: var(--animation-delay, 0ms);
   }
 </style>

@@ -1124,7 +1124,13 @@ export default function StickerBoard() {
       ) : null}
 
       <style>{`
-        @import url("https://fonts.googleapis.com/css2?family=La+Belle+Aurore&display=swap");
+        @font-face {
+          font-family: "La Belle Aurore";
+          font-style: normal;
+          font-weight: 400;
+          font-display: swap;
+          src: url("/assets/fonts/la-belle-aurore-latin.woff2") format("woff2");
+        }
 
         .sticker-board-section {
           width: 100%;

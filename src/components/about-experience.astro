@@ -6,11 +6,11 @@ const { logo, dates, role, company, description } = Astro.props;
   <div
     class="absolute top-0 left-0 z-40 flex items-center justify-center -translate-x-1/2 bg-white border rounded-full dark:bg-neutral-950 w-14 h-14 border-neutral-300 dark:border-neutral-700"
   >
-    <img src={logo} alt={company} class="w-8 h-8 object-contain" />
+    <img src={logo} alt="" class="w-8 h-8 object-contain" width="32" height="32" loading="lazy" decoding="async" />
   </div>
 
   <p
-    class="text-xs uppercase text-neutral-400 dark:text-neutral-500 trackign-widest"
+    class="text-xs uppercase text-neutral-400 dark:text-neutral-500 tracking-widest"
   >
     {dates}
   </p>

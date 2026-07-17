@@ -1,0 +1,147 @@
+{
+  "slug": "dozr",
+  "order": 11,
+  "detail": true,
+  "name": "DOZR",
+  "cardName": "DOZR",
+  "description": "Real-time driver drowsiness detection system using YOLOv5 and OpenCV for road safety.",
+  "cardDescription": "Real-time drowsiness detection w/ YOLO, OpenCV.",
+  "image": {
+    "src": "/assets/images/projects/dozrtiny.jpg",
+    "width": 2560,
+    "height": 1200
+  },
+  "href": "/projects/dozr",
+  "tags": [
+    "YOLO",
+    "PyTorch",
+    "OpenCV"
+  ],
+  "accents": {
+    "primary": "#4ade80",
+    "secondary": "#facc15"
+  },
+  "heroActions": [
+    {
+      "label": "View Project",
+      "href": "https://github.com/rajin-khan/dozr",
+      "primary": true
+    },
+    {
+      "label": "View on GitHub",
+      "href": "https://github.com/rajin-khan/dozr",
+      "primary": false
+    }
+  ],
+  "sections": [
+    {
+      "type": "prose",
+      "title": "What is DOZR?",
+      "paragraphs": [
+        "DOZR is a real-time drowsiness detection system designed to improve road safety by identifying drowsy drivers using <strong>YOLOv5</strong> and <strong>OpenCV</strong>. It processes webcam input to detect signs of drowsiness and triggers alerts to prevent accidents.",
+        "Built with <strong>PyTorch</strong>, DOZR supports custom dataset training and is compatible with both CPU and GPU for efficient inference. With high precision and recall, it offers a reliable solution for drivers, fleet managers, and researchers aiming to enhance safety and study drowsiness patterns."
+      ]
+    },
+    {
+      "type": "features",
+      "title": "Key Features",
+      "items": [
+        {
+          "name": "Real-time Detection",
+          "description": "Detects drowsiness using YOLOv5 via webcam.",
+          "icon": "🕒"
+        },
+        {
+          "name": "Alert System",
+          "description": "Triggers alerts to prevent accidents.",
+          "icon": "🔔"
+        },
+        {
+          "name": "Custom Training",
+          "description": "Fine-tune models with custom datasets.",
+          "icon": "🎯"
+        },
+        {
+          "name": "CPU/GPU Support",
+          "description": "Compatible with both CPU and GPU for inference.",
+          "icon": "⚙️"
+        }
+      ]
+    },
+    {
+      "type": "use-cases",
+      "title": "Perfect For",
+      "items": [
+        {
+          "name": "Road Safety",
+          "description": "Enhance driver safety by detecting drowsiness.",
+          "emoji": "🚗"
+        },
+        {
+          "name": "Fleet Management",
+          "description": "Monitor drivers in commercial vehicles.",
+          "emoji": "🚛"
+        },
+        {
+          "name": "Driver Training",
+          "description": "Use data to improve driver awareness.",
+          "emoji": "📚"
+        },
+        {
+          "name": "Research",
+          "description": "Study drowsiness patterns with custom datasets.",
+          "emoji": "🔬"
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "Technology & Architecture",
+      "paragraphs": [
+        "DOZR leverages <strong>YOLOv5</strong> for real-time object detection, integrated with <strong>PyTorch</strong> for deep learning and <strong>OpenCV</strong> for computer vision tasks. The system processes webcam or video input to detect drowsy states, using annotated datasets created with <strong>LabelImg</strong>.",
+        "The architecture supports custom training with user-provided datasets and runs efficiently on both CPU and GPU. With a modular design, DOZR is extensible for future features like dashboards and mobile alerts, making it a versatile tool for road safety applications."
+      ]
+    },
+    {
+      "type": "roadmap",
+      "title": "What's Next",
+      "items": [
+        {
+          "name": "Interactive Dashboard",
+          "status": "Planned"
+        },
+        {
+          "name": "Mobile App Support",
+          "status": "Planned"
+        },
+        {
+          "name": "Voice-based Alerts",
+          "status": "Planned"
+        },
+        {
+          "name": "Emergency Call Triggers",
+          "status": "Planned"
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "Get Started",
+      "paragraphs": [
+        "DOZR is a powerful tool for enhancing road safety through AI-driven drowsiness detection. Explore the project on GitHub to try it out, contribute, or integrate it into your safety solutions."
+      ],
+      "actions": [
+        {
+          "label": "Explore DOZR",
+          "href": "https://github.com/rajin-khan/dozr",
+          "primary": true
+        },
+        {
+          "label": "Contribute on GitHub",
+          "href": "https://github.com/rajin-khan/dozr",
+          "primary": false
+        }
+      ]
+    }
+  ]
+}

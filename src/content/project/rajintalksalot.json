@@ -1,0 +1,105 @@
+{
+  "slug": "rajintalksalot",
+  "order": 2,
+  "detail": true,
+  "name": "rajintalksalot",
+  "cardName": "rajintalksalot",
+  "description": "A visual archive for creative posts, media dives, recommendations, and stray thoughts.",
+  "cardDescription": "Visual blog for original work.",
+  "image": {
+    "src": "/assets/images/projects/rajintalksalot.jpg",
+    "width": 2194,
+    "height": 1156
+  },
+  "href": "/projects/rajintalksalot",
+  "tags": [
+    "Visual",
+    "Blog",
+    "UI/UX"
+  ],
+  "accents": {
+    "primary": "#d8bd70",
+    "secondary": "#594013"
+  },
+  "heroActions": [
+    {
+      "label": "Visit Live Site",
+      "href": "https://rajintalksalot.vercel.app",
+      "primary": true
+    },
+    {
+      "label": "View on GitHub",
+      "href": "https://github.com/rajin-khan/rajintalksalot",
+      "primary": false
+    }
+  ],
+  "sections": [
+    {
+      "type": "prose",
+      "title": "Why I Made It",
+      "paragraphs": [
+        "rajintalksalot started as an Instagram-based creative blog. It was the easiest place to put thoughts into motion: image, caption, post, move on. But the format eventually felt too small for the kind of posts I wanted to make.",
+        "Instagram is good for momentum, but not for breathing room. I wanted a place where the images, captions, media dives, recommendations, and personal notes could sit together without feeling trapped inside a feed. So I built the web version as a visual archive instead of a traditional blog."
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "The Experience",
+      "paragraphs": [
+        "The project is mostly about restraint. I wanted the interface to feel quiet, dark, and deliberate, with the images doing most of the talking. Small details like the metadata placement, post transitions, stack spacing, and reading layout mattered because the site needed to feel like the posts, not just contain them.",
+        "The UX goal was to make browsing feel tactile without making it noisy. Hover states, scroll behavior, and page transitions are there to add rhythm, but they stay behind the content."
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "The Card Stack Problem",
+      "paragraphs": [
+        "The hardest part was getting the stacked cards to feel natural. On desktop, the hover animation had to expand the images enough to feel physical without making the grid jump. On touch devices, hover does not really exist, so the interaction needed a different rhythm.",
+        "I ended up treating touch as a two-step interaction: first tap reveals the stack animation, second tap opens the post. That sounds simple, but making it work across pointer types, responsive viewports, and real mobile browsers took a lot of small fixes."
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "Responsiveness",
+      "paragraphs": [
+        "A lot of the polish went into making the same idea work across screen sizes. The archive needed to feel spacious on desktop, but still make sense on narrow mobile screens where the cards, captions, and touch states have much less room.",
+        "The final version keeps the visual-first feeling while adjusting the spacing, stack size, and interaction model for smaller viewports. It is still the same archive, just tuned so it does not fall apart when the screen gets tight."
+      ]
+    },
+    {
+      "type": "cards",
+      "title": "Tech Stack",
+      "items": [
+        {
+          "name": "Astro",
+          "description": "Static pages and simple content-driven structure.",
+          "icon": "🚀"
+        },
+        {
+          "name": "Vanilla CSS",
+          "description": "Custom layout, responsiveness, and card stack motion.",
+          "icon": "🎨"
+        }
+      ]
+    },
+    {
+      "type": "prose",
+      "title": "Final Thought",
+      "paragraphs": [
+        "This is not meant to be a platform or a heavy CMS. It is a small, carefully built home for a specific kind of post: visual, reflective, slightly dramatic, and better experienced as a sequence than as a feed."
+      ],
+      "actions": [
+        {
+          "label": "Open the Archive",
+          "href": "https://rajintalksalot.vercel.app",
+          "primary": true
+        },
+        {
+          "label": "View Instagram",
+          "href": "https://www.instagram.com/rajintalksalot/",
+          "primary": false
+        }
+      ]
+    }
+  ]
+}

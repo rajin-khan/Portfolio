@@ -1,45 +1,48 @@
-import React, { useRef, useEffect, useState } from 'react';
-import * as THREE from 'three';
-import { TextureLoader } from 'three';
+import React, { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
 
 const GlobeIntro = () => {
   const mountRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
-  const [animationPhase, setAnimationPhase] = useState('initial'); // initial, pinned, panned
+  const [animationPhase, setAnimationPhase] = useState("initial");
 
   useEffect(() => {
-    if (!mountRef.current || isReady) return;
-
-    let isMounted = true;
     const mountPoint = mountRef.current;
+    if (!mountPoint) return undefined;
 
-    // Scene setup
+    let disposed = false;
+    let frameId = 0;
+    let animationTime = 0;
+    let lastFrameTime = 0;
+    let isInView = true;
+    let texturesReady = false;
+    let panScheduled = false;
+    let panTimer;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, mountPoint.clientWidth / mountPoint.clientHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(mountPoint.clientWidth, mountPoint.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: "high-performance",
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.domElement.setAttribute("aria-hidden", "true");
+    renderer.domElement.style.display = "block";
     mountPoint.appendChild(renderer.domElement);
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-    scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(5, 5, 5);
-    scene.add(directionalLight);
+    scene.add(ambientLight, directionalLight);
 
-    // Texture Loading
-    const textureLoader = new TextureLoader();
-    const profileTexture = textureLoader.load('/assets/images/rajin-main.jpeg');
-    
-    // Create a new group for the globe and its wireframe
     const globeGroup = new THREE.Group();
     scene.add(globeGroup);
 
-    // Earth Sphere
-    const earthGeometry = new THREE.SphereGeometry(1.5, 64, 64);
+    const earthGeometry = new THREE.SphereGeometry(1.5, 48, 48);
     const earthMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff, // Base color, will be covered by texture
+      color: 0xffffff,
       bumpScale: 0.02,
       metalness: 0.1,
       roughness: 0.9,
@@ -47,161 +50,210 @@ const GlobeIntro = () => {
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
     globeGroup.add(earth);
 
-    // Process Earth texture to be grayscale
-    textureLoader.load('/assets/images/globe/earth.jpg', (colorTexture) => {
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      canvas.width = colorTexture.image.width;
-      canvas.height = colorTexture.image.height;
-      context.filter = 'grayscale(100%)';
-      context.drawImage(colorTexture.image, 0, 0);
-      const grayscaleTexture = new THREE.CanvasTexture(canvas);
-      earthMaterial.map = grayscaleTexture;
-      earthMaterial.needsUpdate = true;
-    });
-    textureLoader.load('/assets/images/globe/earth_bump.png', (bumpMap) => {
-        earthMaterial.bumpMap = bumpMap;
-        earthMaterial.needsUpdate = true;
-    });
-
-    // Wireframe Overlay
-    const wireframeGeometry = new THREE.SphereGeometry(1.51, 32, 32);
+    const wireframeGeometry = new THREE.SphereGeometry(1.51, 28, 28);
     const wireframeMaterial = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       wireframe: true,
       transparent: true,
       opacity: 0.1,
     });
-    const wireframe = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
-    globeGroup.add(wireframe);
+    globeGroup.add(new THREE.Mesh(wireframeGeometry, wireframeMaterial));
 
-    // --- IMAGE POSITION FINE-TUNING ---
-    const imageOrbitAngle = 1;
-    const imageTiltAngle = 0;
-    const imageDistance = 0.1;
-
-    // Profile Image for Pin
-    const imgGeometry = new THREE.CircleGeometry(0.12, 32);
+    const imgGeometry = new THREE.CircleGeometry(0.12, 24);
     const imgMaterial = new THREE.MeshBasicMaterial({
-      map: profileTexture,
       transparent: true,
       opacity: 0,
       side: THREE.DoubleSide,
     });
     const imgPlane = new THREE.Mesh(imgGeometry, imgMaterial);
-    
-    // Re-added fix for image orientation
     imgPlane.rotation.z = Math.PI;
-    imgPlane.position.z = imageDistance;
+    imgPlane.position.z = 0.1;
 
-    // Create a pivot for the image to achieve spherical rotation
     const imagePivot = new THREE.Group();
     imagePivot.add(imgPlane);
-    imagePivot.rotation.y = imageOrbitAngle * (Math.PI / 180);
-    imagePivot.rotation.x = imageTiltAngle * (Math.PI / 180);
+    imagePivot.rotation.y = Math.PI / 180;
 
-    // Pin Marker
     const pinGroup = new THREE.Group();
-    const headGeometry = new THREE.SphereGeometry(0.06, 16, 16);
+    const headGeometry = new THREE.SphereGeometry(0.06, 12, 12);
     const headMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 });
     const head = new THREE.Mesh(headGeometry, headMaterial);
-    pinGroup.add(head);
     head.add(imagePivot);
+    pinGroup.add(head);
 
-    // --- PIN POSITION FINE-TUNING ---
-    const latOffsetDegrees = 0.0;
-    const lonOffsetDegrees = 90.0;
-    
     const baseLat = 23.8103;
-    const baseLon = 90.4125;
-    const radius = 1.5;
-
-    const finalLat = baseLat + latOffsetDegrees;
-    const finalLon = baseLon + lonOffsetDegrees;
-    const finalLatRad = finalLat * (Math.PI / 180);
-    const finalLonRad = finalLon * (Math.PI / 180);
-
-    const pinPosition = new THREE.Vector3();
-    pinPosition.setFromSphericalCoords(radius, Math.PI / 2 - finalLatRad, finalLonRad);
+    const baseLon = 180.4125;
+    const finalLatRad = baseLat * (Math.PI / 180);
+    const finalLonRad = baseLon * (Math.PI / 180);
+    const pinPosition = new THREE.Vector3().setFromSphericalCoords(
+      1.5,
+      Math.PI / 2 - finalLatRad,
+      finalLonRad,
+    );
     pinGroup.position.copy(pinPosition);
-    pinGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), pinPosition.clone().normalize());
-    pinGroup.scale.set(0, 0, 0);
+    pinGroup.quaternion.setFromUnitVectors(
+      new THREE.Vector3(0, 0, 1),
+      pinPosition.clone().normalize(),
+    );
+    pinGroup.scale.setScalar(reduceMotion ? 1 : 0);
     globeGroup.add(pinGroup);
 
-    // Set initial rotation of the Earth to center the final pin position
-    const initialRotationY = -finalLonRad + Math.PI + Math.PI / 2.5 + 1; 
-    const initialRotationX = finalLatRad + 0.05;
-    
-    globeGroup.rotation.y = initialRotationY;
-    globeGroup.rotation.x = initialRotationX;
-
-    // Camera
+    globeGroup.rotation.y = -finalLonRad + Math.PI + Math.PI / 2.5 + 1;
+    globeGroup.rotation.x = finalLatRad + 0.05;
     camera.position.set(0, 0, 5);
 
-    // Animation Loop
-    const clock = new THREE.Clock();
-    const animate = () => {
-      if (!isMounted) return;
-      requestAnimationFrame(animate);
-      const elapsed = clock.getElapsedTime();
+    const handleResize = () => {
+      const width = Math.max(mountPoint.clientWidth, 1);
+      const height = Math.max(mountPoint.clientHeight, 1);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+      renderer.setSize(width, height, false);
+    };
 
-      // Constant gentle rotation
-      globeGroup.rotation.y += 0.004;
+    const canRender = () => texturesReady && isInView && !document.hidden && !disposed;
 
-      // Pin animation
-      if (elapsed > 0.5 && animationPhase === 'initial') {
-        const progress = Math.min((elapsed - 0.5) / 1.0, 1.0);
-        const scale = THREE.MathUtils.lerp(0, 1.0, progress);
+    const animate = (time) => {
+      frameId = 0;
+      if (!canRender()) return;
+
+      if (lastFrameTime) {
+        const delta = Math.min((time - lastFrameTime) / 1000, 0.05);
+        animationTime += delta;
+        if (!reduceMotion) globeGroup.rotation.y += delta * 0.24;
+      }
+      lastFrameTime = time;
+
+      if (!reduceMotion && animationTime > 0.5) {
+        const progress = Math.min((animationTime - 0.5) / 1, 1);
         const bounce = 1 + Math.sin(progress * Math.PI) * 0.15;
-        pinGroup.scale.setScalar(scale * bounce);
-        imgMaterial.opacity = THREE.MathUtils.lerp(0, 1, progress * 2 - 0.5);
+        pinGroup.scale.setScalar(progress * bounce);
+        imgMaterial.opacity = THREE.MathUtils.clamp(progress * 2 - 0.5, 0, 1);
 
-        if (progress >= 1.0) {
-          setAnimationPhase('pinned');
-          setTimeout(() => setAnimationPhase('panned'), 500);
+        if (progress === 1 && !panScheduled) {
+          panScheduled = true;
+          setAnimationPhase("pinned");
+          panTimer = window.setTimeout(() => {
+            if (!disposed) setAnimationPhase("panned");
+          }, 500);
         }
       }
-      
+
       renderer.render(scene, camera);
+      frameId = window.requestAnimationFrame(animate);
     };
 
-    animate();
-    setIsReady(true);
-
-    const handleResize = () => {
-      if (!mountPoint) return;
-      camera.aspect = mountPoint.clientWidth / mountPoint.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(mountPoint.clientWidth, mountPoint.clientHeight);
+    const startLoop = () => {
+      if (!frameId && canRender()) {
+        lastFrameTime = 0;
+        frameId = window.requestAnimationFrame(animate);
+      }
     };
-    
-    window.addEventListener('resize', handleResize);
+
+    const stopLoop = () => {
+      if (frameId) window.cancelAnimationFrame(frameId);
+      frameId = 0;
+      lastFrameTime = 0;
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) stopLoop();
+      else startLoop();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isInView = entry.isIntersecting;
+        if (isInView) startLoop();
+        else stopLoop();
+      },
+      { rootMargin: "160px" },
+    );
+    observer.observe(mountPoint);
+
+    handleResize();
+    window.addEventListener("resize", handleResize, { passive: true });
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    const textureLoader = new THREE.TextureLoader();
+    Promise.all([
+      textureLoader.loadAsync("/assets/images/globe/earth-gray.jpg"),
+      textureLoader.loadAsync("/assets/images/globe/earth-bump.jpg"),
+      textureLoader.loadAsync("/assets/images/rajin-main.jpeg"),
+    ])
+      .then(([earthTexture, bumpTexture, profileTexture]) => {
+        if (disposed) {
+          earthTexture.dispose();
+          bumpTexture.dispose();
+          profileTexture.dispose();
+          return;
+        }
+
+        earthTexture.colorSpace = THREE.SRGBColorSpace;
+        profileTexture.colorSpace = THREE.SRGBColorSpace;
+        earthMaterial.map = earthTexture;
+        earthMaterial.bumpMap = bumpTexture;
+        imgMaterial.map = profileTexture;
+        earthMaterial.needsUpdate = true;
+        imgMaterial.needsUpdate = true;
+        imgMaterial.opacity = reduceMotion ? 1 : 0;
+        texturesReady = true;
+
+        if (reduceMotion) setAnimationPhase("panned");
+        setIsReady(true);
+        startLoop();
+      })
+      .catch(() => {
+        if (!disposed) {
+          texturesReady = true;
+          setIsReady(true);
+          setAnimationPhase("panned");
+          startLoop();
+        }
+      });
 
     return () => {
-      isMounted = false;
-      window.removeEventListener('resize', handleResize);
-      if (mountPoint && renderer.domElement) {
-        mountPoint.removeChild(renderer.domElement);
-      }
+      disposed = true;
+      stopLoop();
+      window.clearTimeout(panTimer);
+      observer.disconnect();
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+
+      scene.traverse((object) => {
+        if (!object.isMesh) return;
+        object.geometry?.dispose();
+        const materials = Array.isArray(object.material) ? object.material : [object.material];
+        materials.forEach((material) => {
+          Object.values(material).forEach((value) => {
+            if (value?.isTexture) value.dispose();
+          });
+          material.dispose();
+        });
+      });
       renderer.dispose();
+      renderer.forceContextLoss();
+      renderer.domElement.remove();
     };
   }, []);
 
   return (
-    // The "bg-neutral-950" class has been removed from the line below.
-    <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden flex items-center">
-      <div 
-        className={`relative w-full h-full flex items-center justify-center transition-transform duration-1000 ease-in-out
-                    ${animationPhase === 'panned' ? 'md:translate-x-[-20%]' : 'translate-x-0'}`}
+    <div className="relative flex h-[400px] w-full items-center overflow-hidden md:h-[500px]">
+      <div
+        className={`relative flex h-full w-full items-center justify-center transition-transform duration-1000 ease-in-out ${
+          animationPhase === "panned" ? "md:translate-x-[-20%]" : "translate-x-0"
+        }`}
       >
-        <div ref={mountRef} className="w-full md:w-1/2 h-full" />
+        <div ref={mountRef} className="h-full w-full md:w-1/2" aria-hidden="true" />
       </div>
 
-      <div className={`absolute inset-y-0 right-0 w-full md:w-1/2 flex items-center justify-center md:justify-start px-8 
-                      transition-all duration-1000 ease-in-out
-                      ${animationPhase === 'panned' ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}
+      <div
+        className={`absolute inset-y-0 right-0 flex w-full items-center justify-center px-8 transition-[opacity,transform] duration-1000 ease-in-out md:w-1/2 md:justify-start ${
+          animationPhase === "panned"
+            ? "translate-x-0 opacity-100"
+            : "translate-x-10 opacity-0"
+        }`}
       >
-        <div className="text-left max-w-md">
+        <div className="max-w-md text-left">
           <h1 className="text-4xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-5xl lg:text-6xl">
             About Me
           </h1>
@@ -210,9 +262,10 @@ const GlobeIntro = () => {
           </p>
         </div>
       </div>
+
       {!isReady && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center bg-neutral-950">
-          <p className="text-white animate-pulse">Locating Rajin...</p>
+        <div className="absolute inset-0 z-30 flex items-center justify-center bg-white dark:bg-neutral-950">
+          <p className="animate-pulse text-neutral-600 dark:text-neutral-300">Locating Rajin...</p>
         </div>
       )}
     </div>

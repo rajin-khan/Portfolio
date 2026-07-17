@@ -18,10 +18,16 @@ type Props = {
 const { entry } = Astro.props;
 
 const { Content } = await entry.render();
-const { title, description, date } = entry.data;
+const { title, description, date, updated, image } = entry.data;
 ---
 
-<PostLayout title={title} description={description} date={date}>
+<PostLayout
+  title={title}
+  description={description}
+  date={date}
+  updated={updated}
+  image={image}
+>
   <article class="prose dark:prose-invert mx-auto">
     <div class="flex items-center justify-between text-sm mb-6">
       <p class="text-gray-500 dark:text-gray-400">

@@ -15,12 +15,12 @@ export default function CarouselItem({ issueNumber, date, pdfPath, thumbnail, po
   // Add slight translateX for depth effect
   const translateX = position * 20;
 
-  const handleClick = () => {
-    window.open(pdfPath, '_blank');
-  };
-
   return (
-    <div
+    <a
+      href={pdfPath}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Open Curated issue ${issueNumber}`}
       className="carousel-item"
       style={{
         transform: `scale(${scale}) translateX(${translateX}px)`,
@@ -29,15 +29,17 @@ export default function CarouselItem({ issueNumber, date, pdfPath, thumbnail, po
         width: `${itemWidth}px`,
         flexShrink: 0,
       }}
-      onClick={handleClick}
     >
       <div className="carousel-item-date">{date}</div>
       <div className="carousel-item-inner">
         {thumbnail && !imageError ? (
           <img
             src={thumbnail}
-            alt={`Newsletter ${issueNumber}`}
+            alt={`Cover of Curated issue ${issueNumber}`}
             className="carousel-item-image"
+            width="1200"
+            height="1699"
+            decoding="async"
             onError={() => setImageError(true)}
           />
         ) : (
@@ -49,7 +51,6 @@ export default function CarouselItem({ issueNumber, date, pdfPath, thumbnail, po
         )}
       </div>
       <div className="carousel-item-number">{issueNumber}</div>
-    </div>
+    </a>
   );
 }
-

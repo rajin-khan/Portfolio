@@ -3,7 +3,6 @@ import CarouselItem from './CarouselItem';
 import PlaceholderCard from './PlaceholderCard';
 
 export default function Carousel({ newsletters, nextDate, nextIssueNumber }) {
-    const [thumbnails, setThumbnails] = useState({});
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
     const carouselRef = useRef(null);
@@ -15,63 +14,6 @@ export default function Carousel({ newsletters, nextDate, nextIssueNumber }) {
     const [dimensions, setDimensions] = useState({ itemWidth: 350, itemGap: 40 });
 
     const { itemWidth, itemGap } = dimensions;
-
-    // Load PDF.js and generate thumbnails
-    useEffect(() => {
-        const loadPDFJS = async () => {
-            // Check if PDF.js is already loaded
-            if (window.pdfjsLib) {
-                generateThumbnails();
-                return;
-            }
-
-            // Load PDF.js from CDN
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-            script.onload = () => {
-                if (window.pdfjsLib) {
-                    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-                        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-                    generateThumbnails();
-                }
-            };
-            script.onerror = () => {
-                console.warn('Failed to load PDF.js, thumbnails will not be generated');
-            };
-            document.head.appendChild(script);
-        };
-
-        const generateThumbnails = async () => {
-            const newThumbnails = {};
-
-            for (const newsletter of newsletters) {
-                try {
-                    const loadingTask = window.pdfjsLib.getDocument(newsletter.pdfPath);
-                    const pdf = await loadingTask.promise;
-                    const page = await pdf.getPage(1);
-
-                    const viewport = page.getViewport({ scale: 1.5 });
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-
-                    await page.render({
-                        canvasContext: context,
-                        viewport: viewport,
-                    }).promise;
-
-                    newThumbnails[newsletter.issueNumber] = canvas.toDataURL('image/jpeg', 0.8);
-                } catch (error) {
-                    console.error(`Error generating thumbnail for ${newsletter.issueNumber}:`, error);
-                }
-            }
-
-            setThumbnails(newThumbnails);
-        };
-
-        loadPDFJS();
-    }, [newsletters]);
 
   // Calculate scroll position to center a specific item
   // CSS margin-left centers the first item, so scroll position accounts for that
@@ -390,7 +332,7 @@ export default function Carousel({ newsletters, nextDate, nextIssueNumber }) {
                                 issueNumber={newsletter.issueNumber}
                                 date={newsletter.date}
                                 pdfPath={newsletter.pdfPath}
-                                thumbnail={thumbnails[newsletter.issueNumber]}
+                                thumbnail={newsletter.previewPath}
                                 position={position}
                                 itemWidth={itemWidth}
                             />
@@ -421,4 +363,3 @@ export default function Carousel({ newsletters, nextDate, nextIssueNumber }) {
         </div>
     );
 }
-

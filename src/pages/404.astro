@@ -1,11 +1,14 @@
 ---
 import Layout from "../layouts/main.astro";
 import Button from "../components/button.astro";
-import ChatButton from "../components/chatbutton.astro";
 ---
 
-<Layout title="404: Lost in the Cosmos">
-  <main class="relative z-20 flex flex-col items-center justify-center w-full min-h-screen px-4 py-8 sm:px-6 lg:px-8">
+<Layout
+  title="Page not found"
+  description="That page could not be found. Head back to Rajin Khan's portfolio."
+  noindex={true}
+>
+  <div class="relative z-20 flex flex-col items-center justify-center w-full min-h-screen px-4 py-8 sm:px-6 lg:px-8">
     <div class="w-full max-w-4xl mx-auto space-y-8">
       <!-- Header Section -->
       <div class="text-center animate-in" style="--animation-delay: 0ms;">
@@ -22,14 +25,14 @@ import ChatButton from "../components/chatbutton.astro";
 
       <!-- Robot Magic 8-Ball -->
       <div class="flex flex-col items-center animate-in" style="--animation-delay: 150ms;">
-        <div id="robot-container" class="relative cursor-pointer group">
+        <button type="button" id="robot-container" class="relative p-0 bg-transparent border-0 cursor-pointer group" aria-describedby="robot-message">
           <!-- Particles Canvas -->
-          <canvas id="particles-canvas" class="absolute inset-0 pointer-events-none" style="width: 200px; height: 200px;"></canvas>
+          <canvas id="particles-canvas" class="absolute inset-0 pointer-events-none" width="200" height="200" aria-hidden="true"></canvas>
           
           <!-- Simple Bot Icon with Glow -->
           <div id="robot-head" class="relative transition-transform duration-200 group-hover:scale-105">
             <div class="absolute inset-0 bg-neutral-300 rounded-full blur-xl opacity-20 animate-pulse-slow"></div>
-            <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="relative z-10 text-neutral-300 drop-shadow-lg">
+            <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="relative z-10 text-neutral-300 drop-shadow-lg" aria-hidden="true">
               <path d="M12 8V4H8"/>
               <rect width="16" height="12" x="4" y="8" rx="2"/>
               <path d="M2 14h2"/>
@@ -38,12 +41,12 @@ import ChatButton from "../components/chatbutton.astro";
               <path d="M9 13v2"/>
             </svg>
           </div>
-        </div>
+        </button>
         
         <!-- Message Display Bubble -->
         <div class="mt-8 min-h-[100px] flex items-center justify-center">
           <div id="message-bubble" class="relative px-8 py-5 rounded-3xl border border-neutral-700 bg-neutral-900/40 backdrop-blur-sm transition-all duration-300 animate-float">
-            <p id="robot-message" class="relative z-10 text-lg sm:text-xl font-medium text-neutral-200 text-center max-w-md transition-opacity duration-300">
+            <p id="robot-message" class="relative z-10 text-lg sm:text-xl font-medium text-neutral-200 text-center max-w-md transition-opacity duration-300" role="status" aria-live="polite">
               Tap me!
             </p>
           </div>
@@ -56,7 +59,7 @@ import ChatButton from "../components/chatbutton.astro";
         <Button text=" 💬 Continue talking to A.R.I.A." link="https://aria-lite.vercel.app/" />
       </div>
     </div>
-  </main>
+  </div>
 </Layout>
 
 <script is:inline>
@@ -106,7 +109,7 @@ import ChatButton from "../components/chatbutton.astro";
       "\"I was trained on the entire internet. This wasn't in it.\"",
       
       // Quirky tech humor
-      "\"npm install page@latest // 404 Not Found\"",
+      "\"pnpm add page@latest // 404 Not Found\"",
       "\"fetch('/your-page').catch(() => 'lol')\"",
       "\"Error: Cannot read property 'page' of undefined\"",
       "\"SELECT * FROM pages WHERE url = this // 0 rows returned\"",
@@ -179,7 +182,12 @@ import ChatButton from "../components/chatbutton.astro";
       }
     }
     
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let particleFrame = 0;
+
     function animateParticles() {
+      particleFrame = 0;
+      if (document.hidden || reduceMotion) return;
       ctx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
       
       // Add new particles
@@ -198,10 +206,25 @@ import ChatButton from "../components/chatbutton.astro";
       }
       
       ctx.globalAlpha = 1;
-      requestAnimationFrame(animateParticles);
+      particleFrame = requestAnimationFrame(animateParticles);
     }
-    
-    animateParticles();
+
+    function startParticles() {
+      if (!particleFrame && !document.hidden && !reduceMotion) {
+        particleFrame = requestAnimationFrame(animateParticles);
+      }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && particleFrame) {
+        cancelAnimationFrame(particleFrame);
+        particleFrame = 0;
+      } else {
+        startParticles();
+      }
+    });
+
+    startParticles();
     
     function getRandomMessage() {
       return messages[Math.floor(Math.random() * messages.length)];
@@ -242,17 +265,6 @@ import ChatButton from "../components/chatbutton.astro";
 </script>
 
 <style>
-  @keyframes subtle-fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(1rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
   @keyframes shake {
     0%, 100% { transform: translateX(0) rotate(0deg); }
     10% { transform: translateX(-8px) rotate(-4deg); }
@@ -276,12 +288,6 @@ import ChatButton from "../components/chatbutton.astro";
     50% { transform: translateX(8px); }
   }
 
-  .animate-in {
-    opacity: 0;
-    animation: subtle-fade-in-up 0.6s ease-out forwards;
-    animation-delay: var(--animation-delay, 0ms);
-  }
-  
   .animate-pulse-slow {
     animation: pulse-slow 3s ease-in-out infinite;
   }

@@ -1,63 +1,68 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Script to generate preview images from newsletter PDFs
 # Uses poppler's pdftoppm to convert first page to JPG
 
-NEWSLETTERS_DIR="../public/newsletters"
-QUALITY=85
-SCALE=2
+set -euo pipefail
 
-echo "Generating preview images for newsletters..."
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+NEWSLETTERS_DIR="$PROJECT_DIR/public/newsletters"
+QUALITY=85
+
+printf "Generating preview images for newsletters...\n"
 
 # Check if pdftoppm is available
-if ! command -v pdftoppm &> /dev/null; then
-    echo "Error: pdftoppm not found. Please install poppler-utils."
-    echo "On macOS: brew install poppler"
+if ! command -v pdftoppm >/dev/null 2>&1; then
+    printf "Error: pdftoppm not found. Install Poppler first.\n"
+    printf "On macOS: brew install poppler\n"
     exit 1
 fi
 
 # Check if newsletters directory exists
 if [ ! -d "$NEWSLETTERS_DIR" ]; then
-    echo "Error: Newsletters directory not found at $NEWSLETTERS_DIR"
+    printf "Error: newsletters directory not found at %s\n" "$NEWSLETTERS_DIR"
     exit 1
 fi
 
-# Find all curated-*.pdf files and generate previews
-cd "$NEWSLETTERS_DIR" || exit 1
+shopt -s nullglob
+pdfs=("$NEWSLETTERS_DIR"/curated-*.pdf)
 
-for pdf in curated-*.pdf; do
-    if [ -f "$pdf" ]; then
-        # Extract issue number from filename (e.g., curated-001.pdf -> 001)
-        issue_number=$(echo "$pdf" | sed -n 's/curated-\([0-9]*\)\.pdf/\1/p')
-        
-        if [ -z "$issue_number" ]; then
-            echo "Skipping $pdf (could not extract issue number)"
-            continue
-        fi
-        
-        output_file="curated-${issue_number}-preview.jpg"
-        
-        echo "Processing $pdf -> $output_file"
-        
-        # Convert first page to JPG
-        # -f 1 -l 1: only first page
-        # -jpeg: output as JPEG
-        # -scale-to-x and -scale-to-y: scale for better quality
-        pdftoppm -f 1 -l 1 -jpeg -jpegopt quality=$QUALITY -scale-to-x 1200 -scale-to-y -1 "$pdf" "curated-${issue_number}-preview" 2>/dev/null
-        
-        # Rename the output file (pdftoppm creates curated-XXX-preview-01.jpg or curated-XXX-preview-1.jpg)
-        if [ -f "curated-${issue_number}-preview-01.jpg" ]; then
-            mv "curated-${issue_number}-preview-01.jpg" "$output_file"
-            echo "  ✓ Created $output_file"
-        elif [ -f "curated-${issue_number}-preview-1.jpg" ]; then
-            mv "curated-${issue_number}-preview-1.jpg" "$output_file"
-            echo "  ✓ Created $output_file"
-        else
-            echo "  ✗ Failed to create preview for $pdf"
-        fi
+if [ "${#pdfs[@]}" -eq 0 ]; then
+    printf "No curated-*.pdf files found in %s\n" "$NEWSLETTERS_DIR"
+    exit 0
+fi
+
+for pdf_path in "${pdfs[@]}"; do
+    pdf_name="$(basename "$pdf_path")"
+    issue_number="$(printf "%s" "$pdf_name" | sed -n 's/curated-\([0-9][0-9]*\)\.pdf/\1/p')"
+
+    if [ -z "$issue_number" ]; then
+        printf "Skipping %s (could not extract issue number)\n" "$pdf_name"
+        continue
+    fi
+
+    output_prefix="$NEWSLETTERS_DIR/curated-${issue_number}-preview"
+    output_file="${output_prefix}.jpg"
+    printf "Processing %s -> %s\n" "$pdf_name" "$(basename "$output_file")"
+
+    pdftoppm \
+        -f 1 \
+        -l 1 \
+        -singlefile \
+        -jpeg \
+        -jpegopt "quality=$QUALITY" \
+        -scale-to-x 1200 \
+        -scale-to-y -1 \
+        "$pdf_path" \
+        "$output_prefix"
+
+    if [ -f "$output_file" ]; then
+        printf "  Created %s\n" "$(basename "$output_file")"
+    else
+        printf "  Failed to create preview for %s\n" "$pdf_name"
+        exit 1
     fi
 done
 
-echo ""
-echo "Done! Preview images generated in $NEWSLETTERS_DIR"
-
+printf "\nDone. Preview images generated in %s\n" "$NEWSLETTERS_DIR"

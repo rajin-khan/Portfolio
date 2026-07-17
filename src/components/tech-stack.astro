@@ -1,126 +1,155 @@
 ---
 
+const iconPath = (asset: string) =>
+  `/assets/icons/tech/${asset.includes(".") ? asset : `${asset}.svg`}`;
+
 const techStackItems = [
-  { name: "Git", logoUrl: "https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" },
-  { name: "Railway", logoUrl: "https://railway.com/brand/logo-light.png" },
-  { name: "Vercel", logoUrl: "https://assets.vercel.com/image/upload/front/favicon/vercel/152x152.png" },
-  { name: "Next.js", logoUrl: "https://dl.svgcdn.com/png/logos/nextjs-icon-800.png" },
-  { name: "Vite", logoUrl: "https://dl.svgcdn.com/png/logos/vitejs-800.png" },
-  { name: "Astro", logoUrl: "https://astro.build/assets/press/astro-icon-light-gradient.svg" },
-  { name: "React", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg" },
-  { name: "Tailwind CSS", logoUrl: "https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" },
-  { name: "Stripe", logoUrl: "https://dl.svgcdn.com/png/logos/stripe-800.png" },
-  { name: "Lemon Squeezy", logoUrl: "https://cdn.simpleicons.org/lemonsqueezy/FFC233" },
-  { name: "Paddle", logoUrl: "https://cdn.simpleicons.org/paddle/3D6FEA" },
-  { name: "AWS", logoUrl: "https://dl.svgcdn.com/png/logos/aws-800.png" },
-  { name: "Mintlify", logoUrl: "https://cdn.simpleicons.org/mintlify/18E299" },
-  { name: "Supabase", logoUrl: "https://dl.svgcdn.com/png/logos/supabase-icon-800.png" },
-  { name: "WordPress", logoUrl: "https://dl.svgcdn.com/png/logos/wordpress-icon-800.png" },
-  { name: "Groq", logoUrl: "https://cdn-avatars.huggingface.co/v1/production/uploads/1673913216963-63115d7864939fabc00f0b45.png" },
-  { name: "Ollama", logoUrl: "https://i0.wp.com/collabnix.com/wp-content/uploads/2024/03/qbosw7lyg8enfdqqi8ox.png?fit=512,512&ssl=1" },
-  { name: "MySQL", logoUrl: "https://upload.wikimedia.org/wikipedia/labs/8/8e/Mysql_logo.png" },
-  { name: "ChromaDB", logoUrl: "https://images.seeklogo.com/logo-png/48/2/chroma-logo-png_seeklogo-482133.png" },
-  { name: "Flutter", logoUrl: "https://avatars.githubusercontent.com/u/14101776?s=280&v=4" },
-  { name: "FastAPI", logoUrl: "https://repository-images.githubusercontent.com/763672847/372af879-faec-44b6-bc50-6f6b770c12f5" },
-  { name: "NumPy", logoUrl: "https://i.pinimg.com/originals/b1/e8/44/b1e8445e6096877bf32af7cae6aba731.png" },
-  { name: "Pandas", logoUrl: "https://pandas.pydata.org/static/img/pandas_mark_white.svg" },
-  { name: "Matplotlib", logoUrl: "https://dl.svgcdn.com/png/logos/matplotlib-800.png" },
-  { name: "Seaborn", logoUrl: "https://cdn.worldvectorlogo.com/logos/seaborn-1.svg" },
-  { name: "PyTorch", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/10/PyTorch_logo_icon.svg" },
-  { name: "YOLO", logoUrl: "https://cdn.prod.website-files.com/646dd1f1a3703e451ba81ecc/64994922cf2a6385a4bf4489_UltralyticsYOLO_mark_blue.svg" },
-  { name: "OpenCV", logoUrl: "https://raw.githubusercontent.com/wiki/opencv/opencv/logo/OpenCV_logo_no_text.png" },
-  { name: "Jupyter", logoUrl: "https://dl.svgcdn.com/png/logos/jupyter-800.png" },
-  { name: "C", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" },
-  { name: "C++", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" },
-  { name: "Java", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" },
-  { name: "Python", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" },
-  { name: "Dart", logoUrl: "https://dl.svgcdn.com/png/logos/dart-800.png" },
-  { name: "PHP", logoUrl: "https://dl.svgcdn.com/png/logos/php-800.png" },
-  { name: "SQL", logoUrl: "https://static.isograd-testingservices.com/common_files/images/subjecticons/sql.png" },
-  { name: "Bash", logoUrl: "https://raw.githubusercontent.com/devicons/devicon/master/icons/bash/bash-original.svg" },
-  { name: "HTML", logoUrl: "https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582748_1280.png" },
-  { name: "CSS", logoUrl: "https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582747_1280.png" },
+  { name: "Git", asset: "git" },
+  { name: "Railway", asset: "railway", adaptive: true },
+  { name: "Vercel", asset: "vercel", adaptive: true },
+  { name: "Next.js", asset: "nextjs", adaptive: true },
+  { name: "Vite", asset: "vite" },
+  { name: "Astro", asset: "astro-dark" },
+  { name: "React", asset: "react" },
+  { name: "Tailwind CSS", asset: "tailwind-css" },
+  { name: "Stripe", asset: "stripe" },
+  { name: "Lemon Squeezy", asset: "lemon-squeezy" },
+  { name: "Paddle", asset: "paddle" },
+  { name: "AWS", asset: "aws-dark" },
+  { name: "Mintlify", asset: "mintlify" },
+  { name: "Supabase", asset: "supabase" },
+  { name: "WordPress", asset: "wordpress" },
+  { name: "Codex", asset: "codex-dark.png" },
+  { name: "Cursor", asset: "cursor-dark" },
+  { name: "Groq", asset: "groq.webp" },
+  { name: "Ollama", asset: "ollama", adaptive: true },
+  { name: "MySQL", asset: "mysql" },
+  { name: "ChromaDB", asset: "chromadb" },
+  { name: "Flutter", asset: "flutter" },
+  { name: "FastAPI", asset: "fastapi" },
+  { name: "NumPy", asset: "numpy" },
+  { name: "Pandas", asset: "pandas-dark" },
+  { name: "Matplotlib", asset: "matplotlib" },
+  { name: "Seaborn", asset: "seaborn" },
+  { name: "PyTorch", asset: "pytorch" },
+  { name: "YOLO", asset: "yolo" },
+  { name: "OpenCV", asset: "opencv" },
+  { name: "Jupyter", asset: "jupyter-dark" },
+  { name: "C", asset: "c" },
+  { name: "C++", asset: "cplusplus" },
+  { name: "Java", asset: "java" },
+  { name: "Python", asset: "python" },
+  { name: "Dart", asset: "dart" },
+  { name: "PHP", asset: "php" },
+  { name: "SQL", asset: "sql", adaptive: true },
+  { name: "Bash", asset: "bash", adaptive: true },
+  { name: "HTML", asset: "html" },
+  { name: "CSS", asset: "css" },
 ];
 
-const duplicatedTechStack = [...techStackItems, ...techStackItems];
-const animationDuration = techStackItems.length * 3; 
+const duplicatedTechStack = [
+  ...techStackItems.map((tech) => ({ ...tech, duplicate: false })),
+  ...techStackItems.map((tech) => ({ ...tech, duplicate: true })),
+];
+const animationDuration = techStackItems.length * 3;
 ---
 
-<section class="py-0 md:py-0 w-full"> 
-    <div class="scroller-container max-w-5xl mx-auto" data-animated="true"> 
-      <div class="scroller-inner">
-        {duplicatedTechStack.map((tech) => (
-          <div class="tech-item">
-            <img src={tech.logoUrl} alt={tech.name} class="tech-logo" />
-            <span class="tech-name">{tech.name}</span>
-          </div>
-        ))}
-      </div>
+<section class="w-full py-0 md:py-0">
+  <div class="scroller-container mx-auto max-w-5xl" data-animated="true">
+    <div class="scroller-inner">
+      {duplicatedTechStack.map((tech) => (
+        <div class="tech-item" aria-hidden={tech.duplicate ? "true" : undefined}>
+          <img
+            src={iconPath(tech.asset)}
+            alt={tech.duplicate ? "" : tech.name}
+            class:list={[
+              "tech-logo",
+              { "tech-logo--adaptive": tech.adaptive },
+            ]}
+            width="40"
+            height="40"
+            loading="eager"
+            fetchpriority="low"
+            decoding="async"
+            draggable="false"
+          />
+          <span class="tech-name">{tech.name}</span>
+        </div>
+      ))}
     </div>
-  </section>
+  </div>
+</section>
   
-  <style define:vars={{ animationDuration: `${animationDuration}s` }}>
-    .scroller-container {
-      position: relative;
-      block-size: 2.5rem;
-      overflow: clip;
-      overflow-clip-margin: 0;
-      max-width: 100%;
-      contain: layout paint;
-      -webkit-mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
-              mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
-    }
+<style define:vars={{ animationDuration: `${animationDuration}s` }}>
+  .scroller-container {
+    position: relative;
+    block-size: 2.5rem;
+    max-width: 100%;
+    overflow: clip;
+    overflow-clip-margin: 0;
+    contain: layout paint;
+    -webkit-mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
+            mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
+  }
   
-    .scroller-inner {
-      position: absolute;
-      inset-block: 0;
-      inset-inline-start: 0;
-      display: flex;
-      flex-wrap: nowrap;
-      align-items: center;
-      width: max-content; 
-      animation: scroll var(--animationDuration) linear infinite;
-    }
+  .scroller-inner {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: max-content;
+    animation: scroll var(--animationDuration) linear infinite;
+  }
 
-    @media (min-width: 768px) {
-      .scroller-container {
-        block-size: 3rem;
-      }
+  @media (min-width: 768px) {
+    .scroller-container {
+      block-size: 3rem;
     }
+  }
   
-    .tech-item {
-      @apply flex items-center gap-x-4 px-6 py-0 whitespace-nowrap; 
-      /* UPDATED: Transition all properties for smooth shadow fade-in */
-      @apply transition-all duration-200 ease-in-out; 
-      /* Optional: Add slight padding if shadow gets clipped, but usually okay */
-    }
+  .tech-item {
+    @apply flex items-center gap-x-4 whitespace-nowrap px-6 py-0;
+    @apply transition-transform duration-200 ease-in-out;
+  }
   
-    .tech-item:hover {
-       transform: scale(1.1); 
-    }
+  .tech-item:hover {
+    transform: scale(1.1);
+  }
   
-    .tech-logo {
-      @apply w-8 h-8 md:w-10 md:h-10 object-contain flex-shrink-0; 
-      /* ADDED: Permanent subtle drop shadow for visibility */
-      /* Adjust color/opacity/blur/offset as needed */
-      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.15)) 
-              drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.2)); /* Two shadows for slightly more definition */
-    }
+  .tech-logo {
+    @apply h-8 w-8 flex-shrink-0 object-contain md:h-10 md:w-10;
+    filter:
+      drop-shadow(0 1px 2px rgb(0 0 0 / 0.15))
+      drop-shadow(0 0 1px rgb(0 0 0 / 0.2));
+  }
   
-    .tech-name {
-      @apply text-base md:text-lg font-bold text-neutral-800 dark:text-neutral-200; 
-    }
+  :global(html.dark) .tech-logo--adaptive {
+    filter:
+      brightness(0)
+      invert(1)
+      drop-shadow(0 1px 2px rgb(0 0 0 / 0.15))
+      drop-shadow(0 0 1px rgb(0 0 0 / 0.2));
+  }
+
+  .tech-name {
+    @apply text-base font-bold text-neutral-800 dark:text-neutral-200 md:text-lg;
+  }
   
-    .scroller-container:hover .scroller-inner {
-      animation-play-state: paused;
-    }
+  .scroller-container:hover .scroller-inner {
+    animation-play-state: paused;
+  }
   
-    @keyframes scroll {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-50%); 
-      }
+  @keyframes scroll {
+    to {
+      transform: translateX(-50%);
     }
-  </style>
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroller-inner {
+      animation: none;
+    }
+  }
+</style>

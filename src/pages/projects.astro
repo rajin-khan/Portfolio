@@ -1,11 +1,16 @@
 ---
-import projects from "../collections/projects.json";
 import PageHeading from "../components/page-heading.astro";
 import Project from "../components/project.astro";
 import Layout from "../layouts/main.astro";
+import { getProjects } from "../lib/projects";
+
+const projects = await getProjects();
 ---
 
-<Layout title="My Projects">
+<Layout
+  title="Projects"
+  description="Explore Rajin Khan's work across AI, computer vision, accessibility, full-stack development, creative tools, and experimental software."
+>
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
     <!-- Animation applied to the heading -->
     <div class="animate-in" style="--animation-delay: 0ms;">
@@ -21,37 +26,8 @@ import Layout from "../layouts/main.astro";
       style="--animation-delay: 200ms;"
     >
       {
-        projects.map((project) => {
-          return (
-            <Project
-              name={project.name}
-              description={project.description}
-              image={project.image}
-              url={project.url}
-              tags={project.tags}
-            />
-          )
-        })
+        projects.map(({ data }) => <Project project={data} />)
       }
     </div>
   </section>
 </Layout>
-
-<style>
-  @keyframes subtle-fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(1rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-in {
-    opacity: 0; /* Start hidden */
-    animation: subtle-fade-in-up 0.6s ease-out forwards;
-    animation-delay: var(--animation-delay, 0ms);
-  }
-</style>

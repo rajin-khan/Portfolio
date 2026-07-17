@@ -1,10 +1,9 @@
 ---
-import projects from "../../collections/projects.json";
 import Button from "../button.astro";
 import Project from "../project.astro";
+import { getProjects } from "../../lib/projects";
 
-// Limit to the first 6 projects for the index page
-const displayedProjects = projects.slice(0, 6);
+const displayedProjects = (await getProjects()).slice(0, 6);
 ---
 
 <section class="max-w-4xl mx-auto px-7 lg:px-0">
@@ -20,17 +19,7 @@ const displayedProjects = projects.slice(0, 6);
     class="grid items-stretch w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 mt-7"
   >
     {
-      displayedProjects.map((project) => {
-        return (
-          <Project
-            name={project.name}
-            description={project.description}
-            image={project.image}
-            url={project.url}
-            tags={project.tags}
-          />
-        )
-      })
+      displayedProjects.map(({ data }) => <Project project={data} />)
     }
   </div>
 

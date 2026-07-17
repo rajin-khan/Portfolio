@@ -6,10 +6,10 @@ tags:
   - "Technology"
   - "Frontend"
   - "IndieHacking"
-image: "/assets/images/posts/ydnntm1.png"
+image: "/assets/images/posts/ydnntm1.jpg"
 ---
 
-![You Don't Need Newer Tech, Man](/assets/images/posts/ydnntm1.png)
+![You Don't Need Newer Tech, Man](/assets/images/posts/ydnntm1.jpg)
 
 You **already** have everything you need to build that project. Yes, **even** you reading this on your *"ancient"* 2019 laptop.
 
@@ -36,7 +36,7 @@ And that "old" machine became my **dream home server**. **24/7 uptime**, **autom
 
 But it gets **better**. **Not** having money for fancy hosting forced me down a rabbit hole I never expected. I started building **frontend-only** applications. **No** backends, no servers, **no monthly bills**. Create, get creative, deploy on Vercel, promote.
 
-![Constraints Drive Innovation](/assets/images/posts/ydnntm2.png)
+![Constraints Drive Innovation](/assets/images/posts/ydnntm2.jpg)
 *Frontend magic. An architecture for Frontend only Chatbots.*
 
 This constraint led me to **deeply** understand:
@@ -53,7 +53,7 @@ This constraint led me to **deeply** understand:
 One of the coolest results was **ARIA Lite**: my **personal AI assistant** that **knows *everything* about me**, answers questions about my projects, and runs entirely in your browser. **Zero** backend infrastructure. **Zero** ongoing costs. Just pure JavaScript **magic** talking to AI APIs.
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/ydnntm3.png" autoplay loop muted>
+  <video width="100%" poster="/assets/images/posts/ydnntm3.jpg" data-autoplay preload="none" playsinline loop muted>
     <source src="/assets/videos/posts/ydnntm1.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>

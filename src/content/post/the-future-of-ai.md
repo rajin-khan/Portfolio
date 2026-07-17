@@ -6,10 +6,10 @@ tags:
   - "AI"
   - "Innovation"
   - "Future"
-image: "/assets/images/posts/aibllm.png"
+image: "/assets/images/posts/aibllm.jpg"
 ---
 
-![The AI Revolution](/assets/images/posts/aibllm.png)
+![The AI Revolution](/assets/images/posts/aibllm.jpg)
 
 ## Everyone's still obsessing over ChatGPT and Claude...
 ---
@@ -36,7 +36,7 @@ But here's the real kicker: despite all the hype, **LLMs are just really fancy a
 
 The future isn't one giant model doing everything. It's **specialized AI systems working as a team**. 
 
-![Agentic AI Depating for a Verdict](/assets/images/posts/aibllm2.png)
+![Agentic AI Depating for a Verdict](/assets/images/posts/aibllm2.jpg)
 *Even for a simple answer, Agentic AI could take on different roles, debate, and present a multi-faceted verdict.*
 
 Think of it like this: LLMs were the iPhone moment for AI. Now we're building the **entire App Store**.
