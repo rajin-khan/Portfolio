@@ -5,8 +5,11 @@ dependencies. They were optimized with SVGO 4.0.0 after download.
 
 - Devicon v2.17.0: Git, Vite, Astro, React, Tailwind CSS, AWS, MySQL,
   Flutter, FastAPI, NumPy, Pandas, Matplotlib, PyTorch, OpenCV, Jupyter,
-  C, C++, Java, Python, Dart, PHP, HTML, and CSS. Astro, AWS, and Jupyter
-  include dark-background variants derived from the same source artwork.
+  C, C++, Java, Python, Dart, PHP, HTML, CSS, JavaScript, TypeScript,
+  Node.js, and Firebase. Astro, AWS, and Jupyter include dark-background
+  variants derived from the same source artwork.
+- Elementor: the official Elementor Pink symbol from Elementor's
+  [logo guidelines](https://elementor.com/logos/).
 - Simple Icons v16.21.0: Railway, Vercel, Next.js, Stripe, Lemon Squeezy,
   Paddle, Mintlify, Supabase, WordPress, Ollama, and Bash.
 - Codex: the official dark Codex app icon bundled with the OpenAI desktop
