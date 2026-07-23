@@ -1,129 +1,614 @@
 ---
 import Layout from "../layouts/main.astro";
-import Carousel from "../components/curated/Carousel";
 import { readdirSync } from "fs";
 import { join } from "path";
 
-// Function to calculate date from issue number
-// curated-001 = Dec 25', curated-002 = Jan 26', etc.
-function getDateFromIssueNumber(issueNumber: number): string {
-  const startDate = new Date(2025, 11, 1); // December 2025 (month is 0-indexed)
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+type IssueDetails = {
+  summary: string;
+  length: string;
+  sections: Array<{ category: string; title: string }>;
+};
 
-  // Calculate months from start (issue 1 = Dec 25', issue 2 = Jan 26', etc.)
-  const monthOffset = issueNumber - 1;
-  const targetDate = new Date(startDate);
-  targetDate.setMonth(startDate.getMonth() + monthOffset);
+const publicationHeadline = "Tech, design, whatever I like.";
 
-  const month = months[targetDate.getMonth()];
-  const year = targetDate.getFullYear();
-  const yearShort = year.toString().slice(-2);
+const issueDetails: Record<number, IssueDetails> = {
+  1: {
+    summary:
+      "The first dispatch: useful software, ambitious machines, strange research, good type, and a reminder to make things.",
+    length: "29 pages",
+    sections: [
+      { category: "Think piece", title: "AGI was achieved last week, actually." },
+      { category: "Hardware", title: "Is Neo the chosen one?" },
+      { category: "Software", title: "Networking, made stupidly simple." },
+      { category: "Research", title: "Talking with black boxes." },
+      { category: "Creative", title: "You need to create." },
+      { category: "Design", title: "Good fonts. Oh so free." },
+      { category: "Rajin's Lab", title: "Your note's a mess. Good." },
+    ],
+  },
+};
 
-  return `${month} ${yearShort}'`;
+const defaultIssueDetails: IssueDetails = {
+  summary:
+    "A dispatch about technology, design, useful tools, and the ideas in between.",
+  length: "PDF",
+  sections: [],
+};
+
+function getIssueDate(issueNumber: number) {
+  const date = new Date(2025, 11 + issueNumber - 1, 1);
+
+  return {
+    short: new Intl.DateTimeFormat("en", {
+      month: "short",
+      year: "2-digit",
+    }).format(date),
+    long: new Intl.DateTimeFormat("en", {
+      month: "long",
+      year: "numeric",
+    }).format(date),
+    datetime: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`,
+  };
 }
 
-function getNextDate(lastIssueNumber: number): string {
-  return getDateFromIssueNumber(lastIssueNumber + 1);
-}
-
-// Get all PDF files from public/newsletters directory
 let newsletterFiles: Array<{ filename: string; issueNumber: number }> = [];
 
 try {
   const newslettersDir = join(process.cwd(), "public", "newsletters");
-  const files = readdirSync(newslettersDir);
-
-  newsletterFiles = files
+  newsletterFiles = readdirSync(newslettersDir)
     .filter((file) => file.endsWith(".pdf") && file.startsWith("curated-"))
     .map((file) => {
       const match = file.match(/curated-(\d+)\.pdf/);
-      if (match) {
-        return {
-          filename: file,
-          issueNumber: parseInt(match[1], 10),
-        };
-      }
-      return null;
+      return match
+        ? { filename: file, issueNumber: Number.parseInt(match[1], 10) }
+        : null;
     })
     .filter(
-      (item): item is { filename: string; issueNumber: number } => item !== null
+      (issue): issue is { filename: string; issueNumber: number } =>
+        issue !== null
     )
     .sort((a, b) => a.issueNumber - b.issueNumber);
 } catch (error) {
   console.warn("Could not read newsletters directory:", error);
-  // Fallback to manual list if directory doesn't exist
   newsletterFiles = [{ filename: "curated-001.pdf", issueNumber: 1 }];
 }
 
 const newsletters = newsletterFiles.map(({ filename, issueNumber }) => ({
-  issueNumber: issueNumber.toString().padStart(3, "0"),
-  date: getDateFromIssueNumber(issueNumber),
+  issueNumber,
+  issueLabel: issueNumber.toString().padStart(3, "0"),
+  date: getIssueDate(issueNumber),
   pdfPath: `/newsletters/${filename}`,
   previewPath: `/newsletters/${filename.replace(/\.pdf$/, "-preview.jpg")}`,
+  details: issueDetails[issueNumber] ?? defaultIssueDetails,
 }));
 
-const lastIssueNumber =
-  newsletterFiles.length > 0
-    ? newsletterFiles[newsletterFiles.length - 1].issueNumber
-    : 0;
-const nextIssueNumber = (lastIssueNumber + 1).toString().padStart(3, "0");
-const nextDate = getNextDate(lastIssueNumber);
+const latestIssue = newsletters[newsletters.length - 1] ?? {
+  issueNumber: 1,
+  issueLabel: "001",
+  date: getIssueDate(1),
+  pdfPath: "/newsletters/curated-001.pdf",
+  previewPath: "/newsletters/curated-001-preview.jpg",
+  details: issueDetails[1],
+};
+const nextIssueNumber = (latestIssue.issueNumber + 1)
+  .toString()
+  .padStart(3, "0");
 ---
 
 <Layout
   title="Curated Newsletter"
-  description="Curated is Rajin Khan's occasional visual newsletter: a small collection of ideas, links, design, and other things worth sharing."
-  ogImage="/newsletters/curated-001-preview.jpg"
-  ogImageAlt="Cover of the Curated newsletter by Rajin Khan"
+  description="Curated is Rajin Khan's visual newsletter about technology, design, useful tools, and ideas worth keeping."
+  ogImage={latestIssue.previewPath}
+  ogImageAlt={`Cover of Curated issue ${latestIssue.issueLabel} by Rajin Khan`}
 >
-  <div class="curated-page">
-    <h1 class="sr-only">Curated Newsletter</h1>
-    <!-- Animated light streaks -->
-    <div class="light-streak streak-1"></div>
-    <div class="light-streak streak-2"></div>
-    <div class="light-streak streak-3"></div>
-    <div class="light-streak streak-4"></div>
-    <div class="light-streak streak-5"></div>
-    <div class="light-streak streak-6"></div>
+  <div class="curated-page" data-issue-viewer>
+    <div class="light-streak-layer" aria-hidden="true">
+      <div class="light-streak streak-1"></div>
+      <div class="light-streak streak-2"></div>
+      <div class="light-streak streak-3"></div>
+      <div class="light-streak streak-4"></div>
+      <div class="light-streak streak-5"></div>
+      <div class="light-streak streak-6"></div>
+    </div>
 
-    <a href="/" class="back-button" aria-label="Back to home">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+    <header class="curated-nav">
+      <a href="/" class="home-link">
+        <svg
+          aria-hidden="true"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M19 12H5M12 19l-7-7 7-7"></path>
+        </svg>
+        <span>Home</span>
+      </a>
+
+      <span
+        class="nav-issue"
+        data-nav-issue
+        aria-label={`Current issue ${latestIssue.issueLabel}`}
       >
-        <path d="M19 12H5M12 19l-7-7 7-7"></path>
-      </svg>
-    </a>
-    <Carousel
-      client:load
-      newsletters={newsletters}
-      nextDate={nextDate}
-      nextIssueNumber={nextIssueNumber}
-    />
+        {latestIssue.issueLabel}
+      </span>
+    </header>
+
+    <main class="curated-main">
+      <section class="issue-stage" aria-labelledby="curated-title">
+        <div class="issue-intro">
+          <p class="eyebrow">A newsletter by Rajin Khan</p>
+          <h1 id="curated-title">curated.</h1>
+          <p class="issue-headline">{publicationHeadline}</p>
+          <p class="issue-summary" data-issue-summary>{latestIssue.details.summary}</p>
+
+          <div class="issue-actions">
+            <a
+              class="primary-action"
+              data-read-link
+              href={latestIssue.pdfPath}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span data-read-label>Read issue {latestIssue.issueLabel}</span>
+              <svg
+                aria-hidden="true"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6"></path>
+              </svg>
+            </a>
+            <a
+              class="secondary-action"
+              data-save-link
+              href={latestIssue.pdfPath}
+              download
+            >
+              <svg
+                aria-hidden="true"
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path>
+              </svg>
+              <span>Save PDF</span>
+            </a>
+          </div>
+
+          <dl class="issue-facts">
+            <div>
+              <dt>Issue</dt>
+              <dd data-fact-issue>{latestIssue.issueLabel}</dd>
+            </div>
+            <div>
+              <dt>Published</dt>
+              <dd>
+                <time data-fact-date datetime={latestIssue.date.datetime}
+                  >{latestIssue.date.short}</time
+                >
+              </dd>
+            </div>
+            <div>
+              <dt>Length</dt>
+              <dd data-fact-length>{latestIssue.details.length}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="issue-preview">
+          <a
+            class="latest-cover"
+            data-cover-link
+            href={latestIssue.pdfPath}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open Curated issue ${latestIssue.issueLabel} PDF`}
+          >
+            <span class="cover-index" data-cover-index aria-hidden="true"
+              >Latest {latestIssue.issueLabel}</span
+            >
+            <img
+              data-cover-image
+              src={latestIssue.previewPath}
+              alt={`Curated issue ${latestIssue.issueLabel} cover`}
+              width="1200"
+              height="1699"
+              fetchpriority="high"
+              decoding="async"
+            />
+            <span class="cover-open" aria-hidden="true">
+              <span>Open issue</span>
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6"></path>
+              </svg>
+            </span>
+          </a>
+
+          {
+            newsletters.length > 1 && (
+              <div class="issue-picker" aria-label="Choose an issue">
+                <button
+                  type="button"
+                  data-previous-issue
+                  aria-label="Previous issue"
+                  title="Previous issue"
+                >
+                  <svg
+                    aria-hidden="true"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M19 12H5M11 18l-6-6 6-6"></path>
+                  </svg>
+                </button>
+                <span class="issue-picker-label" data-picker-label aria-live="polite">
+                  {latestIssue.issueLabel}
+                </span>
+                <button
+                  type="button"
+                  data-next-issue
+                  aria-label="Next issue"
+                  title="Next issue"
+                  disabled
+                >
+                  <svg
+                    aria-hidden="true"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6"></path>
+                  </svg>
+                </button>
+              </div>
+            )
+          }
+        </div>
+
+        <aside class="issue-contents" aria-labelledby="contents-title">
+          <div class="contents-heading">
+            <p id="contents-title" data-contents-label>Inside {latestIssue.issueLabel}</p>
+            <span data-story-count>{latestIssue.details.sections.length} stories</span>
+          </div>
+
+          <ol data-contents-list>
+            {
+              latestIssue.details.sections.map((section, index) => (
+                <li>
+                  <span class="story-index">
+                    {(index + 1).toString().padStart(2, "0")}
+                  </span>
+                  <div>
+                    <span class="story-category">{section.category}</span>
+                    <span class="story-title">{section.title}</span>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+
+        </aside>
+      </section>
+
+      <section class="archive" id="archive" aria-labelledby="archive-title">
+        <div class="archive-heading">
+          <div>
+            <p class="eyebrow">Every issue</p>
+            <h2 id="archive-title">The archive.</h2>
+          </div>
+          <p>
+            {`${newsletters.length} ${newsletters.length === 1 ? "issue" : "issues"}. newest to oldest.`}
+          </p>
+        </div>
+
+        <div class="issue-shelf" aria-label="Curated issue archive">
+          <article class="archive-issue upcoming-issue">
+            <div class="upcoming-cover" aria-hidden="true">
+              <span class="upcoming-number">{nextIssueNumber}</span>
+              <span class="upcoming-wordmark">curated.</span>
+              <span class="upcoming-status">In the works</span>
+            </div>
+            <div class="archive-meta">
+              <strong>Up next</strong>
+              <span class="upcoming-release">When it's ready</span>
+            </div>
+          </article>
+
+          {
+            [...newsletters].reverse().map((issue) => (
+              <a
+                class="archive-issue"
+                href={issue.pdfPath}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open Curated issue ${issue.issueLabel} PDF`}
+              >
+                <div class="archive-cover">
+                  <img
+                    src={issue.previewPath}
+                    alt=""
+                    width="1200"
+                    height="1699"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span aria-hidden="true">Read</span>
+                </div>
+                <div class="archive-meta">
+                  <strong>Issue {issue.issueLabel}</strong>
+                  <time datetime={issue.date.datetime}>{issue.date.long}</time>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+
+        <section class="archive-subscribe" aria-labelledby="curated-subscribe-title">
+          <div class="subscribe-copy">
+            <p class="eyebrow">The next issue</p>
+            <h3 id="curated-subscribe-title">Let it find you.</h3>
+          </div>
+
+          <form class="curated-subscribe-form" id="curated-subscribe-form">
+            <label class="sr-only" for="curated-subscribe-email">Email address</label>
+            <div class="subscribe-field">
+              <input
+                id="curated-subscribe-email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                autocomplete="email"
+                inputmode="email"
+                spellcheck="false"
+                aria-describedby="curated-subscribe-status"
+                required
+              />
+              <button type="submit">
+                <span data-subscribe-label>SUBSCRIBE</span>
+              </button>
+            </div>
+            <p
+              class="curated-subscribe-status"
+              id="curated-subscribe-status"
+              role="status"
+              aria-live="polite"
+            ></p>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script
+      id="curated-issue-data"
+      type="application/json"
+      is:inline
+      set:html={JSON.stringify(newsletters)}
+    ></script>
   </div>
 </Layout>
 
+<script>
+  type CuratedIssue = {
+    issueLabel: string;
+    date: { short: string; datetime: string };
+    pdfPath: string;
+    previewPath: string;
+    details: {
+      summary: string;
+      length: string;
+      sections: Array<{ category: string; title: string }>;
+    };
+  };
+
+  const viewer = document.querySelector<HTMLElement>("[data-issue-viewer]");
+  const issueData = document.querySelector<HTMLScriptElement>("#curated-issue-data");
+
+  if (viewer && issueData) {
+    const issues = JSON.parse(issueData.textContent ?? "[]") as CuratedIssue[];
+    let activeIndex = Math.max(issues.length - 1, 0);
+
+    const navIssue = viewer.querySelector<HTMLElement>("[data-nav-issue]");
+    const summary = viewer.querySelector<HTMLElement>("[data-issue-summary]");
+    const readLink = viewer.querySelector<HTMLAnchorElement>("[data-read-link]");
+    const readLabel = viewer.querySelector<HTMLElement>("[data-read-label]");
+    const saveLink = viewer.querySelector<HTMLAnchorElement>("[data-save-link]");
+    const factIssue = viewer.querySelector<HTMLElement>("[data-fact-issue]");
+    const factDate = viewer.querySelector<HTMLTimeElement>("[data-fact-date]");
+    const factLength = viewer.querySelector<HTMLElement>("[data-fact-length]");
+    const coverLink = viewer.querySelector<HTMLAnchorElement>("[data-cover-link]");
+    const coverIndex = viewer.querySelector<HTMLElement>("[data-cover-index]");
+    const coverImage = viewer.querySelector<HTMLImageElement>("[data-cover-image]");
+    const pickerLabel = viewer.querySelector<HTMLElement>("[data-picker-label]");
+    const previousButton = viewer.querySelector<HTMLButtonElement>("[data-previous-issue]");
+    const nextButton = viewer.querySelector<HTMLButtonElement>("[data-next-issue]");
+    const contentsLabel = viewer.querySelector<HTMLElement>("[data-contents-label]");
+    const storyCount = viewer.querySelector<HTMLElement>("[data-story-count]");
+    const contentsList = viewer.querySelector<HTMLOListElement>("[data-contents-list]");
+    const storyTemplate = contentsList?.querySelector("li")?.cloneNode(true) as HTMLElement | undefined;
+
+    const renderIssue = (index: number) => {
+      const issue = issues[index];
+      if (!issue) return;
+
+      activeIndex = index;
+
+      if (navIssue) {
+        navIssue.textContent = issue.issueLabel;
+        navIssue.setAttribute("aria-label", `Current issue ${issue.issueLabel}`);
+      }
+      if (summary) summary.textContent = issue.details.summary;
+      if (readLink) readLink.href = issue.pdfPath;
+      if (readLabel) readLabel.textContent = `Read issue ${issue.issueLabel}`;
+      if (saveLink) saveLink.href = issue.pdfPath;
+      if (factIssue) factIssue.textContent = issue.issueLabel;
+      if (factDate) {
+        factDate.textContent = issue.date.short;
+        factDate.dateTime = issue.date.datetime;
+      }
+      if (factLength) factLength.textContent = issue.details.length;
+      if (coverIndex) {
+        const issueStatus = activeIndex === issues.length - 1 ? "Latest" : "Issue";
+        coverIndex.textContent = `${issueStatus} ${issue.issueLabel}`;
+      }
+      if (coverLink) {
+        coverLink.href = issue.pdfPath;
+        coverLink.setAttribute("aria-label", `Open Curated issue ${issue.issueLabel} PDF`);
+      }
+      if (coverImage) {
+        coverImage.src = issue.previewPath;
+        coverImage.alt = `Curated issue ${issue.issueLabel} cover`;
+      }
+      if (pickerLabel) pickerLabel.textContent = issue.issueLabel;
+      if (contentsLabel) contentsLabel.textContent = `Inside ${issue.issueLabel}`;
+      if (storyCount) {
+        const count = issue.details.sections.length;
+        storyCount.textContent = `${count} ${count === 1 ? "story" : "stories"}`;
+      }
+
+      if (contentsList && storyTemplate) {
+        contentsList.replaceChildren(
+          ...issue.details.sections.map((section, storyIndex) => {
+            const story = storyTemplate.cloneNode(true) as HTMLElement;
+            const indexLabel = story.querySelector<HTMLElement>(".story-index");
+            const category = story.querySelector<HTMLElement>(".story-category");
+            const title = story.querySelector<HTMLElement>(".story-title");
+
+            if (indexLabel) indexLabel.textContent = String(storyIndex + 1).padStart(2, "0");
+            if (category) category.textContent = section.category;
+            if (title) title.textContent = section.title;
+            return story;
+          })
+        );
+      }
+
+      if (previousButton) previousButton.disabled = activeIndex === 0;
+      if (nextButton) nextButton.disabled = activeIndex === issues.length - 1;
+    };
+
+    previousButton?.addEventListener("click", () => renderIssue(activeIndex - 1));
+    nextButton?.addEventListener("click", () => renderIssue(activeIndex + 1));
+  }
+</script>
+
+<script>
+  const subscribeForm = document.querySelector<HTMLFormElement>(
+    "#curated-subscribe-form"
+  );
+
+  if (subscribeForm && subscribeForm.dataset.bound !== "true") {
+    subscribeForm.dataset.bound = "true";
+
+    const emailInput = subscribeForm.querySelector<HTMLInputElement>(
+      "#curated-subscribe-email"
+    );
+    const submitButton = subscribeForm.querySelector<HTMLButtonElement>(
+      'button[type="submit"]'
+    );
+    const buttonLabel = subscribeForm.querySelector<HTMLElement>(
+      "[data-subscribe-label]"
+    );
+    const status = subscribeForm.querySelector<HTMLElement>(
+      "#curated-subscribe-status"
+    );
+
+    subscribeForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!emailInput || !submitButton || !buttonLabel || !status) return;
+
+      if (!emailInput.reportValidity()) {
+        status.textContent = "A valid email works best.";
+        status.dataset.state = "error";
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.setAttribute("aria-busy", "true");
+      buttonLabel.textContent = "Joining";
+      status.textContent = "Passing your address to A.R.I.A...";
+      status.dataset.state = "pending";
+
+      try {
+        const response = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: emailInput.value.trim() }),
+        });
+        const data = response.headers.get("content-type")?.includes("application/json")
+          ? ((await response.json()) as { error?: string })
+          : {};
+
+        if (!response.ok) {
+          throw new Error(data.error || "Something went wrong. Try again.");
+        }
+
+        emailInput.value = "";
+        buttonLabel.textContent = "Joined";
+        status.textContent = "You're in. The next issue will find you.";
+        status.dataset.state = "success";
+
+        window.setTimeout(() => {
+          buttonLabel.textContent = "Subscribe";
+          submitButton.disabled = false;
+          submitButton.removeAttribute("aria-busy");
+        }, 2500);
+      } catch (error) {
+        buttonLabel.textContent = "Subscribe";
+        submitButton.disabled = false;
+        submitButton.removeAttribute("aria-busy");
+        status.textContent =
+          error instanceof Error ? error.message : "Couldn't subscribe just now.";
+        status.dataset.state = "error";
+      }
+    });
+  }
+</script>
+
 <style>
-  /* Import fonts */
+  @font-face {
+    font-family: "La Belle Aurore";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/assets/fonts/la-belle-aurore-latin.woff2") format("woff2");
+  }
+
   @font-face {
     font-family: "Instrument Serif";
     font-style: italic;
@@ -140,20 +625,107 @@ const nextDate = getNextDate(lastIssueNumber);
     src: url("/assets/fonts/satoshi-regular.woff") format("woff");
   }
 
-  .curated-page {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #000000;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    z-index: 9999;
+  :global(header#header),
+  :global(body > footer),
+  :global(body > div.relative.w-full.h-20[aria-hidden="true"]),
+  :global(.square-lines) {
+    display: none !important;
   }
 
-  /* Light streaks animation */
+  :global(body) {
+    overflow-x: hidden;
+    background: #080808 !important;
+  }
+
+  :global(#main-content) {
+    outline: none;
+  }
+
+  .curated-page {
+    --ink: #080808;
+    --paper: #f3f2ed;
+    --muted: #9c9b96;
+    --line: rgba(255, 255, 255, 0.14);
+    --rust: #c67a55;
+    --sage: #a9b99c;
+    min-height: 100svh;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    color: var(--paper);
+    background-color: var(--ink);
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 96px 96px;
+    font-family:
+      "Satoshi",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+  }
+
+  .curated-nav {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    min-height: 76px;
+    width: 100%;
+    padding: 0 clamp(20px, 3vw, 48px);
+    border-bottom: 1px solid var(--line);
+    background: rgba(8, 8, 8, 0.92);
+    backdrop-filter: blur(16px);
+  }
+
+  .home-link,
+  .primary-action,
+  .secondary-action,
+  .latest-cover,
+  .archive-issue {
+    text-decoration: none;
+  }
+
+  .home-link {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #b8b7b2;
+    font-size: 13px;
+    transition: color 180ms ease;
+  }
+
+  .home-link svg {
+    transition: transform 180ms ease;
+  }
+
+  .home-link:hover {
+    color: var(--paper);
+  }
+
+  .home-link:hover svg {
+    transform: translateX(-3px);
+  }
+
+  .nav-issue {
+    justify-self: end;
+    color: var(--paper);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+  }
+
+  .light-streak-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
   .light-streak {
     position: absolute;
     width: 3px;
@@ -262,295 +834,886 @@ const nextDate = getNextDate(lastIssueNumber);
     }
   }
 
-  /* Hide header and footer on curated page */
-  :global(header),
-  :global(footer),
-  :global(.square-lines) {
-    display: none !important;
-  }
-
-  :global(body) {
-    overflow: hidden;
-  }
-
-  /* Back Button */
-  .back-button {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 10000;
-    width: auto;
-    height: auto;
-    color: rgba(255, 255, 255, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    padding: 8px;
-  }
-
-  .back-button:hover {
-    color: rgba(255, 255, 255, 1);
-    transform: translateX(-2px);
-  }
-
-  .back-button:active {
-    transform: translateX(-4px);
-  }
-
-  .back-button svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  /* Carousel Wrapper */
-  :global(.carousel-wrapper) {
+  .curated-main {
     position: relative;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    perspective: 1000px;
-    z-index: 2;
+    z-index: 1;
+    width: 100%;
   }
 
-  /* Carousel Container */
-  :global(.carousel-container) {
+  .issue-stage {
+    display: grid;
+    grid-template-columns: minmax(230px, 0.84fr) minmax(300px, 370px) minmax(250px, 0.9fr);
+    align-items: center;
+    gap: clamp(28px, 3.5vw, 56px);
+    width: calc(100% - 96px);
+    max-width: 1280px;
+    min-height: calc(100svh - 132px);
+    margin: 0 auto;
+    padding: 48px 0 64px;
+  }
+
+  .issue-intro {
+    min-width: 0;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .eyebrow {
+    margin: 0;
+    color: var(--paper);
+    font-size: 11px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  h1,
+  h2,
+  p,
+  dl,
+  ol {
+    margin-top: 0;
+  }
+
+  h1 {
+    margin: 18px 0 24px;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: clamp(68px, 6.3vw, 102px);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 0.8;
+    letter-spacing: 0;
+  }
+
+  .issue-headline {
+    max-width: 340px;
+    margin-bottom: 16px;
+    color: #faf9f5;
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-size: clamp(20px, 1.75vw, 26px);
+    font-style: normal;
+    line-height: 1.16;
+    letter-spacing: 0;
+  }
+
+  .issue-summary {
+    max-width: 330px;
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .issue-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .primary-action,
+  .secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    border-radius: 999px;
+    font-size: 12px;
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .primary-action {
+    gap: 26px;
+    padding: 0 16px 0 18px;
+    background: var(--paper);
+    color: #0a0a0a;
+  }
+
+  .primary-action:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+  }
+
+  .primary-action svg {
+    transition: transform 180ms ease;
+  }
+
+  .primary-action:hover svg {
+    transform: translateX(3px);
+  }
+
+  .secondary-action {
+    gap: 8px;
+    padding: 0 15px;
+    border: 1px solid var(--line);
+    color: #c8c7c2;
+  }
+
+  .secondary-action:hover {
+    border-color: rgba(255, 255, 255, 0.32);
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+
+  .issue-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 340px;
+    margin-bottom: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  .issue-facts div + div {
+    padding-left: 15px;
+    border-left: 1px solid var(--line);
+  }
+
+  .issue-facts dt {
+    margin-bottom: 5px;
+    color: #767571;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  .issue-facts dd {
+    margin: 0;
+    color: #d8d7d2;
+    font-size: 12px;
+  }
+
+  .latest-cover {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1200 / 1699;
+    color: var(--paper);
+    isolation: isolate;
+    perspective: 1100px;
+  }
+
+  .issue-preview {
+    width: min(100%, 370px);
+    justify-self: center;
+  }
+
+  .latest-cover::before {
+    content: "";
+    position: absolute;
+    inset: 12px -12px -12px 12px;
+    z-index: -1;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #11110f;
+    transition: transform 260ms ease;
+  }
+
+  .latest-cover img {
+    display: block;
     width: 100%;
     height: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    object-fit: cover;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    transition:
+      transform 260ms ease,
+      box-shadow 260ms ease;
+    transform-origin: center bottom;
   }
 
-  :global(.carousel-container::-webkit-scrollbar) {
-    display: none; /* Chrome, Safari, Opera */
+  .latest-cover:hover img {
+    transform: translate(-4px, -7px) rotate(-0.8deg);
+    box-shadow: 18px 38px 90px rgba(0, 0, 0, 0.62);
   }
 
-  /* Carousel Track */
-  :global(.carousel-track) {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+  .latest-cover:hover::before {
+    transform: translate(4px, 4px);
+  }
+
+  .cover-index,
+  .cover-open {
+    position: absolute;
+    z-index: 2;
+    display: inline-flex;
     align-items: center;
-    justify-content: flex-start;
-    height: 100%;
-    padding: 0;
-    gap: 40px;
-    transform-style: preserve-3d;
-    width: max-content;
-    min-width: 100%;
-    position: relative;
-    /* Viewport-based centering: center first item using margin */
-    margin-left: calc(50vw - 175px);
-    /* Add right margin to center last item and ensure full scrollability */
-    margin-right: calc(50vw - 175px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    background: #242422;
+    color: #c8c7c2;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0;
   }
 
-  /* Carousel Item */
-  :global(.carousel-item) {
+  .cover-index {
+    top: -13px;
+    left: -18px;
+    min-height: 30px;
+    padding: 0 12px;
+    transition: opacity 180ms ease;
+  }
+
+  .cover-open {
+    right: -14px;
+    top: 50%;
+    gap: 14px;
+    min-height: 38px;
+    padding: 0 12px 0 14px;
+    opacity: 0;
+    transform: translate(-8px, -50%);
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+  }
+
+  .latest-cover:hover .cover-open,
+  .latest-cover:focus-visible .cover-open {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  .latest-cover:hover .cover-index {
+    opacity: 0;
+  }
+
+  .issue-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    margin-top: 30px;
+  }
+
+  .issue-picker button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: #d8d7d2;
+    background: rgba(8, 8, 8, 0.78);
     cursor: pointer;
     transition:
-      transform 0.15s ease-out,
-      opacity 0.15s ease-out;
-    transform-origin: center center;
-    flex-shrink: 0;
+      color 180ms ease,
+      border-color 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .issue-picker button svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .issue-picker button:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.48);
+    color: #ffffff;
+    background: #151514;
+  }
+
+  .issue-picker button:disabled {
+    color: #555450;
+    border-color: rgba(255, 255, 255, 0.08);
+    cursor: default;
+  }
+
+  .issue-picker button:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+  }
+
+  .issue-picker-label {
+    min-width: 42px;
+    color: #a2a19c;
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  .issue-contents {
+    width: 100%;
+    max-width: 350px;
+    justify-self: end;
+  }
+
+  .contents-heading {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .contents-heading p {
+    margin-bottom: 0;
+    color: #eeeeea;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  .contents-heading span {
+    color: #777671;
+    font-size: 11px;
+  }
+
+  .issue-contents ol {
+    margin-bottom: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .issue-contents li {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .story-index {
+    padding-top: 2px;
+    color: var(--rust);
+    font-size: 10px;
+  }
+
+  .story-category,
+  .story-title {
+    display: block;
+  }
+
+  .story-category {
+    margin-bottom: 4px;
+    color: #74736f;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  .story-title {
+    color: #d8d7d2;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .archive {
+    padding: clamp(64px, 7vw, 104px) max(48px, calc((100vw - 1280px) / 2));
+    border-top: 1px solid var(--line);
+    background: #0d0d0c;
+  }
+
+  .archive-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 42px;
+  }
+
+  .archive-heading h2 {
+    margin: 8px 0 0;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: clamp(48px, 5vw, 72px);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: 0;
+  }
+
+  .archive-heading > p {
+    max-width: 320px;
+    margin-bottom: 4px;
+    color: #888783;
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-size: 17px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    text-align: right;
+  }
+
+  .issue-shelf {
+    display: flex;
+    gap: clamp(18px, 2vw, 30px);
+    overflow-x: auto;
+    padding: 2px 2px 24px;
+    scroll-snap-type: x proximity;
+    scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+    scrollbar-width: thin;
+  }
+
+  .archive-issue {
+    flex: 0 0 clamp(190px, 19vw, 260px);
+    color: var(--paper);
+    scroll-snap-align: start;
+  }
+
+  .archive-cover,
+  .upcoming-cover {
     position: relative;
-    will-change: transform, opacity;
-  }
-
-  :global(.carousel-item:hover .carousel-item-inner) {
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
-  }
-
-  :global(.carousel-item-inner) {
-    width: 350px;
-    height: 495px; /* A4 aspect ratio: 350 * (297/210) */
-    background: #1a1a1a;
-    border-radius: 8px;
+    width: 100%;
+    aspect-ratio: 1200 / 1699;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    flex-shrink: 0;
+    border: 1px solid var(--line);
+    background: #070707;
   }
 
-  :global(.carousel-item-image) {
+  .archive-cover img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition:
+      transform 260ms ease,
+      opacity 260ms ease;
   }
 
-  :global(.carousel-item-placeholder) {
-    width: 100%;
-    height: 100%;
-    display: flex;
+  .archive-cover > span {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    background: #1a1a1a;
+    min-height: 26px;
+    padding: 0 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    background: #242422;
+    color: #c8c7c2;
+    font-size: 10px;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
   }
 
-  :global(.carousel-item-date) {
-    font-family: "Instrument Serif", serif;
-    font-style: italic;
-    font-weight: 500;
-    font-size: 18px;
-    color: rgba(255, 255, 255, 0.9);
-    text-align: center;
-    margin-bottom: 16px;
-    width: 100%;
-    order: 1;
-    flex-shrink: 0;
+  .archive-issue:hover .archive-cover img {
+    opacity: 0.82;
+    transform: scale(1.015);
   }
 
-  :global(.carousel-item-inner) {
-    order: 2;
+  .archive-issue:hover .archive-cover > span,
+  .archive-issue:focus-visible .archive-cover > span {
+    opacity: 1;
+    transform: translateY(0);
   }
 
-  :global(.carousel-item-number) {
-    font-family:
-      "Satoshi",
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      sans-serif;
+  .archive-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 13px;
+  }
+
+  .archive-meta strong {
+    font-size: 12px;
     font-weight: 400;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.7);
-    text-align: center;
-    margin-top: 16px;
-    width: 100%;
-    order: 3;
-    flex-shrink: 0;
+    text-transform: uppercase;
   }
 
-  /* Placeholder Card */
-  :global(.placeholder-card .carousel-item-inner) {
-    background: #2a2a2a;
+  .archive-meta time {
+    color: #777671;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 16px;
+    font-style: italic;
+  }
+
+  .upcoming-release {
+    color: #777671;
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-size: 17px;
+    font-style: normal;
+    letter-spacing: 0;
+  }
+
+  .upcoming-cover {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background:
+      linear-gradient(135deg, rgba(198, 122, 85, 0.13), transparent 44%),
+      #131312;
   }
 
-  :global(.placeholder-inner) {
-    position: relative;
-  }
-
-  :global(.placeholder-logo-container) {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-  }
-
-  :global(.placeholder-logo) {
-    max-width: 80%;
-    max-height: 80%;
-    object-fit: contain;
-    opacity: 0.6;
-  }
-
-  /* Navigation Arrows */
-  :global(.carousel-nav-button) {
+  .upcoming-cover::before,
+  .upcoming-cover::after {
+    content: "";
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 100;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  .upcoming-cover::before {
+    top: 22px;
+    right: 22px;
+    width: 1px;
+    height: 28%;
+  }
+
+  .upcoming-cover::after {
+    bottom: 22px;
+    left: 22px;
+    width: 1px;
+    height: 28%;
+  }
+
+  .upcoming-number,
+  .upcoming-status {
+    position: absolute;
+    color: #85847f;
+    font-size: 9px;
+    text-transform: uppercase;
+  }
+
+  .upcoming-number {
+    top: 22px;
+    left: 22px;
+  }
+
+  .upcoming-status {
+    right: 22px;
+    bottom: 22px;
+  }
+
+  .upcoming-wordmark {
+    color: #9b9a95;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: clamp(42px, 5vw, 66px);
+    font-style: italic;
+  }
+
+  .upcoming-issue {
+    cursor: default;
+  }
+
+  .archive-subscribe {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(240px, 0.8fr) minmax(320px, 1.2fr);
+    align-items: center;
+    gap: clamp(36px, 6vw, 96px);
+    width: 100%;
+    margin: clamp(70px, 8vw, 112px) 0 0;
+    padding: 42px clamp(16px, 2vw, 24px) 44px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+
+  .subscribe-copy h3 {
+    margin: 11px 0 0;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: clamp(38px, 4vw, 56px);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 0.96;
+    letter-spacing: 0;
+  }
+
+  .curated-subscribe-form {
+    position: relative;
+    top: 4px;
+    min-width: 0;
+    width: min(100%, 380px);
+    justify-self: end;
+    text-align: left;
+  }
+
+  .subscribe-field {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 12px;
+  }
+
+  .subscribe-field input {
+    min-width: 0;
+    flex: 1;
+    padding: 4px 0;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    outline: 0;
+    color: var(--paper);
+    background: transparent;
+    font: inherit;
+    font-size: 13px;
+    transition: border-color 180ms ease;
+  }
+
+  .subscribe-field input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .subscribe-field input:focus {
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .subscribe-field button {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: rgba(255, 255, 255, 0.6);
+    background: transparent;
+    font: inherit;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
     cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    transition:
+      color 180ms ease,
+      opacity 180ms ease;
   }
 
-  :global(.carousel-nav-button:hover) {
-    background: rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 1);
-    transform: translateY(-50%) scale(1.1);
+  .subscribe-field button:hover:not(:disabled) {
+    color: #ffffff;
+    text-decoration: underline;
   }
 
-  :global(.carousel-nav-button:active) {
-    transform: translateY(-50%) scale(0.95);
+  .subscribe-field button:disabled {
+    cursor: wait;
+    opacity: 0.58;
   }
 
-  :global(.carousel-nav-left) {
-    left: 20px;
+  .subscribe-field button:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
   }
 
-  :global(.carousel-nav-right) {
-    right: 20px;
+  .curated-subscribe-status {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    min-height: 16px;
+    margin: 9px 0 0;
+    color: #7f7e79;
+    font-size: 10px;
+    line-height: 1.4;
   }
 
-  :global(.carousel-nav-button svg) {
-    width: 20px;
-    height: 20px;
+  .curated-subscribe-status[data-state="error"] {
+    color: #d9a8a0;
   }
 
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .back-button {
-      top: 16px;
-      left: 16px;
-      padding: 6px;
+  .curated-subscribe-status[data-state="success"] {
+    color: var(--sage);
+  }
+
+  .home-link:focus-visible,
+  .primary-action:focus-visible,
+  .secondary-action:focus-visible,
+  .latest-cover:focus-visible,
+  .archive-issue:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 1180px) {
+    .issue-stage {
+      grid-template-columns: minmax(270px, 0.8fr) minmax(300px, 390px);
+      align-items: start;
+      width: calc(100% - 56px);
+      max-width: 980px;
+      min-height: 0;
+      padding: 64px 0 88px;
     }
 
-    .back-button svg {
-      width: 18px;
-      height: 18px;
+    .issue-intro {
+      align-self: center;
     }
 
-    :global(.carousel-item-inner) {
-      width: 250px;
-      height: 354px; /* Maintain A4 ratio */
+    .issue-contents {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 36px;
+      max-width: none;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
     }
 
-    :global(.carousel-track) {
-      gap: 20px;
+    .contents-heading {
+      display: block;
       padding: 0;
-      /* Viewport-based centering for mobile: center 250px item */
-      margin-left: calc(50vw - 125px);
-      /* Add right margin to center last item and ensure full scrollability */
-      margin-right: calc(50vw - 125px);
+      border: 0;
     }
 
-    :global(.carousel-nav-button) {
-      width: 40px;
-      height: 40px;
+    .contents-heading p {
+      margin-bottom: 7px;
     }
 
-    :global(.carousel-nav-left) {
-      left: 10px;
+    .issue-contents ol {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 30px;
     }
 
-    :global(.carousel-nav-right) {
-      right: 10px;
+  }
+
+  @media (max-width: 900px) {
+    .archive-subscribe {
+      grid-template-columns: minmax(220px, 0.8fr) minmax(300px, 1.2fr);
+      gap: 32px;
     }
 
-    :global(.carousel-item-date) {
-      font-size: 16px;
-      margin-bottom: 12px;
+    .curated-subscribe-form {
+      width: min(100%, 380px);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .curated-page {
+      background-size: 64px 64px;
     }
 
-    :global(.carousel-item-number) {
-      font-size: 12px;
-      margin-top: 12px;
+    .curated-nav {
+      min-height: 64px;
+      padding: 0 18px;
+    }
+
+    .home-link span {
+      display: none;
+    }
+
+    .home-link {
+      width: 36px;
+      height: 36px;
+      justify-content: center;
+    }
+
+    .issue-stage {
+      display: flex;
+      flex-direction: column;
+      width: calc(100% - 40px);
+      max-width: 480px;
+      padding: 48px 0 72px;
+      gap: 46px;
+    }
+
+    .issue-intro {
+      max-width: none;
+    }
+
+    h1 {
+      margin: 16px 0 24px;
+      font-size: clamp(70px, 22vw, 92px);
+    }
+
+    .issue-headline {
+      max-width: 340px;
+      font-size: 23px;
+    }
+
+    .issue-summary {
+      max-width: 390px;
+    }
+
+    .issue-actions {
+      margin-bottom: 30px;
+    }
+
+    .primary-action {
+      flex: 1 1 auto;
+    }
+
+    .secondary-action {
+      flex: 0 0 auto;
+    }
+
+    .issue-facts {
+      max-width: none;
+    }
+
+    .issue-preview {
+      width: min(86vw, 390px);
+    }
+
+    .cover-open {
+      display: none;
+    }
+
+    .issue-contents {
+      display: block;
+      width: 100%;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .contents-heading {
+      display: flex;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .issue-contents ol {
+      display: block;
+    }
+
+    .archive {
+      padding: 72px 20px 88px;
+    }
+
+    .archive-heading {
+      display: block;
+      margin-bottom: 34px;
+    }
+
+    .archive-heading > p {
+      margin: 18px 0 0;
+      text-align: left;
+    }
+
+    .issue-shelf {
+      gap: 18px;
+      margin-right: -20px;
+      padding-right: 20px;
+    }
+
+    .archive-issue {
+      flex-basis: min(68vw, 250px);
+    }
+
+    .archive-subscribe {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+      margin-top: 62px;
+      padding: 38px 16px 42px;
+      text-align: center;
+    }
+
+    .curated-subscribe-form {
+      width: min(100%, 380px);
+      justify-self: center;
+    }
+
+    .subscribe-copy h3 {
+      font-size: 46px;
+    }
+
+    .subscribe-field {
+      gap: 10px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .light-streak {
+      display: none;
     }
   }
 </style>

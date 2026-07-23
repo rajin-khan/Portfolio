@@ -3,49 +3,57 @@
 const iconPath = (asset: string) =>
   `/assets/icons/tech/${asset.includes(".") ? asset : `${asset}.svg`}`;
 
-const techStackItems = [
+type TechStackItem = {
+  name: string;
+  asset: string;
+  adaptive?: boolean;
+  highlight?: boolean;
+  highlightNote?: string;
+};
+
+const techStackItems: TechStackItem[] = [
   { name: "Git", asset: "git" },
   { name: "Railway", asset: "railway", adaptive: true },
   { name: "Vercel", asset: "vercel", adaptive: true },
-  { name: "Next.js", asset: "nextjs", adaptive: true },
+  { name: "Next.js", asset: "nextjs", adaptive: true , highlight: true, highlightNote: "forced to use" },
   { name: "Vite", asset: "vite" },
-  { name: "Astro", asset: "astro-dark" },
+  { name: "Astro", asset: "astro-dark", highlight: true, highlightNote: "this site" },
   { name: "React", asset: "react" },
   { name: "Node.js", asset: "nodejs" },
   { name: "Tailwind CSS", asset: "tailwind-css" },
-  { name: "Stripe", asset: "stripe" },
+  { name: "Stripe", asset: "stripe", highlight: true, highlightNote: "currently using" },
   { name: "Lemon Squeezy", asset: "lemon-squeezy" },
   { name: "Paddle", asset: "paddle" },
-  { name: "AWS", asset: "aws-dark" },
+  { name: "AWS", asset: "aws-dark", highlight: true, highlightNote: "fuck this."  },
   { name: "Mintlify", asset: "mintlify" },
-  { name: "Supabase", asset: "supabase" },
+  { name: "Supabase", asset: "supabase", highlight: true, highlightNote: "kinda unbeatable"  },
   { name: "Firebase", asset: "firebase" },
   { name: "WordPress", asset: "wordpress" },
   { name: "Elementor", asset: "elementor" },
-  { name: "Codex", asset: "codex-dark.png" },
+  { name: "Codex", asset: "codex-dark.png", highlight: true, highlightNote: "literal essential" },
   { name: "Cursor", asset: "cursor-dark" },
-  { name: "Groq", asset: "groq.webp" },
+  { name: "Groq", asset: "groq.webp", highlight: true, highlightNote: "a gem."  },
   { name: "Ollama", asset: "ollama", adaptive: true },
   { name: "MySQL", asset: "mysql" },
   { name: "ChromaDB", asset: "chromadb" },
   { name: "Flutter", asset: "flutter" },
-  { name: "FastAPI", asset: "fastapi" },
+  { name: "FastAPI", asset: "fastapi", highlight: true, highlightNote: "usable without AI"  },
   { name: "NumPy", asset: "numpy" },
   { name: "Pandas", asset: "pandas-dark" },
   { name: "Matplotlib", asset: "matplotlib" },
   { name: "Seaborn", asset: "seaborn" },
   { name: "PyTorch", asset: "pytorch" },
-  { name: "YOLO", asset: "yolo" },
+  { name: "YOLO", asset: "yolo", highlight: true, highlightNote: "saved my thesis"  },
   { name: "OpenCV", asset: "opencv" },
   { name: "Jupyter", asset: "jupyter-dark" },
   { name: "C", asset: "c" },
   { name: "C++", asset: "cplusplus" },
-  { name: "Java", asset: "java" },
+  { name: "Java", asset: "java", highlight: true, highlightNote: "my baby"  },
   { name: "Python", asset: "python" },
   { name: "Dart", asset: "dart" },
   { name: "PHP", asset: "php" },
   { name: "SQL", asset: "sql", adaptive: true },
-  { name: "Bash", asset: "bash", adaptive: true },
+  { name: "Bash", asset: "bash", adaptive: true, highlight: true, highlightNote: "changed my life" },
   { name: "HTML", asset: "html" },
   { name: "CSS", asset: "css" },
   { name: "JavaScript", asset: "javascript" },
@@ -78,7 +86,19 @@ const animationDuration = techStackItems.length * 3;
             decoding="async"
             draggable="false"
           />
-          <span class="tech-name">{tech.name}</span>
+          <span
+            class:list={[
+              "tech-name-wrap",
+              { "tech-name-wrap--highlighted": tech.highlight },
+            ]}
+          >
+            <span class="tech-name">{tech.name}</span>
+            {tech.highlight && (
+              <span class="tech-highlight-note">
+                {tech.highlightNote ?? "current fave"}
+              </span>
+            )}
+          </span>
         </div>
       ))}
     </div>
@@ -86,9 +106,17 @@ const animationDuration = techStackItems.length * 3;
 </section>
   
 <style define:vars={{ animationDuration: `${animationDuration}s` }}>
+  @font-face {
+    font-family: "La Belle Aurore";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/assets/fonts/la-belle-aurore-latin.woff2") format("woff2");
+  }
+
   .scroller-container {
     position: relative;
-    block-size: 2.5rem;
+    block-size: 6.75rem;
     max-width: 100%;
     overflow: clip;
     overflow-clip-margin: 0;
@@ -101,16 +129,18 @@ const animationDuration = techStackItems.length * 3;
     position: absolute;
     inset-block: 0;
     inset-inline-start: 0;
+    box-sizing: border-box;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
+    padding-block-start: 20px;
     width: max-content;
     animation: scroll var(--animationDuration) linear infinite;
   }
 
   @media (min-width: 768px) {
     .scroller-container {
-      block-size: 3rem;
+      block-size: 6.75rem;
     }
   }
   
@@ -139,9 +169,62 @@ const animationDuration = techStackItems.length * 3;
   }
 
   .tech-name {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
     @apply text-base font-bold text-neutral-800 dark:text-neutral-200 md:text-lg;
   }
-  
+
+  .tech-name-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .tech-name-wrap--highlighted {
+    margin-inline: 8px 16px;
+  }
+
+  .tech-name-wrap--highlighted .tech-name::before,
+  .tech-name-wrap--highlighted .tech-name::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .tech-name-wrap--highlighted .tech-name::before {
+    inset: -5px -11px -4px -10px;
+    border: 1.5px solid currentColor;
+    border-radius: 49% 51% 46% 54% / 54% 47% 53% 46%;
+    opacity: 0.72;
+    transform: rotate(-2.5deg);
+  }
+
+  .tech-name-wrap--highlighted .tech-name::after {
+    inset: -3px -12px -6px -8px;
+    border: 1px solid;
+    border-color: currentColor currentColor transparent currentColor;
+    border-radius: 53% 47% 51% 49% / 47% 54% 46% 53%;
+    opacity: 0.32;
+    transform: rotate(2deg);
+  }
+
+  .tech-highlight-note {
+    position: absolute;
+    top: -40px;
+    right: -20px;
+    z-index: 2;
+    color: #fff;
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: nowrap;
+    transform: rotate(4deg);
+  }
+
   .scroller-container:hover .scroller-inner {
     animation-play-state: paused;
   }

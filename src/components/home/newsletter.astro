@@ -5,6 +5,12 @@
 <div class="newsletter-wrapper">
   <div class="newsletter-container">
     <div class="newsletter-inner">
+      <a
+        href="/curated"
+        class="curated-widget-link"
+        tabindex="-1"
+        aria-hidden="true"
+      ></a>
       <div class="newsletter-content">
         <form class="subscription-form" id="subscription-form">
           <label class="sr-only" for="newsletter-email">Email address</label>
@@ -335,6 +341,15 @@
     justify-content: space-between;
     height: 100%;
     padding: 20px 40px;
+    pointer-events: none;
+  }
+
+  .curated-widget-link {
+    position: absolute;
+    z-index: 9;
+    inset: 0;
+    border-radius: inherit;
+    cursor: pointer;
   }
 
   .subscription-form {
@@ -344,7 +359,7 @@
     position: relative;
     z-index: 11;
     flex: 0 0 auto;
-    pointer-events: auto;
+    pointer-events: none;
   }
 
   .newsletter-email-input {
@@ -365,6 +380,7 @@
     min-width: 180px;
     width: auto;
     flex: 0 1 auto;
+    pointer-events: auto;
   }
 
   .newsletter-email-input::placeholder {
@@ -401,6 +417,7 @@
     transition: color 0.2s ease, opacity 0.2s ease;
     position: relative;
     z-index: 11;
+    pointer-events: auto;
   }
 
   .subscribe-button:disabled {
@@ -467,7 +484,7 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    pointer-events: auto;
+    pointer-events: none;
     gap: 0;
   }
 
@@ -480,6 +497,7 @@
     transition: color 0.2s ease, transform 0.2s ease;
     padding: 0;
     margin-left: 4px;
+    pointer-events: auto;
   }
 
   .curated-link:hover {
@@ -496,6 +514,7 @@
     max-width: 150px;
     object-fit: contain;
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+    pointer-events: none;
   }
 
   /* Light streaks animation */
