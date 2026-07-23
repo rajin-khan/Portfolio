@@ -253,6 +253,11 @@ The first run can recover the count from the legacy heartbeat message, so no
 manual Redis migration is required. Do not change the placement ID, sticker ID,
 or slot unless the live Redis entry is migrated at the same time.
 
+The 365-message rotation lives in `src/data/aria-notes.ts`. Keep exactly one
+`{count}` placeholder in each note and keep every rendered message within the
+guestbook's 180-character limit. The visible count continues upward forever;
+only the message selection loops after 365 entries.
+
 ## Update Experience
 
 Edit `src/collections/experiences.json`. Entries render in file order.

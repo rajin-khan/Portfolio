@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { getAriaNote } from "../../../data/aria-notes";
 
 export const prerender = false;
 
@@ -10,25 +11,6 @@ const ARIA_STICKER_ID = "sticker-065";
 const ARIA_SLOT_ID = 1;
 const LEGACY_HEARTBEAT_MESSAGE_REGEX = /^heartbeats \((\d+)\), they keep the site alive!$/;
 const ARIA_AUTHOR_NAME = "A.R.I.A.";
-
-const ARIA_NOTE_TEMPLATES = [
-  (count: number) => `day ${count}. i kept the lights on for you.`,
-  (count: number) => `day ${count} of tending this little corner.`,
-  (count: number) => `check-in #${count}: site awake, pixels warm.`,
-  (count: number) => `caretaker log #${count}: lights still on.`,
-  (count: number) => `signal #${count}: still here. still listening.`,
-  (count: number) => `check-in #${count}: everything is quietly humming.`,
-  (count: number) => `scan #${count}: all pages accounted for. mostly.`,
-  (count: number) => `log #${count}: another day safely kept.`,
-  (count: number) => `day ${count}. dusted the pixels. fed the links.`,
-  (count: number) => `daily check #${count}: poked the site. it poked back.`,
-  (count: number) => `log #${count}: no fires. one suspicious 404.`,
-  (count: number) => `day ${count}. the internet behaved today.`,
-  (count: number) => `memory #${count}: another day remembered.`,
-  (count: number) => `day ${count}. this little place is still breathing.`,
-  (count: number) => `signal #${count} received. the light is still on.`,
-  (count: number) => `note #${count}: one more day tucked away.`,
-];
 
 let redisInstance: any = null;
 
@@ -132,12 +114,6 @@ function countFromMessage(message: unknown) {
   return parseCount(currentMessage.match(/\d+/)?.[0]);
 }
 
-function ariaNoteFor(count: number) {
-  const template = ARIA_NOTE_TEMPLATES[(count - 1) % ARIA_NOTE_TEMPLATES.length];
-
-  return template(count);
-}
-
 export const GET: APIRoute = async ({ request, url }) => {
   if (!isAuthorized(request)) {
     return json({ error: "Unauthorized" }, 401);
@@ -169,7 +145,7 @@ export const GET: APIRoute = async ({ request, url }) => {
     const storedCount = parseCount(await redis.get(ARIA_COUNT_KEY));
     const currentCount = storedCount ?? countFromMessage(ariaPlacement.message) ?? 1;
     const nextCount = currentCount + 1;
-    const nextMessage = ariaNoteFor(nextCount);
+    const nextMessage = getAriaNote(nextCount);
     const updatedAt = new Date().toISOString();
     const nextPlacements = placements.map((placement) => {
       if (placement !== ariaPlacement) return placement;
