@@ -168,7 +168,7 @@ function generateEmailHtml(
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet">
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; background-color: #0a0a0a; color: #ffffff;">
+<body style="margin: 0; padding: 0; font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; font-weight: 500; background-color: #0a0a0a; color: #ffffff;">
   <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #0a0a0a;">
     <tr>
       <td style="padding: 40px 20px;">
@@ -209,7 +209,7 @@ function generateEmailHtml(
                     <table role="presentation" style="width: 100%; margin: 30px 0;">
                       <tr>
                         <td style="text-align: center;">
-                          <a href="${pdfUrl}" style="display: inline-block; padding: 12px 28px; background: #ffffff; border: none; color: #0a0a0a; text-decoration: none; border-radius: 12px; font-weight: 400; font-size: 10px; font-family: 'Satoshi', sans-serif; text-transform: uppercase; letter-spacing: 0.5px;">view newsletter</a>
+                          <a href="${pdfUrl}" style="display: inline-block; padding: 12px 28px; background: #ffffff; border: none; color: #0a0a0a; text-decoration: none; border-radius: 12px; font-weight: 500; font-size: 10px; font-family: 'Satoshi', sans-serif; text-transform: uppercase; letter-spacing: 0.5px;">view newsletter</a>
                         </td>
                       </tr>
                     </table>

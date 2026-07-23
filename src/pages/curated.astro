@@ -334,7 +334,11 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
             <h2 id="archive-title">The archive.</h2>
           </div>
           <p>
-            {`${newsletters.length} ${newsletters.length === 1 ? "issue" : "issues"}. newest to oldest.`}
+            {
+              newsletters.length === 1
+                ? "Had to start somewhere."
+                : `${newsletters.length} issues. newest to oldest.`
+            }
           </p>
         </div>
 
@@ -664,6 +668,7 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
       BlinkMacSystemFont,
       "Segoe UI",
       sans-serif;
+    font-weight: 500;
   }
 
   .curated-nav {
@@ -890,6 +895,7 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
     margin-bottom: 16px;
     color: #faf9f5;
     font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-weight: 400;
     font-size: clamp(20px, 1.75vw, 26px);
     font-style: normal;
     line-height: 1.16;
@@ -1232,6 +1238,7 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
     margin-bottom: 4px;
     color: #888783;
     font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-weight: 400;
     font-size: 17px;
     line-height: 1.5;
     letter-spacing: 0;
@@ -1316,13 +1323,14 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
 
   .archive-meta strong {
     font-size: 12px;
-    font-weight: 400;
+    font-weight: 500;
     text-transform: uppercase;
   }
 
   .archive-meta time {
     color: #777671;
     font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
     font-size: 16px;
     font-style: italic;
   }
@@ -1330,6 +1338,7 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
   .upcoming-release {
     color: #777671;
     font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-weight: 400;
     font-size: 17px;
     font-style: normal;
     letter-spacing: 0;
@@ -1387,6 +1396,7 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
   .upcoming-wordmark {
     color: #9b9a95;
     font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
     font-size: clamp(42px, 5vw, 66px);
     font-style: italic;
   }

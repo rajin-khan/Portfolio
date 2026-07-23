@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Satoshi";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/satoshi-regular.woff") format("woff");
+}
+
 :root {
   color-scheme: dark;
 }
@@ -14,6 +22,7 @@ body {
 
 body {
   min-height: 100vh;
+  font-weight: 500;
 }
 
 img,
@@ -55,7 +64,7 @@ canvas {
   background: rgb(10 10 10);
   color: rgb(250 250 250);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 700;
   transform: translateY(calc(-100% - 1.5rem));
   transition: transform 160ms ease;
 }
