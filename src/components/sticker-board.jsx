@@ -853,8 +853,8 @@ export default function StickerBoard() {
   return (
     <section id="sticker-board" className="sticker-board-section" aria-labelledby="sticker-board-title">
       <div className="sticker-board-heading">
-        <h2 id="sticker-board-title">Guestbook</h2>
-        <p>A little board where you can leave a piece of yourself. It stays forever! 🤍</p>
+        <h2 id="sticker-board-title">Sticker Guestbook</h2>
+        <p>Write and pin yours. Tap any sticker below to read what others left! 🤍</p>
       </div>
 
       <div className="sticker-board-shell">
@@ -947,7 +947,7 @@ export default function StickerBoard() {
               >
                 {selectedSticker ? (
                   <span className="selected-sticker-float">
-                    <span className="selected-sticker-callout">here&apos;s your sticker.</span>
+                    <span className="selected-sticker-callout">here&apos;s your sticker, tap!</span>
                     <button
                       type="button"
                       className="selected-sticker-main"

@@ -71,7 +71,7 @@ The sticker board is the most needlessly elaborate part of the site. Naturally, 
 | [Three.js](https://threejs.org/) | The textured globe, Dhaka pin, camera movement, and About intro |
 | [Upstash Redis](https://upstash.com/) | Sticker placements and newsletter subscribers |
 | [Resend](https://resend.com/) | Newsletter delivery |
-| [Vercel](https://vercel.com/) | Hosting, serverless API routes, and the daily heartbeat cron |
+| [Vercel](https://vercel.com/) | Hosting, serverless API routes, and A.R.I.A.'s daily guestbook note |
 
 Astro handles the quiet parts; React only wakes up for the pieces that genuinely need to move.
 

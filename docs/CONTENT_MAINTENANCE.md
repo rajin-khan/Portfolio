@@ -246,9 +246,12 @@ The note-back doodles are listed near the top of
 each entry. Replacing an existing file changes that doodle everywhere; adding a
 fourth requires adding its path to the component array.
 
-The daily heartbeat cron targets one exact placement ID, sticker ID, slot, and
-message format in `src/pages/api/cron/heartbeat-sticker.ts`. Do not edit those
-constants unless the live Redis entry is migrated at the same time.
+The daily cron in `src/pages/api/cron/heartbeat-sticker.ts` updates one exact
+placement as A.R.I.A. It rotates through a fixed set of notes, stores the
+sequence in `sticker-board:aria-note:count`, and refreshes the placement date.
+The first run can recover the count from the legacy heartbeat message, so no
+manual Redis migration is required. Do not change the placement ID, sticker ID,
+or slot unless the live Redis entry is migrated at the same time.
 
 ## Update Experience
 

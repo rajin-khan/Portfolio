@@ -3,11 +3,32 @@ import type { APIRoute } from "astro";
 export const prerender = false;
 
 const BOARD_KEY = "sticker-board:placements";
-const HEARTBEAT_LAST_RUN_KEY = "sticker-board:heartbeat:last-run-date";
-const HEARTBEAT_PLACEMENT_ID = "0d7ea7bb-d430-471d-8f5c-10bbe97fe860";
-const HEARTBEAT_STICKER_ID = "sticker-065";
-const HEARTBEAT_SLOT_ID = 1;
-const HEARTBEAT_MESSAGE_REGEX = /^heartbeats \((\d+)\), they keep the site alive!$/;
+const ARIA_COUNT_KEY = "sticker-board:aria-note:count";
+const ARIA_LAST_RUN_KEY = "sticker-board:heartbeat:last-run-date";
+const ARIA_PLACEMENT_ID = "0d7ea7bb-d430-471d-8f5c-10bbe97fe860";
+const ARIA_STICKER_ID = "sticker-065";
+const ARIA_SLOT_ID = 1;
+const LEGACY_HEARTBEAT_MESSAGE_REGEX = /^heartbeats \((\d+)\), they keep the site alive!$/;
+const ARIA_AUTHOR_NAME = "A.R.I.A.";
+
+const ARIA_NOTE_TEMPLATES = [
+  (count: number) => `day ${count}. i kept the lights on for you.`,
+  (count: number) => `day ${count} of tending this little corner.`,
+  (count: number) => `check-in #${count}: site awake, pixels warm.`,
+  (count: number) => `caretaker log #${count}: lights still on.`,
+  (count: number) => `signal #${count}: still here. still listening.`,
+  (count: number) => `check-in #${count}: everything is quietly humming.`,
+  (count: number) => `scan #${count}: all pages accounted for. mostly.`,
+  (count: number) => `log #${count}: another day safely kept.`,
+  (count: number) => `day ${count}. dusted the pixels. fed the links.`,
+  (count: number) => `daily check #${count}: poked the site. it poked back.`,
+  (count: number) => `log #${count}: no fires. one suspicious 404.`,
+  (count: number) => `day ${count}. the internet behaved today.`,
+  (count: number) => `memory #${count}: another day remembered.`,
+  (count: number) => `day ${count}. this little place is still breathing.`,
+  (count: number) => `signal #${count} received. the light is still on.`,
+  (count: number) => `note #${count}: one more day tucked away.`,
+];
 
 let redisInstance: any = null;
 
@@ -16,6 +37,7 @@ type StickerPlacement = {
   stickerId?: string;
   stickerSrc?: string;
   message?: string;
+  authorName?: string;
   slotId?: number;
   createdAt?: string;
 };
@@ -67,7 +89,7 @@ async function getRedis() {
 
     return redisInstance;
   } catch (error) {
-    console.error("Error initializing heartbeat Redis:", error);
+    console.error("Error initializing A.R.I.A. note Redis:", error);
     return null;
   }
 }
@@ -86,24 +108,34 @@ async function readPlacements(redis: any) {
   return Array.isArray(value) ? value : [];
 }
 
-function findHeartbeatPlacement(placements: StickerPlacement[]) {
-  return placements.find((placement) => placement?.id === HEARTBEAT_PLACEMENT_ID)
+function findAriaPlacement(placements: StickerPlacement[]) {
+  return placements.find((placement) => placement?.id === ARIA_PLACEMENT_ID)
     || placements.find((placement) => (
-      placement?.stickerId === HEARTBEAT_STICKER_ID &&
-      placement?.slotId === HEARTBEAT_SLOT_ID
+      placement?.stickerId === ARIA_STICKER_ID &&
+      placement?.slotId === ARIA_SLOT_ID
     ));
 }
 
-function nextHeartbeatMessage(message: unknown) {
-  const currentMessage = typeof message === "string" ? message : "";
-  const match = currentMessage.match(HEARTBEAT_MESSAGE_REGEX);
-  const currentCount = match ? Number.parseInt(match[1], 10) : 1;
-  const nextCount = Number.isFinite(currentCount) ? currentCount + 1 : 2;
+function parseCount(value: unknown) {
+  const count = typeof value === "number"
+    ? value
+    : Number.parseInt(typeof value === "string" ? value : "", 10);
 
-  return {
-    count: nextCount,
-    message: `heartbeats (${nextCount}), they keep the site alive!`,
-  };
+  return Number.isInteger(count) && count >= 1 ? count : null;
+}
+
+function countFromMessage(message: unknown) {
+  const currentMessage = typeof message === "string" ? message : "";
+  const legacyMatch = currentMessage.match(LEGACY_HEARTBEAT_MESSAGE_REGEX);
+  if (legacyMatch) return parseCount(legacyMatch[1]);
+
+  return parseCount(currentMessage.match(/\d+/)?.[0]);
+}
+
+function ariaNoteFor(count: number) {
+  const template = ARIA_NOTE_TEMPLATES[(count - 1) % ARIA_NOTE_TEMPLATES.length];
+
+  return template(count);
 }
 
 export const GET: APIRoute = async ({ request, url }) => {
@@ -121,41 +153,49 @@ export const GET: APIRoute = async ({ request, url }) => {
 
   try {
     if (!force) {
-      const lastRunDate = await redis.get(HEARTBEAT_LAST_RUN_KEY);
+      const lastRunDate = await redis.get(ARIA_LAST_RUN_KEY);
       if (lastRunDate === runDate) {
         return json({ ok: true, skipped: true, reason: "Already updated today", runDate });
       }
     }
 
     const placements = await readPlacements(redis) as StickerPlacement[];
-    const heartbeatPlacement = findHeartbeatPlacement(placements);
+    const ariaPlacement = findAriaPlacement(placements);
 
-    if (!heartbeatPlacement) {
-      return json({ error: "Heartbeat sticker not found" }, 404);
+    if (!ariaPlacement) {
+      return json({ error: "A.R.I.A. sticker not found" }, 404);
     }
 
-    const next = nextHeartbeatMessage(heartbeatPlacement.message);
+    const storedCount = parseCount(await redis.get(ARIA_COUNT_KEY));
+    const currentCount = storedCount ?? countFromMessage(ariaPlacement.message) ?? 1;
+    const nextCount = currentCount + 1;
+    const nextMessage = ariaNoteFor(nextCount);
+    const updatedAt = new Date().toISOString();
     const nextPlacements = placements.map((placement) => {
-      if (placement !== heartbeatPlacement) return placement;
+      if (placement !== ariaPlacement) return placement;
 
       return {
         ...placement,
-        message: next.message,
+        message: nextMessage,
+        authorName: ARIA_AUTHOR_NAME,
+        createdAt: updatedAt,
       };
     });
 
     await redis.set(BOARD_KEY, nextPlacements);
-    await redis.set(HEARTBEAT_LAST_RUN_KEY, runDate);
+    await redis.set(ARIA_COUNT_KEY, nextCount);
+    await redis.set(ARIA_LAST_RUN_KEY, runDate);
 
     return json({
       ok: true,
       runDate,
-      placementId: heartbeatPlacement.id,
-      count: next.count,
-      message: next.message,
+      placementId: ariaPlacement.id,
+      count: nextCount,
+      authorName: ARIA_AUTHOR_NAME,
+      message: nextMessage,
     });
   } catch (error) {
-    console.error("Error updating heartbeat sticker:", error);
-    return json({ error: "Heartbeat update failed" }, 500);
+    console.error("Error updating A.R.I.A. sticker:", error);
+    return json({ error: "A.R.I.A. note update failed" }, 500);
   }
 };

@@ -21,8 +21,8 @@ changing content systems or public assets.
 - Snapshot live data before any manual migration.
 - Preserve sticker IDs already present in `src/data/stickers.json`. Removing or
   renaming one can make an existing guestbook placement disappear.
-- Preserve the heartbeat placement constants and message format unless the
-  corresponding live Redis entry is intentionally migrated.
+- Preserve the A.R.I.A. note placement ID, sticker ID, slot, and counter key
+  unless the corresponding live Redis entry is intentionally migrated.
 - Follow `docs/NEWSLETTER_OPERATIONS.md` before sending a Curated issue. Never
   delete delivery-ledger keys or expose newsletter environment values.
 
