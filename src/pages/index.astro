@@ -86,7 +86,7 @@ const ogImage = "/assets/images/rajins-banner-new.png";
     >
       <div class="relative w-full md:w-1/2">
         <h1
-          class="mb-5 text-4xl font-bold leading-tight md:text-4xl lg:text-6xl dark:text-white"
+          class="hero-handwritten-title mb-5 text-4xl font-normal leading-tight md:text-4xl lg:text-6xl dark:text-white"
         >
           Hey, I'm Rajin.
         </h1>
@@ -169,3 +169,17 @@ const ogImage = "/assets/images/rajins-banner-new.png";
   <!-- A fixed modal cannot live inside content-visibility containment. -->
   <StickerBoard client:visible={{ rootMargin: "500px" }} />
 </Layout>
+
+<style>
+  @font-face {
+    font-family: "La Belle Aurore";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/assets/fonts/la-belle-aurore-latin.woff2") format("woff2");
+  }
+
+  .hero-handwritten-title {
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+  }
+</style>
