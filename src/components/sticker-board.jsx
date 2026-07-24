@@ -3,10 +3,10 @@ import stickers from "../data/stickers.json";
 
 const LOCAL_STORAGE_KEY = "rajin-sticker-board-placements-v5";
 const LEGACY_LOCAL_STORAGE_KEYS = [
-  "rajin-sticker-board-placements-v4",
-  "rajin-sticker-board-placements-v3",
-  "rajin-sticker-board-placements-v2",
-  "rajin-sticker-board-placements-v1",
+	"rajin-sticker-board-placements-v4",
+	"rajin-sticker-board-placements-v3",
+	"rajin-sticker-board-placements-v2",
+	"rajin-sticker-board-placements-v1",
 ];
 const MESSAGE_LIMIT = 180;
 const NAME_LIMIT = 32;
@@ -17,1113 +17,1461 @@ const MAX_PLACEMENTS = 240;
 const MAX_GROUPS = Math.ceil(MAX_PLACEMENTS / GROUP_SIZE);
 const MIN_RENDER_GROUPS = 2;
 const NOTE_DOODLES = [
-  "/assets/images/stickers/doodles/doodle-1.png",
-  "/assets/images/stickers/doodles/doodle-2.webp",
-  "/assets/images/stickers/doodles/doodle-3.webp",
+	"/assets/images/stickers/doodles/doodle-1.png",
+	"/assets/images/stickers/doodles/doodle-2.webp",
+	"/assets/images/stickers/doodles/doodle-3.webp",
 ];
 const NOTE_DOODLE_VARIANTS = [
-  { x: "7.4%", y: "7.2%", rotate: "-7deg", scale: "0.92", opacity: "0.62" },
-  { x: "8.6%", y: "8%", rotate: "4deg", scale: "0.84", opacity: "0.56" },
-  { x: "6.8%", y: "8.8%", rotate: "-2deg", scale: "0.98", opacity: "0.58" },
+	{ x: "7.4%", y: "7.2%", rotate: "-7deg", scale: "0.92", opacity: "0.62" },
+	{ x: "8.6%", y: "8%", rotate: "4deg", scale: "0.84", opacity: "0.56" },
+	{ x: "6.8%", y: "8.8%", rotate: "-2deg", scale: "0.98", opacity: "0.58" },
 ];
 
 const SHAPE_CONFIG = {
-  portrait: {
-    label: "portrait",
-    aspect: 0.72,
-    boardInline: "clamp(6rem, 10.2cqw, 8.7rem)",
-    selectedInline: "clamp(10.6rem, 18.2cqw, 14.8rem)",
-    modalInline: "min(24rem, 74vw)",
-    actionX: "clamp(4.35rem, 6.5vw, 5.35rem)",
-    actionY: "clamp(6rem, 9vw, 7.1rem)",
-    rowTone: "232 226 214",
-  },
-  square: {
-    label: "square",
-    aspect: 1,
-    boardInline: "clamp(6.5rem, 11.4cqw, 9.7rem)",
-    selectedInline: "clamp(11.2rem, 19.2cqw, 15.6rem)",
-    modalInline: "min(26rem, 78vw)",
-    actionX: "clamp(5rem, 7.4vw, 6.1rem)",
-    actionY: "clamp(5rem, 7.4vw, 6.1rem)",
-    rowTone: "226 228 232",
-  },
-  landscape: {
-    label: "wide",
-    aspect: 1.62,
-    boardInline: "clamp(7.4rem, 14.7cqw, 12.6rem)",
-    selectedInline: "clamp(12.8rem, 23cqw, 18.8rem)",
-    modalInline: "min(34rem, 88vw)",
-    actionX: "clamp(6.2rem, 9.6vw, 7.7rem)",
-    actionY: "clamp(3.55rem, 5.45vw, 4.55rem)",
-    rowTone: "222 226 224",
-  },
+	portrait: {
+		label: "portrait",
+		aspect: 0.72,
+		boardInline: "clamp(6rem, 10.2cqw, 8.7rem)",
+		selectedInline: "clamp(10.6rem, 18.2cqw, 14.8rem)",
+		modalInline: "min(24rem, 74vw)",
+		actionX: "clamp(4.35rem, 6.5vw, 5.35rem)",
+		actionY: "clamp(6rem, 9vw, 7.1rem)",
+		rowTone: "232 226 214",
+	},
+	square: {
+		label: "square",
+		aspect: 1,
+		boardInline: "clamp(6.5rem, 11.4cqw, 9.7rem)",
+		selectedInline: "clamp(11.2rem, 19.2cqw, 15.6rem)",
+		modalInline: "min(26rem, 78vw)",
+		actionX: "clamp(5rem, 7.4vw, 6.1rem)",
+		actionY: "clamp(5rem, 7.4vw, 6.1rem)",
+		rowTone: "226 228 232",
+	},
+	landscape: {
+		label: "wide",
+		aspect: 1.62,
+		boardInline: "clamp(7.4rem, 14.7cqw, 12.6rem)",
+		selectedInline: "clamp(12.8rem, 23cqw, 18.8rem)",
+		modalInline: "min(34rem, 88vw)",
+		actionX: "clamp(6.2rem, 9.6vw, 7.7rem)",
+		actionY: "clamp(3.55rem, 5.45vw, 4.55rem)",
+		rowTone: "222 226 224",
+	},
 };
 
-const MAX_STICKER_WIDTH = Math.max(...stickers.map((sticker) => sticker.width || 1));
-const MAX_STICKER_HEIGHT = Math.max(...stickers.map((sticker) => sticker.height || 1));
+const MAX_STICKER_WIDTH = Math.max(
+	...stickers.map((sticker) => sticker.width || 1),
+);
+const MAX_STICKER_HEIGHT = Math.max(
+	...stickers.map((sticker) => sticker.height || 1),
+);
 const MAX_STICKER_LONG_SIDE = Math.max(
-  ...stickers.map((sticker) => Math.max(sticker.width || 1, sticker.height || 1)),
+	...stickers.map((sticker) =>
+		Math.max(sticker.width || 1, sticker.height || 1),
+	),
 );
 const SLOT_VARIANTS = [
-  { x: "1%", y: "-1%", rotate: "-2.4deg", scale: "1.04" },
-  { x: "2%", y: "1%", rotate: "1.8deg", scale: "1.03" },
-  { x: "-1%", y: "-3%", rotate: "-1.4deg", scale: "1.08" },
-  { x: "4%", y: "2%", rotate: "3.7deg", scale: "0.98" },
-  { x: "-2%", y: "-1%", rotate: "-2.1deg", scale: "1.02" },
-  { x: "3%", y: "0%", rotate: "2.4deg", scale: "1.1" },
-  { x: "-3%", y: "2%", rotate: "-3.4deg", scale: "1.05" },
-  { x: "0%", y: "-2%", rotate: "4.4deg", scale: "1.12" },
-  { x: "2%", y: "2%", rotate: "-1deg", scale: "1.04" },
-  { x: "-4%", y: "1%", rotate: "2.8deg", scale: "1.08" },
-  { x: "1%", y: "-1%", rotate: "-4deg", scale: "1.06" },
-  { x: "-2%", y: "2%", rotate: "1.5deg", scale: "1.13" },
-  { x: "3%", y: "-3%", rotate: "-2.8deg", scale: "1" },
-  { x: "-1%", y: "0%", rotate: "3.2deg", scale: "1.07" },
-  { x: "2%", y: "1%", rotate: "-1.8deg", scale: "1.04" },
+	{ x: "1%", y: "-1%", rotate: "-2.4deg", scale: "1.04" },
+	{ x: "2%", y: "1%", rotate: "1.8deg", scale: "1.03" },
+	{ x: "-1%", y: "-3%", rotate: "-1.4deg", scale: "1.08" },
+	{ x: "4%", y: "2%", rotate: "3.7deg", scale: "0.98" },
+	{ x: "-2%", y: "-1%", rotate: "-2.1deg", scale: "1.02" },
+	{ x: "3%", y: "0%", rotate: "2.4deg", scale: "1.1" },
+	{ x: "-3%", y: "2%", rotate: "-3.4deg", scale: "1.05" },
+	{ x: "0%", y: "-2%", rotate: "4.4deg", scale: "1.12" },
+	{ x: "2%", y: "2%", rotate: "-1deg", scale: "1.04" },
+	{ x: "-4%", y: "1%", rotate: "2.8deg", scale: "1.08" },
+	{ x: "1%", y: "-1%", rotate: "-4deg", scale: "1.06" },
+	{ x: "-2%", y: "2%", rotate: "1.5deg", scale: "1.13" },
+	{ x: "3%", y: "-3%", rotate: "-2.8deg", scale: "1" },
+	{ x: "-1%", y: "0%", rotate: "3.2deg", scale: "1.07" },
+	{ x: "2%", y: "1%", rotate: "-1.8deg", scale: "1.04" },
 ];
 const NOTE_LEET_MAP = {
-  "0": "o",
-  "1": "i",
-  "3": "e",
-  "4": "a",
-  "5": "s",
-  "7": "t",
-  "@": "a",
-  "$": "s",
-  "!": "i",
+	0: "o",
+	1: "i",
+	3: "e",
+	4: "a",
+	5: "s",
+	7: "t",
+	"@": "a",
+	$: "s",
+	"!": "i",
 };
 const BLOCKED_NOTE_PATTERNS = [
-  /\b(?:fuck|fucker|fucking|motherfucker|mf)\b/,
-  /\b(?:shit|bullshit|shitty)\b/,
-  /\b(?:bitch|asshole|bastard|cunt|dick|pussy|whore|slut|douchebag|wanker)\b/,
-  /\b(?:nigger|nigga|niggah|niggers|niggas)\b/,
-  /\b(?:fag|faggot)\b/,
-  /\b(?:retard|retarded)\b/,
-  /\b(?:kike|chink|spic|tranny|coon)\b/,
-  /\b(?:madarchod|bhenchod|behnchod|bokachoda|choda|chodna)\b/,
+	/\b(?:fuck|fucker|fucking|motherfucker|mf)\b/,
+	/\b(?:shit|bullshit|shitty)\b/,
+	/\b(?:bitch|asshole|bastard|cunt|dick|pussy|whore|slut|douchebag|wanker)\b/,
+	/\b(?:nigger|nigga|niggah|niggers|niggas)\b/,
+	/\b(?:fag|faggot)\b/,
+	/\b(?:retard|retarded)\b/,
+	/\b(?:kike|chink|spic|tranny|coon)\b/,
+	/\b(?:madarchod|bhenchod|behnchod|bokachoda|choda|chodna)\b/,
 ];
 const BLOCKED_NOTE_COMPACT_PATTERNS = [
-  /f+u+c+k+/,
-  /s+h+i+t+/,
-  /b+i+t+c+h+/,
-  /a+s+s+h+o+l+e+/,
-  /c+u+n+t+/,
-  /n+i+g+g+(?:a|er|ah)?/,
-  /f+a+g+(?:g+o+t+)?/,
-  /r+e+t+a+r+d+/,
-  /m+a+d+a+r+c+h+o+d+/,
-  /b+h?e+h?n+c+h+o+d+/,
-  /b+o+k+a+c+h+o+d+/,
+	/f+u+c+k+/,
+	/s+h+i+t+/,
+	/b+i+t+c+h+/,
+	/a+s+s+h+o+l+e+/,
+	/c+u+n+t+/,
+	/n+i+g+g+(?:a|er|ah)?/,
+	/f+a+g+(?:g+o+t+)?/,
+	/r+e+t+a+r+d+/,
+	/m+a+d+a+r+c+h+o+d+/,
+	/b+h?e+h?n+c+h+o+d+/,
+	/b+o+k+a+c+h+o+d+/,
 ];
 const tiltFrameByElement = new WeakMap();
 const lastPointerByElement = new WeakMap();
 
 function getLocalPlacements() {
-  if (typeof window === "undefined") return [];
+	if (typeof window === "undefined") return [];
 
-  try {
-    const raw =
-      window.localStorage.getItem(LOCAL_STORAGE_KEY) ||
-      LEGACY_LOCAL_STORAGE_KEYS.map((key) => window.localStorage.getItem(key)).find(Boolean);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+	try {
+		const raw =
+			window.localStorage.getItem(LOCAL_STORAGE_KEY) ||
+			LEGACY_LOCAL_STORAGE_KEYS.map((key) =>
+				window.localStorage.getItem(key),
+			).find(Boolean);
+		const parsed = raw ? JSON.parse(raw) : [];
+		return Array.isArray(parsed) ? parsed : [];
+	} catch {
+		return [];
+	}
 }
 
 function setLocalPlacements(placements) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(placements));
+	if (typeof window === "undefined") return;
+	window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(placements));
 }
 
 function findSticker(stickerId) {
-  return stickers.find((sticker) => sticker.id === stickerId) || stickers[0];
+	return stickers.find((sticker) => sticker.id === stickerId) || stickers[0];
 }
 
 function stickerKind(sticker) {
-  const aspect = Number(sticker?.aspectRatio) || 1;
-  if (aspect < 0.86) return "portrait";
-  if (aspect > 1.18) return "landscape";
-  return "square";
+	const aspect = Number(sticker?.aspectRatio) || 1;
+	if (aspect < 0.86) return "portrait";
+	if (aspect > 1.18) return "landscape";
+	return "square";
 }
 
 function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+	return Math.max(min, Math.min(max, value));
 }
 
 function stickerStyle(sticker) {
-  const kind = stickerKind(sticker);
-  const aspect = clamp(Number(sticker?.aspectRatio) || SHAPE_CONFIG[kind].aspect, 0.5, 2.6);
-  const longestSide = Math.max(sticker?.width || 1, sticker?.height || 1);
-  const widthWeight = (sticker?.width || 1) / MAX_STICKER_WIDTH;
-  const heightWeight = (sticker?.height || 1) / MAX_STICKER_HEIGHT;
-  const longSideWeight = longestSide / MAX_STICKER_LONG_SIDE;
-  const presence = clamp(Math.max(widthWeight, heightWeight, longSideWeight), 0.82, 1.08);
+	const kind = stickerKind(sticker);
+	const aspect = clamp(
+		Number(sticker?.aspectRatio) || SHAPE_CONFIG[kind].aspect,
+		0.5,
+		2.6,
+	);
+	const longestSide = Math.max(sticker?.width || 1, sticker?.height || 1);
+	const widthWeight = (sticker?.width || 1) / MAX_STICKER_WIDTH;
+	const heightWeight = (sticker?.height || 1) / MAX_STICKER_HEIGHT;
+	const longSideWeight = longestSide / MAX_STICKER_LONG_SIDE;
+	const presence = clamp(
+		Math.max(widthWeight, heightWeight, longSideWeight),
+		0.82,
+		1.08,
+	);
 
-  return {
-    "--sticker-aspect": aspect.toFixed(3),
-    "--sticker-presence": presence.toFixed(3),
-    "--sticker-board-inline": SHAPE_CONFIG[kind].boardInline,
-    "--sticker-selected-inline": SHAPE_CONFIG[kind].selectedInline,
-    "--sticker-action-x": SHAPE_CONFIG[kind].actionX,
-    "--sticker-action-y": SHAPE_CONFIG[kind].actionY,
-    "--row-tone": SHAPE_CONFIG[kind].rowTone,
-  };
+	return {
+		"--sticker-aspect": aspect.toFixed(3),
+		"--sticker-presence": presence.toFixed(3),
+		"--sticker-board-inline": SHAPE_CONFIG[kind].boardInline,
+		"--sticker-selected-inline": SHAPE_CONFIG[kind].selectedInline,
+		"--sticker-action-x": SHAPE_CONFIG[kind].actionX,
+		"--sticker-action-y": SHAPE_CONFIG[kind].actionY,
+		"--row-tone": SHAPE_CONFIG[kind].rowTone,
+	};
 }
 
 function flipFrameFor(sticker) {
-  const rawAspect = Number(sticker?.aspectRatio) || 1;
-  const aspect = clamp(rawAspect, 0.5, 2.6);
-  const kind = stickerKind(sticker);
+	const rawAspect = Number(sticker?.aspectRatio) || 1;
+	const aspect = clamp(rawAspect, 0.5, 2.6);
+	const kind = stickerKind(sticker);
 
-  return {
-    "--flip-inline": SHAPE_CONFIG[kind].modalInline,
-    "--flip-aspect": aspect.toFixed(3),
-  };
+	return {
+		"--flip-inline": SHAPE_CONFIG[kind].modalInline,
+		"--flip-aspect": aspect.toFixed(3),
+	};
 }
 
 function formatStickerDate(value) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
+	const date = new Date(value);
+	if (Number.isNaN(date.getTime())) return "";
 
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = String(date.getFullYear()).slice(-2);
+	const day = String(date.getDate()).padStart(2, "0");
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const year = String(date.getFullYear()).slice(-2);
 
-  return `${day}.${month}.${year}`;
+	return `${day}.${month}.${year}`;
 }
 
 function hashString(value) {
-  return String(value || "").split("").reduce((hash, character) => {
-    return (hash * 31 + character.charCodeAt(0)) >>> 0;
-  }, 2166136261);
+	return String(value || "")
+		.split("")
+		.reduce((hash, character) => {
+			return (hash * 31 + character.charCodeAt(0)) >>> 0;
+		}, 2166136261);
 }
 
 function noteDoodleFor(placement, sticker) {
-  const key = placement?.id || `${sticker?.id || "preview"}-${sticker?.src || ""}`;
-  const hash = hashString(key);
-  const variant = NOTE_DOODLE_VARIANTS[hash % NOTE_DOODLE_VARIANTS.length];
+	const key =
+		placement?.id || `${sticker?.id || "preview"}-${sticker?.src || ""}`;
+	const hash = hashString(key);
+	const variant = NOTE_DOODLE_VARIANTS[hash % NOTE_DOODLE_VARIANTS.length];
 
-  return {
-    src: NOTE_DOODLES[hash % NOTE_DOODLES.length],
-    style: {
-      "--note-doodle-x": variant.x,
-      "--note-doodle-y": variant.y,
-      "--note-doodle-rotate": variant.rotate,
-      "--note-doodle-scale": variant.scale,
-      "--note-doodle-opacity": variant.opacity,
-    },
-  };
+	return {
+		src: NOTE_DOODLES[hash % NOTE_DOODLES.length],
+		style: {
+			"--note-doodle-x": variant.x,
+			"--note-doodle-y": variant.y,
+			"--note-doodle-rotate": variant.rotate,
+			"--note-doodle-scale": variant.scale,
+			"--note-doodle-opacity": variant.opacity,
+		},
+	};
 }
 
 function normalizePlacement(placement) {
-  const sticker = findSticker(placement.stickerId);
-  const slotId = Number.isInteger(placement.slotId) && placement.slotId >= 0 ? placement.slotId : 0;
+	const sticker = findSticker(placement.stickerId);
+	const slotId =
+		Number.isInteger(placement.slotId) && placement.slotId >= 0
+			? placement.slotId
+			: 0;
 
-  return {
-    id: placement.id || `${placement.stickerId}-${slotId}-${Date.now()}`,
-    stickerId: placement.stickerId,
-    stickerSrc: sticker.src,
-    message: placement.message || "",
-    authorName: String(placement.authorName || "").slice(0, NAME_LIMIT),
-    slotId,
-    createdAt: placement.createdAt || new Date().toISOString(),
-    pending: Boolean(placement.pending),
-  };
+	return {
+		id: placement.id || `${placement.stickerId}-${slotId}-${Date.now()}`,
+		stickerId: placement.stickerId,
+		stickerSrc: sticker.src,
+		message: placement.message || "",
+		authorName: String(placement.authorName || "").slice(0, NAME_LIMIT),
+		slotId,
+		createdAt: placement.createdAt || new Date().toISOString(),
+		pending: Boolean(placement.pending),
+	};
 }
 
 function slotGroup(slotId) {
-  return Math.floor(slotId / GROUP_SIZE);
+	return Math.floor(slotId / GROUP_SIZE);
 }
 
 function slotRow(slotId) {
-  return Math.floor((slotId % GROUP_SIZE) / ROW_GROUP_SIZE);
+	return Math.floor((slotId % GROUP_SIZE) / ROW_GROUP_SIZE);
 }
 
 function slotColumn(slotId) {
-  return slotId % ROW_GROUP_SIZE;
+	return slotId % ROW_GROUP_SIZE;
 }
 
 function slotIdFor(row, group, column) {
-  return group * GROUP_SIZE + row * ROW_GROUP_SIZE + column;
+	return group * GROUP_SIZE + row * ROW_GROUP_SIZE + column;
 }
 
 function placementsBySlot(placements) {
-  return new Map(placements.map((placement) => [placement.slotId, normalizePlacement(placement)]));
+	return new Map(
+		placements.map((placement) => [
+			placement.slotId,
+			normalizePlacement(placement),
+		]),
+	);
 }
 
 function rowGroupPlacements(placements, row, group) {
-  return placements
-    .filter((placement) => slotGroup(placement.slotId) === group && slotRow(placement.slotId) === row)
-    .sort((a, b) => slotColumn(a.slotId) - slotColumn(b.slotId));
+	return placements
+		.filter(
+			(placement) =>
+				slotGroup(placement.slotId) === group &&
+				slotRow(placement.slotId) === row,
+		)
+		.sort((a, b) => slotColumn(a.slotId) - slotColumn(b.slotId));
 }
 
 function rowGroupKind(placements, row, group) {
-  const firstPlacement = rowGroupPlacements(placements, row, group)[0];
-  if (!firstPlacement) return null;
-  return stickerKind(findSticker(firstPlacement.stickerId));
+	const firstPlacement = rowGroupPlacements(placements, row, group)[0];
+	if (!firstPlacement) return null;
+	return stickerKind(findSticker(firstPlacement.stickerId));
 }
 
 function firstOpenInRowGroup(placements, row, group) {
-  const occupiedSlots = new Set(placements.map((placement) => placement.slotId));
+	const occupiedSlots = new Set(
+		placements.map((placement) => placement.slotId),
+	);
 
-  for (let column = 0; column < ROW_GROUP_SIZE; column += 1) {
-    const slotId = slotIdFor(row, group, column);
-    if (slotId < MAX_PLACEMENTS && !occupiedSlots.has(slotId)) return slotId;
-  }
+	for (let column = 0; column < ROW_GROUP_SIZE; column += 1) {
+		const slotId = slotIdFor(row, group, column);
+		if (slotId < MAX_PLACEMENTS && !occupiedSlots.has(slotId)) return slotId;
+	}
 
-  return undefined;
+	return undefined;
 }
 
 function nextRequiredKind(placements) {
-  for (let group = 0; group < MAX_GROUPS; group += 1) {
-    for (let row = 0; row < BOARD_ROWS; row += 1) {
-      const kind = rowGroupKind(placements, row, group);
-      if (kind && firstOpenInRowGroup(placements, row, group) !== undefined) return kind;
-    }
-  }
+	for (let group = 0; group < MAX_GROUPS; group += 1) {
+		for (let row = 0; row < BOARD_ROWS; row += 1) {
+			const kind = rowGroupKind(placements, row, group);
+			if (kind && firstOpenInRowGroup(placements, row, group) !== undefined)
+				return kind;
+		}
+	}
 
-  return null;
+	return null;
 }
 
 function findPlacementSlot(placements, sticker) {
-  const kind = stickerKind(sticker);
+	const kind = stickerKind(sticker);
 
-  for (let group = 0; group < MAX_GROUPS; group += 1) {
-    for (let row = 0; row < BOARD_ROWS; row += 1) {
-      if (rowGroupKind(placements, row, group) !== kind) continue;
-      const slotId = firstOpenInRowGroup(placements, row, group);
-      if (slotId !== undefined) return slotId;
-    }
-  }
+	for (let group = 0; group < MAX_GROUPS; group += 1) {
+		for (let row = 0; row < BOARD_ROWS; row += 1) {
+			if (rowGroupKind(placements, row, group) !== kind) continue;
+			const slotId = firstOpenInRowGroup(placements, row, group);
+			if (slotId !== undefined) return slotId;
+		}
+	}
 
-  for (let group = 0; group < MAX_GROUPS; group += 1) {
-    for (let row = 0; row < BOARD_ROWS; row += 1) {
-      if (rowGroupPlacements(placements, row, group).length > 0) continue;
-      const slotId = firstOpenInRowGroup(placements, row, group);
-      if (slotId !== undefined) return slotId;
-    }
-  }
+	for (let group = 0; group < MAX_GROUPS; group += 1) {
+		for (let row = 0; row < BOARD_ROWS; row += 1) {
+			if (rowGroupPlacements(placements, row, group).length > 0) continue;
+			const slotId = firstOpenInRowGroup(placements, row, group);
+			if (slotId !== undefined) return slotId;
+		}
+	}
 
-  return undefined;
+	return undefined;
 }
 
 function renderGroupCount(placements) {
-  const highestGroup = placements.reduce((max, placement) => Math.max(max, slotGroup(placement.slotId)), -1);
-  return clamp(highestGroup + 2, MIN_RENDER_GROUPS, MAX_GROUPS);
+	const highestGroup = placements.reduce(
+		(max, placement) => Math.max(max, slotGroup(placement.slotId)),
+		-1,
+	);
+	return clamp(highestGroup + 2, MIN_RENDER_GROUPS, MAX_GROUPS);
 }
 
 function boardRows(placements) {
-  const bySlot = placementsBySlot(placements);
-  const groupCount = renderGroupCount(placements);
+	const bySlot = placementsBySlot(placements);
+	const groupCount = renderGroupCount(placements);
 
-  return Array.from({ length: BOARD_ROWS }, (_row, row) => {
-    return Array.from({ length: groupCount }, (_group, group) => {
-      const kind = rowGroupKind(placements, row, group);
-      const tone = kind ? SHAPE_CONFIG[kind].rowTone : "226 226 226";
+	return Array.from({ length: BOARD_ROWS }, (_row, row) => {
+		return Array.from({ length: groupCount }, (_group, group) => {
+			const kind = rowGroupKind(placements, row, group);
+			const tone = kind ? SHAPE_CONFIG[kind].rowTone : "226 226 226";
 
-      return {
-        row,
-        group,
-        kind,
-        tone,
-        slots: Array.from({ length: ROW_GROUP_SIZE }, (_slot, column) => {
-          const slotId = slotIdFor(row, group, column);
-          return {
-            id: slotId,
-            index: row * ROW_GROUP_SIZE + column,
-            placement: bySlot.get(slotId) || null,
-            variant: SLOT_VARIANTS[(group * GROUP_SIZE + row * ROW_GROUP_SIZE + column) % SLOT_VARIANTS.length],
-          };
-        }),
-      };
-    });
-  });
+			return {
+				row,
+				group,
+				kind,
+				tone,
+				slots: Array.from({ length: ROW_GROUP_SIZE }, (_slot, column) => {
+					const slotId = slotIdFor(row, group, column);
+					return {
+						id: slotId,
+						index: row * ROW_GROUP_SIZE + column,
+						placement: bySlot.get(slotId) || null,
+						variant:
+							SLOT_VARIANTS[
+								(group * GROUP_SIZE + row * ROW_GROUP_SIZE + column) %
+									SLOT_VARIANTS.length
+							],
+					};
+				}),
+			};
+		});
+	});
 }
 
 function chooseSticker(placements, preferredSticker = null) {
-  const usedIds = new Set(placements.map((item) => item.stickerId));
-  const available = stickers.filter((sticker) => !usedIds.has(sticker.id));
-  const requiredKind = nextRequiredKind(placements);
-  const matching = requiredKind
-    ? available.filter((sticker) => stickerKind(sticker) === requiredKind)
-    : [];
-  const pool = matching.length > 0 ? matching : available.length > 0 ? available : stickers;
+	const usedIds = new Set(placements.map((item) => item.stickerId));
+	const available = stickers.filter((sticker) => !usedIds.has(sticker.id));
+	const requiredKind = nextRequiredKind(placements);
+	const matching = requiredKind
+		? available.filter((sticker) => stickerKind(sticker) === requiredKind)
+		: [];
+	const pool =
+		matching.length > 0
+			? matching
+			: available.length > 0
+				? available
+				: stickers;
 
-  if (preferredSticker && pool.some((sticker) => sticker.id === preferredSticker.id)) {
-    return preferredSticker;
-  }
+	if (
+		preferredSticker &&
+		pool.some((sticker) => sticker.id === preferredSticker.id)
+	) {
+		return preferredSticker;
+	}
 
-  return pool[Math.floor(Math.random() * pool.length)];
+	return pool[Math.floor(Math.random() * pool.length)];
 }
 
 function isSlotOpen(placements, slotId) {
-  if (!Number.isInteger(slotId) || slotId < 0) return false;
-  if (slotId >= MAX_PLACEMENTS) return false;
-  if (placements.some((placement) => placement.slotId === slotId)) return false;
-  return true;
+	if (!Number.isInteger(slotId) || slotId < 0) return false;
+	if (slotId >= MAX_PLACEMENTS) return false;
+	if (placements.some((placement) => placement.slotId === slotId)) return false;
+	return true;
 }
 
 function setPointerTilt(event) {
-  if (event.pointerType === "touch") return;
-  const target = event.currentTarget;
+	if (event.pointerType === "touch") return;
+	const target = event.currentTarget;
 
-  lastPointerByElement.set(target, {
-    clientX: event.clientX,
-    clientY: event.clientY,
-  });
+	lastPointerByElement.set(target, {
+		clientX: event.clientX,
+		clientY: event.clientY,
+	});
 
-  if (tiltFrameByElement.has(target)) return;
+	if (tiltFrameByElement.has(target)) return;
 
-  const frame = window.requestAnimationFrame(() => {
-    const pointer = lastPointerByElement.get(target);
-    if (!pointer) {
-      tiltFrameByElement.delete(target);
-      return;
-    }
+	const frame = window.requestAnimationFrame(() => {
+		const pointer = lastPointerByElement.get(target);
+		if (!pointer) {
+			tiltFrameByElement.delete(target);
+			return;
+		}
 
-    const rect = target.getBoundingClientRect();
-    const x = (pointer.clientX - rect.left) / rect.width - 0.5;
-    const y = (pointer.clientY - rect.top) / rect.height - 0.5;
+		const rect = target.getBoundingClientRect();
+		const x = (pointer.clientX - rect.left) / rect.width - 0.5;
+		const y = (pointer.clientY - rect.top) / rect.height - 0.5;
 
-    target.style.setProperty("--tilt-x", `${(-y * 13).toFixed(2)}deg`);
-    target.style.setProperty("--tilt-y", `${(x * 15).toFixed(2)}deg`);
-    tiltFrameByElement.delete(target);
-  });
+		target.style.setProperty("--tilt-x", `${(-y * 13).toFixed(2)}deg`);
+		target.style.setProperty("--tilt-y", `${(x * 15).toFixed(2)}deg`);
+		tiltFrameByElement.delete(target);
+	});
 
-  tiltFrameByElement.set(target, frame);
+	tiltFrameByElement.set(target, frame);
 }
 
 function clearPointerTilt(event) {
-  const target = event.currentTarget;
-  const frame = tiltFrameByElement.get(target);
+	const target = event.currentTarget;
+	const frame = tiltFrameByElement.get(target);
 
-  if (frame) {
-    window.cancelAnimationFrame(frame);
-    tiltFrameByElement.delete(target);
-  }
+	if (frame) {
+		window.cancelAnimationFrame(frame);
+		tiltFrameByElement.delete(target);
+	}
 
-  lastPointerByElement.delete(target);
-  target.style.removeProperty("--tilt-x");
-  target.style.removeProperty("--tilt-y");
+	lastPointerByElement.delete(target);
+	target.style.removeProperty("--tilt-x");
+	target.style.removeProperty("--tilt-y");
 }
 
 function normalizeNoteForFilter(text) {
-  return text
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[013457@$!]/g, (character) => NOTE_LEET_MAP[character] || character)
-    .replace(/[^a-z0-9]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+	return text
+		.toLowerCase()
+		.normalize("NFKD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.replace(
+			/[013457@$!]/g,
+			(character) => NOTE_LEET_MAP[character] || character,
+		)
+		.replace(/[^a-z0-9]+/g, " ")
+		.replace(/\s+/g, " ")
+		.trim();
 }
 
 function noteHasBlockedLanguage(text) {
-  const normalized = normalizeNoteForFilter(text);
-  const compact = normalized.replace(/\s+/g, "");
+	const normalized = normalizeNoteForFilter(text);
+	const compact = normalized.replace(/\s+/g, "");
 
-  return (
-    BLOCKED_NOTE_PATTERNS.some((pattern) => pattern.test(normalized)) ||
-    BLOCKED_NOTE_COMPACT_PATTERNS.some((pattern) => pattern.test(compact))
-  );
+	return (
+		BLOCKED_NOTE_PATTERNS.some((pattern) => pattern.test(normalized)) ||
+		BLOCKED_NOTE_COMPACT_PATTERNS.some((pattern) => pattern.test(compact))
+	);
 }
 
 function validateNote(text) {
-  const note = text.trim();
+	const note = text.trim();
 
-  if (!note) return "Write a note first.";
-  if (noteHasBlockedLanguage(note)) return "Please keep the note kind.";
-  return "";
+	if (!note) return "Write a note first.";
+	if (noteHasBlockedLanguage(note)) return "Please keep the note kind.";
+	return "";
 }
 
 function validateName(text) {
-  const name = text.trim();
+	const name = text.trim();
 
-  if (!name) return "";
-  if (noteHasBlockedLanguage(name)) return "Please keep the name kind.";
-  return "";
+	if (!name) return "";
+	if (noteHasBlockedLanguage(name)) return "Please keep the name kind.";
+	return "";
 }
 
 export default function StickerBoard() {
-  const pendingRequestRef = useRef(0);
-  const noteInputRef = useRef(null);
+	const pendingRequestRef = useRef(0);
+	const noteInputRef = useRef(null);
+	const artworkInfoButtonRef = useRef(null);
+	const artworkInfoCardRef = useRef(null);
+	const artworkInfoCloseRef = useRef(null);
+	const artworkInfoCloseTimerRef = useRef(null);
 
-  const [placements, setPlacements] = useState([]);
-  const [selectedSticker, setSelectedSticker] = useState(null);
-  const [message, setMessage] = useState("");
-  const [authorName, setAuthorName] = useState("");
-  const [, setStatus] = useState("loading");
-  const [modalPlacement, setModalPlacement] = useState(null);
-  const [previewSticker, setPreviewSticker] = useState(null);
-  const [modalFlipped, setModalFlipped] = useState(false);
-  const [noteError, setNoteError] = useState("");
-  const [newPlacementSlotId, setNewPlacementSlotId] = useState(null);
-  const [composerStickerDeparting, setComposerStickerDeparting] = useState(false);
-  const [composerStickerReturning, setComposerStickerReturning] = useState(false);
-  const [departingPlacementId, setDepartingPlacementId] = useState(null);
-  const [returningPlacementId, setReturningPlacementId] = useState(null);
-  const [modalEntryKind, setModalEntryKind] = useState("default");
-  const [modalClosing, setModalClosing] = useState(false);
+	const [placements, setPlacements] = useState([]);
+	const [selectedSticker, setSelectedSticker] = useState(null);
+	const [message, setMessage] = useState("");
+	const [authorName, setAuthorName] = useState("");
+	const [, setStatus] = useState("loading");
+	const [modalPlacement, setModalPlacement] = useState(null);
+	const [previewSticker, setPreviewSticker] = useState(null);
+	const [modalFlipped, setModalFlipped] = useState(false);
+	const [noteError, setNoteError] = useState("");
+	const [newPlacementSlotId, setNewPlacementSlotId] = useState(null);
+	const [composerStickerDeparting, setComposerStickerDeparting] =
+		useState(false);
+	const [composerStickerReturning, setComposerStickerReturning] =
+		useState(false);
+	const [departingPlacementId, setDepartingPlacementId] = useState(null);
+	const [returningPlacementId, setReturningPlacementId] = useState(null);
+	const [modalEntryKind, setModalEntryKind] = useState("default");
+	const [modalClosing, setModalClosing] = useState(false);
+	const [artworkInfoOpen, setArtworkInfoOpen] = useState(false);
+	const [artworkInfoClosing, setArtworkInfoClosing] = useState(false);
 
-  const rows = useMemo(() => boardRows(placements), [placements]);
-  const availableStickers = useMemo(() => {
-    const usedIds = new Set(placements.map((item) => item.stickerId));
-    return stickers.filter((sticker) => !usedIds.has(sticker.id));
-  }, [placements]);
-  const allStickersUsed = availableStickers.length === 0;
-  const modalSticker = modalPlacement ? findSticker(modalPlacement.stickerId) : previewSticker;
-  const modalFrame = modalSticker ? flipFrameFor(modalSticker) : null;
-  const modalMessage =
-    modalPlacement?.message ||
-    (previewSticker ? message.trim() || "Write something small for the sticker to carry." : "");
-  const modalAuthorName = modalPlacement?.authorName || "";
-  const modalTimestamp = modalPlacement ? formatStickerDate(modalPlacement.createdAt) : "";
-  const modalDoodle = modalSticker ? noteDoodleFor(modalPlacement, modalSticker) : null;
-  const noteCharactersLeft = MESSAGE_LIMIT - message.length;
-  const showNoteLimitWarning = Boolean(previewSticker && noteCharactersLeft <= 15);
-  const noteDensityClass = message.length > 125 ? "is-dense" : message.length > 75 ? "is-compact" : "";
+	const rows = useMemo(() => boardRows(placements), [placements]);
+	const availableStickers = useMemo(() => {
+		const usedIds = new Set(placements.map((item) => item.stickerId));
+		return stickers.filter((sticker) => !usedIds.has(sticker.id));
+	}, [placements]);
+	const allStickersUsed = availableStickers.length === 0;
+	const modalSticker = modalPlacement
+		? findSticker(modalPlacement.stickerId)
+		: previewSticker;
+	const modalFrame = modalSticker ? flipFrameFor(modalSticker) : null;
+	const modalMessage =
+		modalPlacement?.message ||
+		(previewSticker
+			? message.trim() || "Write something small for the sticker to carry."
+			: "");
+	const modalAuthorName = modalPlacement?.authorName || "";
+	const modalTimestamp = modalPlacement
+		? formatStickerDate(modalPlacement.createdAt)
+		: "";
+	const modalDoodle = modalSticker
+		? noteDoodleFor(modalPlacement, modalSticker)
+		: null;
+	const noteCharactersLeft = MESSAGE_LIMIT - message.length;
+	const showNoteLimitWarning = Boolean(
+		previewSticker && noteCharactersLeft <= 15,
+	);
+	const noteDensityClass =
+		message.length > 125 ? "is-dense" : message.length > 75 ? "is-compact" : "";
 
-  useEffect(() => {
-    let isMounted = true;
+	useEffect(() => {
+		let isMounted = true;
 
-    async function loadPlacements() {
-      try {
-        const response = await fetch("/api/stickers");
-        if (!response.ok) throw new Error("Sticker API unavailable");
-        const data = await response.json();
-        if (data.storage === "unavailable") throw new Error("Sticker API storage unavailable");
+		async function loadPlacements() {
+			try {
+				const response = await fetch("/api/stickers");
+				if (!response.ok) throw new Error("Sticker API unavailable");
+				const data = await response.json();
+				if (data.storage === "unavailable")
+					throw new Error("Sticker API storage unavailable");
 
-        const nextPlacements = Array.isArray(data.placements)
-          ? data.placements.map(normalizePlacement)
-          : [];
+				const nextPlacements = Array.isArray(data.placements)
+					? data.placements.map(normalizePlacement)
+					: [];
 
-        if (!isMounted) return;
-        setPlacements(nextPlacements);
-        setLocalPlacements(nextPlacements);
-        setSelectedSticker((currentSticker) => chooseSticker(nextPlacements, currentSticker));
-        setStatus("ready");
-      } catch {
-        const localPlacements = getLocalPlacements().map(normalizePlacement);
-        if (!isMounted) return;
-        setPlacements(localPlacements);
-        setSelectedSticker((currentSticker) => chooseSticker(localPlacements, currentSticker));
-        setStatus("local");
-      }
-    }
+				if (!isMounted) return;
+				setPlacements(nextPlacements);
+				setLocalPlacements(nextPlacements);
+				setSelectedSticker((currentSticker) =>
+					chooseSticker(nextPlacements, currentSticker),
+				);
+				setStatus("ready");
+			} catch {
+				const localPlacements = getLocalPlacements().map(normalizePlacement);
+				if (!isMounted) return;
+				setPlacements(localPlacements);
+				setSelectedSticker((currentSticker) =>
+					chooseSticker(localPlacements, currentSticker),
+				);
+				setStatus("local");
+			}
+		}
 
-    loadPlacements();
+		loadPlacements();
 
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+		return () => {
+			isMounted = false;
+		};
+	}, []);
 
-  useEffect(() => {
-    if (newPlacementSlotId === null) return;
-    const timeout = window.setTimeout(() => setNewPlacementSlotId(null), 860);
-    return () => window.clearTimeout(timeout);
-  }, [newPlacementSlotId]);
+	useEffect(() => {
+		if (newPlacementSlotId === null) return;
+		const timeout = window.setTimeout(() => setNewPlacementSlotId(null), 860);
+		return () => window.clearTimeout(timeout);
+	}, [newPlacementSlotId]);
 
-  useEffect(() => {
-    if ((!modalPlacement && !previewSticker) || modalClosing) return;
+	useEffect(() => {
+		if ((!modalPlacement && !previewSticker) || modalClosing) return;
 
-    setModalFlipped(false);
+		setModalFlipped(false);
 
-    if (!previewSticker) return;
+		if (!previewSticker) return;
 
-    const flipTimeout = window.setTimeout(() => {
-      setModalFlipped(true);
-    }, 1000);
-    const focusTimeout = window.setTimeout(() => {
-      noteInputRef.current?.focus();
-    }, 1120);
+		const flipTimeout = window.setTimeout(() => {
+			setModalFlipped(true);
+		}, 1000);
+		const focusTimeout = window.setTimeout(() => {
+			noteInputRef.current?.focus();
+		}, 1120);
 
-    return () => {
-      window.clearTimeout(flipTimeout);
-      window.clearTimeout(focusTimeout);
-    };
-  }, [modalPlacement, previewSticker, modalClosing]);
+		return () => {
+			window.clearTimeout(flipTimeout);
+			window.clearTimeout(focusTimeout);
+		};
+	}, [modalPlacement, previewSticker, modalClosing]);
 
-  useEffect(() => {
-    if (!modalPlacement && !previewSticker) return;
+	useEffect(() => {
+		if (!modalPlacement && !previewSticker) return;
 
-    const closeOnEscape = (event) => {
-      if (event.key === "Escape") {
-        closeStickerModal();
-      }
-    };
+		const closeOnEscape = (event) => {
+			if (event.key === "Escape") {
+				closeStickerModal();
+			}
+		};
 
-    document.addEventListener("keydown", closeOnEscape);
-    return () => document.removeEventListener("keydown", closeOnEscape);
-  }, [modalPlacement, previewSticker]);
+		document.addEventListener("keydown", closeOnEscape);
+		return () => document.removeEventListener("keydown", closeOnEscape);
+	}, [modalPlacement, previewSticker]);
 
-  useEffect(() => {
-    const input = noteInputRef.current;
-    if (!input || !previewSticker) return;
+	useEffect(() => {
+		if (!artworkInfoOpen) return;
 
-    input.style.height = "0px";
-    input.style.height = `${input.scrollHeight}px`;
-  }, [message, previewSticker, modalFlipped]);
+		artworkInfoCloseRef.current?.focus();
 
-  async function persistPlacement(placement, optimisticPlacements) {
-    const requestId = ++pendingRequestRef.current;
+		const handleArtworkInfoKeys = (event) => {
+			if (event.key === "Escape") {
+				event.preventDefault();
+				closeArtworkInfo();
+				return;
+			}
 
-    try {
-      const response = await fetch("/api/stickers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          stickerId: placement.stickerId,
-          message: placement.message,
-          authorName: placement.authorName || "",
-          slotId: placement.slotId,
-        }),
-      });
+			if (event.key !== "Tab") return;
 
-      const data = await response.json();
+			const focusable =
+				artworkInfoCardRef.current?.querySelectorAll("button, a[href]");
+			if (!focusable?.length) return;
 
-      if (!response.ok) {
-        if (
-          requestId === pendingRequestRef.current &&
-          (
-            data?.error === "Write a note first." ||
-            data?.error === "Please keep the note kind." ||
-            data?.error === "Please keep the name kind."
-          )
-        ) {
-          const rolledBackPlacements = optimisticPlacements.filter((item) => item.id !== placement.id);
-          const rejectedSticker = findSticker(placement.stickerId);
+			const first = focusable[0];
+			const last = focusable[focusable.length - 1];
 
-          setPlacements(rolledBackPlacements);
-          setLocalPlacements(rolledBackPlacements);
-          setSelectedSticker(rejectedSticker);
-          setMessage(placement.message);
-          setAuthorName(placement.authorName || "");
-          setPreviewSticker(rejectedSticker);
-          setNoteError(data.error);
-          setModalFlipped(true);
-          setStatus("local");
-          return;
-        }
+			if (event.shiftKey && document.activeElement === first) {
+				event.preventDefault();
+				last.focus();
+			} else if (!event.shiftKey && document.activeElement === last) {
+				event.preventDefault();
+				first.focus();
+			}
+		};
 
-        if (Array.isArray(data.placements) && requestId === pendingRequestRef.current) {
-          const serverPlacements = data.placements.map(normalizePlacement);
-          setPlacements(serverPlacements);
-          setLocalPlacements(serverPlacements);
-          setSelectedSticker((currentSticker) => chooseSticker(serverPlacements, currentSticker));
-          setStatus("ready");
-        } else if (requestId === pendingRequestRef.current) {
-          const settledPlacements = optimisticPlacements.map((item) =>
-            item.id === placement.id ? { ...item, pending: false } : item,
-          );
-          setPlacements(settledPlacements);
-          setLocalPlacements(settledPlacements);
-          setSelectedSticker((currentSticker) => chooseSticker(settledPlacements, currentSticker));
-          setStatus("local");
-        }
-        return;
-      }
+		document.addEventListener("keydown", handleArtworkInfoKeys);
+		return () => document.removeEventListener("keydown", handleArtworkInfoKeys);
+	}, [artworkInfoOpen]);
 
-      if (requestId !== pendingRequestRef.current) return;
+	useEffect(
+		() => () => {
+			if (artworkInfoCloseTimerRef.current) {
+				window.clearTimeout(artworkInfoCloseTimerRef.current);
+			}
+		},
+		[],
+	);
 
-      const serverPlacements = Array.isArray(data.placements)
-        ? data.placements.map(normalizePlacement)
-        : optimisticPlacements.map((item) =>
-            item.id === placement.id ? normalizePlacement(data.placement || placement) : item,
-          );
+	useEffect(() => {
+		const input = noteInputRef.current;
+		if (!input || !previewSticker) return;
 
-      setPlacements(serverPlacements);
-      setLocalPlacements(serverPlacements);
-      setSelectedSticker((currentSticker) => chooseSticker(serverPlacements, currentSticker));
-      setStatus("saved");
-    } catch {
-      if (requestId !== pendingRequestRef.current) return;
-      const settledPlacements = optimisticPlacements.map((item) =>
-        item.id === placement.id ? { ...item, pending: false } : item,
-      );
-      setPlacements(settledPlacements);
-      setLocalPlacements(settledPlacements);
-      setSelectedSticker((currentSticker) => chooseSticker(settledPlacements, currentSticker));
-      setStatus("local");
-    }
-  }
+		input.style.height = "0px";
+		input.style.height = `${input.scrollHeight}px`;
+	}, [message, previewSticker, modalFlipped]);
 
-  function updateMessage(value) {
-    setMessage(value);
-    if (noteError) setNoteError("");
-  }
+	async function persistPlacement(placement, optimisticPlacements) {
+		const requestId = ++pendingRequestRef.current;
 
-  function updateAuthorName(value) {
-    setAuthorName(value.slice(0, NAME_LIMIT));
-    if (noteError) setNoteError("");
-  }
+		try {
+			const response = await fetch("/api/stickers", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					stickerId: placement.stickerId,
+					message: placement.message,
+					authorName: placement.authorName || "",
+					slotId: placement.slotId,
+				}),
+			});
 
-  function openSelectedStickerNote() {
-    if (
-      !selectedSticker ||
-      allStickersUsed ||
-      composerStickerDeparting ||
-      composerStickerReturning ||
-      departingPlacementId ||
-      returningPlacementId ||
-      modalClosing
-    ) {
-      return;
-    }
-    setNoteError("");
-    setAuthorName("");
-    setModalClosing(false);
+			const data = await response.json();
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setModalEntryKind("from-composer");
-      setPreviewSticker(selectedSticker);
-      return;
-    }
+			if (!response.ok) {
+				if (
+					requestId === pendingRequestRef.current &&
+					(data?.error === "Write a note first." ||
+						data?.error === "Please keep the note kind." ||
+						data?.error === "Please keep the name kind.")
+				) {
+					const rolledBackPlacements = optimisticPlacements.filter(
+						(item) => item.id !== placement.id,
+					);
+					const rejectedSticker = findSticker(placement.stickerId);
 
-    setComposerStickerDeparting(true);
-  }
+					setPlacements(rolledBackPlacements);
+					setLocalPlacements(rolledBackPlacements);
+					setSelectedSticker(rejectedSticker);
+					setMessage(placement.message);
+					setAuthorName(placement.authorName || "");
+					setPreviewSticker(rejectedSticker);
+					setNoteError(data.error);
+					setModalFlipped(true);
+					setStatus("local");
+					return;
+				}
 
-  function openPlacedStickerNote(placement) {
-    if (
-      composerStickerDeparting ||
-      composerStickerReturning ||
-      departingPlacementId ||
-      returningPlacementId ||
-      modalClosing
-    ) {
-      return;
-    }
-    setAuthorName("");
-    setModalClosing(false);
+				if (
+					Array.isArray(data.placements) &&
+					requestId === pendingRequestRef.current
+				) {
+					const serverPlacements = data.placements.map(normalizePlacement);
+					setPlacements(serverPlacements);
+					setLocalPlacements(serverPlacements);
+					setSelectedSticker((currentSticker) =>
+						chooseSticker(serverPlacements, currentSticker),
+					);
+					setStatus("ready");
+				} else if (requestId === pendingRequestRef.current) {
+					const settledPlacements = optimisticPlacements.map((item) =>
+						item.id === placement.id ? { ...item, pending: false } : item,
+					);
+					setPlacements(settledPlacements);
+					setLocalPlacements(settledPlacements);
+					setSelectedSticker((currentSticker) =>
+						chooseSticker(settledPlacements, currentSticker),
+					);
+					setStatus("local");
+				}
+				return;
+			}
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setModalEntryKind("from-board");
-      setModalPlacement(placement);
-      return;
-    }
+			if (requestId !== pendingRequestRef.current) return;
 
-    setDepartingPlacementId(placement.id);
-  }
+			const serverPlacements = Array.isArray(data.placements)
+				? data.placements.map(normalizePlacement)
+				: optimisticPlacements.map((item) =>
+						item.id === placement.id
+							? normalizePlacement(data.placement || placement)
+							: item,
+					);
 
-  function closeStickerModal() {
-    if (modalClosing || (!modalPlacement && !previewSticker)) return;
+			setPlacements(serverPlacements);
+			setLocalPlacements(serverPlacements);
+			setSelectedSticker((currentSticker) =>
+				chooseSticker(serverPlacements, currentSticker),
+			);
+			setStatus("saved");
+		} catch {
+			if (requestId !== pendingRequestRef.current) return;
+			const settledPlacements = optimisticPlacements.map((item) =>
+				item.id === placement.id ? { ...item, pending: false } : item,
+			);
+			setPlacements(settledPlacements);
+			setLocalPlacements(settledPlacements);
+			setSelectedSticker((currentSticker) =>
+				chooseSticker(settledPlacements, currentSticker),
+			);
+			setStatus("local");
+		}
+	}
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	function updateMessage(value) {
+		setMessage(value);
+		if (noteError) setNoteError("");
+	}
 
-    if (reducedMotion) {
-      setModalPlacement(null);
-      setPreviewSticker(null);
-      setComposerStickerDeparting(false);
-      setComposerStickerReturning(false);
-      setDepartingPlacementId(null);
-      setReturningPlacementId(null);
-      setModalClosing(false);
-      setModalEntryKind("default");
-      setAuthorName("");
-      setNoteError("");
-      return;
-    }
+	function updateAuthorName(value) {
+		setAuthorName(value.slice(0, NAME_LIMIT));
+		if (noteError) setNoteError("");
+	}
 
-    setModalClosing(true);
-  }
+	function openArtworkInfo() {
+		if (artworkInfoCloseTimerRef.current) {
+			window.clearTimeout(artworkInfoCloseTimerRef.current);
+			artworkInfoCloseTimerRef.current = null;
+		}
+		setArtworkInfoClosing(false);
+		setArtworkInfoOpen(true);
+	}
 
-  function handleSelectedStickerJourneyEnd(event) {
-    if (event.target !== event.currentTarget) return;
+	function closeArtworkInfo() {
+		if (!artworkInfoOpen || artworkInfoClosing) return;
 
-    if (composerStickerReturning && event.animationName === "selected-sticker-return-right") {
-      setComposerStickerReturning(false);
-      setModalEntryKind("default");
-      return;
-    }
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			setArtworkInfoOpen(false);
+			window.setTimeout(() => artworkInfoButtonRef.current?.focus(), 0);
+			return;
+		}
 
-    if (
-      composerStickerDeparting &&
-      !previewSticker &&
-      event.animationName === "selected-sticker-depart-right"
-    ) {
-      setModalEntryKind("from-composer");
-      setPreviewSticker(selectedSticker);
-    }
-  }
+		setArtworkInfoClosing(true);
+		artworkInfoCloseTimerRef.current = window.setTimeout(() => {
+			setArtworkInfoOpen(false);
+			setArtworkInfoClosing(false);
+			artworkInfoCloseTimerRef.current = null;
+			artworkInfoButtonRef.current?.focus();
+		}, 220);
+	}
 
-  function handlePlacedStickerJourneyEnd(event, placement) {
-    if (returningPlacementId === placement.id && event.animationName === "placed-sticker-return") {
-      setReturningPlacementId(null);
-      setModalEntryKind("default");
-      return;
-    }
+	function openSelectedStickerNote() {
+		if (
+			!selectedSticker ||
+			allStickersUsed ||
+			composerStickerDeparting ||
+			composerStickerReturning ||
+			departingPlacementId ||
+			returningPlacementId ||
+			modalClosing
+		) {
+			return;
+		}
+		setNoteError("");
+		setAuthorName("");
+		setModalClosing(false);
 
-    if (
-      departingPlacementId === placement.id &&
-      !modalPlacement &&
-      event.animationName === "placed-sticker-depart"
-    ) {
-      setModalEntryKind("from-board");
-      setModalPlacement(placement);
-    }
-  }
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			setModalEntryKind("from-composer");
+			setPreviewSticker(selectedSticker);
+			return;
+		}
 
-  function handleModalJourneyEnd(event) {
-    if (event.target !== event.currentTarget || !modalClosing) return;
-    if (
-      event.animationName !== "sticker-modal-leave-to-bottom" &&
-      event.animationName !== "sticker-modal-leave-to-board"
-    ) {
-      return;
-    }
+		setComposerStickerDeparting(true);
+	}
 
-    const returningId = modalPlacement?.id || null;
-    const returningToComposer = modalEntryKind === "from-composer";
+	function openPlacedStickerNote(placement) {
+		if (
+			composerStickerDeparting ||
+			composerStickerReturning ||
+			departingPlacementId ||
+			returningPlacementId ||
+			modalClosing
+		) {
+			return;
+		}
+		setAuthorName("");
+		setModalClosing(false);
 
-    setModalPlacement(null);
-    setPreviewSticker(null);
-    setModalClosing(false);
-    setAuthorName("");
-    setNoteError("");
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			setModalEntryKind("from-board");
+			setModalPlacement(placement);
+			return;
+		}
 
-    if (returningToComposer) {
-      setComposerStickerDeparting(false);
-      setComposerStickerReturning(true);
-      return;
-    }
+		setDepartingPlacementId(placement.id);
+	}
 
-    setDepartingPlacementId(null);
-    setReturningPlacementId(returningId);
-  }
+	function closeStickerModal() {
+		if (modalClosing || (!modalPlacement && !previewSticker)) return;
 
-  function placeSticker() {
-    const stickerForPlacement = previewSticker || selectedSticker;
-    const slotId = stickerForPlacement ? findPlacementSlot(placements, stickerForPlacement) : undefined;
+		const reducedMotion = window.matchMedia(
+			"(prefers-reduced-motion: reduce)",
+		).matches;
 
-    if (
-      !stickerForPlacement ||
-      allStickersUsed ||
-      slotId === undefined ||
-      !isSlotOpen(placements, slotId) ||
-      placements.some((placement) => placement.stickerId === stickerForPlacement.id)
-    ) {
-      return;
-    }
+		if (reducedMotion) {
+			setModalPlacement(null);
+			setPreviewSticker(null);
+			setComposerStickerDeparting(false);
+			setComposerStickerReturning(false);
+			setDepartingPlacementId(null);
+			setReturningPlacementId(null);
+			setModalClosing(false);
+			setModalEntryKind("default");
+			setAuthorName("");
+			setNoteError("");
+			return;
+		}
 
-    const noteText = (noteInputRef.current?.value ?? message).trim();
-    const trimmedAuthorName = authorName.trim();
-    const validationError = validateNote(noteText) || validateName(trimmedAuthorName);
+		setModalClosing(true);
+	}
 
-    if (validationError) {
-      setNoteError(validationError);
-      setModalFlipped(true);
-      window.setTimeout(() => noteInputRef.current?.focus(), 0);
-      return;
-    }
+	function handleSelectedStickerJourneyEnd(event) {
+		if (event.target !== event.currentTarget) return;
 
-    const optimisticPlacement = normalizePlacement({
-      id: `local-${crypto.randomUUID()}`,
-      stickerId: stickerForPlacement.id,
-      stickerSrc: stickerForPlacement.src,
-      message: noteText,
-      authorName: trimmedAuthorName,
-      slotId,
-      createdAt: new Date().toISOString(),
-      pending: true,
-    });
-    const optimisticPlacements = [...placements, optimisticPlacement];
+		if (
+			composerStickerReturning &&
+			event.animationName === "selected-sticker-return-right"
+		) {
+			setComposerStickerReturning(false);
+			setModalEntryKind("default");
+			return;
+		}
 
-    setPlacements(optimisticPlacements);
-    setLocalPlacements(optimisticPlacements);
-    setMessage("");
-    setAuthorName("");
-    setNoteError("");
-    setPreviewSticker(null);
-    setComposerStickerDeparting(false);
-    setComposerStickerReturning(false);
-    setDepartingPlacementId(null);
-    setReturningPlacementId(null);
-    setModalClosing(false);
-    setModalEntryKind("default");
-    setSelectedSticker((currentSticker) => chooseSticker(optimisticPlacements, currentSticker));
-    setNewPlacementSlotId(optimisticPlacement.slotId);
-    setStatus("saving");
+		if (
+			composerStickerDeparting &&
+			!previewSticker &&
+			event.animationName === "selected-sticker-depart-right"
+		) {
+			setModalEntryKind("from-composer");
+			setPreviewSticker(selectedSticker);
+		}
+	}
 
-    persistPlacement(optimisticPlacement, optimisticPlacements);
-  }
+	function handlePlacedStickerJourneyEnd(event, placement) {
+		if (
+			returningPlacementId === placement.id &&
+			event.animationName === "placed-sticker-return"
+		) {
+			setReturningPlacementId(null);
+			setModalEntryKind("default");
+			return;
+		}
 
-  return (
-    <section id="sticker-board" className="sticker-board-section" aria-labelledby="sticker-board-title">
-      <div className="sticker-board-heading">
-        <h2 id="sticker-board-title">Sticker Guestbook</h2>
-        <p>Write and pin yours. Tap any sticker below to read what others left! 🤍</p>
-      </div>
+		if (
+			departingPlacementId === placement.id &&
+			!modalPlacement &&
+			event.animationName === "placed-sticker-depart"
+		) {
+			setModalEntryKind("from-board");
+			setModalPlacement(placement);
+		}
+	}
 
-      <div className="sticker-board-shell">
-        <div className="sticker-board-panel" aria-label="Visitor sticker board">
-          <div className="sticker-board-surface">
-            <div className="sticker-board-track">
-              {rows.map((rowGroups, rowIndex) => (
-                <div className="sticker-board-row" key={rowIndex}>
-                  {rowGroups.map((group) => (
-                    <div
-                      className={`sticker-row-group ${group.kind ? `is-${group.kind}` : "is-empty"}`}
-                      key={`${group.row}-${group.group}`}
-                      style={{ "--row-tone": group.tone }}
-                    >
-                      {group.slots.map((slot) => {
-                        const placement = slot.placement;
-                        const sticker = placement ? findSticker(placement.stickerId) : null;
+	function handleModalJourneyEnd(event) {
+		if (event.target !== event.currentTarget || !modalClosing) return;
+		if (
+			event.animationName !== "sticker-modal-leave-to-bottom" &&
+			event.animationName !== "sticker-modal-leave-to-board"
+		) {
+			return;
+		}
 
-                        return (
-                          <div
-                            className={`sticker-slot ${placement ? "has-sticker" : ""}`}
-                            data-sticker-slot={slot.id}
-                            key={slot.id}
-                            style={{
-                              "--slot-rotation": slot.variant.rotate,
-                              "--slot-x": slot.variant.x,
-                              "--slot-y": slot.variant.y,
-                              "--slot-scale": slot.variant.scale,
-                              "--slot-edge-x":
-                                slotColumn(slot.id) === 0
-                                  ? "clamp(0.38rem, 0.9vw, 0.72rem)"
-                                  : slotColumn(slot.id) === ROW_GROUP_SIZE - 1
-                                    ? "clamp(-0.72rem, -0.9vw, -0.38rem)"
-                                    : "0px",
-                            }}
-                          >
-                            <span className="empty-sticker-slot" aria-hidden="true" />
-                            {placement ? (
-                              <button
-                                type="button"
-                                className={`placed-sticker ${placement.pending ? "is-pending" : ""} ${
-                                  newPlacementSlotId === placement.slotId ? "is-new" : ""
-                                } ${departingPlacementId === placement.id ? "is-departing-to-focus" : ""} ${
-                                  returningPlacementId === placement.id ? "is-returning-from-focus" : ""
-                                }`}
-                                onClick={() => openPlacedStickerNote(placement)}
-                                onAnimationEnd={(event) => handlePlacedStickerJourneyEnd(event, placement)}
-                                onPointerMove={setPointerTilt}
-                                onPointerLeave={clearPointerTilt}
-                                style={stickerStyle(sticker)}
-                                aria-label="Open sticker note"
-                              >
-                                <span className="placed-sticker-shape">
-                                  <img
-                                    src={placement.stickerSrc}
-                                    width={sticker?.width}
-                                    height={sticker?.height}
-                                    alt=""
-                                    loading="lazy"
-                                  />
-                                </span>
-                              </button>
-                            ) : null}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+		const returningId = modalPlacement?.id || null;
+		const returningToComposer = modalEntryKind === "from-composer";
 
-        <aside className="sticker-composer" aria-label="Sticker composer">
-          <div className="selected-sticker-card">
-            <div className="selected-sticker-stage">
-              <div
-                className={`selected-sticker ${!selectedSticker || allStickersUsed ? "is-disabled" : ""} ${
-                  composerStickerDeparting ? "is-departing-right" : ""
-                } ${composerStickerReturning ? "is-returning-from-right" : ""}`}
-                onAnimationEnd={handleSelectedStickerJourneyEnd}
-                onClick={(event) => {
-                  if (event.target instanceof HTMLElement && event.target.closest("button")) return;
-                  openSelectedStickerNote();
-                }}
-                onPointerMove={setPointerTilt}
-                onPointerLeave={clearPointerTilt}
-                style={selectedSticker ? stickerStyle(selectedSticker) : undefined}
-              >
-                {selectedSticker ? (
-                  <span className="selected-sticker-float">
-                    <span className="selected-sticker-callout">here&apos;s your sticker, tap!</span>
-                    <button
-                      type="button"
-                      className="selected-sticker-main"
-                      onClick={openSelectedStickerNote}
-                      aria-label="Open selected sticker note"
-                      disabled={allStickersUsed}
-                    >
-                      <img
-                        className="selected-sticker-image"
-                        src={selectedSticker.src}
-                        width={selectedSticker.width}
-                        height={selectedSticker.height}
-                        alt=""
-                        draggable="false"
-                      />
-                    </button>
-                    <button
-                      type="button"
-                      className="sticker-pencil-action"
-                      onClick={openSelectedStickerNote}
-                      aria-label="Write a note for this sticker"
-                      disabled={allStickersUsed}
-                    >
-                      <img
-                        src="/assets/images/writing-tool.png"
-                        width="24"
-                        height="24"
-                        alt=""
-                        draggable="false"
-                      />
-                    </button>
-                  </span>
-                ) : (
-                  <span className="selected-sticker-loading" />
-                )}
-              </div>
-            </div>
-          </div>
-        </aside>
-      </div>
+		setModalPlacement(null);
+		setPreviewSticker(null);
+		setModalClosing(false);
+		setAuthorName("");
+		setNoteError("");
 
-      {modalSticker ? (
-        <div
-          className={`sticker-modal ${modalClosing ? "is-closing" : ""}`}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Sticker note"
-        >
-          <button
-            type="button"
-            className="sticker-modal-backdrop"
-            aria-label="Close sticker note"
-            onClick={closeStickerModal}
-          />
-          <div
-            className={`sticker-modal-card ${previewSticker ? "is-writing" : ""} ${
-              modalClosing
-                ? modalEntryKind === "from-composer"
-                  ? "is-leaving-to-bottom"
-                  : "is-leaving-to-board"
-                : modalEntryKind === "from-composer"
-                  ? "is-arriving-from-bottom"
-                  : modalEntryKind === "from-board"
-                    ? "is-arriving-from-board"
-                    : ""
-            }`}
-            style={modalFrame || undefined}
-            onAnimationEnd={handleModalJourneyEnd}
-          >
-            <div className="sticker-modal-frame">
-              <button
-                type="button"
-                className="sticker-modal-close"
-                aria-label="Close sticker note"
-                onClick={closeStickerModal}
-              >
-                ×
-              </button>
-              <div
-                role="button"
-                tabIndex={0}
-                className={`sticker-flip-object ${modalFlipped ? "is-flipped" : ""}`}
-                onClick={(event) => {
-                  if (event.target instanceof HTMLElement && event.target.closest(".sticker-note-editor")) return;
-                  setModalFlipped((value) => !value);
-                }}
-                onKeyDown={(event) => {
-                  if (event.target instanceof HTMLElement && event.target.closest(".sticker-note-editor")) return;
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    setModalFlipped((value) => !value);
-                  }
-                }}
-                aria-label="Flip sticker note"
-              >
-                <span className="sticker-flip-face sticker-flip-front">
-                  <img src={modalPlacement?.stickerSrc || previewSticker?.src} alt="" />
-                </span>
-                <span className="sticker-flip-face sticker-flip-back">
-                  {modalDoodle ? (
-                    <img
-                      className="sticker-note-doodle"
-                      src={modalDoodle.src}
-                      alt=""
-                      aria-hidden="true"
-                      style={modalDoodle.style}
-                    />
-                  ) : null}
-                  {previewSticker ? (
-                    <span className={`sticker-note-editor ${noteDensityClass}`}>
-                      <textarea
-                        ref={noteInputRef}
-                        className="sticker-note-input"
-                        value={message}
-                        rows={1}
-                        maxLength={MESSAGE_LIMIT}
-                        onInput={(event) => updateMessage(event.currentTarget.value)}
-                        onChange={(event) => updateMessage(event.target.value)}
-                        placeholder="write something tiny"
-                        aria-label="Sticker note"
-                        aria-invalid={Boolean(noteError)}
-                        aria-describedby={showNoteLimitWarning ? "sticker-note-limit" : undefined}
-                      />
-                      <input
-                        className="sticker-note-name-input"
-                        value={authorName}
-                        maxLength={NAME_LIMIT}
-                        onInput={(event) => updateAuthorName(event.currentTarget.value)}
-                        onChange={(event) => updateAuthorName(event.target.value)}
-                        placeholder="your name (optional)"
-                        aria-label="Your name, optional"
-                      />
-                    </span>
-                  ) : (
-                    <span className="sticker-note-copy">
-                      {modalMessage || "No note left. Just a sticker passing through."}
-                    </span>
-                  )}
-                  {modalAuthorName || modalTimestamp ? (
-                    <span className="sticker-note-meta">
-                      {modalAuthorName ? <span className="sticker-note-author">~ {modalAuthorName}</span> : null}
-                      {modalTimestamp ? (
-                        <time className="sticker-note-date">{modalAuthorName ? modalTimestamp : `~ ${modalTimestamp}`}</time>
-                      ) : null}
-                    </span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
-            {previewSticker && noteError ? (
-              <p className="sticker-note-error" role="alert">
-                {noteError}
-              </p>
-            ) : null}
-            {showNoteLimitWarning ? (
-              <p id="sticker-note-limit" className="sticker-note-limit" role="status" aria-live="polite">
-                {noteCharactersLeft > 0 ? `${noteCharactersLeft} characters left` : "No room left"}
-              </p>
-            ) : null}
-            {previewSticker ? (
-              <button
-                type="button"
-                className="sticker-sparkle-place"
-                onClick={() => placeSticker()}
-                disabled={!selectedSticker || allStickersUsed}
-              >
-                Pin it!
-              </button>
-            ) : (
-              <p className="sticker-modal-hint">Tap to reveal!</p>
-            )}
-          </div>
-        </div>
-      ) : null}
+		if (returningToComposer) {
+			setComposerStickerDeparting(false);
+			setComposerStickerReturning(true);
+			return;
+		}
 
-      <style>{`
+		setDepartingPlacementId(null);
+		setReturningPlacementId(returningId);
+	}
+
+	function placeSticker() {
+		const stickerForPlacement = previewSticker || selectedSticker;
+		const slotId = stickerForPlacement
+			? findPlacementSlot(placements, stickerForPlacement)
+			: undefined;
+
+		if (
+			!stickerForPlacement ||
+			allStickersUsed ||
+			slotId === undefined ||
+			!isSlotOpen(placements, slotId) ||
+			placements.some(
+				(placement) => placement.stickerId === stickerForPlacement.id,
+			)
+		) {
+			return;
+		}
+
+		const noteText = (noteInputRef.current?.value ?? message).trim();
+		const trimmedAuthorName = authorName.trim();
+		const validationError =
+			validateNote(noteText) || validateName(trimmedAuthorName);
+
+		if (validationError) {
+			setNoteError(validationError);
+			setModalFlipped(true);
+			window.setTimeout(() => noteInputRef.current?.focus(), 0);
+			return;
+		}
+
+		const optimisticPlacement = normalizePlacement({
+			id: `local-${crypto.randomUUID()}`,
+			stickerId: stickerForPlacement.id,
+			stickerSrc: stickerForPlacement.src,
+			message: noteText,
+			authorName: trimmedAuthorName,
+			slotId,
+			createdAt: new Date().toISOString(),
+			pending: true,
+		});
+		const optimisticPlacements = [...placements, optimisticPlacement];
+
+		setPlacements(optimisticPlacements);
+		setLocalPlacements(optimisticPlacements);
+		setMessage("");
+		setAuthorName("");
+		setNoteError("");
+		setPreviewSticker(null);
+		setComposerStickerDeparting(false);
+		setComposerStickerReturning(false);
+		setDepartingPlacementId(null);
+		setReturningPlacementId(null);
+		setModalClosing(false);
+		setModalEntryKind("default");
+		setSelectedSticker((currentSticker) =>
+			chooseSticker(optimisticPlacements, currentSticker),
+		);
+		setNewPlacementSlotId(optimisticPlacement.slotId);
+		setStatus("saving");
+
+		persistPlacement(optimisticPlacement, optimisticPlacements);
+	}
+
+	return (
+		<section
+			id="sticker-board"
+			className="sticker-board-section"
+			aria-labelledby="sticker-board-title"
+		>
+			<div className="sticker-board-heading">
+				<h2 id="sticker-board-title">Sticker Guestbook</h2>
+				<p>
+					Write and pin yours. Tap any sticker below to read what others left!
+					🤍
+				</p>
+			</div>
+
+			<div className="sticker-board-shell">
+				<div className="sticker-board-panel" aria-label="Visitor sticker board">
+					<button
+						ref={artworkInfoButtonRef}
+						type="button"
+						className="artwork-info-trigger"
+						onClick={openArtworkInfo}
+						aria-label="About the sticker artwork"
+						aria-haspopup="dialog"
+						aria-expanded={artworkInfoOpen}
+						title="About the sticker artwork"
+					>
+						<svg
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="1.8"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							aria-hidden="true"
+						>
+							<circle cx="12" cy="12" r="9" />
+							<path d="M12 11v5" />
+							<path d="M12 8h.01" />
+						</svg>
+					</button>
+					<div className="sticker-board-surface">
+						<div className="sticker-board-track">
+							{rows.map((rowGroups, rowIndex) => (
+								<div className="sticker-board-row" key={rowIndex}>
+									{rowGroups.map((group) => (
+										<div
+											className={`sticker-row-group ${
+												group.kind ? `is-${group.kind}` : "is-empty"
+											}`}
+											key={`${group.row}-${group.group}`}
+											style={{ "--row-tone": group.tone }}
+										>
+											{group.slots.map((slot) => {
+												const placement = slot.placement;
+												const sticker = placement
+													? findSticker(placement.stickerId)
+													: null;
+
+												return (
+													<div
+														className={`sticker-slot ${
+															placement ? "has-sticker" : ""
+														}`}
+														data-sticker-slot={slot.id}
+														key={slot.id}
+														style={{
+															"--slot-rotation": slot.variant.rotate,
+															"--slot-x": slot.variant.x,
+															"--slot-y": slot.variant.y,
+															"--slot-scale": slot.variant.scale,
+															"--slot-edge-x":
+																slotColumn(slot.id) === 0
+																	? "clamp(0.38rem, 0.9vw, 0.72rem)"
+																	: slotColumn(slot.id) === ROW_GROUP_SIZE - 1
+																		? "clamp(-0.72rem, -0.9vw, -0.38rem)"
+																		: "0px",
+														}}
+													>
+														<span
+															className="empty-sticker-slot"
+															aria-hidden="true"
+														/>
+														{placement ? (
+															<button
+																type="button"
+																className={`placed-sticker ${
+																	placement.pending ? "is-pending" : ""
+																} ${
+																	newPlacementSlotId === placement.slotId
+																		? "is-new"
+																		: ""
+																} ${
+																	departingPlacementId === placement.id
+																		? "is-departing-to-focus"
+																		: ""
+																} ${
+																	returningPlacementId === placement.id
+																		? "is-returning-from-focus"
+																		: ""
+																}`}
+																onClick={() => openPlacedStickerNote(placement)}
+																onAnimationEnd={(event) =>
+																	handlePlacedStickerJourneyEnd(
+																		event,
+																		placement,
+																	)
+																}
+																onPointerMove={setPointerTilt}
+																onPointerLeave={clearPointerTilt}
+																style={stickerStyle(sticker)}
+																aria-label="Open sticker note"
+															>
+																<span className="placed-sticker-shape">
+																	<img
+																		src={placement.stickerSrc}
+																		width={sticker?.width}
+																		height={sticker?.height}
+																		alt=""
+																		loading="lazy"
+																	/>
+																</span>
+															</button>
+														) : null}
+													</div>
+												);
+											})}
+										</div>
+									))}
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+
+				<aside className="sticker-composer" aria-label="Sticker composer">
+					<div className="selected-sticker-card">
+						<div className="selected-sticker-stage">
+							<div
+								className={`selected-sticker ${
+									!selectedSticker || allStickersUsed ? "is-disabled" : ""
+								} ${composerStickerDeparting ? "is-departing-right" : ""} ${
+									composerStickerReturning ? "is-returning-from-right" : ""
+								}`}
+								onAnimationEnd={handleSelectedStickerJourneyEnd}
+								onClick={(event) => {
+									if (
+										event.target instanceof HTMLElement &&
+										event.target.closest("button")
+									)
+										return;
+									openSelectedStickerNote();
+								}}
+								onPointerMove={setPointerTilt}
+								onPointerLeave={clearPointerTilt}
+								style={
+									selectedSticker ? stickerStyle(selectedSticker) : undefined
+								}
+							>
+								{selectedSticker ? (
+									<span className="selected-sticker-float">
+										<span className="selected-sticker-callout">
+											here&apos;s your sticker, tap!
+										</span>
+										<button
+											type="button"
+											className="selected-sticker-main"
+											onClick={openSelectedStickerNote}
+											aria-label="Open selected sticker note"
+											disabled={allStickersUsed}
+										>
+											<img
+												className="selected-sticker-image"
+												src={selectedSticker.src}
+												width={selectedSticker.width}
+												height={selectedSticker.height}
+												alt=""
+												draggable="false"
+											/>
+										</button>
+										<button
+											type="button"
+											className="sticker-pencil-action"
+											onClick={openSelectedStickerNote}
+											aria-label="Write a note for this sticker"
+											disabled={allStickersUsed}
+										>
+											<img
+												src="/assets/images/writing-tool.png"
+												width="24"
+												height="24"
+												alt=""
+												draggable="false"
+											/>
+										</button>
+									</span>
+								) : (
+									<span className="selected-sticker-loading" />
+								)}
+							</div>
+						</div>
+					</div>
+				</aside>
+			</div>
+
+			{artworkInfoOpen ? (
+				<div
+					className={`artwork-info-modal ${
+						artworkInfoClosing ? "is-closing" : ""
+					}`}
+					role="dialog"
+					aria-modal="true"
+					aria-labelledby="artwork-info-title"
+				>
+					<button
+						type="button"
+						className="artwork-info-backdrop"
+						onClick={closeArtworkInfo}
+						aria-label="Close artwork information"
+					/>
+					<div ref={artworkInfoCardRef} className="artwork-info-card">
+						<button
+							ref={artworkInfoCloseRef}
+							type="button"
+							className="artwork-info-close"
+							onClick={closeArtworkInfo}
+							aria-label="Close artwork information"
+						>
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="1.8"
+								strokeLinecap="round"
+								aria-hidden="true"
+							>
+								<path d="m7 7 10 10" />
+								<path d="M17 7 7 17" />
+							</svg>
+						</button>
+						<p className="artwork-info-kicker">tiny credit note</p>
+						<h3 id="artwork-info-title">
+							The board is mine. The artwork is not.
+						</h3>
+						<p>
+							I collected most of these images from Pinterest over time. Every
+							illustration still belongs to its original artist or rights
+							holder, and I am not claiming any of it as my own.
+						</p>
+						<p>
+							This is just a small personal guestbook built with a lot of
+							affection. If you recognize your work and would like a credit
+							added, corrected, or the image removed, email me at{" "}
+							<a href="mailto:rajin.khan2001@gmail.com">
+								rajin.khan2001@gmail.com
+							</a>
+							.
+						</p>
+						<p className="artwork-info-signoff">
+							I&apos;ll sort it out quickly, respectfully, and without making it
+							awkward.
+						</p>
+						<button
+							type="button"
+							className="artwork-info-confirm"
+							onClick={closeArtworkInfo}
+						>
+							Got it
+						</button>
+					</div>
+				</div>
+			) : null}
+
+			{modalSticker ? (
+				<div
+					className={`sticker-modal ${modalClosing ? "is-closing" : ""}`}
+					role="dialog"
+					aria-modal="true"
+					aria-label="Sticker note"
+				>
+					<button
+						type="button"
+						className="sticker-modal-backdrop"
+						aria-label="Close sticker note"
+						onClick={closeStickerModal}
+					/>
+					<div
+						className={`sticker-modal-card ${
+							previewSticker ? "is-writing" : ""
+						} ${
+							modalClosing
+								? modalEntryKind === "from-composer"
+									? "is-leaving-to-bottom"
+									: "is-leaving-to-board"
+								: modalEntryKind === "from-composer"
+									? "is-arriving-from-bottom"
+									: modalEntryKind === "from-board"
+										? "is-arriving-from-board"
+										: ""
+						}`}
+						style={modalFrame || undefined}
+						onAnimationEnd={handleModalJourneyEnd}
+					>
+						<div className="sticker-modal-frame">
+							<button
+								type="button"
+								className="sticker-modal-close"
+								aria-label="Close sticker note"
+								onClick={closeStickerModal}
+							>
+								×
+							</button>
+							<div
+								role="button"
+								tabIndex={0}
+								className={`sticker-flip-object ${
+									modalFlipped ? "is-flipped" : ""
+								}`}
+								onClick={(event) => {
+									if (
+										event.target instanceof HTMLElement &&
+										event.target.closest(".sticker-note-editor")
+									)
+										return;
+									setModalFlipped((value) => !value);
+								}}
+								onKeyDown={(event) => {
+									if (
+										event.target instanceof HTMLElement &&
+										event.target.closest(".sticker-note-editor")
+									)
+										return;
+									if (event.key === "Enter" || event.key === " ") {
+										event.preventDefault();
+										setModalFlipped((value) => !value);
+									}
+								}}
+								aria-label="Flip sticker note"
+							>
+								<span className="sticker-flip-face sticker-flip-front">
+									<img
+										src={modalPlacement?.stickerSrc || previewSticker?.src}
+										alt=""
+									/>
+								</span>
+								<span className="sticker-flip-face sticker-flip-back">
+									{modalDoodle ? (
+										<img
+											className="sticker-note-doodle"
+											src={modalDoodle.src}
+											alt=""
+											aria-hidden="true"
+											style={modalDoodle.style}
+										/>
+									) : null}
+									{previewSticker ? (
+										<span className={`sticker-note-editor ${noteDensityClass}`}>
+											<textarea
+												ref={noteInputRef}
+												className="sticker-note-input"
+												value={message}
+												rows={1}
+												maxLength={MESSAGE_LIMIT}
+												onInput={(event) =>
+													updateMessage(event.currentTarget.value)
+												}
+												onChange={(event) => updateMessage(event.target.value)}
+												placeholder="write something tiny"
+												aria-label="Sticker note"
+												aria-invalid={Boolean(noteError)}
+												aria-describedby={
+													showNoteLimitWarning
+														? "sticker-note-limit"
+														: undefined
+												}
+											/>
+											<input
+												className="sticker-note-name-input"
+												value={authorName}
+												maxLength={NAME_LIMIT}
+												onInput={(event) =>
+													updateAuthorName(event.currentTarget.value)
+												}
+												onChange={(event) =>
+													updateAuthorName(event.target.value)
+												}
+												placeholder="your name (optional)"
+												aria-label="Your name, optional"
+											/>
+										</span>
+									) : (
+										<span className="sticker-note-copy">
+											{modalMessage ||
+												"No note left. Just a sticker passing through."}
+										</span>
+									)}
+									{modalAuthorName || modalTimestamp ? (
+										<span className="sticker-note-meta">
+											{modalAuthorName ? (
+												<span className="sticker-note-author">
+													~ {modalAuthorName}
+												</span>
+											) : null}
+											{modalTimestamp ? (
+												<time className="sticker-note-date">
+													{modalAuthorName
+														? modalTimestamp
+														: `~ ${modalTimestamp}`}
+												</time>
+											) : null}
+										</span>
+									) : null}
+								</span>
+							</div>
+						</div>
+						{previewSticker && noteError ? (
+							<p className="sticker-note-error" role="alert">
+								{noteError}
+							</p>
+						) : null}
+						{showNoteLimitWarning ? (
+							<p
+								id="sticker-note-limit"
+								className="sticker-note-limit"
+								role="status"
+								aria-live="polite"
+							>
+								{noteCharactersLeft > 0
+									? `${noteCharactersLeft} characters left`
+									: "No room left"}
+							</p>
+						) : null}
+						{previewSticker ? (
+							<button
+								type="button"
+								className="sticker-sparkle-place"
+								onClick={() => placeSticker()}
+								disabled={!selectedSticker || allStickersUsed}
+							>
+								Pin it!
+							</button>
+						) : (
+							<p className="sticker-modal-hint">Tap to reveal!</p>
+						)}
+					</div>
+				</div>
+			) : null}
+
+			<style>{`
         @font-face {
           font-family: "La Belle Aurore";
           font-style: normal;
@@ -1216,6 +1564,237 @@ export default function StickerBoard() {
           min-block-size: 28rem;
           border-radius: var(--board-radius);
           transform-origin: center top;
+        }
+
+        .artwork-info-trigger {
+          position: absolute;
+          top: calc(var(--board-inset) + 0.52rem);
+          right: calc(var(--board-inset) + 0.52rem);
+          z-index: 30;
+          display: grid;
+          width: 1.75rem;
+          height: 1.75rem;
+          padding: 0;
+          place-items: center;
+          border: 1px solid rgb(255 255 255 / 0.18);
+          border-radius: 50%;
+          background: rgb(10 10 10 / 0.76);
+          color: rgb(226 226 222 / 0.72);
+          box-shadow: 0 8px 22px rgb(0 0 0 / 0.24);
+          cursor: pointer;
+          backdrop-filter: blur(8px);
+          transition:
+            border-color 160ms ease,
+            color 160ms ease,
+            background-color 160ms ease,
+            transform 160ms ease;
+        }
+
+        .artwork-info-trigger svg {
+          width: 0.9rem;
+          height: 0.9rem;
+        }
+
+        .artwork-info-trigger:hover,
+        .artwork-info-trigger:focus-visible {
+          border-color: rgb(255 255 255 / 0.36);
+          background: rgb(24 24 24 / 0.9);
+          color: rgb(250 250 247 / 0.94);
+          transform: translateY(-1px);
+        }
+
+        .artwork-info-trigger:focus-visible {
+          outline: 2px solid rgb(255 255 255 / 0.42);
+          outline-offset: 3px;
+        }
+
+        .artwork-info-modal {
+          position: fixed;
+          inset: 0;
+          z-index: 90;
+          display: grid;
+          padding: 1.25rem;
+          place-items: center;
+        }
+
+        .artwork-info-modal.is-closing {
+          pointer-events: none;
+        }
+
+        .artwork-info-backdrop {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          border: 0;
+          background: rgb(0 0 0 / 0.68);
+          cursor: default;
+          backdrop-filter: blur(7px);
+          animation: artwork-info-fade-in 180ms ease both;
+        }
+
+        .artwork-info-card {
+          position: relative;
+          z-index: 1;
+          width: min(30rem, 100%);
+          overflow: hidden;
+          padding: 1.8rem 1.85rem 1.7rem;
+          border: 1px solid rgb(255 255 255 / 0.14);
+          border-radius: 20px;
+          background: rgb(16 16 16);
+          color: rgb(232 232 228);
+          box-shadow:
+            0 34px 90px rgb(0 0 0 / 0.52),
+            0 1px 0 rgb(255 255 255 / 0.04) inset;
+          animation: artwork-info-card-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .artwork-info-modal.is-closing .artwork-info-backdrop {
+          animation: artwork-info-fade-out 200ms ease both;
+        }
+
+        .artwork-info-modal.is-closing .artwork-info-card {
+          animation: artwork-info-card-out 220ms cubic-bezier(0.4, 0, 1, 1) both;
+        }
+
+        .artwork-info-card::before {
+          position: absolute;
+          inset: 5px;
+          border: 1px solid rgb(255 255 255 / 0.045);
+          border-radius: 15px;
+          content: "";
+          pointer-events: none;
+        }
+
+        .artwork-info-kicker {
+          margin: 0 0 0.45rem;
+          color: rgb(190 190 184);
+          font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+          font-size: 1rem;
+          line-height: 1.2;
+        }
+
+        .artwork-info-card h3 {
+          max-width: 20ch;
+          margin: 0 2.25rem 1.15rem 0;
+          color: rgb(250 250 247);
+          font-size: 1.35rem;
+          font-weight: 700;
+          line-height: 1.2;
+          letter-spacing: 0;
+          text-wrap: balance;
+        }
+
+        .artwork-info-card > p:not(.artwork-info-kicker) {
+          margin: 0.8rem 0 0;
+          color: rgb(177 177 172);
+          font-size: 0.88rem;
+          font-weight: 500;
+          line-height: 1.65;
+          text-wrap: pretty;
+        }
+
+        .artwork-info-card a {
+          color: rgb(244 244 240);
+          text-decoration-color: rgb(255 255 255 / 0.38);
+          text-decoration-thickness: 1px;
+          text-underline-offset: 0.18em;
+        }
+
+        .artwork-info-card a:hover,
+        .artwork-info-card a:focus-visible {
+          text-decoration-color: currentColor;
+        }
+
+        .artwork-info-signoff {
+          font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+          font-size: 1.05rem !important;
+          color: rgb(220 220 214) !important;
+        }
+
+        .artwork-info-close {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          display: grid;
+          width: 2rem;
+          height: 2rem;
+          padding: 0;
+          place-items: center;
+          border: 1px solid rgb(255 255 255 / 0.12);
+          border-radius: 50%;
+          background: transparent;
+          color: rgb(200 200 195);
+          cursor: pointer;
+        }
+
+        .artwork-info-close svg {
+          width: 0.82rem;
+          height: 0.82rem;
+        }
+
+        .artwork-info-close:hover,
+        .artwork-info-close:focus-visible {
+          border-color: rgb(255 255 255 / 0.28);
+          color: rgb(255 255 252);
+        }
+
+        .artwork-info-close:focus-visible,
+        .artwork-info-confirm:focus-visible {
+          outline: 2px solid rgb(255 255 255 / 0.4);
+          outline-offset: 3px;
+        }
+
+        .artwork-info-confirm {
+          display: inline-flex;
+          min-height: 2.3rem;
+          margin: 1.35rem 0 0;
+          padding: 0.58rem 1.08rem;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgb(255 255 255 / 0.16);
+          border-radius: 999px;
+          background: rgb(255 255 255 / 0.09);
+          color: rgb(245 245 241);
+          font-size: 0.78rem;
+          font-weight: 650;
+          cursor: pointer;
+          transition:
+            border-color 160ms ease,
+            background-color 160ms ease;
+        }
+
+        .artwork-info-confirm:hover,
+        .artwork-info-confirm:focus-visible {
+          border-color: rgb(255 255 255 / 0.3);
+          background: rgb(255 255 255 / 0.15);
+        }
+
+        @keyframes artwork-info-fade-in {
+          from {
+            opacity: 0;
+          }
+        }
+
+        @keyframes artwork-info-card-in {
+          from {
+            opacity: 0;
+            transform: translateY(12px) scale(0.985);
+          }
+        }
+
+        @keyframes artwork-info-fade-out {
+          to {
+            opacity: 0;
+          }
+        }
+
+        @keyframes artwork-info-card-out {
+          to {
+            opacity: 0;
+            transform: translateY(8px) scale(0.985);
+          }
         }
 
         .sticker-board-surface {
@@ -2688,6 +3267,8 @@ export default function StickerBoard() {
           .selected-sticker,
           .selected-sticker-float,
           .selected-sticker-image,
+          .artwork-info-backdrop,
+          .artwork-info-card,
           .sticker-modal-card,
           .sticker-modal-close,
           .sticker-flip-face {
@@ -2703,6 +3284,6 @@ export default function StickerBoard() {
           }
         }
       `}</style>
-    </section>
-  );
+		</section>
+	);
 }
