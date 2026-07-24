@@ -1,56 +1,297 @@
 ---
 import Layout from "../layouts/main.astro";
-import PageHeading from "../components/page-heading.astro";
 
 // Define a type for a single "uses" item for type safety
 interface UsesItem {
-  name: string;
-  details?: string;
-  description: string;
-  coords?: { x: number; y: number };
+	name: string;
+	icon: string;
+	iconKind?: "mark" | "wide" | "character";
+	details?: string;
+	description: string;
+	coords?: { x: number; y: number };
+	highlight?: boolean;
+	highlightNote?: string;
+	highlightSide?: "left" | "right";
 }
 
 // Define a type for an item that is guaranteed to have coordinates
 type InteractiveItem = UsesItem & { coords: { x: number; y: number } };
 
 const usesData: Record<string, UsesItem[]> = {
-  workstation: [
-    { name: "MacBook Air 13\"", details: "M1 Base 2020, 16GB Memory, 256GB SSD", description: "This MacBook is one of the best investments I've ever made. I bought the space gray version, and it's been more than enough to meet my coding requirements.", coords: { x: 20, y: 60 } },
-    { name: "MacBook Pro 13\"", details: "Intel i5, 2015, 8GB Memory, 128GB SSD", description: "My trusty old machine, now repurposed into a full-time home server for automation and media.", coords: { x: 35, y: 64.7 }  },
-    { name: "Raspberry Pi 5", details: "Full Kit, 16GB Memory, 64GB SD", description: "I got this Pi with a friend for my Final Year Project, but it's been very handy in helping us learn about Automation, Self-Hosting, and a lot more!", coords: { x: 91.5, y: 95 } },
-    { name: "Xiaomi Redmi A27Q", details: "27 Inch, QHD 2K", description: "Probably my favourite purchase ever, the size, the colors, everything is perfect.", coords: { x: 54.5, y: 26 } },
-    { name: "Logitech Pebble Mouse", details: "White", description: "This was a gift from my lovely girlfriend, so it's one of my most prized possessions. I love the minimal, sleek design, and how lightweight it is (do not scream at me about ergonomics).", coords: { x: 71, y: 92 } },
-    { name: "Fenda F&D F580X", details: "2 Tweeters, 1 Sub Woofer", description: "I like speakers with good bass, and this one comes with a separate Sub Woofer. It's held up well, for over 7 years now.", coords: { x: 98.2, y: 51.2 } },
-    { name: "Royal Kludge RK71", details: "RGB Backlight, Brown Switches", description: "Also a gift from my beautiful girlfriend! It's my first mechanical keyboard, and I've been loving it a lot. I'm yet to customize the full thing.", coords: { x: 49, y: 81 } }
-  ],
-  accessories: [
-    { name: "Bostitch Office Lamp", description: "A must-have, provides adequate backlighting for my Monitor.", coords: { x: 26.5, y: 10 } },
-    { name: "Kaloc Monitor Arm", description: "My favorite gift ever (also from my amazing girlfriend). This single arm has changed my entire setup."},
-    { name: "AirPods Pro (2nd Generation)", description: "Can't really work outside without Lofi Jazz, or Yeat (no in between).", coords: { x: 49.5, y: 61.4 } },
-    { name: "Transcend M3", details: "1TB HDD", description: "My primary storage for Media, Backups, and everything else. It's held up for over 5 years!", coords: { x: 7.5, y: 79.8 }  },
-    { name: "Hoco W35 Max", details: "I made the stickers myself.", description: "I mostly use these for listening to Podcasts or watching stuff on Youtube, as they're not really heavy on the Bass.", coords: { x: 84, y: 77 } },
-    { name: "Scented Candle", details: "Miniso (Vanilla Spice)", description: "Sometimes when I really need to wind down, nothing beats getting on a call with my girlfriend, getting each other food, lighting up these candles, and binge watching stuff together.", coords: { x: 87.3, y: 66.5 }  }
-  ],
-  figures: [
-    { name: "Kuromi Plushie", description: "My girlfriend won this for me at a claw machine game!" },
-    { name: "Roronoa Zoro", description: "I got this action figure as a gift from all my friends on my 24th."},
-    { name: "Portgas D. Ace", description: "First action figure I ever got, a gift from my girlfriend too!" }
-  ],
-  applications: [
-    { name: "Arc", details: "Daily Browser", description: "My daily driver, coding browser, all in one. Arc's UX is simply unbeatable. Pity they moved on to Dia, but I'll be sticking to this browser till Zen catches up." },
-    { name: "Cursor", details: "Code Editor", description: "Surprisingly, I've been using Cursor more than VSCode lately. I only realized recently that I hadn't opened VSCode in a month. I'm quite used to all the features Cursor has to offer, and I've been loving it. Might try out Claude Code next."  },
-    { name: "iTerm2", details: "Terminal", description: "Classic, easy, smooth. I tried Ghostty, but ran into a lot of issues when SSH-ing into other machines, so I haven't been tempted to switch." },
-    { name: "Raycast", details: "Spotlight Alternative", description: "This is a must-have. The only software missing on Macs by default. I also use Raycast for AI Chat." }
-  ],
-  subscriptions: [
-    { name: "ChatGPT", details: "Plus, $20/Month", description: "The only AI toolset worth paying for. OpenAI's overall AI system and sheer number of tools make it a no-brainer for my daily use. I don't use it for coding though." },
-    { name: "Cursor", details: "Pro, $20/Month", description: "I do pay for Cursor Pro, and it's been a game changer. The fact that Auto is just free and unilimited on the Pro plan makes it very valuable, and paid usage of selective models like Anthropic's and Google's ones makes it even better." },
-    { name: "No other subscriptions, really.", description: "I Self-Host all my media and use Open Source tools. I like the freedom it gives me." }
-  ]
+	workstation: [
+		{
+			name: 'MacBook Air 13"',
+			icon: "apple.png",
+			details: "M1 Base 2020, 16GB Memory, 256GB SSD",
+			description:
+				"This MacBook is one of the best investments I've ever made. I bought the space gray version, and it's been more than enough to meet my coding requirements.",
+			coords: { x: 20, y: 60 },
+			highlight: true,
+			highlightNote: "best investment",
+		},
+		{
+			name: 'MacBook Pro 13"',
+			icon: "apple.png",
+			details: "Intel i5, 2015, 8GB Memory, 128GB SSD",
+			description:
+				"My trusty old machine, now a home desktop that mostly runs YouTube, holds extra storage, and occasionally pretends to be a very strange NAS.",
+			coords: { x: 35, y: 64.7 },
+		},
+		{
+			name: "Raspberry Pi 5",
+			icon: "raspberry-pi.png",
+			details: "Full Kit, 16GB Memory, 64GB SD",
+			description:
+				"I got this Pi with a friend for our Final Year Project. It now runs my home server and taught us far more about automation and self-hosting than the project ever asked for.",
+			coords: { x: 91.5, y: 95 },
+		},
+		{
+			name: "Xiaomi Redmi A27Q",
+			icon: "xiaomi.png",
+			details: "27 Inch, QHD 2K",
+			description:
+				"Probably my favourite purchase ever, the size, the colors, everything is perfect.",
+			coords: { x: 54.5, y: 26 },
+		},
+		{
+			name: "Logitech Pebble Mouse",
+			icon: "logitech.png",
+			iconKind: "wide",
+			details: "White",
+			description:
+				"This was a gift from my lovely girlfriend, so it's one of my most prized possessions. I love the minimal, sleek design, and how lightweight it is (do not scream at me about ergonomics).",
+			coords: { x: 71, y: 92 },
+		},
+		{
+			name: "Fenda F&D F580X",
+			icon: "fenda.png",
+			iconKind: "wide",
+			details: "2 Tweeters, 1 Sub Woofer",
+			description:
+				"I like speakers with good bass, and this one comes with a separate Sub Woofer. It's held up well, for over 7 years now.",
+			coords: { x: 98.2, y: 51.2 },
+		},
+		{
+			name: "Royal Kludge RK71",
+			icon: "royal-kludge.png",
+			iconKind: "wide",
+			details: "RGB Backlight, Brown Switches",
+			description:
+				"Also a gift from my beautiful girlfriend! It's my first mechanical keyboard, and I've been loving it a lot. I'm yet to customize the full thing.",
+			coords: { x: 49, y: 81 },
+		},
+	],
+	accessories: [
+		{
+			name: "Generic Desk Lamp",
+			icon: "generic-lamp.svg",
+			details: "Brand: genuinely no idea",
+			description:
+				"I have no idea what brand this is. It was cheap, it lights the desk, and it has never given me a reason to ask more questions.",
+			coords: { x: 26.5, y: 10 },
+		},
+		{
+			name: "Kaloc Monitor Arm",
+			icon: "kaloc.png",
+			description:
+				"My favorite gift ever (also from my amazing girlfriend). This single arm has changed my entire setup.",
+			highlight: true,
+			highlightNote: "favorite gift ever",
+		},
+		{
+			name: "AirPods Pro (Knockoff)",
+			icon: "apple.png",
+			details: "Suspiciously cheap",
+			description:
+				"I live in South Asia; these were suspiciously cheap, and I promise they sound just as good. I've stopped listening to music like before, but these come with ANC too, can you believe it?.",
+			coords: { x: 49.5, y: 61.4 },
+		},
+		{
+			name: "Transcend M3",
+			icon: "transcend.png",
+			iconKind: "wide",
+			details: "1TB HDD",
+			description:
+				"My primary storage for Media, Backups, and everything else. It's held up for over 5 years!",
+			coords: { x: 7.5, y: 79.8 },
+		},
+		{
+			name: "Hoco W35 Max",
+			icon: "hoco.png",
+			iconKind: "wide",
+			details: "I made the stickers myself.",
+			description:
+				"I mostly use these for listening to Podcasts or watching stuff on Youtube, as they're not really heavy on the Bass.",
+			coords: { x: 84, y: 77 },
+		},
+		{
+			name: "Scented Candle",
+			icon: "miniso.png",
+			details: "Miniso (Vanilla Spice)",
+			description:
+				"Sometimes when I really need to wind down, nothing beats getting on a call with my girlfriend, getting each other food, lighting up these candles, and binge watching stuff together.",
+			coords: { x: 87.3, y: 66.5 },
+		},
+	],
+	figures: [
+		{
+			name: "Kuromi Plushie",
+			icon: "kuromi.png",
+			iconKind: "character",
+			description: "My girlfriend won this for me at a claw machine game!",
+			highlight: true,
+			highlightNote: "claw machine win",
+		},
+		{
+			name: "Roronoa Zoro",
+			icon: "zoro.png",
+			iconKind: "character",
+			description:
+				"I got this action figure as a gift from all my friends on my 24th.",
+		},
+		{
+			name: "Portgas D. Ace",
+			icon: "ace.png",
+			iconKind: "character",
+			description:
+				"First action figure I ever got, a gift from my girlfriend too!",
+		},
+	],
+	applications: [
+		{
+			name: "Arc",
+			icon: "arc.png",
+			details: "Daily Browser",
+			description:
+				"My daily driver, coding browser, all in one. Arc's UX is simply unbeatable. Pity they moved on to Dia, but I'll be sticking to this browser till Zen catches up.",
+			highlight: true,
+			highlightNote: "still unbeatable",
+		},
+		{
+			name: "Cursor",
+			icon: "cursor.png",
+			details: "Code Editor",
+			description:
+				"I barely open a traditional editor anymore, but when I do, it is still Cursor. I once realized I had gone a month without opening VSCode; this is the one that settled in, and I don't think I'll be trying another editor.",
+		},
+		{
+			name: "iTerm2",
+			icon: "iterm2.png",
+			details: "Terminal",
+			description:
+				"Classic, easy, smooth. I tried Ghostty, but ran into a lot of issues when SSH-ing into other machines, so I haven't been tempted to switch.",
+		},
+		{
+			name: "Raycast",
+			icon: "raycast.png",
+			details: "Spotlight Alternative",
+			description:
+				"This is a must-have. The only software missing on Macs by default. I also use Raycast for AI Chat.",
+		},
+	],
+	subscriptions: [
+		{
+			name: "ChatGPT",
+			icon: "chatgpt.png",
+			details: "Plus, $20/Month",
+			description:
+				"The AI toolset I use every day, with Codex now doing most of my coding. My older sister handles the bill, so my personal pricing remains extremely competitive.",
+			highlight: true,
+			highlightNote: "sister-sponsored",
+		},
+		{
+			name: "Cursor",
+			icon: "cursor.png",
+			details: "Pro, $20/Month",
+			description:
+				"Mostly just a simple code editor now. I barely touch its AI features anymore, but it stays installed as a familiar backup when I need one.",
+		},
+		{
+			name: "Railway",
+			icon: "railway.png",
+			details: "$5/Month",
+			description:
+				"My default place for full-stack apps when I want them online without making deployment another project. My older sister pays for this one too; at this point she is quietly running the infrastructure department.",
+			highlight: true,
+			highlightNote: "also sister-sponsored",
+		},
+		{
+			name: "YouTube Premium",
+			icon: "youtube-premium.png",
+			details: "Premium",
+			description:
+				"No ads, background play, and downloads for flights. I use YouTube enough that seeing an ad on someone else's account now feels like a service outage.",
+		},
+		{
+			name: "Netflix",
+			icon: "netflix.png",
+			details: "Streaming",
+			description:
+				"Somehow still billing me while the home server sits there doing the same job with more confidence. This subscription is living on borrowed time.",
+		},
+		{
+			name: "Everything else is self-hosted.",
+			icon: "self-hosted.svg",
+			description:
+				"I Self-Host all my media and use Open Source tools. I like the freedom it gives me.",
+		},
+	],
 };
 
 const hasCoords = (item: UsesItem): item is InteractiveItem => !!item.coords;
 const setupDots = Object.values(usesData).flat().filter(hasCoords);
+const slugify = (value: string) =>
+	value
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/(^-|-$)/g, "");
+
+const usesIconPath = (asset: string) => `/assets/icons/uses/marks/${asset}`;
+const stableHash = (value: string) =>
+	Array.from(value).reduce(
+		(hash, character) => (hash * 31 + character.charCodeAt(0)) >>> 0,
+		0,
+	);
+
+const categoryMeta: Record<string, { label: string; description: string }> = {
+	workstation: {
+		label: "Workstation",
+		description: "The hardware that earns permanent desk space.",
+	},
+	accessories: {
+		label: "Accessories",
+		description: "Small things that make long hours much nicer.",
+	},
+	figures: {
+		label: "Figures",
+		description: "Desk company. All gifts, all non-negotiable.",
+	},
+	applications: {
+		label: "Applications",
+		description: "Usually open before I am properly awake.",
+	},
+	subscriptions: {
+		label: "Subscriptions",
+		description: "A short list. I host most of the rest myself.",
+	},
+};
+
+const highlightTilts = ["-2.5deg", "1.8deg", "-1.4deg", "2.2deg"];
+
+const categories = Object.entries(usesData).map(([key, items], index) => ({
+	key,
+	items: items.map((item) => {
+		const variant = stableHash(`${key}:${item.name}`);
+		return {
+			...item,
+			highlightSideResolved:
+				item.highlightSide ?? (variant % 2 === 0 ? "left" : "right"),
+			highlightTilt: highlightTilts[variant % highlightTilts.length],
+		};
+	}),
+	indexNumber: String(index + 1).padStart(2, "0"),
+	...categoryMeta[key],
+}));
 ---
 
 <Layout
@@ -59,205 +300,766 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
   ogImage="/assets/images/rajins-setup-25.jpg"
   ogImageAlt="Rajin Khan's workspace and daily setup"
 >
-  <section class="relative z-20 max-w-4xl mx-auto my-12 px-7 lg:px-0">
-    <div class="animate-in" style="--animation-delay: 0ms;">
-      <PageHeading
-        title="My Daily Uses"
-        description="A peek into my workspace and the tools I use every day to build, design, and create."
-      />
-    </div>
-
-    <div class="interactive-setup-container mt-16 mb-20 animate-in" style="--animation-delay: 200ms;">
-      <div class="image-container" id="image-container">
-        <img
-          src="/assets/images/rajins-setup-25.jpg"
-          alt="My workspace setup"
-          class="setup-visual"
-          width="1280"
-          height="855"
-          decoding="async"
-        />
-        {setupDots.map(dot => (
-          <button
-            type="button"
-            class="dot" 
-            style={`top: ${dot.coords.y}%; left: ${dot.coords.x}%;`}
-            data-tooltip={`${dot.name}${dot.details ? '|' + dot.details : ''}`}
-            aria-label={`Show details for ${dot.name}`}
-            aria-describedby="setup-tooltip"
-            aria-expanded="false"
-          ></button>
-        ))}
-        <div class="tooltip" id="setup-tooltip" role="tooltip" aria-hidden="true">
-          <div class="tooltip-title"></div>
-          <div class="tooltip-details"></div>
+  <section class="uses-page">
+    <div class="uses-shell">
+      <header class="uses-hero animate-in" style="--animation-delay: 0ms;">
+        <div class="uses-title-block">
+          <h1>My daily uses</h1>
+          <p class="handwritten-note">nothing sponsored. unfortunately.</p>
         </div>
-      </div>
-    </div>
-    
-    <div class="space-y-16">
-      {Object.entries(usesData).map(([category, items]) => (
-        <div class="grid grid-cols-1 md:grid-cols-4 md:gap-8">
-          <div class="md:col-span-1">
-            <h2 class="text-2xl font-bold dark:text-neutral-100 capitalize">
-              {category}
-            </h2>
+        <div class="uses-intro-copy">
+          <p>
+            The hardware, software, and small comforts I actually use to make
+            things. This changes whenever I find something better.
+          </p>
+        </div>
+      </header>
+
+      <figure class="setup-figure animate-in" style="--animation-delay: 180ms;">
+        <div class="interactive-setup-container">
+          <div class="image-container" id="image-container">
+            <img
+              src="/assets/images/rajins-setup-25.jpg"
+              alt="Rajin's desk with a monitor, two laptops, keyboard, speakers, figures, headphones, and accessories"
+              class="setup-visual"
+              width="1280"
+              height="855"
+              decoding="async"
+            />
+            {setupDots.map(dot => (
+              <button
+                type="button"
+                class="dot"
+                style={`top: ${dot.coords.y}%; left: ${dot.coords.x}%;`}
+                data-tooltip={`${dot.name}${dot.details ? '|' + dot.details : ''}`}
+                data-item-id={slugify(dot.name)}
+                aria-label={`Show details for ${dot.name}`}
+                aria-describedby="setup-tooltip"
+                aria-expanded="false"
+              ></button>
+            ))}
+            <div class="tooltip" id="setup-tooltip" role="tooltip" aria-hidden="true">
+              <div class="tooltip-title"></div>
+              <div class="tooltip-details"></div>
+            </div>
           </div>
-          <div class="md:col-span-3 mt-4 md:mt-0">
-            <ul class="space-y-8">
-              {items.map(item => (
-                <li>
-                  <h3 class="font-semibold text-lg text-neutral-100">{item.name}</h3>
-                  {item.details && <p class="text-sm text-neutral-500 -mt-1">{item.details}</p>}
-                  {item.description && <p class="mt-2 text-neutral-400 max-w-prose">{item.description}</p>}
+        </div>
+        <figcaption class="setup-cue">tap a dot on the image</figcaption>
+      </figure>
+
+      <div class="uses-directory">
+        {categories.map(category => (
+          <section
+            class="uses-category"
+            id={`uses-${category.key}`}
+            data-category-section={category.key}
+            aria-labelledby={`uses-${category.key}-title`}
+          >
+            <header class="category-header">
+              <span class="category-index" aria-hidden="true">{category.indexNumber}</span>
+              <h2 id={`uses-${category.key}-title`}>{category.label}</h2>
+              <p class="category-description">{category.description}</p>
+            </header>
+
+            <ol class="uses-list">
+              {category.items.map(item => (
+                <li
+                  class:list={[
+                    "use-row",
+                    {
+                      "use-row--mapped": item.coords,
+                      "use-row--highlighted": item.highlight,
+                    },
+                  ]}
+                >
+                  <article class="use-entry">
+                    <span class="use-logo-slot" aria-hidden="true">
+                      <img
+                        class:list={[
+                          "use-logo",
+                          `use-logo--${item.iconKind ?? "mark"}`,
+                        ]}
+                        src={usesIconPath(item.icon)}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        draggable="false"
+                      />
+                    </span>
+                    <div class="use-identity">
+                      <div
+                        class:list={[
+                          "use-copy",
+                          {
+                            "use-copy--highlighted": item.highlight,
+                            "use-copy--note-left":
+                              item.highlight && item.highlightSideResolved === "left",
+                            "use-copy--note-right":
+                              item.highlight && item.highlightSideResolved === "right",
+                          },
+                        ]}
+                        style={`--highlight-tilt: ${item.highlightTilt};`}
+                      >
+                        <h3>{item.name}</h3>
+                        {item.details && <p>{item.details}</p>}
+                        {item.highlight && (
+                          <span class="use-highlight-note" aria-hidden="true">
+                            {item.highlightNote ?? "current fave"}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <p class="use-description">{item.description}</p>
+                    {item.coords ? (
+                      <button
+                        type="button"
+                        class="locate-item"
+                        data-locate-item={slugify(item.name)}
+                        aria-label={`Find ${item.name} in the setup photo`}
+                      >
+                        <svg
+                          class="locate-icon"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" />
+                        </svg>
+                      </button>
+                    ) : (
+                      <span class="locate-spacer" aria-hidden="true"></span>
+                    )}
+                  </article>
                 </li>
               ))}
-            </ul>
-          </div>
-        </div>
-      ))}
+            </ol>
+          </section>
+        ))}
+      </div>
     </div>
   </section>
 </Layout>
 
 <style>
-.interactive-setup-container {
-  max-width: 900px;
-  margin: 2rem auto;
-}
-
-.image-container {
-  position: relative;
-  width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-  border: 1px solid #27272a;
-  aspect-ratio: 16 / 10;
-}
-
-.setup-visual {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-.dot {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1.5px solid rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-  padding: 0;
-  appearance: none;
-  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-  z-index: 10;
-  animation: dot-pulse 3s infinite ease-in-out;
-}
-/* NEW: Style for active/clicked dot */
-.dot.active {
-  transform: translate(-50%, -50%) scale(1.4);
-  background: white;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-  animation: none; /* Pause pulse when active */
-}
-
-.dot:hover,
-.dot:focus-visible {
-  transform: translate(-50%, -50%) scale(1.4);
-  background: white;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-  animation-play-state: paused;
-}
-
-.dot:focus-visible {
-  outline: 2px solid white;
-  outline-offset: 3px;
-}
-
-@keyframes dot-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.15);
+  .uses-page {
+    --uses-paper: #f2f2ef;
+    --uses-muted: #9a9a96;
+    --uses-faint: #62625f;
+    --uses-line: rgba(255, 255, 255, 0.11);
+    --uses-soft-line: rgba(255, 255, 255, 0.065);
+    position: relative;
+    z-index: 20;
+    padding: 40px 28px 48px;
+    color: var(--uses-paper);
   }
-  50% {
-    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+
+  .uses-shell {
+    width: min(100%, 1120px);
+    margin: 0 auto;
   }
-}
 
-.tooltip {
-  position: absolute;
-  background: rgba(23, 23, 23, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 10px 14px;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-  z-index: 20;
-  max-width: 280px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-}
+  .uses-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+    gap: 80px;
+    align-items: center;
+    padding: 28px 0 64px;
+  }
 
-.tooltip.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
+  .uses-title-block h1 {
+    margin: 0;
+    color: var(--uses-paper);
+    font-size: 3.75rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1;
+  }
 
-.tooltip-title {
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.9rem;
-  margin-bottom: 4px;
-}
+  .uses-intro-copy {
+    align-self: center;
+  }
 
-.tooltip-details {
-  color: #a3a3a3;
-  font-size: 0.8rem;
-  line-height: 1.4;
-}
+  .uses-intro-copy > p:first-child {
+    max-width: 45ch;
+    margin: 0;
+    color: #b8b8b4;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.72;
+    text-wrap: pretty;
+  }
 
-@media (max-width: 768px) {
+  .handwritten-note,
+  .setup-cue,
+  .category-index,
+  .use-highlight-note {
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+  }
+
+  .handwritten-note {
+    margin: 16px 0 0;
+    color: var(--uses-paper);
+    font-size: 1.3rem;
+    line-height: 1.35;
+  }
+
+  .setup-cue {
+    margin: 38px auto 0;
+    color: var(--uses-paper);
+    font-size: 1.02rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .setup-figure {
+    width: min(100%, 900px);
+    margin: 0 auto 34px;
+  }
+
+  .interactive-setup-container {
+    width: 100%;
+    margin: 0;
+  }
+
+  .image-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #27272a;
+    border-radius: 12px;
+    aspect-ratio: 16 / 10;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  }
+
+  .setup-visual {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .uses-directory {
+    position: relative;
+  }
+
+  .uses-category {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 64px;
+    padding: 68px 0 84px;
+    border-top: 1px solid var(--uses-line);
+    scroll-margin-top: 24px;
+  }
+
+  .uses-category:last-child {
+    padding-bottom: 24px;
+  }
+
+  .category-header {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+
+  .category-index {
+    display: block;
+    margin: 0 0 18px 2px;
+    color: #8c8c87;
+    font-size: 1.12rem;
+    line-height: 1;
+    transform: rotate(-3deg);
+    transform-origin: left center;
+  }
+
+  .category-header h2 {
+    margin: 0;
+    color: var(--uses-paper);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.05;
+  }
+
+  .category-description {
+    max-width: 25ch;
+    margin: 16px 0 0;
+    color: var(--uses-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .uses-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .use-row {
+    margin: 0;
+    border-top: 1px solid var(--uses-soft-line);
+    transition: background-color 180ms ease;
+  }
+
+  .use-row:last-child {
+    border-bottom: 1px solid var(--uses-soft-line);
+  }
+
+  .use-row:hover,
+  .use-row:focus-within {
+    background: rgba(255, 255, 255, 0.028);
+  }
+
+  .use-entry {
+    display: grid;
+    grid-template-columns: 52px minmax(165px, 0.8fr) minmax(0, 1.45fr) 52px;
+    gap: 18px;
+    align-items: start;
+    min-height: 108px;
+    padding: 24px 12px;
+  }
+
+  .use-row--highlighted .use-entry {
+    padding-top: 50px;
+    padding-bottom: 30px;
+  }
+
+  .use-logo-slot {
+    display: grid;
+    width: 52px;
+    min-height: 42px;
+    place-items: center;
+    align-self: start;
+    justify-self: start;
+  }
+
+  .use-logo {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 40px;
+    max-height: 40px;
+    object-fit: contain;
+  }
+
+  .use-logo--wide {
+    max-width: 52px;
+    max-height: 27px;
+  }
+
+  .use-logo--character {
+    max-width: 38px;
+    max-height: 48px;
+  }
+
+  .use-identity {
+    min-width: 0;
+  }
+
+  .use-copy {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .use-identity h3 {
+    margin: 0;
+    color: #dededa;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-wrap: pretty;
+  }
+
+  .use-identity p {
+    margin: 7px 0 0;
+    color: #c8c8c3;
+    font-size: 0.72rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .use-copy--highlighted {
+    z-index: 0;
+    margin-inline: 7px;
+    padding: 1px 3px;
+  }
+
+  .use-copy--highlighted::before,
+  .use-copy--highlighted::after {
+    position: absolute;
+    z-index: -1;
+    border-style: solid;
+    border-color: #d0d0cb;
+    content: "";
+    pointer-events: none;
+  }
+
+  .use-copy--highlighted::before {
+    inset: -8px -14px -8px -13px;
+    border-width: 1.4px;
+    border-radius: 49% 51% 47% 53% / 53% 46% 54% 47%;
+    opacity: 0.46;
+    transform: rotate(var(--highlight-tilt));
+  }
+
+  .use-copy--highlighted::after {
+    inset: -6px -16px -10px -10px;
+    border-width: 1px;
+    border-bottom-color: transparent;
+    border-radius: 53% 47% 51% 49% / 47% 54% 46% 53%;
+    opacity: 0.16;
+    transform: rotate(1.7deg);
+  }
+
+  .use-highlight-note {
+    position: absolute;
+    top: -37px;
+    z-index: 2;
+    color: #fff;
+    font-size: 1.03rem;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .use-copy--note-left .use-highlight-note {
+    left: -7px;
+    transform: rotate(-4deg);
+  }
+
+  .use-copy--note-right .use-highlight-note {
+    right: -9px;
+    transform: rotate(4deg);
+  }
+
+  .use-description {
+    max-width: 60ch;
+    margin: 0;
+    color: #b8b8b4;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  .locate-item {
+    display: grid;
+    place-items: center;
+    align-self: center;
+    justify-self: center;
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    background: #171717;
+    color: #777773;
+    cursor: pointer;
+    transition:
+      color 180ms ease,
+      border-color 180ms ease,
+      background-color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .locate-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .locate-item:hover,
+  .locate-item:focus-visible {
+    color: var(--uses-paper);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: #202020;
+    transform: translateY(-1px);
+  }
+
+  .locate-item:active {
+    transform: translateY(0);
+  }
+
   .dot {
+    position: absolute;
+    z-index: 10;
     width: 12px;
     height: 12px;
+    padding: 0;
+    border: 1.5px solid rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    animation: dot-pulse 3s infinite ease-in-out;
+    transition:
+      transform 0.3s ease,
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
   }
-  .tooltip {
-    padding: 8px 12px;
-    max-width: 200px;
-  }
-  .tooltip-title {
-    font-size: 0.85rem;
-  }
-  .tooltip-details {
-    font-size: 0.75rem;
-  }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-in,
-  .dot {
+  .dot.active {
+    background: white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%) scale(1.4);
     animation: none;
-    opacity: 1;
   }
-}
+
+  .dot:hover,
+  .dot:focus-visible {
+    background: white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%) scale(1.4);
+    animation-play-state: paused;
+  }
+
+  .dot:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 3px;
+  }
+
+  @keyframes dot-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.15);
+    }
+    50% {
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+    }
+  }
+
+  .tooltip {
+    position: absolute;
+    z-index: 20;
+    max-width: 280px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    visibility: hidden;
+    background: rgba(23, 23, 23, 0.7);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    backdrop-filter: blur(10px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease,
+      visibility 0.3s;
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .tooltip.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .tooltip-title {
+    margin-bottom: 4px;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .tooltip-details {
+    color: #a3a3a3;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 980px) {
+    .uses-hero {
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
+      gap: 48px;
+    }
+
+    .uses-title-block h1 {
+      font-size: 3.35rem;
+    }
+
+    .uses-category {
+      grid-template-columns: 205px minmax(0, 1fr);
+      gap: 42px;
+    }
+
+    .use-entry {
+      grid-template-columns: 46px minmax(145px, 0.75fr) minmax(0, 1.35fr) 48px;
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .uses-page {
+      padding: 24px 20px 76px;
+    }
+
+    .uses-hero {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 24px 0 48px;
+    }
+
+    .uses-title-block h1 {
+      font-size: 2.75rem;
+      line-height: 1.04;
+    }
+
+    .uses-intro-copy > p:first-child {
+      max-width: 38ch;
+      font-size: 0.94rem;
+    }
+
+    .handwritten-note {
+      font-size: 1.18rem;
+    }
+
+    .setup-cue {
+      margin: 30px auto 0;
+      font-size: 0.95rem;
+    }
+
+    .setup-figure {
+      margin-bottom: 28px;
+    }
+
+    .uses-category {
+      grid-template-columns: 1fr;
+      gap: 30px;
+      padding: 54px 0 68px;
+      scroll-margin-top: 10px;
+    }
+
+    .category-header {
+      position: static;
+    }
+
+    .category-header h2 {
+      font-size: 1.75rem;
+    }
+
+    .category-index {
+      margin-bottom: 14px;
+      font-size: 1.04rem;
+    }
+
+    .category-description {
+      max-width: 38ch;
+      margin-top: 12px;
+    }
+
+    .use-entry {
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      gap: 14px;
+      min-height: 0;
+      padding: 21px 8px;
+    }
+
+    .use-logo-slot {
+      grid-column: 1;
+      grid-row: 1;
+      width: 46px;
+      min-height: 40px;
+    }
+
+    .use-logo {
+      max-width: 38px;
+      max-height: 38px;
+    }
+
+    .use-logo--wide {
+      max-width: 46px;
+      max-height: 24px;
+    }
+
+    .use-logo--character {
+      max-width: 36px;
+      max-height: 46px;
+    }
+
+    .use-identity {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .use-description {
+      grid-column: 2;
+      grid-row: 2;
+      max-width: 52ch;
+      font-size: 0.77rem;
+    }
+
+    .locate-item {
+      grid-column: 3;
+      grid-row: 1 / 3;
+    }
+
+    .locate-spacer {
+      display: none;
+    }
+
+    .use-row--highlighted .use-entry {
+      padding-top: 48px;
+      padding-bottom: 25px;
+    }
+
+    .use-highlight-note {
+      top: -35px;
+      font-size: 0.98rem;
+    }
+
+    .tooltip {
+      max-width: 200px;
+      padding: 8px 12px;
+    }
+
+    .tooltip-title {
+      font-size: 0.85rem;
+    }
+
+    .tooltip-details {
+      font-size: 0.75rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .uses-page {
+      padding-right: 16px;
+      padding-left: 16px;
+    }
+
+    .uses-title-block h1 {
+      font-size: 2.45rem;
+    }
+
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-in,
+    .dot {
+      opacity: 1;
+      animation: none;
+    }
+  }
 </style>
 
 <script>
   function initSetupHotspots() {
     const container = document.getElementById('image-container');
-    const dots = document.querySelectorAll<HTMLElement>('.dot');
+    const dots = container?.querySelectorAll<HTMLElement>('.dot');
+    const locateButtons = document.querySelectorAll<HTMLButtonElement>('[data-locate-item]');
     const tooltip = document.getElementById('setup-tooltip') as HTMLElement | null;
     
-    if (!tooltip || !container) return;
+    if (!tooltip || !container || !dots) return;
     if (container.dataset.hotspotsBound === 'true') return;
     container.dataset.hotspotsBound = 'true';
 
@@ -268,7 +1070,6 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
     
     let activeDot: HTMLElement | null = null;
     
-    // Function to hide the tooltip and deactivate dot
     function hideTooltip() {
       tooltip.classList.remove('show');
       tooltip.setAttribute('aria-hidden', 'true');
@@ -279,11 +1080,10 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
       }
     }
 
-    // Hide tooltip when clicking anywhere on the container that isn't a dot
     container.addEventListener('click', (event) => {
-        if (!(event.target as HTMLElement).classList.contains('dot')) {
-            hideTooltip();
-        }
+      if (!(event.target as HTMLElement).classList.contains('dot')) {
+        hideTooltip();
+      }
     });
 
     function activateDot(dot: HTMLElement) {
@@ -299,9 +1099,8 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
     }
 
     dots.forEach(dot => {
-      // Click event for mobile/touch
       dot.addEventListener('click', function(event) {
-        event.stopPropagation(); // Prevent the container click event from firing
+        event.stopPropagation();
         if (activeDot === this) {
           hideTooltip();
         } else {
@@ -309,14 +1108,11 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
         }
       });
 
-      // Mouseenter for desktop hover
       dot.addEventListener('mouseenter', function() {
         showTooltip(this);
       });
 
-      // Mouseleave for desktop hover
       dot.addEventListener('mouseleave', function() {
-        // Only hide if it wasn't clicked/activated
         if (activeDot !== this) {
           tooltip.classList.remove('show');
           tooltip.setAttribute('aria-hidden', 'true');
@@ -329,6 +1125,26 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
 
       dot.addEventListener('blur', function() {
         if (activeDot === this) hideTooltip();
+      });
+    });
+
+    locateButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const itemId = button.dataset.locateItem;
+        if (!itemId) return;
+        const dot = Array.from(dots).find(candidate => candidate.dataset.itemId === itemId);
+        if (!dot) return;
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        container.scrollIntoView({
+          behavior: reduceMotion ? 'auto' : 'smooth',
+          block: 'center',
+        });
+
+        window.setTimeout(() => {
+          dot.focus({ preventScroll: true });
+          activateDot(dot);
+        }, reduceMotion ? 0 : 480);
       });
     });
     
@@ -352,7 +1168,6 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
       const containerRect = container.getBoundingClientRect();
       const dotRect = dot.getBoundingClientRect();
       
-      // Temporarily show to measure dimensions
       tooltipEl.style.visibility = 'hidden';
       tooltipEl.style.display = 'block';
       const tooltipRect = tooltipEl.getBoundingClientRect();
@@ -362,12 +1177,10 @@ const setupDots = Object.values(usesData).flat().filter(hasCoords);
       let top = dotRect.top - containerRect.top - tooltipRect.height - 15;
       let left = dotRect.left - containerRect.left + (dotRect.width / 2) - (tooltipRect.width / 2);
 
-      // Reposition if it goes off-screen vertically
       if (top < 0) {
         top = dotRect.top - containerRect.top + dotRect.height + 15;
       }
       
-      // Reposition if it goes off-screen horizontally
       if (left < 10) {
         left = 10;
       }

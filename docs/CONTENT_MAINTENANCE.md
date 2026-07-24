@@ -274,14 +274,49 @@ changes, also update the Person schema's `worksFor` field in
 
 ## Update Uses
 
-The Uses page data is the `usesData` array near the top of
-`src/pages/uses.astro`. Edit a category's title, description, link, image, or
-items there.
+The Uses page data is the `usesData` category record near the top of
+`src/pages/uses.astro`. Category labels and descriptions live in the adjacent
+`categoryMeta` record. Each item supports:
 
-Items with `x` and `y` percentages become interactive image callouts. Items
-without coordinates remain in the accompanying list. After changing the setup
-photo, remeasure every callout against the displayed image and test keyboard
-focus as well as pointer hover.
+- `name`: rendered item title.
+- `icon`: required transparent PNG filename from
+  `public/assets/icons/uses/marks/`. A generic utility SVG is allowed when an
+  item has no identifiable brand.
+- `iconKind`: optional `mark`, `wide`, or `character` sizing hint. Omit it for
+  ordinary square-ish logomarks, use `wide` for horizontal wordmarks, and use
+  `character` for transparent character art.
+- `details`: optional subtitle or specification line.
+- `description`: the item note shown in the directory.
+- `coords: { x, y }`: optional setup-photo percentages. Supplying coordinates
+  adds both an image hotspot and the laptop locate button in the list.
+- `highlight: true`: draws the two-line doodled circle around the title and
+  details.
+- `highlightNote`: optional handwritten text above the circle. It defaults to
+  `current fave`.
+- `highlightSide`: optional `left` or `right` override for the note. Without an
+  override, side and circle tilt are chosen deterministically from the category
+  and item name, so they vary without moving between builds.
+
+When adding an item, use a recognizable official brand, app, or character mark.
+Export a tightly cropped PNG with a transparent background, save it in
+`public/assets/icons/uses/marks/`, record its exact source in the parent
+folder's `SOURCES.md`, and reference the filename through `icon`. Preserve the
+mark's natural silhouette, colors, orientation, and aspect ratio. Do not place
+it on a square tile, add a CSS badge shell, rotate it, or bake in a white
+background. Prefer an official horizontal wordmark only when the standalone
+logomark is unavailable or unrecognizable at this size. The layout's invisible
+logo slot handles alignment without adding visible chrome.
+
+Highlights are data-driven and work on every Uses item. Add `highlight: true`
+and `highlightNote` to circle the item's title plus optional `details` line.
+Use `highlightSide` only when the deterministic left/right placement conflicts
+with nearby content. Keep highlights selective so the annotation remains
+meaningful rather than becoming the default state.
+
+After changing the setup photo, remeasure every `coords` callout against the
+displayed image and test keyboard focus as well as pointer hover. Highlighted
+items need a desktop and mobile check because handwritten notes intentionally
+sit above their row content.
 
 ## Update About Photos
 
@@ -308,6 +343,10 @@ CDN dependency.
    the default SVG.
 6. Check it on the dark background. Use the component's monochrome adaptation
    only when appropriate; preserve requested brand colors.
+
+Each tech item also supports `adaptive: true` for suitable monochrome logos,
+`highlight: true` for the doodled circle, and `highlightNote` for custom
+handwritten text. A highlighted item without custom text uses `current fave`.
 
 The marquee duplicates items in the DOM to loop seamlessly, but browsers reuse
 the same local files. The current icon directory is small enough that this is

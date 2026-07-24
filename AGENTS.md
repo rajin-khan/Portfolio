@@ -35,6 +35,9 @@ changing content systems or public assets.
   references to it have been checked.
 - Tech logos are self-hosted in `public/assets/icons/tech/`; record new sources
   in that folder's `SOURCES.md`.
+- Uses icons are self-hosted in `public/assets/icons/uses/`; keep every list
+  entry on a local transparent asset and record new sources in that folder's
+  `SOURCES.md`.
 
 ## Content Map
 

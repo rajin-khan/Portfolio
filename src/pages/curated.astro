@@ -390,7 +390,10 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
           }
         </div>
 
-        <section class="archive-subscribe" aria-labelledby="curated-subscribe-title">
+      </section>
+
+      <section class="archive-subscribe" aria-labelledby="curated-subscribe-title">
+        <div class="archive-subscribe-inner">
           <div class="subscribe-copy">
             <p class="eyebrow">The next issue</p>
             <h3 id="curated-subscribe-title">Let it find you.</h3>
@@ -421,7 +424,7 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
               aria-live="polite"
             ></p>
           </form>
-        </section>
+        </div>
       </section>
     </main>
 
@@ -648,6 +651,10 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
 
   :global(#main-content) {
     outline: none;
+  }
+
+  :global(body > footer) {
+    margin-top: 0 !important;
   }
 
   .curated-page {
@@ -1412,15 +1419,23 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
 
   .archive-subscribe {
     position: relative;
+    z-index: 1;
+    width: 100%;
+    margin: 0;
+    border-top: 1px solid var(--line);
+    background: transparent;
+  }
+
+  .archive-subscribe-inner {
     display: grid;
     grid-template-columns: minmax(240px, 0.8fr) minmax(320px, 1.2fr);
     align-items: center;
     gap: clamp(36px, 6vw, 96px);
-    width: 100%;
-    margin: clamp(70px, 8vw, 112px) 0 0;
-    padding: 42px clamp(16px, 2vw, 24px) 44px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+    width: calc(100% - 96px);
+    max-width: 1152px;
+    min-height: 250px;
+    margin: 0 auto;
+    padding: 56px 16px 58px;
     text-align: left;
   }
 
@@ -1575,7 +1590,7 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
   }
 
   @media (max-width: 900px) {
-    .archive-subscribe {
+    .archive-subscribe-inner {
       grid-template-columns: minmax(220px, 0.8fr) minmax(300px, 1.2fr);
       gap: 32px;
     }
@@ -1697,11 +1712,12 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
       flex-basis: min(68vw, 250px);
     }
 
-    .archive-subscribe {
+    .archive-subscribe-inner {
       grid-template-columns: minmax(0, 1fr);
       gap: 24px;
-      margin-top: 62px;
-      padding: 38px 16px 42px;
+      width: calc(100% - 40px);
+      min-height: 0;
+      padding: 58px 0 64px;
       text-align: center;
     }
 
