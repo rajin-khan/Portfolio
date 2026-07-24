@@ -10,10 +10,11 @@ interface Props {
 
 const { logo, dates, role, company, description, kind } = Astro.props;
 const kindLabel = kind === "education" ? "Education" : "Experience";
+const isNsu = role === "North South University";
 ---
 
 <article
-  class:list={["experience-entry", `is-${kind}`]}
+  class:list={["experience-entry", `is-${kind}`, { "is-nsu": isNsu }]}
   aria-label={`${kindLabel}: ${role}, ${company}`}
 >
   <div class="experience-content">
@@ -190,6 +191,14 @@ const kindLabel = kind === "education" ? "Education" : "Experience";
   .experience-entry:hover .experience-logo img {
     opacity: 1;
     transform: scale(1.06);
+  }
+
+  .is-nsu .experience-logo img {
+    transform: translate3d(0, -1.5px, 0);
+  }
+
+  .is-nsu:hover .experience-logo img {
+    transform: translate3d(0, -1.5px, 0) scale(1.06);
   }
 
   .experience-meta {
