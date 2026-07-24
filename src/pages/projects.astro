@@ -26,10 +26,6 @@ const projectItems = projects.map(({ data }, index) => ({
 					<h1>Things I&apos;ve made</h1>
 					<p class="projects-handwritten">some useful. some just had to exist.</p>
 				</div>
-				<p class="projects-intro">
-					Products, research, and small experiments across AI,
-					accessibility, computer vision, and the web.
-				</p>
 			</header>
 
 			<section
@@ -195,11 +191,8 @@ const projectItems = projects.map(({ data }, index) => ({
 	}
 
 	.projects-hero {
-		display: grid;
-		grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
-		gap: 80px;
-		align-items: center;
 		padding: 28px 0 54px;
+		text-align: center;
 	}
 
 	.projects-title-block h1 {
@@ -221,16 +214,6 @@ const projectItems = projects.map(({ data }, index) => ({
 		color: var(--projects-paper);
 		font-size: 1.28rem;
 		line-height: 1.35;
-	}
-
-	.projects-intro {
-		max-width: 45ch;
-		margin: 0;
-		color: #b8b8b4;
-		font-size: 1rem;
-		font-weight: 500;
-		line-height: 1.72;
-		text-wrap: pretty;
 	}
 
 	.project-reel {
@@ -713,11 +696,6 @@ const projectItems = projects.map(({ data }, index) => ({
 	}
 
 	@media (max-width: 960px) {
-		.projects-hero {
-			grid-template-columns: minmax(0, 1fr) minmax(280px, 0.82fr);
-			gap: 48px;
-		}
-
 		.reel-copy {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 			gap: 46px;
@@ -742,17 +720,11 @@ const projectItems = projects.map(({ data }, index) => ({
 		}
 
 		.projects-hero {
-			grid-template-columns: 1fr;
-			gap: 28px;
 			padding-bottom: 40px;
 		}
 
 		.projects-title-block h1 {
 			font-size: 3rem;
-		}
-
-		.projects-intro {
-			max-width: 54ch;
 		}
 
 		.project-reel {
@@ -859,10 +831,6 @@ const projectItems = projects.map(({ data }, index) => ({
 
 		.projects-handwritten {
 			font-size: 1.08rem;
-		}
-
-		.projects-intro {
-			font-size: 0.9rem;
 		}
 
 		.reel-caption {

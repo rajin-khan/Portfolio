@@ -1,22 +1,399 @@
 ---
-const { logo, dates, role, company, description } = Astro.props;
+interface Props {
+	logo: string;
+	dates: string;
+	role: string;
+	company: string;
+	description: string;
+	kind: "work" | "education";
+}
+
+const { logo, dates, role, company, description, kind } = Astro.props;
+const kindLabel = kind === "education" ? "Education" : "Experience";
 ---
 
-<div class="relative flex flex-col justify-start pl-12">
-  <div
-    class="absolute top-0 left-0 z-40 flex items-center justify-center -translate-x-1/2 bg-white border rounded-full dark:bg-neutral-950 w-14 h-14 border-neutral-300 dark:border-neutral-700"
-  >
-    <img src={logo} alt="" class="w-8 h-8 object-contain" width="32" height="32" loading="lazy" decoding="async" />
+<article
+  class:list={["experience-entry", `is-${kind}`]}
+  aria-label={`${kindLabel}: ${role}, ${company}`}
+>
+  <div class="experience-content">
+    <div class="experience-meta">
+      <span class="experience-kind">{kindLabel}</span>
+      <p>{dates.trim()}</p>
+    </div>
+
+    <div class="experience-details">
+      <div class="experience-identity">
+        <h3>{role}</h3>
+        <p>{company}</p>
+      </div>
+      <p class="experience-description">{description}</p>
+    </div>
   </div>
 
-  <p
-    class="text-xs uppercase text-neutral-400 dark:text-neutral-500 tracking-widest"
-  >
-    {dates}
-  </p>
-  <h3 class="my-1 text-lg font-bold dark:text-neutral-100">{role}</h3>
-  <p class="mb-1 text-sm font-medium dark:text-neutral-300">{company}</p>
-  <p class="text-sm font-light text-neutral-600 dark:text-neutral-400">
-    {description}
-  </p>
-</div>
+  <div class="experience-node" aria-hidden="true">
+    <span class="experience-logo">
+      <img src={logo} alt="" width="42" height="42" loading="lazy" decoding="async" />
+    </span>
+  </div>
+</article>
+
+<style>
+  .experience-entry {
+    --timeline-branch: rgba(255, 255, 255, 0.18);
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 94px 1px 94px minmax(0, 1fr);
+    min-height: 120px;
+    padding-bottom: 38px;
+  }
+
+  .experience-entry:last-child {
+    padding-bottom: 0;
+  }
+
+  .experience-content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 410px);
+    min-width: 0;
+    padding: 3px 22px 8px;
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .experience-content::before {
+    position: absolute;
+    z-index: -1;
+    inset: -13px -16px -14px;
+    border-radius: 8px;
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease;
+  }
+
+  .is-work .experience-content {
+    grid-column: 1;
+    justify-self: end;
+    padding-left: 0;
+    text-align: right;
+  }
+
+  .is-work .experience-content::before {
+    background: linear-gradient(270deg, rgba(255, 255, 255, 0.045), transparent 74%);
+  }
+
+  .is-education .experience-content {
+    grid-column: 5;
+    justify-self: start;
+    padding-right: 0;
+    text-align: left;
+  }
+
+  .is-education .experience-content::before {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.045), transparent 74%);
+  }
+
+  .experience-entry:hover .experience-content::before {
+    opacity: 1;
+  }
+
+  .is-work:hover .experience-content {
+    transform: translate3d(-6px, 0, 0);
+  }
+
+  .is-education:hover .experience-content {
+    transform: translate3d(6px, 0, 0);
+  }
+
+  .experience-node {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-row: 1;
+    place-items: start center;
+  }
+
+  .is-work .experience-node {
+    grid-column: 2;
+  }
+
+  .is-education .experience-node {
+    grid-column: 4;
+  }
+
+  .experience-node::after {
+    position: absolute;
+    z-index: -1;
+    top: 26px;
+    height: 1px;
+    background: var(--timeline-branch);
+    content: "";
+    transition: background-color 220ms ease;
+  }
+
+  .is-work .experience-node::after {
+    right: -2px;
+    left: calc(50% + 25px);
+  }
+
+  .is-education .experience-node::after {
+    right: calc(50% + 25px);
+    left: -2px;
+  }
+
+  .experience-entry:hover .experience-node::after {
+    background-color: rgba(255, 255, 255, 0.72);
+  }
+
+  .experience-logo {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    place-items: center;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 50%;
+    background: #090909;
+    box-shadow: 0 0 0 7px #090909;
+    transition:
+      border-color 220ms ease,
+      background-color 220ms ease,
+      box-shadow 220ms ease,
+      transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .experience-logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.92;
+    transition:
+      opacity 220ms ease,
+      transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .experience-entry:hover .experience-logo {
+    border-color: rgba(255, 255, 255, 0.58);
+    background: #0e0e0e;
+    box-shadow:
+      0 0 0 7px #090909,
+      0 0 28px rgba(255, 255, 255, 0.07);
+    transform: rotate(-3deg) scale(1.04);
+  }
+
+  .is-education:hover .experience-logo {
+    transform: rotate(3deg) scale(1.04);
+  }
+
+  .experience-entry:hover .experience-logo img {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+
+  .experience-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .is-work .experience-meta {
+    justify-content: flex-end;
+  }
+
+  .experience-kind {
+    display: none;
+  }
+
+  .experience-meta > p,
+  .experience-identity p,
+  .experience-description {
+    margin: 0;
+  }
+
+  .experience-meta > p {
+    color: #858581;
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 650;
+    line-height: 1.35;
+    transition: color 220ms ease;
+  }
+
+  .experience-entry:hover .experience-meta > p {
+    color: #b8b8b4;
+  }
+
+  .experience-details {
+    margin-top: 11px;
+  }
+
+  .experience-identity {
+    min-width: 0;
+  }
+
+  .experience-identity h3 {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    color: #dededb;
+    font-size: 1.12rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-wrap: balance;
+    transition: color 220ms ease;
+  }
+
+  .experience-identity h3::after {
+    position: absolute;
+    right: 0;
+    bottom: -4px;
+    left: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.62);
+    content: "";
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .is-work .experience-identity h3::after {
+    transform-origin: right;
+  }
+
+  .experience-entry:hover .experience-identity h3 {
+    color: #fff;
+  }
+
+  .experience-entry:hover .experience-identity h3::after {
+    transform: scaleX(1);
+  }
+
+  .experience-identity p {
+    margin-top: 7px;
+    color: #aaa9a5;
+    font-size: 0.84rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .experience-description {
+    max-width: 47ch;
+    margin-top: 12px;
+    color: #92928e;
+    font-size: 0.86rem;
+    font-weight: 550;
+    line-height: 1.62;
+    text-wrap: pretty;
+  }
+
+  .is-work .experience-description {
+    margin-left: auto;
+  }
+
+  @media (max-width: 720px) {
+    .experience-entry {
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 18px;
+      min-height: 0;
+      padding-bottom: 40px;
+    }
+
+    .experience-content,
+    .is-work .experience-content,
+    .is-education .experience-content {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: stretch;
+      width: 100%;
+      padding: 2px 0 7px;
+      text-align: left;
+    }
+
+    .experience-content::before,
+    .is-work .experience-content::before,
+    .is-education .experience-content::before {
+      inset: -11px -8px -12px -12px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.045), transparent 74%);
+    }
+
+    .is-work:hover .experience-content,
+    .is-education:hover .experience-content {
+      transform: translate3d(3px, 0, 0);
+    }
+
+    .experience-node,
+    .is-work .experience-node,
+    .is-education .experience-node {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .experience-node::after {
+      display: none;
+    }
+
+    .experience-logo {
+      width: 46px;
+      height: 46px;
+      padding: 7px;
+      box-shadow: 0 0 0 6px #090909;
+    }
+
+    .experience-entry:hover .experience-logo {
+      box-shadow:
+        0 0 0 6px #090909,
+        0 0 22px rgba(255, 255, 255, 0.06);
+    }
+
+    .experience-meta,
+    .is-work .experience-meta {
+      justify-content: flex-start;
+    }
+
+    .experience-kind {
+      display: inline-flex;
+      align-items: center;
+      color: #666662;
+      font-size: 0.64rem;
+      font-weight: 700;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .experience-kind::after {
+      width: 10px;
+      height: 1px;
+      margin-left: 8px;
+      background: rgba(255, 255, 255, 0.18);
+      content: "";
+    }
+
+    .experience-identity h3::after,
+    .is-work .experience-identity h3::after {
+      transform-origin: left;
+    }
+
+    .is-work .experience-description {
+      margin-left: 0;
+    }
+
+    .experience-description {
+      max-width: 50ch;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .experience-node::after,
+    .experience-logo,
+    .experience-logo img,
+    .experience-content,
+    .experience-content::before,
+    .experience-meta > p,
+    .experience-identity h3,
+    .experience-identity h3::after {
+      transition: none;
+    }
+  }
+</style>

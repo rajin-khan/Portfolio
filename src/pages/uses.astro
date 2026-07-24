@@ -307,12 +307,6 @@ const categories = Object.entries(usesData).map(([key, items], index) => ({
           <h1>My daily uses</h1>
           <p class="handwritten-note">nothing sponsored. unfortunately.</p>
         </div>
-        <div class="uses-intro-copy">
-          <p>
-            The hardware, software, and small comforts I actually use to make
-            things. This changes whenever I find something better.
-          </p>
-        </div>
       </header>
 
       <figure class="setup-figure animate-in" style="--animation-delay: 180ms;">
@@ -464,11 +458,8 @@ const categories = Object.entries(usesData).map(([key, items], index) => ({
   }
 
   .uses-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
-    gap: 80px;
-    align-items: center;
     padding: 28px 0 64px;
+    text-align: center;
   }
 
   .uses-title-block h1 {
@@ -478,20 +469,6 @@ const categories = Object.entries(usesData).map(([key, items], index) => ({
     font-weight: 700;
     letter-spacing: 0;
     line-height: 1;
-  }
-
-  .uses-intro-copy {
-    align-self: center;
-  }
-
-  .uses-intro-copy > p:first-child {
-    max-width: 45ch;
-    margin: 0;
-    color: #b8b8b4;
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.72;
-    text-wrap: pretty;
   }
 
   .handwritten-note,
@@ -878,11 +855,6 @@ const categories = Object.entries(usesData).map(([key, items], index) => ({
   }
 
   @media (max-width: 980px) {
-    .uses-hero {
-      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
-      gap: 48px;
-    }
-
     .uses-title-block h1 {
       font-size: 3.35rem;
     }
@@ -911,19 +883,12 @@ const categories = Object.entries(usesData).map(([key, items], index) => ({
     }
 
     .uses-hero {
-      grid-template-columns: 1fr;
-      gap: 24px;
       padding: 24px 0 48px;
     }
 
     .uses-title-block h1 {
       font-size: 2.75rem;
       line-height: 1.04;
-    }
-
-    .uses-intro-copy > p:first-child {
-      max-width: 38ch;
-      font-size: 0.94rem;
     }
 
     .handwritten-note {
