@@ -898,6 +898,13 @@ const categories = Object.entries(usesData).map(([key, items], index) => ({
     }
   }
 
+  @media (min-width: 761px) and (max-width: 1100px) {
+    .uses-page {
+      padding-right: clamp(40px, 5vw, 52px);
+      padding-left: clamp(40px, 5vw, 52px);
+    }
+  }
+
   @media (max-width: 760px) {
     .uses-page {
       padding: 24px 20px 76px;

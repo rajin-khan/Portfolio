@@ -729,6 +729,13 @@ const projectItems = projects.map(({ data }, index) => ({
 		}
 	}
 
+	@media (min-width: 761px) and (max-width: 1100px) {
+		.projects-page {
+			padding-right: clamp(40px, 5vw, 52px);
+			padding-left: clamp(40px, 5vw, 52px);
+		}
+	}
+
 	@media (max-width: 760px) {
 		.projects-page {
 			padding-inline: 20px;
