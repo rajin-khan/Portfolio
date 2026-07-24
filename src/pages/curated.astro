@@ -1,98 +1,104 @@
 ---
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 import Layout from "../layouts/main.astro";
-import { readdirSync } from "fs";
-import { join } from "path";
 
 type IssueDetails = {
-  summary: string;
-  length: string;
-  sections: Array<{ category: string; title: string }>;
+	summary: string;
+	length: string;
+	sections: Array<{ category: string; title: string }>;
 };
 
 const publicationHeadline = "Tech, design, whatever I like.";
 
 const issueDetails: Record<number, IssueDetails> = {
-  1: {
-    summary:
-      "The first dispatch: useful software, ambitious machines, strange research, good type, and a reminder to make things.",
-    length: "29 pages",
-    sections: [
-      { category: "Think piece", title: "AGI was achieved last week, actually." },
-      { category: "Hardware", title: "Is Neo the chosen one?" },
-      { category: "Software", title: "Networking, made stupidly simple." },
-      { category: "Research", title: "Talking with black boxes." },
-      { category: "Creative", title: "You need to create." },
-      { category: "Design", title: "Good fonts. Oh so free." },
-      { category: "Rajin's Lab", title: "Your note's a mess. Good." },
-    ],
-  },
+	1: {
+		summary:
+			"The first dispatch: useful software, ambitious machines, strange research, good type, and a reminder to make things.",
+		length: "29 pages",
+		sections: [
+			{
+				category: "Think piece",
+				title: "AGI was achieved last week, actually.",
+			},
+			{ category: "Hardware", title: "Is Neo the chosen one?" },
+			{ category: "Software", title: "Networking, made stupidly simple." },
+			{ category: "Research", title: "Talking with black boxes." },
+			{ category: "Creative", title: "You need to create." },
+			{ category: "Design", title: "Good fonts. Oh so free." },
+			{ category: "Rajin's Lab", title: "Your note's a mess. Good." },
+		],
+	},
 };
 
 const defaultIssueDetails: IssueDetails = {
-  summary:
-    "A dispatch about technology, design, useful tools, and the ideas in between.",
-  length: "PDF",
-  sections: [],
+	summary:
+		"A dispatch about technology, design, useful tools, and the ideas in between.",
+	length: "PDF",
+	sections: [],
 };
 
 function getIssueDate(issueNumber: number) {
-  const date = new Date(2025, 11 + issueNumber - 1, 1);
+	const date = new Date(2025, 11 + issueNumber - 1, 1);
 
-  return {
-    short: new Intl.DateTimeFormat("en", {
-      month: "short",
-      year: "2-digit",
-    }).format(date),
-    long: new Intl.DateTimeFormat("en", {
-      month: "long",
-      year: "numeric",
-    }).format(date),
-    datetime: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`,
-  };
+	return {
+		short: new Intl.DateTimeFormat("en", {
+			month: "short",
+			year: "2-digit",
+		}).format(date),
+		long: new Intl.DateTimeFormat("en", {
+			month: "long",
+			year: "numeric",
+		}).format(date),
+		datetime: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+			2,
+			"0",
+		)}`,
+	};
 }
 
 let newsletterFiles: Array<{ filename: string; issueNumber: number }> = [];
 
 try {
-  const newslettersDir = join(process.cwd(), "public", "newsletters");
-  newsletterFiles = readdirSync(newslettersDir)
-    .filter((file) => file.endsWith(".pdf") && file.startsWith("curated-"))
-    .map((file) => {
-      const match = file.match(/curated-(\d+)\.pdf/);
-      return match
-        ? { filename: file, issueNumber: Number.parseInt(match[1], 10) }
-        : null;
-    })
-    .filter(
-      (issue): issue is { filename: string; issueNumber: number } =>
-        issue !== null
-    )
-    .sort((a, b) => a.issueNumber - b.issueNumber);
+	const newslettersDir = join(process.cwd(), "public", "newsletters");
+	newsletterFiles = readdirSync(newslettersDir)
+		.filter((file) => file.endsWith(".pdf") && file.startsWith("curated-"))
+		.map((file) => {
+			const match = file.match(/curated-(\d+)\.pdf/);
+			return match
+				? { filename: file, issueNumber: Number.parseInt(match[1], 10) }
+				: null;
+		})
+		.filter(
+			(issue): issue is { filename: string; issueNumber: number } =>
+				issue !== null,
+		)
+		.sort((a, b) => a.issueNumber - b.issueNumber);
 } catch (error) {
-  console.warn("Could not read newsletters directory:", error);
-  newsletterFiles = [{ filename: "curated-001.pdf", issueNumber: 1 }];
+	console.warn("Could not read newsletters directory:", error);
+	newsletterFiles = [{ filename: "curated-001.pdf", issueNumber: 1 }];
 }
 
 const newsletters = newsletterFiles.map(({ filename, issueNumber }) => ({
-  issueNumber,
-  issueLabel: issueNumber.toString().padStart(3, "0"),
-  date: getIssueDate(issueNumber),
-  pdfPath: `/newsletters/${filename}`,
-  previewPath: `/newsletters/${filename.replace(/\.pdf$/, "-preview.jpg")}`,
-  details: issueDetails[issueNumber] ?? defaultIssueDetails,
+	issueNumber,
+	issueLabel: issueNumber.toString().padStart(3, "0"),
+	date: getIssueDate(issueNumber),
+	pdfPath: `/newsletters/${filename}`,
+	previewPath: `/newsletters/${filename.replace(/\.pdf$/, "-preview.jpg")}`,
+	details: issueDetails[issueNumber] ?? defaultIssueDetails,
 }));
 
 const latestIssue = newsletters[newsletters.length - 1] ?? {
-  issueNumber: 1,
-  issueLabel: "001",
-  date: getIssueDate(1),
-  pdfPath: "/newsletters/curated-001.pdf",
-  previewPath: "/newsletters/curated-001-preview.jpg",
-  details: issueDetails[1],
+	issueNumber: 1,
+	issueLabel: "001",
+	date: getIssueDate(1),
+	pdfPath: "/newsletters/curated-001.pdf",
+	previewPath: "/newsletters/curated-001-preview.jpg",
+	details: issueDetails[1],
 };
 const nextIssueNumber = (latestIssue.issueNumber + 1)
-  .toString()
-  .padStart(3, "0");
+	.toString()
+	.padStart(3, "0");
 ---
 
 <Layout
@@ -630,7 +636,6 @@ const nextIssueNumber = (latestIssue.issueNumber + 1)
   }
 
   :global(header#header),
-  :global(body > footer),
   :global(body > div.relative.w-full.h-20[aria-hidden="true"]),
   :global(.square-lines) {
     display: none !important;

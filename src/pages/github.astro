@@ -1,0 +1,2206 @@
+---
+import Layout from "../layouts/main.astro";
+
+const commitPlaceholders = Array.from({ length: 100 });
+const eventPlaceholders = Array.from({ length: 30 });
+const hourPlaceholders = Array.from({ length: 24 });
+const weekdayPlaceholders = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const languagePlaceholders = Array.from({ length: 6 });
+const repositoryPlaceholders = Array.from({ length: 5 });
+const commitLogPlaceholders = Array.from({ length: 5 });
+---
+
+<Layout
+  title="GitHub Activity"
+  description="A live public snapshot of Rajin Khan's GitHub repositories, commits, languages, and recent development activity."
+  ogImage="/assets/images/rajins-banner-new.png"
+  ogImageAlt="Rajin Khan's public GitHub activity"
+>
+  <div
+    class="github-page"
+    data-github-dashboard
+    data-state="loading"
+    aria-busy="true"
+  >
+    <header class="github-nav">
+      <a href="/" class="home-link">
+        <svg
+          aria-hidden="true"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M19 12H5M12 19l-7-7 7-7"></path>
+        </svg>
+        <span>Home</span>
+      </a>
+
+      <div class="nav-meta">
+        <span data-dashboard-updated>Reading the public trail...</span>
+        <a
+          data-profile-link
+          href="https://github.com/rajin-khan"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Rajin Khan on GitHub"
+          title="Open GitHub profile"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path
+              fill-rule="evenodd"
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <div class="dashboard-alert" data-dashboard-error role="alert" hidden>
+      <p data-dashboard-error-message>GitHub is being quiet right now.</p>
+      <div>
+        <button type="button" data-dashboard-retry>Try again</button>
+        <a
+          data-profile-link
+          href="https://github.com/rajin-khan"
+          target="_blank"
+          rel="noopener noreferrer">Open GitHub</a
+        >
+      </div>
+    </div>
+
+    <aside
+      id="commit-day-details"
+      class="commit-popover"
+      data-commit-popover
+      data-open="false"
+      role="dialog"
+      aria-label="Commit details"
+      aria-live="polite"
+      hidden
+    >
+      <div class="commit-popover-meta">
+        <time data-commit-popover-date datetime="">A quiet day</time>
+        <span data-commit-popover-count>0 commits</span>
+      </div>
+      <strong data-commit-popover-message>Nothing public landed here</strong>
+      <span class="commit-popover-repository" data-commit-popover-repository>
+        the square still gets to exist
+      </span>
+      <a
+        data-commit-popover-link
+        href="https://github.com/rajin-khan"
+        target="_blank"
+        rel="noopener noreferrer"
+        hidden
+      >
+        <span>View commit</span>
+        <svg
+          aria-hidden="true"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 12h14M13 6l6 6-6 6"></path>
+        </svg>
+      </a>
+    </aside>
+
+    <main class="github-main">
+      <section class="github-hero" aria-labelledby="github-title">
+        <div class="hero-profile">
+          <div class="profile-lockup">
+            <img
+              data-profile-avatar
+              src="https://avatars.githubusercontent.com/u/121302497?v=4"
+              alt="Rajin Khan's GitHub avatar"
+              width="112"
+              height="112"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+            <div>
+              <h1 id="github-title">github</h1>
+            </div>
+          </div>
+
+          <p class="hero-line">i do like building.</p>
+
+          <div class="profile-details">
+            <a
+              data-profile-link
+              data-profile-handle
+              href="https://github.com/rajin-khan"
+              target="_blank"
+              rel="noopener noreferrer">@rajin-khan</a
+            >
+            <span data-profile-since>on GitHub since 2022</span>
+          </div>
+
+          <div class="hero-count">
+            <div class="hero-total-row">
+              <strong class="hero-total" data-total-commits>----</strong>
+              <span class="hero-plus" aria-hidden="true">+</span>
+            </div>
+            <p class="hero-total-label">public commits</p>
+
+            <dl class="hero-facts">
+              <div>
+                <dt>Repositories</dt>
+                <dd data-public-repos>--</dd>
+              </div>
+              <div>
+                <dt>Stars earned</dt>
+                <dd data-total-stars>--</dd>
+              </div>
+              <div>
+                <dt>Forks</dt>
+                <dd data-total-forks>--</dd>
+              </div>
+              <div>
+                <dt>Followers</dt>
+                <dd data-followers>--</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="hero-activity">
+          <header class="section-heading commit-field-heading">
+            <div>
+              <h2 id="commit-field-title">The latest hundred.</h2>
+              <p class="section-aside">one square, one day</p>
+            </div>
+            <span data-commit-sample>Reading the last 100 days...</span>
+          </header>
+
+          <div class="commit-field-layout">
+            <figure class="commit-field-figure">
+              <figcaption>
+                <span>oldest day</span>
+                <span data-commit-range>fetching the range</span>
+                <span>newest day</span>
+              </figcaption>
+              <div
+                class="commit-grid"
+                data-commit-grid
+                role="group"
+                aria-label="Public commits across the last 100 days"
+                aria-busy="true"
+              >
+                {
+                  commitPlaceholders.map(() => (
+                    <span class="commit-pixel commit-pixel--skeleton" aria-hidden="true"></span>
+                  ))
+                }
+              </div>
+            </figure>
+
+            <article class="head-commit" aria-label="Most recent public commit">
+              <p class="head-label">HEAD</p>
+              <a
+                class="head-sha"
+                data-head-link
+                href="https://github.com/rajin-khan"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span aria-hidden="true">+</span>
+                <code data-head-sha>-------</code>
+              </a>
+              <h3 data-head-message>Reading the newest commit...</h3>
+              <div class="head-meta">
+                <a
+                  data-head-repository
+                  href="https://github.com/rajin-khan"
+                  target="_blank"
+                  rel="noopener noreferrer">Public repository</a
+                >
+                <time data-head-date datetime="">just now</time>
+              </div>
+              <p class="head-aside">currently at the top of the pile</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="data-section public-month-section" aria-labelledby="public-month-title">
+        <div class="section-inner">
+          <header class="section-heading">
+            <div>
+              <h2 id="public-month-title">Last month I...</h2>
+              <p class="section-aside month-note" data-month-note>
+                reading the month (-- commits)
+              </p>
+            </div>
+            <span>the last 30 days</span>
+          </header>
+
+          <figure class="event-figure">
+            <div
+              class="event-chart"
+              data-event-chart
+              role="group"
+              aria-label="Public GitHub commits over the last 30 days"
+              aria-busy="true"
+            >
+              {
+                eventPlaceholders.map((_, index) => (
+                  <span class="event-column" aria-hidden="true">
+                    <span
+                      class="event-bar-track"
+                      style={`--event-height: ${20 + ((index * 17) % 72)}%`}
+                    >
+                      <span
+                        class="event-bar event-bar--skeleton"
+                      ></span>
+                      <span class="event-count">--</span>
+                    </span>
+                    <span class="event-date"></span>
+                  </span>
+                ))
+              }
+            </div>
+          </figure>
+
+          <dl class="event-facts">
+            <div>
+              <dt>Commits</dt>
+              <dd data-month-commits>--</dd>
+            </div>
+            <div>
+              <dt>Active days</dt>
+              <dd data-month-active-days>--</dd>
+            </div>
+            <div>
+              <dt>Busiest day</dt>
+              <dd data-month-busiest>--</dd>
+            </div>
+            <div>
+              <dt>Repositories</dt>
+              <dd data-month-repositories>--</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="data-section analysis-section" aria-label="GitHub activity analysis">
+        <div class="section-inner analysis-grid">
+          <article class="rhythm-panel">
+            <header class="analysis-heading">
+              <h2>Commit rhythm</h2>
+              <p class="section-aside" data-rhythm-note>finding the pattern</p>
+            </header>
+
+            <figure class="hour-figure">
+              <figcaption>
+                <span>Hour of day / latest 100</span>
+                <span class="rhythm-readout" data-rhythm-readout>
+                  tap a bar, it has opinions
+                </span>
+              </figcaption>
+              <div
+                class="hour-chart"
+                data-hour-chart
+                role="group"
+                aria-label="Recent commits grouped by hour of day"
+                aria-busy="true"
+              >
+                {
+                  hourPlaceholders.map((_, index) => (
+                    <span class="hour-column" aria-hidden="true">
+                      <span
+                        class="hour-bar hour-bar--skeleton"
+                        style={`--hour-height: ${18 + ((index * 23) % 76)}%`}
+                      ></span>
+                      <span class="hour-label">{index % 6 === 0 ? String(index).padStart(2, "0") : ""}</span>
+                    </span>
+                  ))
+                }
+              </div>
+            </figure>
+
+            <div
+              class="weekday-chart"
+              data-weekday-chart
+              role="group"
+              aria-label="Recent commits grouped by weekday"
+              aria-busy="true"
+            >
+              {
+                weekdayPlaceholders.map((day, index) => (
+                  <span class="weekday-row" aria-hidden="true">
+                    <span class="weekday-name">{day}</span>
+                    <span class="weekday-track">
+                      <span
+                        class="weekday-bar weekday-bar--skeleton"
+                        style={`--weekday-width: ${34 + index * 8}%`}
+                      ></span>
+                    </span>
+                    <span class="weekday-value">--</span>
+                  </span>
+                ))
+              }
+            </div>
+          </article>
+
+          <article class="language-panel">
+            <header class="analysis-heading">
+              <h2>What it's made of</h2>
+              <p class="section-aside" data-language-note>counting languages</p>
+            </header>
+            <p class="analysis-caption">Primary language across owned, active repositories.</p>
+            <ol class="language-list" data-language-list aria-busy="true">
+              {
+                languagePlaceholders.map((_, index) => (
+                  <li class="language-row language-row--skeleton" aria-hidden="true">
+                    <span class="language-rank">{String(index + 1).padStart(2, "0")}</span>
+                    <span class="language-content">
+                      <span class="language-heading">
+                        <span class="language-name">Reading...</span>
+                        <span class="language-count">-- repos</span>
+                      </span>
+                      <span class="language-track">
+                        <span
+                          class="language-bar"
+                          style={`--language-width: ${96 - index * 11}%`}
+                        ></span>
+                      </span>
+                    </span>
+                  </li>
+                ))
+              }
+            </ol>
+          </article>
+        </div>
+      </section>
+
+      <section class="data-section code-index-section" aria-label="Repositories and recent commits">
+        <div class="section-inner code-index-grid">
+          <article class="repositories-panel" aria-labelledby="repositories-title">
+            <header class="section-heading">
+              <div>
+                <h2 id="repositories-title">Worth opening</h2>
+                <p>Public repositories, ordered by the attention they found.</p>
+              </div>
+              <a
+                href="https://github.com/rajin-khan?tab=repositories"
+                target="_blank"
+                rel="noopener noreferrer"
+              >All repositories</a>
+            </header>
+
+            <ol class="repository-list" data-repository-list aria-busy="true">
+              {
+                repositoryPlaceholders.map((_, index) => (
+                  <li class="repository-item repository-item--skeleton" aria-hidden="true">
+                    <span class="repository-link">
+                      <span class="repository-rank">{String(index + 1).padStart(2, "0")}</span>
+                      <span class="repository-copy">
+                        <strong class="repository-name">Reading repository...</strong>
+                        <span class="repository-description">Waiting for GitHub metadata.</span>
+                      </span>
+                      <span class="repository-facts">-- language / -- stars</span>
+                      <span class="repository-arrow" aria-hidden="true">↗</span>
+                    </span>
+                  </li>
+                ))
+              }
+            </ol>
+          </article>
+
+          <article class="commit-log-panel" aria-labelledby="commit-log-title">
+            <header class="section-heading">
+              <div>
+                <h2 id="commit-log-title">Recent commits</h2>
+                <p>The messages say more than the graph does.</p>
+              </div>
+              <span data-commit-log-count>Reading the log...</span>
+            </header>
+
+            <ol class="commit-log" data-commit-list aria-busy="true">
+              {
+                commitLogPlaceholders.map(() => (
+                  <li class="commit-log-item commit-log-item--skeleton" aria-hidden="true">
+                    <span class="commit-log-link">
+                      <code class="commit-log-sha">-------</code>
+                      <span class="commit-log-copy">
+                        <strong class="commit-log-message">Reading commit message...</strong>
+                        <span class="commit-log-repository">repository</span>
+                      </span>
+                      <time class="commit-log-date">--</time>
+                      <span class="commit-log-arrow" aria-hidden="true">↗</span>
+                    </span>
+                  </li>
+                ))
+              }
+            </ol>
+          </article>
+        </div>
+      </section>
+
+      <p class="dashboard-api-note" data-api-note hidden></p>
+    </main>
+  </div>
+
+  <script src="../assets/js/github-dashboard.js"></script>
+</Layout>
+
+<style is:global>
+  @font-face {
+    font-family: "La Belle Aurore";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/assets/fonts/la-belle-aurore-latin.woff2") format("woff2");
+  }
+
+  header#header,
+  body > div.relative.w-full.h-20[aria-hidden="true"],
+  .square-lines {
+    display: none !important;
+  }
+
+  body {
+    overflow-x: hidden;
+    background: #080808 !important;
+  }
+
+  body > footer {
+    margin-top: 0 !important;
+  }
+
+  #main-content {
+    outline: none;
+  }
+
+  .github-page {
+    --ink: #080808;
+    --ink-raised: #0d0d0d;
+    --paper: #f1f1ee;
+    --muted: #9a9a96;
+    --faint: #666662;
+    --line: rgba(255, 255, 255, 0.14);
+    --line-strong: rgba(255, 255, 255, 0.28);
+    --activity-0: #161b22;
+    --activity-1: #0e4429;
+    --activity-2: #006d32;
+    --activity-3: #26a641;
+    --activity-4: #39d353;
+    min-height: 100svh;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    color: var(--paper);
+    background-color: var(--ink);
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+    background-size: 88px 88px;
+    font-family: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 500;
+  }
+
+  .github-page *,
+  .github-page *::before,
+  .github-page *::after {
+    box-sizing: border-box;
+  }
+
+  .github-nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    min-height: 72px;
+    width: 100%;
+    padding: 0 36px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(8, 8, 8, 0.92);
+    backdrop-filter: blur(16px);
+  }
+
+  .home-link,
+  .nav-meta,
+  .nav-meta a,
+  .profile-details,
+  .head-meta,
+  .section-heading,
+  .repository-facts {
+    display: flex;
+    align-items: center;
+  }
+
+  .home-link,
+  .nav-meta a,
+  .profile-details a,
+  .head-commit a,
+  .section-heading a,
+  .repository-link,
+  .commit-log-link,
+  .dashboard-alert a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .home-link {
+    justify-self: start;
+    gap: 9px;
+    color: #b8b8b4;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: color 180ms ease;
+  }
+
+  .home-link svg {
+    transition: transform 180ms ease;
+  }
+
+  .home-link:hover {
+    color: var(--paper);
+  }
+
+  .home-link:hover svg {
+    transform: translateX(-3px);
+  }
+
+  .nav-meta {
+    justify-self: end;
+    gap: 14px;
+    color: var(--faint);
+    font-size: 0.68rem;
+    font-weight: 600;
+  }
+
+  .nav-meta a {
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: #bcbcb8;
+    transition:
+      color 180ms ease,
+      border-color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .nav-meta a:hover {
+    border-color: var(--line-strong);
+    color: var(--paper);
+    transform: rotate(-5deg);
+  }
+
+  .nav-meta svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .dashboard-alert {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    width: min(1180px, calc(100% - 48px));
+    margin: 22px auto 0;
+    padding: 14px 16px;
+    border: 1px dashed var(--line-strong);
+    border-radius: 8px;
+    background: #101010;
+    color: #cfcfcb;
+    font-size: 0.78rem;
+  }
+
+  .dashboard-alert[hidden] {
+    display: none;
+  }
+
+  .dashboard-alert p {
+    margin: 0;
+  }
+
+  .dashboard-alert div {
+    display: flex;
+    gap: 8px;
+  }
+
+  .dashboard-alert button,
+  .dashboard-alert a {
+    padding: 7px 11px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #171717;
+    color: var(--paper);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .github-main {
+    position: relative;
+    z-index: 1;
+  }
+
+  .github-hero,
+  .section-inner {
+    width: min(1180px, calc(100% - 72px));
+    margin: 0 auto;
+  }
+
+  .github-hero {
+    display: grid;
+    grid-template-columns: minmax(290px, 0.72fr) minmax(0, 1.48fr);
+    align-items: stretch;
+    gap: 68px;
+    min-height: calc(100svh - 72px);
+    padding: 58px 0 70px;
+  }
+
+  .hero-profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    padding-right: 54px;
+    border-right: 1px solid var(--line);
+  }
+
+  .profile-lockup {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .profile-lockup img {
+    width: 88px;
+    height: 88px;
+    border: 1px dashed #5f5f5c;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: saturate(0.9) contrast(1.03);
+  }
+
+  .profile-lockup h1 {
+    margin: 0;
+    color: var(--paper);
+    font-size: 4.45rem;
+    font-weight: 800;
+    line-height: 0.82;
+    letter-spacing: 0;
+  }
+
+  .hero-line {
+    max-width: 18ch;
+    margin: 31px 0 0;
+    color: #deded9;
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.15;
+    transform: rotate(-1deg);
+  }
+
+  .section-aside,
+  .head-aside {
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .profile-details {
+    flex-wrap: wrap;
+    gap: 8px 0;
+    margin-top: 27px;
+    color: var(--faint);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .profile-details > * {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .profile-details > *:not(:last-child)::after {
+    width: 3px;
+    height: 3px;
+    margin: 0 10px;
+    border-radius: 50%;
+    background: #555552;
+    content: "";
+  }
+
+  .profile-details a {
+    color: #c8c8c4;
+  }
+
+  .profile-details a:hover {
+    color: var(--paper);
+  }
+
+  .hero-count {
+    position: relative;
+    min-width: 0;
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+
+  .hero-total-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 9px;
+  }
+
+  .hero-plus {
+    color: #555552;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 2.75rem;
+    font-weight: 400;
+    line-height: 0.82;
+    padding-bottom: 7px;
+    pointer-events: none;
+  }
+
+  .hero-total {
+    display: block;
+    color: var(--paper);
+    font-size: 4.6rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 0.9;
+    letter-spacing: 0;
+  }
+
+  .hero-total-label {
+    margin: 15px 0 0;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .hero-facts,
+  .event-facts {
+    display: grid;
+    margin: 0;
+  }
+
+  .hero-facts {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 24px;
+    max-width: 390px;
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+
+  .hero-facts div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    min-width: 0;
+    padding: 10px 0;
+  }
+
+  .hero-facts div + div {
+    border-left: 0;
+  }
+
+  .hero-activity {
+    align-self: center;
+    min-width: 0;
+  }
+
+  .hero-activity .section-heading {
+    margin-bottom: 36px;
+  }
+
+  .hero-facts dt,
+  .event-facts dt {
+    color: var(--faint);
+    font-size: 0.58rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .hero-facts dd,
+  .event-facts dd {
+    margin: 7px 0 0;
+    color: #d6d6d2;
+    font-size: 0.92rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hero-facts dt {
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  .hero-facts dd {
+    margin: 0;
+    color: #dcdcd8;
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+
+  .data-section {
+    position: relative;
+    border-top: 1px solid var(--line);
+  }
+
+  .section-inner {
+    padding: 88px 0 96px;
+  }
+
+  .section-heading {
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 54px;
+  }
+
+  .section-heading h2,
+  .analysis-heading h2 {
+    margin: 0;
+    color: var(--paper);
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .section-heading p,
+  .analysis-caption {
+    margin: 12px 0 0;
+    color: var(--faint);
+    font-size: 0.76rem;
+    font-weight: 600;
+  }
+
+  .section-heading > span,
+  .section-heading > a {
+    flex: 0 0 auto;
+    color: var(--faint);
+    font-size: 0.68rem;
+    font-weight: 600;
+  }
+
+  .section-heading > a {
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    transition:
+      color 180ms ease,
+      border-color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .section-heading > a:hover {
+    border-color: var(--line-strong);
+    color: var(--paper);
+    transform: translateY(-2px);
+  }
+
+  .section-aside {
+    margin: 10px 0 0 !important;
+    color: #a7a7a3 !important;
+    font-size: 1rem !important;
+    line-height: 1;
+    transform: rotate(-1deg);
+  }
+
+  .commit-field-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(220px, 0.86fr);
+    gap: 46px;
+    align-items: stretch;
+  }
+
+  .commit-field-figure,
+  .event-figure,
+  .hour-figure {
+    margin: 0;
+  }
+
+  .commit-grid {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    grid-template-rows: repeat(10, minmax(0, 1fr));
+    grid-auto-flow: column;
+    gap: 5px;
+    width: 100%;
+    aspect-ratio: 1;
+  }
+
+  .commit-pixel {
+    appearance: none;
+    display: block;
+    min-width: 0;
+    padding: 0;
+    aspect-ratio: 1;
+    border: 1px solid #30363d;
+    border-radius: 2px;
+    background: var(--activity-0);
+    cursor: pointer;
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  button.commit-pixel:hover,
+  button.commit-pixel[aria-expanded="true"] {
+    z-index: 2;
+    border-color: rgba(255, 255, 255, 0.8);
+    filter: brightness(1.22);
+    transform: scale(1.16);
+  }
+
+  button.commit-pixel:focus-visible {
+    z-index: 3;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  .commit-popover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    display: grid;
+    gap: 10px;
+    width: min(330px, calc(100vw - 32px));
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 7px;
+    background: #0d0d0d;
+    box-shadow: 0 20px 54px rgba(0, 0, 0, 0.55);
+    color: var(--paper);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(5px);
+    transition:
+      opacity 130ms ease,
+      transform 130ms ease;
+  }
+
+  .commit-popover[hidden] {
+    display: none;
+  }
+
+  .commit-popover[data-open="true"] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .commit-popover-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    color: #909690;
+    font-size: 0.6rem;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
+  }
+
+  .commit-popover > strong {
+    color: #f0f0ec;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8rem;
+    font-weight: 550;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .commit-popover-repository {
+    color: #929a94;
+    font-size: 0.66rem;
+    font-weight: 600;
+  }
+
+  .commit-popover > a {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    margin-top: 3px;
+    padding: 9px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    background: #171717;
+    color: #e8eae6;
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .commit-popover > a[hidden] {
+    display: none;
+  }
+
+  .commit-popover > a:hover {
+    border-color: rgba(255, 255, 255, 0.34);
+    background: #1b1b1b;
+  }
+
+  .commit-pixel--level-0 {
+    background: #080808;
+  }
+
+  .activity-level-0 {
+    background: var(--activity-0);
+  }
+
+  .commit-pixel--level-1,
+  .activity-level-1 {
+    background: var(--activity-1);
+  }
+
+  .commit-pixel--level-2,
+  .activity-level-2 {
+    background: var(--activity-2);
+  }
+
+  .commit-pixel--level-3,
+  .activity-level-3 {
+    background: var(--activity-3);
+  }
+
+  .commit-pixel--level-4,
+  .activity-level-4 {
+    background: var(--activity-4);
+  }
+
+  .commit-pixel--skeleton {
+    border-color: rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.08);
+    animation: data-pulse 1.6s ease-in-out infinite alternate;
+  }
+
+  .commit-pixel--skeleton:nth-child(3n) {
+    animation-delay: 180ms;
+  }
+
+  .commit-pixel--skeleton:nth-child(4n) {
+    animation-delay: 360ms;
+  }
+
+  .commit-field-figure figcaption {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    margin-bottom: 13px;
+    color: var(--faint);
+    font-size: 0.6rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .commit-field-figure figcaption span:nth-child(2) {
+    text-align: center;
+  }
+
+  .commit-field-figure figcaption span:last-child {
+    text-align: right;
+  }
+
+  .head-commit {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100%;
+    padding: 34px 0 34px 38px;
+    border-left: 1px dashed var(--line-strong);
+  }
+
+  .head-label {
+    margin: 0 0 28px;
+    color: var(--faint);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+  }
+
+  .head-sha {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    width: max-content;
+    color: #b9b9b5 !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .head-sha:hover {
+    color: var(--paper) !important;
+  }
+
+  .head-commit h3 {
+    max-width: 18ch;
+    margin: 22px 0 0;
+    color: var(--paper);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 1.38rem;
+    font-weight: 500;
+    line-height: 1.38;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .head-meta {
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin-top: 30px;
+    color: var(--faint);
+    font-size: 0.68rem;
+    font-weight: 600;
+  }
+
+  .head-meta a {
+    color: #b7b7b3;
+  }
+
+  .head-meta a:hover {
+    color: var(--paper);
+  }
+
+  .head-aside {
+    position: absolute;
+    right: 8px;
+    bottom: 13px;
+    margin: 0;
+    color: #989894;
+    font-size: 0.98rem;
+    transform: rotate(-2deg);
+  }
+
+  .public-month-section,
+  .code-index-section {
+    background: #0c0c0c;
+  }
+
+  .code-index-section .section-inner {
+    padding-bottom: 72px;
+  }
+
+  .event-chart,
+  .hour-chart {
+    display: grid;
+    align-items: end;
+  }
+
+  .event-chart {
+    grid-template-columns: repeat(30, minmax(4px, 1fr));
+    gap: 5px;
+    height: 190px;
+    padding-top: 16px;
+  }
+
+  .event-column,
+  .hour-column {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    align-items: end;
+    height: 100%;
+  }
+
+  button.event-column {
+    appearance: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  button.event-column:focus-visible {
+    outline: 1px solid rgba(255, 255, 255, 0.62);
+    outline-offset: 3px;
+  }
+
+  .event-bar-track {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .event-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: var(--event-height);
+    min-height: 3px;
+    background: #c4c4bf;
+    opacity: 0.8;
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+    transform-origin: bottom;
+  }
+
+  .event-column:hover .event-bar,
+  .event-column:focus-visible .event-bar,
+  .event-column[aria-pressed="true"] .event-bar {
+    opacity: 1;
+    transform: scaleY(1.03);
+  }
+
+  .event-count {
+    position: absolute;
+    bottom: calc(var(--event-height) + 7px);
+    left: 50%;
+    z-index: 4;
+    display: block;
+    width: max-content;
+    padding: 5px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    background: #171717;
+    color: #f1f1ee;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.58rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 4px);
+    transition:
+      opacity 140ms ease,
+      transform 140ms ease;
+  }
+
+  .event-column:hover .event-count,
+  .event-column:focus-visible .event-count,
+  .event-column[aria-pressed="true"] .event-count {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .event-column:first-child .event-count {
+    left: 0;
+    transform: translate(0, 4px);
+  }
+
+  .event-column:first-child:hover .event-count,
+  .event-column:first-child:focus-visible .event-count,
+  .event-column:first-child[aria-pressed="true"] .event-count {
+    transform: translate(0, 0);
+  }
+
+  .event-column:last-child .event-count {
+    right: 0;
+    left: auto;
+    transform: translate(0, 4px);
+  }
+
+  .event-column:last-child:hover .event-count,
+  .event-column:last-child:focus-visible .event-count,
+  .event-column:last-child[aria-pressed="true"] .event-count {
+    transform: translate(0, 0);
+  }
+
+  .event-bar--skeleton + .event-count {
+    display: none;
+  }
+
+  .event-date,
+  .hour-label {
+    display: block;
+    min-height: 19px;
+    padding-top: 8px;
+    color: var(--faint);
+    font-size: 0.55rem;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  .event-bar--skeleton,
+  .hour-bar--skeleton,
+  .weekday-bar--skeleton,
+  .language-row--skeleton .language-bar {
+    background: rgba(255, 255, 255, 0.12);
+    animation: data-pulse 1.5s ease-in-out infinite alternate;
+  }
+
+  .event-facts {
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+
+  .event-facts div {
+    min-width: 0;
+    padding: 0 18px;
+  }
+
+  .event-facts div:first-child {
+    padding-left: 0;
+  }
+
+  .event-facts div + div {
+    border-left: 1px solid var(--line);
+  }
+
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+    gap: 0;
+  }
+
+  .rhythm-panel {
+    padding-right: 70px;
+  }
+
+  .language-panel {
+    padding-left: 70px;
+    border-left: 1px solid var(--line);
+  }
+
+  .analysis-heading {
+    min-height: 72px;
+  }
+
+  .analysis-caption {
+    max-width: 34ch;
+  }
+
+  .hour-figure {
+    margin-top: 44px;
+  }
+
+  .hour-figure figcaption {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 24px;
+    color: var(--faint);
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .rhythm-readout {
+    color: #d8d8d3;
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-size: 0.92rem;
+    font-weight: 400;
+    line-height: 1;
+    text-align: right;
+    text-transform: none;
+  }
+
+  .hour-chart {
+    grid-template-columns: repeat(24, 1fr);
+    gap: 4px;
+    height: 150px;
+  }
+
+  .hour-bar {
+    display: block;
+    width: 100%;
+    height: var(--hour-height);
+    min-height: 2px;
+    background: var(--paper);
+    opacity: 0.82;
+    transform-origin: bottom;
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+  }
+
+  .hour-column:hover .hour-bar,
+  .hour-column:focus-visible .hour-bar,
+  .hour-column[aria-pressed="true"] .hour-bar {
+    opacity: 1;
+    transform: scaleY(1.04);
+  }
+
+  button.hour-column,
+  button.weekday-row {
+    appearance: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  button.hour-column:focus-visible,
+  button.weekday-row:focus-visible {
+    outline: 1px solid rgba(255, 255, 255, 0.62);
+    outline-offset: 3px;
+  }
+
+  .weekday-chart {
+    display: grid;
+    gap: 9px;
+    margin-top: 42px;
+  }
+
+  .weekday-row {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) 24px;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .weekday-name,
+  .weekday-value {
+    color: var(--faint);
+    font-size: 0.58rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .weekday-value {
+    text-align: right;
+  }
+
+  .weekday-track,
+  .language-track {
+    position: relative;
+    display: block;
+    height: 2px;
+  }
+
+  .weekday-bar,
+  .language-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    height: 100%;
+    background: var(--paper);
+  }
+
+  .event-bar.activity-level-0 {
+    background: var(--activity-0);
+  }
+
+  .event-bar.activity-level-1 {
+    background: var(--activity-1);
+  }
+
+  .event-bar.activity-level-2 {
+    background: var(--activity-2);
+  }
+
+  .event-bar.activity-level-3 {
+    background: var(--activity-3);
+  }
+
+  .event-bar.activity-level-4 {
+    background: var(--activity-4);
+  }
+
+  .weekday-bar {
+    width: var(--weekday-width);
+    opacity: 0.82;
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+    transform-origin: left;
+  }
+
+  .weekday-row:hover .weekday-bar,
+  .weekday-row:focus-visible .weekday-bar,
+  .weekday-row[aria-pressed="true"] .weekday-bar {
+    opacity: 1;
+    transform: scaleX(1.015);
+  }
+
+  .language-list {
+    display: grid;
+    gap: 0;
+    margin: 31px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .language-row {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+    min-height: 52px;
+    border-top: 1px solid var(--line);
+  }
+
+  .language-row:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .language-rank,
+  .repository-rank {
+    color: var(--faint);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.58rem;
+    font-weight: 600;
+  }
+
+  .language-content,
+  .language-heading {
+    display: block;
+    min-width: 0;
+  }
+
+  .language-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .language-name {
+    color: #d0d0cc;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .language-count {
+    color: var(--faint);
+    font-size: 0.58rem;
+    font-weight: 600;
+  }
+
+  .language-bar {
+    width: var(--language-width);
+    background: var(--language-color, #8b949e);
+  }
+
+  .repository-list,
+  .commit-log {
+    margin: 0;
+    padding: 0;
+    box-shadow: inset 0 -1px 0 var(--line);
+    list-style: none;
+  }
+
+  .commit-log {
+    max-height: 410px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: #555 transparent;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+  }
+
+  .commit-log::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .commit-log::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: #555;
+  }
+
+  .repository-item,
+  .commit-log-item {
+    border-top: 1px solid var(--line);
+  }
+
+  .repository-link {
+    position: relative;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) minmax(250px, auto) 24px;
+    gap: 22px;
+    align-items: center;
+    min-height: 112px;
+    padding: 16px 12px 16px 0;
+    transition:
+      background-color 180ms ease,
+      padding 180ms ease;
+  }
+
+  a.repository-link:hover {
+    padding-left: 12px;
+    background: rgba(255, 255, 255, 0.026);
+  }
+
+  .repository-copy {
+    display: grid;
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .repository-name {
+    color: #e7e7e3;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .repository-description {
+    max-width: 56ch;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 500;
+    line-height: 1.45;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .repository-facts {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 7px 18px;
+    color: var(--faint);
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .repository-arrow,
+  .commit-log-arrow {
+    color: var(--faint);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translate(-3px, 3px);
+    transition:
+      color 180ms ease,
+      opacity 180ms ease,
+      transform 180ms ease;
+  }
+
+  a.repository-link:hover .repository-arrow,
+  a.repository-link:focus-visible .repository-arrow,
+  a.commit-log-link:hover .commit-log-arrow,
+  a.commit-log-link:focus-visible .commit-log-arrow {
+    color: var(--paper);
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  .commit-log-link {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr) 80px 20px;
+    gap: 22px;
+    align-items: center;
+    min-height: 82px;
+    padding: 13px 10px 13px 0;
+    transition:
+      background-color 180ms ease,
+      padding 180ms ease;
+  }
+
+  a.commit-log-link:hover {
+    padding-left: 10px;
+    background: rgba(255, 255, 255, 0.026);
+  }
+
+  .commit-log-sha {
+    color: #8f8f8b;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+  }
+
+  .commit-log-copy {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .commit-log-message {
+    overflow: hidden;
+    color: #dfdfdb;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .commit-log-repository,
+  .commit-log-date {
+    color: var(--faint);
+    font-size: 0.6rem;
+    font-weight: 600;
+  }
+
+  .commit-log-date {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .code-index-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .repositories-panel {
+    min-width: 0;
+    padding-right: 56px;
+  }
+
+  .commit-log-panel {
+    min-width: 0;
+    padding-left: 56px;
+    border-left: 1px solid var(--line);
+  }
+
+  .code-index-grid .section-heading {
+    align-items: flex-start;
+    min-height: 110px;
+    margin-bottom: 38px;
+  }
+
+  .code-index-grid .section-heading p {
+    max-width: 34ch;
+    line-height: 1.5;
+  }
+
+  .code-index-grid .repository-link {
+    grid-template-columns: 32px minmax(0, 1fr) 18px;
+    gap: 14px;
+    min-height: 104px;
+  }
+
+  .code-index-grid .repository-facts {
+    grid-column: 2 / 3;
+    grid-row: 2;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .code-index-grid .repository-arrow {
+    grid-column: 3;
+    grid-row: 1 / 3;
+  }
+
+  .code-index-grid .commit-log-link {
+    grid-template-columns: 62px minmax(0, 1fr) 18px;
+    gap: 14px;
+    min-height: 104px;
+  }
+
+  .code-index-grid .commit-log-date {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: left;
+  }
+
+  .code-index-grid .commit-log-arrow {
+    grid-column: 3;
+    grid-row: 1 / 3;
+  }
+
+  .repository-item--skeleton,
+  .commit-log-item--skeleton,
+  .language-row--skeleton {
+    opacity: 0.55;
+    animation: data-pulse 1.5s ease-in-out infinite alternate;
+  }
+
+  .dashboard-api-note {
+    width: min(1180px, calc(100% - 72px));
+    margin: 0 auto;
+    padding: 24px 0;
+    color: #b3b3af;
+    font-size: 0.66rem;
+    font-weight: 600;
+    line-height: 1.55;
+    text-align: right;
+  }
+
+  @keyframes data-pulse {
+    from {
+      opacity: 0.28;
+    }
+    to {
+      opacity: 0.72;
+    }
+  }
+
+  @media (min-width: 981px) {
+    .code-index-grid .repository-link,
+    .code-index-grid .commit-log-link {
+      height: 110px;
+      min-height: 110px;
+    }
+
+    .code-index-grid .commit-log {
+      height: 555px;
+      max-height: 555px;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .github-hero,
+    .section-inner,
+    .dashboard-api-note {
+      width: min(100% - 48px, 860px);
+    }
+
+    .github-hero {
+      grid-template-columns: 1fr;
+      gap: 68px;
+      min-height: auto;
+      padding: 62px 0 68px;
+    }
+
+    .hero-profile {
+      padding-right: 0;
+      padding-bottom: 60px;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-count {
+      padding: 34px 0 0;
+      border-top: 1px solid var(--line);
+      border-left: 0;
+    }
+
+    .hero-total {
+      font-size: 5.5rem;
+    }
+
+    .commit-field-layout {
+      grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1fr);
+      gap: 46px;
+    }
+
+    .head-commit {
+      padding-left: 38px;
+    }
+
+    .analysis-grid {
+      grid-template-columns: 1fr;
+      gap: 76px;
+    }
+
+    .rhythm-panel,
+    .language-panel {
+      padding: 0;
+    }
+
+    .language-panel {
+      padding-top: 70px;
+      border-top: 1px solid var(--line);
+      border-left: 0;
+    }
+
+    .code-index-grid {
+      grid-template-columns: 1fr;
+      gap: 70px;
+    }
+
+    .repositories-panel,
+    .commit-log-panel {
+      padding: 0;
+    }
+
+    .commit-log-panel {
+      padding-top: 70px;
+      border-top: 1px solid var(--line);
+      border-left: 0;
+    }
+
+    .code-index-grid .section-heading {
+      min-height: 0;
+    }
+
+    .repository-link {
+      grid-template-columns: 36px minmax(0, 1fr) 24px;
+    }
+
+    .repository-facts {
+      grid-column: 2 / 3;
+      justify-content: flex-start;
+      grid-row: 2;
+      text-align: left;
+    }
+
+    .repository-arrow {
+      grid-column: 3;
+      grid-row: 1 / 3;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .github-nav {
+      min-height: 64px;
+      padding: 0 20px;
+    }
+
+    .nav-meta > span {
+      display: none;
+    }
+
+    .github-hero,
+    .section-inner,
+    .dashboard-api-note {
+      width: calc(100% - 40px);
+    }
+
+    .github-hero {
+      gap: 38px;
+      padding: 46px 0 52px;
+    }
+
+    .hero-profile {
+      padding-bottom: 48px;
+    }
+
+    .profile-lockup {
+      gap: 16px;
+    }
+
+    .profile-lockup img {
+      width: 72px;
+      height: 72px;
+    }
+
+    .profile-lockup h1 {
+      font-size: 3.5rem;
+    }
+
+    .hero-line {
+      margin-top: 28px;
+      font-size: 1.36rem;
+    }
+
+    .profile-details {
+      margin-top: 28px;
+    }
+
+    .profile-details > *:not(:last-child)::after {
+      margin: 0 8px;
+    }
+
+    .hero-plus {
+      font-size: 2.4rem;
+    }
+
+    .hero-total {
+      font-size: 4.5rem;
+    }
+
+    .hero-facts {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .section-inner {
+      padding: 68px 0 76px;
+    }
+
+    .section-heading {
+      align-items: flex-start;
+      margin-bottom: 40px;
+    }
+
+    .section-heading h2,
+    .analysis-heading h2 {
+      font-size: 2rem;
+    }
+
+    .section-heading > span {
+      max-width: 112px;
+      text-align: right;
+    }
+
+    .commit-field-layout {
+      grid-template-columns: 1fr;
+      gap: 52px;
+    }
+
+    .commit-grid {
+      gap: 4px;
+    }
+
+    .head-commit {
+      min-height: 300px;
+      padding: 44px 0 36px;
+      border-top: 1px dashed var(--line-strong);
+      border-left: 0;
+    }
+
+    .head-commit h3 {
+      max-width: 22ch;
+      font-size: 1.35rem;
+    }
+
+    .event-chart {
+      gap: 3px;
+      height: 160px;
+    }
+
+    .event-facts {
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 22px;
+    }
+
+    .event-facts div:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .hour-figure figcaption {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .rhythm-readout {
+      text-align: left;
+    }
+
+    .rhythm-panel,
+    .language-panel {
+      min-width: 0;
+    }
+
+    .hour-chart {
+      gap: 3px;
+      height: 130px;
+    }
+
+    .repository-link {
+      grid-template-columns: 28px minmax(0, 1fr) 18px;
+      gap: 12px;
+      min-height: 124px;
+    }
+
+    .repository-description {
+      white-space: normal;
+    }
+
+    .commit-log-link {
+      grid-template-columns: 60px minmax(0, 1fr) 18px;
+      gap: 12px;
+      min-height: 92px;
+    }
+
+    .commit-log {
+      max-height: 460px;
+    }
+
+    .commit-log-date {
+      grid-column: 2;
+      grid-row: 2;
+      text-align: left;
+    }
+
+    .commit-log-arrow {
+      grid-column: 3;
+      grid-row: 1 / 3;
+    }
+
+    .code-index-grid .repository-link {
+      grid-template-columns: 28px minmax(0, 1fr) 18px;
+      gap: 12px;
+      min-height: 124px;
+    }
+
+    .code-index-grid .commit-log-link {
+      grid-template-columns: 60px minmax(0, 1fr) 18px;
+      gap: 12px;
+      min-height: 92px;
+    }
+
+    .code-index-grid .commit-log {
+      max-height: 460px;
+    }
+
+    .dashboard-api-note {
+      text-align: left;
+    }
+
+    .dashboard-alert {
+      align-items: flex-start;
+      width: calc(100% - 40px);
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 440px) {
+    .profile-lockup h1 {
+      font-size: 3rem;
+    }
+
+    .hero-total {
+      font-size: 3.8rem;
+    }
+
+    .section-heading {
+      display: grid;
+      gap: 18px;
+    }
+
+    .section-heading > span {
+      max-width: none;
+      text-align: left;
+    }
+
+    .repository-facts {
+      gap: 5px 12px;
+    }
+  }
+
+  @media (hover: none), (max-width: 720px) {
+    .commit-popover {
+      top: auto !important;
+      right: 20px;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      left: 20px !important;
+      width: auto;
+      transform: translateY(10px);
+    }
+
+    .commit-popover[data-open="true"] {
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .github-page *,
+    .github-page *::before,
+    .github-page *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
