@@ -1,158 +1,156 @@
 {
-  "slug": "millenai",
-  "order": 6,
-  "detail": true,
-  "name": "MillenAI",
-  "cardName": "MillenAI",
-  "description": "A high-performance AI workspace featuring the 'AI Council'—a multi-agent system for deep, collaborative reasoning.",
-  "cardDescription": "AI Workspace with Multi Agent Workflows.",
-  "image": {
-    "src": "/assets/images/projects/MillenAI.png",
-    "width": 1200,
-    "height": 630
-  },
-  "href": "/projects/millenai",
-  "tags": [
-    "AI",
-    "ChatBot",
-    "Agentic"
-  ],
-  "accents": {
-    "primary": "#34d399",
-    "secondary": "#22d3ee"
-  },
-  "heroActions": [
-    {
-      "label": "Launch MillenAI",
-      "href": "https://millen-ai.vercel.app",
-      "primary": true
-    },
-    {
-      "label": "View on GitHub",
-      "href": "https://github.com/rajin-khan/MillenAI",
-      "primary": false
-    }
-  ],
-  "sections": [
-    {
-      "type": "prose",
-      "title": "What is MillenAI?",
-      "paragraphs": [
-        "I was drowning in tabs. ChatGPT in one, a new open-source model in another, Perplexity for research—my workflow was a mess of lost conversations and fragmented context. I built the first version of MillenAI to solve this, creating a unified workspace to seamlessly switch between models without losing momentum. It was a huge improvement, but a new problem emerged.",
-        "When I asked a complex question, like \"Should our company invest in decentralized AI?\", I realized every AI gave me a single, monolithic answer. One model would be optimistic about the tech, another cautious about the ethics, and a third would focus on the market data. Each answer was useful, but incomplete. To get a truly comprehensive view, I had to manually synthesize these different perspectives, a tedious and error-prone process.",
-        "That was the moment it all clicked. Why ask one AI to be a jack-of-all-trades when I could assemble a team of specialists? This led to the creation of the <strong>AI Council</strong>. Instead of just one response, MillenAI now convenes a panel of AIs: a web-savvy <strong>Researcher</strong>, a pragmatic <strong>Analyst</strong>, a contrarian <strong>Philosopher</strong>, and a decisive <strong>Judge</strong>. You watch them work in real-time as they research, debate, and synthesize their findings into a final, multi-faceted verdict. It's not just a chat; it's a collaborative intelligence system."
-      ]
-    },
-    {
-      "type": "features",
-      "title": "Key Features",
-      "items": [
-        {
-          "name": "The AI Council",
-          "description": "Convene specialized AI agents (Researcher, Analyst, Philosopher, Judge) to tackle complex problems from multiple angles.",
-          "icon": "🏛️"
-        },
-        {
-          "name": "Advanced Document Processing",
-          "description": "Bring your own data. Process images (OCR), PDFs, DOCX, and more, directly in the chat context.",
-          "icon": "📎"
-        },
-        {
-          "name": "Multi-Model Chat",
-          "description": "Seamlessly switch between top open-source models like Llama 3.1 and GPT-OSS in one conversation.",
-          "icon": "🧠"
-        },
-        {
-          "name": "Agentic Tooling",
-          "description": "Equip any model with universal web search or engage deep reasoning mode for complex analysis.",
-          "icon": "🛠️"
-        },
-        {
-          "name": "Persistent & Private",
-          "description": "Secure Firebase Auth saves your chat history. Your API keys never leave your browser.",
-          "icon": "🔒"
-        },
-        {
-          "name": "Polished UX",
-          "description": "A meticulously crafted interface with a real-time token counter, rich Markdown, and stunning animations.",
-          "icon": "✨"
-        }
-      ]
-    },
-    {
-      "type": "use-cases",
-      "title": "Perfect For",
-      "items": [
-        {
-          "name": "Strategic Thinkers",
-          "description": "Get comprehensive, multi-faceted answers for complex business or research questions.",
-          "emoji": "🚀"
-        },
-        {
-          "name": "Developers & Researchers",
-          "description": "A fast, open-source playground to test and compare advanced model outputs.",
-          "emoji": "🔬"
-        },
-        {
-          "name": "Content Creators",
-          "description": "Go beyond simple drafts with an AI system that provides research, analysis, and diverse perspectives.",
-          "emoji": "✍️"
-        },
-        {
-          "name": "AI Power-Users",
-          "description": "A unified hub to orchestrate and converse with the world's most powerful LLMs.",
-          "emoji": "💻"
-        }
-      ]
-    },
-    {
-      "type": "prose",
-      "title": "Technology & Architecture",
-      "paragraphs": [
-        "MillenAI is built with a modern, high-performance tech stack. The frontend is powered by <strong>React 19+</strong> and <strong>Vite</strong>, with styling from <strong>Tailwind CSS v4</strong> and fluid animations from <strong>Framer Motion</strong>. Global state for the AI Council is managed efficiently by <strong>Zustand</strong>.",
-        "The backend leverages <strong>Firebase Auth</strong> for secure Google Sign-In and <strong>Firestore</strong> for real-time conversation storage. The AI Council's complex workflow is orchestrated by a <strong>Vercel Edge Function</strong>, which streams status updates to the client while making sequential calls to the ultra-fast <strong>Groq API</strong>."
-      ]
-    },
-    {
-      "type": "roadmap",
-      "title": "Project Status",
-      "items": [
-        {
-          "name": "AI Council System",
-          "status": "Completed"
-        },
-        {
-          "name": "Document Processing",
-          "status": "Completed"
-        },
-        {
-          "name": "Multi-API Support",
-          "status": "In Progress"
-        },
-        {
-          "name": "Streaming Responses",
-          "status": "In Progress"
-        }
-      ]
-    },
-    {
-      "type": "prose",
-      "title": "Get Started",
-      "paragraphs": [
-        "Ready to experience a smarter way to interact with AI? Launch the app to convene your own AI Council or dive into the open-source codebase on GitHub to contribute."
-      ],
-      "actions": [
-        {
-          "label": "Launch MillenAI",
-          "href": "https://millen-ai.vercel.app",
-          "primary": true
-        },
-        {
-          "label": "Contribute on GitHub",
-          "href": "https://github.com/rajin-khan/MillenAI",
-          "primary": false
-        }
-      ]
-    }
-  ]
+	"slug": "millenai",
+	"order": 6,
+	"detail": true,
+	"name": "MillenAI",
+	"cardName": "MillenAI",
+	"description": "A high-performance AI workspace featuring the 'AI Council'—a multi-agent system for deep, collaborative reasoning.",
+	"cardDescription": "AI Workspace with Multi Agent Workflows.",
+	"note": "many models, one workspace",
+	"image": {
+		"src": "/assets/images/projects/MillenAI.png",
+		"width": 1200,
+		"height": 630
+	},
+	"href": "/projects/millenai",
+	"tags": ["AI", "ChatBot", "Agentic"],
+	"accents": {
+		"primary": "#34d399",
+		"secondary": "#22d3ee",
+		"screen": "#071714"
+	},
+	"heroActions": [
+		{
+			"label": "Launch MillenAI",
+			"href": "https://millen-ai.vercel.app",
+			"primary": true
+		},
+		{
+			"label": "View on GitHub",
+			"href": "https://github.com/rajin-khan/MillenAI",
+			"primary": false
+		}
+	],
+	"sections": [
+		{
+			"type": "prose",
+			"title": "What is MillenAI?",
+			"paragraphs": [
+				"I was drowning in tabs. ChatGPT in one, a new open-source model in another, Perplexity for research—my workflow was a mess of lost conversations and fragmented context. I built the first version of MillenAI to solve this, creating a unified workspace to seamlessly switch between models without losing momentum. It was a huge improvement, but a new problem emerged.",
+				"When I asked a complex question, like \"Should our company invest in decentralized AI?\", I realized every AI gave me a single, monolithic answer. One model would be optimistic about the tech, another cautious about the ethics, and a third would focus on the market data. Each answer was useful, but incomplete. To get a truly comprehensive view, I had to manually synthesize these different perspectives, a tedious and error-prone process.",
+				"That was the moment it all clicked. Why ask one AI to be a jack-of-all-trades when I could assemble a team of specialists? This led to the creation of the <strong>AI Council</strong>. Instead of just one response, MillenAI now convenes a panel of AIs: a web-savvy <strong>Researcher</strong>, a pragmatic <strong>Analyst</strong>, a contrarian <strong>Philosopher</strong>, and a decisive <strong>Judge</strong>. You watch them work in real-time as they research, debate, and synthesize their findings into a final, multi-faceted verdict. It's not just a chat; it's a collaborative intelligence system."
+			]
+		},
+		{
+			"type": "features",
+			"title": "Key Features",
+			"items": [
+				{
+					"name": "The AI Council",
+					"description": "Convene specialized AI agents (Researcher, Analyst, Philosopher, Judge) to tackle complex problems from multiple angles.",
+					"icon": "🏛️"
+				},
+				{
+					"name": "Advanced Document Processing",
+					"description": "Bring your own data. Process images (OCR), PDFs, DOCX, and more, directly in the chat context.",
+					"icon": "📎"
+				},
+				{
+					"name": "Multi-Model Chat",
+					"description": "Seamlessly switch between top open-source models like Llama 3.1 and GPT-OSS in one conversation.",
+					"icon": "🧠"
+				},
+				{
+					"name": "Agentic Tooling",
+					"description": "Equip any model with universal web search or engage deep reasoning mode for complex analysis.",
+					"icon": "🛠️"
+				},
+				{
+					"name": "Persistent & Private",
+					"description": "Secure Firebase Auth saves your chat history. Your API keys never leave your browser.",
+					"icon": "🔒"
+				},
+				{
+					"name": "Polished UX",
+					"description": "A meticulously crafted interface with a real-time token counter, rich Markdown, and stunning animations.",
+					"icon": "✨"
+				}
+			]
+		},
+		{
+			"type": "use-cases",
+			"title": "Perfect For",
+			"items": [
+				{
+					"name": "Strategic Thinkers",
+					"description": "Get comprehensive, multi-faceted answers for complex business or research questions.",
+					"emoji": "🚀"
+				},
+				{
+					"name": "Developers & Researchers",
+					"description": "A fast, open-source playground to test and compare advanced model outputs.",
+					"emoji": "🔬"
+				},
+				{
+					"name": "Content Creators",
+					"description": "Go beyond simple drafts with an AI system that provides research, analysis, and diverse perspectives.",
+					"emoji": "✍️"
+				},
+				{
+					"name": "AI Power-Users",
+					"description": "A unified hub to orchestrate and converse with the world's most powerful LLMs.",
+					"emoji": "💻"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Technology & Architecture",
+			"paragraphs": [
+				"MillenAI is built with a modern, high-performance tech stack. The frontend is powered by <strong>React 19+</strong> and <strong>Vite</strong>, with styling from <strong>Tailwind CSS v4</strong> and fluid animations from <strong>Framer Motion</strong>. Global state for the AI Council is managed efficiently by <strong>Zustand</strong>.",
+				"The backend leverages <strong>Firebase Auth</strong> for secure Google Sign-In and <strong>Firestore</strong> for real-time conversation storage. The AI Council's complex workflow is orchestrated by a <strong>Vercel Edge Function</strong>, which streams status updates to the client while making sequential calls to the ultra-fast <strong>Groq API</strong>."
+			]
+		},
+		{
+			"type": "roadmap",
+			"title": "Project Status",
+			"items": [
+				{
+					"name": "AI Council System",
+					"status": "Completed"
+				},
+				{
+					"name": "Document Processing",
+					"status": "Completed"
+				},
+				{
+					"name": "Multi-API Support",
+					"status": "In Progress"
+				},
+				{
+					"name": "Streaming Responses",
+					"status": "In Progress"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Get Started",
+			"paragraphs": [
+				"Ready to experience a smarter way to interact with AI? Launch the app to convene your own AI Council or dive into the open-source codebase on GitHub to contribute."
+			],
+			"actions": [
+				{
+					"label": "Launch MillenAI",
+					"href": "https://millen-ai.vercel.app",
+					"primary": true
+				},
+				{
+					"label": "Contribute on GitHub",
+					"href": "https://github.com/rajin-khan/MillenAI",
+					"primary": false
+				}
+			]
+		}
+	]
 }

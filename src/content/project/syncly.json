@@ -1,168 +1,166 @@
 {
-  "slug": "syncly",
-  "order": 8,
-  "detail": true,
-  "name": "Syncly",
-  "cardName": "Syncly",
-  "description": "Unified cloud file management platform with AI-powered, search, conversationality with files and multi-platform access.",
-  "cardDescription": "Unified cloud management with AI.",
-  "image": {
-    "src": "/assets/images/projects/Syncly.png",
-    "width": 2454,
-    "height": 864
-  },
-  "href": "/projects/syncly",
-  "tags": [
-    "AI",
-    "Cloud",
-    "Universal"
-  ],
-  "accents": {
-    "primary": "#d1d5db",
-    "secondary": "#6b7280"
-  },
-  "heroActions": [
-    {
-      "label": "View Project",
-      "href": "https://github.com/rajin-khan/Syncly",
-      "primary": true
-    },
-    {
-      "label": "View on GitHub",
-      "href": "https://github.com/rajin-khan/Syncly",
-      "primary": false
-    }
-  ],
-  "sections": [
-    {
-      "type": "prose",
-      "title": "What is Syncly?",
-      "paragraphs": [
-        "Syncly is a unified cloud file management platform that simplifies the way you store, search, and manage files across multiple cloud services like Google Drive and Dropbox. With intelligent file splitting, AI-powered search, and multi-platform access via web and Telegram, Syncly streamlines your workflow.",
-        "Powered by <strong>FastAPI</strong>, <strong>React</strong>, and the <strong>Groq API</strong>, Syncly offers secure user management, real-time storage insights, and a conversational AI assistant that extracts relevant information from your files. Whether you're managing storage or searching for specific content, Syncly makes it effortless and secure."
-      ]
-    },
-    {
-      "type": "features",
-      "title": "Key Features",
-      "items": [
-        {
-          "name": "Multi-Cloud Support",
-          "description": "Manage files across Google Drive and Dropbox.",
-          "icon": "☁️"
-        },
-        {
-          "name": "AI-Powered Search",
-          "description": "Search files with contextual AI assistance.",
-          "icon": "🔍"
-        },
-        {
-          "name": "File Splitting",
-          "description": "Intelligently split and upload files to optimal drives.",
-          "icon": "✂️"
-        },
-        {
-          "name": "Telegram Bot",
-          "description": "Interact with files via Telegram.",
-          "icon": "🤖"
-        }
-      ]
-    },
-    {
-      "type": "use-cases",
-      "title": "Perfect For",
-      "items": [
-        {
-          "name": "Cloud Storage Management",
-          "description": "Unify and manage multiple cloud accounts.",
-          "emoji": "📂"
-        },
-        {
-          "name": "Smart File Search",
-          "description": "Find files quickly with AI-driven search.",
-          "emoji": "🔎"
-        },
-        {
-          "name": "Secure File Access",
-          "description": "Access files securely via web or Telegram.",
-          "emoji": "🔒"
-        },
-        {
-          "name": "Storage Optimization",
-          "description": "Monitor and optimize storage usage.",
-          "emoji": "📊"
-        }
-      ]
-    },
-    {
-      "type": "prose",
-      "title": "Technology & Architecture",
-      "paragraphs": [
-        "Syncly is built with a modern tech stack, featuring <strong>FastAPI</strong> for the backend, <strong>Vite + React</strong> for the web frontend, and <strong>MongoDB</strong> for secure data storage. It integrates with Google Drive and Dropbox APIs for cloud storage management and uses the <strong>Groq API</strong> for AI-powered search and assistance.",
-        "The modular architecture ensures scalability, with OAuth 2.0 for secure cloud authentication, JWT for session management, and a Telegram bot for seamless interaction. The AI assistant leverages Llama models to provide context-aware responses, making file search and management smarter and more efficient."
-      ]
-    },
-    {
-      "type": "roadmap",
-      "title": "What's Next",
-      "items": [
-        {
-          "name": "Mobile App Rollout",
-          "status": "Planned"
-        },
-        {
-          "name": "Railway Deployment",
-          "status": "Planned"
-        },
-        {
-          "name": "Expanded Cloud Support",
-          "status": "Planned"
-        },
-        {
-          "name": "Advanced AI Features",
-          "status": "Planned"
-        }
-      ]
-    },
-    {
-      "type": "team",
-      "title": "The Team",
-      "items": [
-        {
-          "name": "Rajin Khan",
-          "institution": "North South University",
-          "github": "https://github.com/rajin-khan"
-        },
-        {
-          "name": "Ahnaf Ojayer",
-          "institution": "North South University",
-          "github": "https://github.com/0jayer"
-        },
-        {
-          "name": "Rihal Mahmood",
-          "institution": "North South University",
-          "github": "https://github.com/RihalMahmood"
-        }
-      ]
-    },
-    {
-      "type": "prose",
-      "title": "Get Started",
-      "paragraphs": [
-        "Syncly is an innovative solution for unified cloud file management. Explore the project on GitHub to see how AI and cloud integration can transform the way you handle files."
-      ],
-      "actions": [
-        {
-          "label": "Explore Syncly",
-          "href": "https://github.com/rajin-khan/Syncly",
-          "primary": true
-        },
-        {
-          "label": "Contribute on GitHub",
-          "href": "https://github.com/rajin-khan/Syncly",
-          "primary": false
-        }
-      ]
-    }
-  ]
+	"slug": "syncly",
+	"order": 8,
+	"detail": true,
+	"name": "Syncly",
+	"cardName": "Syncly",
+	"description": "Unified cloud file management platform with AI-powered, search, conversationality with files and multi-platform access.",
+	"cardDescription": "Unified cloud management with AI.",
+	"note": "all your clouds, one place",
+	"image": {
+		"src": "/assets/images/projects/Syncly.png",
+		"width": 2454,
+		"height": 864
+	},
+	"href": "/projects/syncly",
+	"tags": ["AI", "Cloud", "Universal"],
+	"accents": {
+		"primary": "#d1d5db",
+		"secondary": "#6b7280",
+		"screen": "#101214"
+	},
+	"heroActions": [
+		{
+			"label": "View Project",
+			"href": "https://github.com/rajin-khan/Syncly",
+			"primary": true
+		},
+		{
+			"label": "View on GitHub",
+			"href": "https://github.com/rajin-khan/Syncly",
+			"primary": false
+		}
+	],
+	"sections": [
+		{
+			"type": "prose",
+			"title": "What is Syncly?",
+			"paragraphs": [
+				"Syncly is a unified cloud file management platform that simplifies the way you store, search, and manage files across multiple cloud services like Google Drive and Dropbox. With intelligent file splitting, AI-powered search, and multi-platform access via web and Telegram, Syncly streamlines your workflow.",
+				"Powered by <strong>FastAPI</strong>, <strong>React</strong>, and the <strong>Groq API</strong>, Syncly offers secure user management, real-time storage insights, and a conversational AI assistant that extracts relevant information from your files. Whether you're managing storage or searching for specific content, Syncly makes it effortless and secure."
+			]
+		},
+		{
+			"type": "features",
+			"title": "Key Features",
+			"items": [
+				{
+					"name": "Multi-Cloud Support",
+					"description": "Manage files across Google Drive and Dropbox.",
+					"icon": "☁️"
+				},
+				{
+					"name": "AI-Powered Search",
+					"description": "Search files with contextual AI assistance.",
+					"icon": "🔍"
+				},
+				{
+					"name": "File Splitting",
+					"description": "Intelligently split and upload files to optimal drives.",
+					"icon": "✂️"
+				},
+				{
+					"name": "Telegram Bot",
+					"description": "Interact with files via Telegram.",
+					"icon": "🤖"
+				}
+			]
+		},
+		{
+			"type": "use-cases",
+			"title": "Perfect For",
+			"items": [
+				{
+					"name": "Cloud Storage Management",
+					"description": "Unify and manage multiple cloud accounts.",
+					"emoji": "📂"
+				},
+				{
+					"name": "Smart File Search",
+					"description": "Find files quickly with AI-driven search.",
+					"emoji": "🔎"
+				},
+				{
+					"name": "Secure File Access",
+					"description": "Access files securely via web or Telegram.",
+					"emoji": "🔒"
+				},
+				{
+					"name": "Storage Optimization",
+					"description": "Monitor and optimize storage usage.",
+					"emoji": "📊"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Technology & Architecture",
+			"paragraphs": [
+				"Syncly is built with a modern tech stack, featuring <strong>FastAPI</strong> for the backend, <strong>Vite + React</strong> for the web frontend, and <strong>MongoDB</strong> for secure data storage. It integrates with Google Drive and Dropbox APIs for cloud storage management and uses the <strong>Groq API</strong> for AI-powered search and assistance.",
+				"The modular architecture ensures scalability, with OAuth 2.0 for secure cloud authentication, JWT for session management, and a Telegram bot for seamless interaction. The AI assistant leverages Llama models to provide context-aware responses, making file search and management smarter and more efficient."
+			]
+		},
+		{
+			"type": "roadmap",
+			"title": "What's Next",
+			"items": [
+				{
+					"name": "Mobile App Rollout",
+					"status": "Planned"
+				},
+				{
+					"name": "Railway Deployment",
+					"status": "Planned"
+				},
+				{
+					"name": "Expanded Cloud Support",
+					"status": "Planned"
+				},
+				{
+					"name": "Advanced AI Features",
+					"status": "Planned"
+				}
+			]
+		},
+		{
+			"type": "team",
+			"title": "The Team",
+			"items": [
+				{
+					"name": "Rajin Khan",
+					"institution": "North South University",
+					"github": "https://github.com/rajin-khan"
+				},
+				{
+					"name": "Ahnaf Ojayer",
+					"institution": "North South University",
+					"github": "https://github.com/0jayer"
+				},
+				{
+					"name": "Rihal Mahmood",
+					"institution": "North South University",
+					"github": "https://github.com/RihalMahmood"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Get Started",
+			"paragraphs": [
+				"Syncly is an innovative solution for unified cloud file management. Explore the project on GitHub to see how AI and cloud integration can transform the way you handle files."
+			],
+			"actions": [
+				{
+					"label": "Explore Syncly",
+					"href": "https://github.com/rajin-khan/Syncly",
+					"primary": true
+				},
+				{
+					"label": "Contribute on GitHub",
+					"href": "https://github.com/rajin-khan/Syncly",
+					"primary": false
+				}
+			]
+		}
+	]
 }

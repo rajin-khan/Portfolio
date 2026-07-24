@@ -1,33 +1,1150 @@
 ---
-import PageHeading from "../components/page-heading.astro";
 import Project from "../components/project.astro";
 import Layout from "../layouts/main.astro";
 import { getProjects } from "../lib/projects";
 
 const projects = await getProjects();
+const projectCount = projects.length;
+
+const projectItems = projects.map(({ data }, index) => ({
+	...data,
+	indexLabel: String(index + 1).padStart(2, "0"),
+	isExternal: data.href.startsWith("http"),
+}));
 ---
 
 <Layout
-  title="Projects"
-  description="Explore Rajin Khan's work across AI, computer vision, accessibility, full-stack development, creative tools, and experimental software."
+	title="Projects"
+	description="Products, experiments, and case studies by Rajin Khan across AI, accessibility, computer vision, and the web."
+	ogImage={projectItems[0]?.image.src}
+	ogImageAlt={`${projectItems[0]?.cardName ?? "Rajin Khan"} project preview`}
 >
-  <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
-    <!-- Animation applied to the heading -->
-    <div class="animate-in" style="--animation-delay: 0ms;">
-      <PageHeading
-        title="My Projects"
-        description="A selection from some of the projects I've worked on over the years. I love creating digital solutions for all my problems, while working on impactful projects, or random things that pique my interest."
-      />
-    </div>
+	<section class="projects-page">
+		<div class="projects-shell">
+			<header class="projects-hero animate-in" style="--animation-delay: 0ms;">
+				<div class="projects-title-block">
+					<h1>Things I&apos;ve made</h1>
+					<p class="projects-handwritten">some useful. some just had to exist.</p>
+				</div>
+				<p class="projects-intro">
+					Products, research, and small experiments across AI,
+					accessibility, computer vision, and the web.
+				</p>
+			</header>
 
-    <!-- Animation applied to the entire projects grid -->
-    <div
-      class="z-50 grid items-stretch w-full grid-cols-1 my-8 gap-7 sm:gap-5 sm:grid-cols-2 animate-in"
-      style="--animation-delay: 200ms;"
-    >
-      {
-        projects.map(({ data }) => <Project project={data} />)
-      }
-    </div>
-  </section>
+			<section
+				class="project-reel animate-in"
+				style={`--animation-delay: 160ms; --active-accent: ${projectItems[0]?.accents.primary};`}
+				data-project-reel
+				data-direction="next"
+				role="region"
+				aria-roledescription="carousel"
+				aria-labelledby="project-reel-title"
+			>
+				<h2 id="project-reel-title" class="sr-only">Browse selected projects</h2>
+
+				<div class="reel-stage" data-reel-stage>
+					<div class="reel-viewport">
+						{projectItems.map((project, index) => {
+							const initialState = index === 0
+								? "active"
+								: index === 1
+									? "next"
+									: index === projectCount - 1
+										? "previous"
+										: index < projectCount / 2
+											? "after"
+											: "before";
+
+							return (
+								<figure
+									class="reel-slide"
+									data-project-slide={index}
+									data-state={initialState}
+									data-project-accent={project.accents.primary}
+									data-project-screen={project.accents.screen}
+									role="group"
+									aria-roledescription="slide"
+									aria-label={`${index + 1} of ${projectCount}: ${project.cardName}`}
+									aria-hidden={index === 0 ? "false" : "true"}
+									inert={index === 0 ? undefined : true}
+									style={`--project-screen: ${project.accents.screen}; --project-accent: ${project.accents.primary};`}
+								>
+									<a
+										href={project.href}
+										target={project.isExternal ? "_blank" : undefined}
+										rel={project.isExternal ? "noopener noreferrer" : undefined}
+										tabindex={index === 0 ? "0" : "-1"}
+										aria-label={`Open ${project.cardName}${project.isExternal ? " on GitHub" : " project page"}`}
+									>
+										<img
+											src={project.image.src}
+											width={project.image.width}
+											height={project.image.height}
+											alt={`${project.cardName} project preview`}
+											loading={index === 0 ? "eager" : "lazy"}
+											fetchpriority={index === 0 ? "high" : "auto"}
+											decoding="async"
+											draggable="false"
+										/>
+									</a>
+								</figure>
+							);
+						})}
+					</div>
+
+					<button type="button" class="reel-arrow reel-arrow--previous" data-project-previous aria-label="Previous project">
+						<span class="reel-arrow-icon" aria-hidden="true"></span>
+					</button>
+					<button type="button" class="reel-arrow reel-arrow--next" data-project-next aria-label="Next project">
+						<span class="reel-arrow-icon" aria-hidden="true"></span>
+					</button>
+				</div>
+
+				<div class="reel-caption">
+					<div class="reel-copy-stack" aria-live="polite" aria-atomic="true">
+						{projectItems.map((project, index) => (
+							<article
+								class="reel-copy"
+								data-project-copy={index}
+								hidden={index !== 0}
+								inert={index === 0 ? undefined : true}
+							>
+								<div class="reel-copy-heading">
+									<h3>{project.cardName}</h3>
+									<p class="reel-note">{project.note}</p>
+								</div>
+								<div class="reel-copy-details">
+									<p>{project.cardDescription}</p>
+									<ul aria-label={`${project.cardName} technologies and themes`}>
+										{project.tags.map(tag => <li>{tag}</li>)}
+									</ul>
+									<a
+										href={project.href}
+										target={project.isExternal ? "_blank" : undefined}
+										rel={project.isExternal ? "noopener noreferrer" : undefined}
+										tabindex={index === 0 ? "0" : "-1"}
+									>
+										<span>Open project</span>
+										<span aria-hidden="true">↗</span>
+									</a>
+								</div>
+							</article>
+						))}
+					</div>
+
+					<div class="reel-progress-row">
+						<p class="reel-position" aria-live="polite">
+							<span data-project-current>01</span>
+							<span aria-hidden="true">/</span>
+							<span>{String(projectCount).padStart(2, "0")}</span>
+						</p>
+						<span class="reel-progress" aria-hidden="true">
+							<span data-project-progress style={`width: ${100 / projectCount}%`}></span>
+						</span>
+					</div>
+
+					<nav class="reel-index" aria-label="Choose a project">
+						{projectItems.map((project, index) => (
+							<button
+								type="button"
+								data-project-select={index}
+								aria-pressed={index === 0 ? "true" : "false"}
+								style={`--project-accent: ${project.accents.primary};`}
+							>
+								<span>{project.indexLabel}</span>
+								<span>{project.cardName}</span>
+							</button>
+						))}
+					</nav>
+				</div>
+			</section>
+
+			<section class="project-gallery" aria-labelledby="project-gallery-title">
+				<header class="project-gallery-header">
+					<h2 id="project-gallery-title">All projects</h2>
+					<p>{projectCount} projects</p>
+				</header>
+
+				<ol class="project-cards">
+					{projectItems.map(project => (
+						<li>
+							<Project project={project} />
+						</li>
+					))}
+				</ol>
+			</section>
+		</div>
+	</section>
 </Layout>
+
+<style>
+	.projects-page {
+		--projects-paper: #f2f2ef;
+		--projects-faint: #73736f;
+		--projects-line: rgba(255, 255, 255, 0.12);
+		position: relative;
+		z-index: 20;
+		padding: 40px 28px 72px;
+		color: var(--projects-paper);
+	}
+
+	.projects-shell {
+		width: min(100%, 1180px);
+		margin: 0 auto;
+	}
+
+	.projects-hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+		gap: 80px;
+		align-items: center;
+		padding: 28px 0 54px;
+	}
+
+	.projects-title-block h1 {
+		margin: 0;
+		color: var(--projects-paper);
+		font-size: 3.75rem;
+		font-weight: 700;
+		letter-spacing: 0;
+		line-height: 1;
+	}
+
+	.projects-handwritten,
+	.reel-note {
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+	}
+
+	.projects-handwritten {
+		margin: 16px 0 0;
+		color: var(--projects-paper);
+		font-size: 1.28rem;
+		line-height: 1.35;
+	}
+
+	.projects-intro {
+		max-width: 45ch;
+		margin: 0;
+		color: #b8b8b4;
+		font-size: 1rem;
+		font-weight: 500;
+		line-height: 1.72;
+		text-wrap: pretty;
+	}
+
+	.project-reel {
+		--reel-width: min(62vw, 740px);
+		padding: 18px 0 40px;
+		border-bottom: 1px solid var(--projects-line);
+	}
+
+	.reel-caption {
+		width: min(100%, var(--reel-width));
+		margin-inline: auto;
+	}
+
+	.reel-stage {
+		--active-half: min(31vw, 370px);
+		--reel-drag: 0px;
+		position: relative;
+		width: min(1440px, calc(100vw - 24px));
+		margin-left: 50%;
+		transform: translateX(-50%);
+	}
+
+	.reel-viewport {
+		position: relative;
+		height: clamp(270px, 34vw, 420px);
+		overflow: hidden;
+		cursor: grab;
+		isolation: isolate;
+		touch-action: pan-y;
+		user-select: none;
+	}
+
+	.reel-stage.is-dragging .reel-viewport {
+		cursor: grabbing;
+	}
+
+	.reel-slide {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: var(--reel-width);
+		margin: 0;
+		opacity: 0;
+		transform: translate3d(-50%, -50%, 0) scale(0.72);
+		transition:
+			transform 430ms cubic-bezier(0.22, 1, 0.36, 1),
+			opacity 220ms ease;
+		aspect-ratio: 16 / 9;
+		backface-visibility: hidden;
+	}
+
+	.reel-slide[data-state="active"] {
+		z-index: 3;
+		opacity: 1;
+		transform: translate3d(calc(-50% + var(--reel-drag)), -50%, 0) scale(1);
+		will-change: transform, opacity;
+	}
+
+	.reel-slide[data-state="previous"] {
+		z-index: 1;
+		opacity: 0.14;
+		transform: translate3d(calc(-132% + var(--reel-drag)), -50%, 0) scale(0.84);
+		will-change: transform, opacity;
+	}
+
+	.reel-slide[data-state="next"] {
+		z-index: 1;
+		opacity: 0.14;
+		transform: translate3d(calc(32% + var(--reel-drag)), -50%, 0) scale(0.84);
+		will-change: transform, opacity;
+	}
+
+	.reel-slide[data-state="before"] {
+		transform: translate3d(calc(-174% + var(--reel-drag)), -50%, 0) scale(0.72);
+	}
+
+	.reel-slide[data-state="after"] {
+		transform: translate3d(calc(74% + var(--reel-drag)), -50%, 0) scale(0.72);
+	}
+
+	.reel-stage.is-dragging .reel-slide {
+		transition: none;
+	}
+
+	.reel-slide a {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 8px;
+		background: var(--project-screen);
+		color: inherit;
+		box-shadow:
+			0 30px 72px rgba(0, 0, 0, 0.42),
+			0 0 0 1px rgba(0, 0, 0, 0.28) inset;
+		text-decoration: none;
+		backface-visibility: hidden;
+		pointer-events: none;
+	}
+
+	.reel-slide a::after {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		background: #000;
+		content: "";
+		opacity: 0.055;
+		pointer-events: none;
+		transition: opacity 180ms ease;
+	}
+
+	.reel-slide[data-state="active"] a {
+		pointer-events: auto;
+	}
+
+
+	.reel-slide a:focus-visible {
+		outline: 2px solid rgba(255, 255, 255, 0.88);
+		outline-offset: 4px;
+	}
+
+	.reel-slide img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		backface-visibility: hidden;
+		transform: translateZ(0) scale(1.001);
+		transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+		pointer-events: none;
+	}
+
+	.reel-slide a:hover::after,
+	.reel-slide a:focus-visible::after {
+		opacity: 0;
+	}
+
+	.reel-slide a:hover img,
+	.reel-slide a:focus-visible img {
+		transform: translateZ(0) scale(1.012);
+	}
+
+
+	.reel-arrow {
+		position: absolute;
+		top: 50%;
+		z-index: 6;
+		display: grid;
+		width: 34px;
+		height: 34px;
+		padding: 0;
+		place-items: center;
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 50%;
+		background: #111;
+		color: #b9b9b4;
+		font: inherit;
+		cursor: pointer;
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
+		transform: translateY(-50%);
+		transition:
+			background-color 180ms ease,
+			border-color 180ms ease,
+			color 180ms ease,
+			transform 180ms ease;
+	}
+
+	.reel-arrow--previous {
+		left: calc(50% - var(--active-half) - 48px);
+	}
+
+	.reel-arrow--next {
+		right: calc(50% - var(--active-half) - 48px);
+	}
+
+	.reel-arrow-icon {
+		display: block;
+		width: 7px;
+		height: 7px;
+		border-top: 1.5px solid currentColor;
+		border-right: 1.5px solid currentColor;
+	}
+
+	.reel-arrow--previous .reel-arrow-icon {
+		transform: translateX(1px) rotate(-135deg);
+	}
+
+	.reel-arrow--next .reel-arrow-icon {
+		transform: translateX(-1px) rotate(45deg);
+	}
+
+	.reel-arrow:hover,
+	.reel-arrow:focus-visible {
+		border-color: rgba(255, 255, 255, 0.32);
+		background: #1b1b1b;
+		color: #fff;
+		transform: translateY(-50%) scale(1.05);
+	}
+
+	.reel-arrow:focus-visible,
+	.reel-index button:focus-visible,
+	.reel-copy-details > a:focus-visible {
+		outline: 2px solid rgba(255, 255, 255, 0.5);
+		outline-offset: 4px;
+	}
+
+	.reel-caption {
+		padding-top: 24px;
+	}
+
+	.reel-copy-stack {
+		min-height: 150px;
+	}
+
+	.reel-copy {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 40px;
+		align-items: start;
+		animation: reel-copy-in 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+	}
+
+	.reel-copy[hidden] {
+		display: none;
+	}
+
+
+	.reel-copy h3 {
+		margin: 0;
+		color: var(--projects-paper);
+		font-size: 2.85rem;
+		font-weight: 700;
+		letter-spacing: 0;
+		line-height: 0.98;
+		overflow-wrap: anywhere;
+		text-wrap: balance;
+	}
+
+	.reel-note {
+		margin: 17px 0 0 2px;
+		color: #deded9;
+		font-size: 1.08rem;
+		line-height: 1.35;
+		transform: rotate(-1deg);
+		transform-origin: left center;
+	}
+
+	.reel-copy-details > p {
+		max-width: 48ch;
+		margin: 0;
+		color: #adada8;
+		font-size: 0.88rem;
+		font-weight: 500;
+		line-height: 1.68;
+		text-wrap: pretty;
+	}
+
+	.reel-copy-details ul {
+		display: flex;
+		margin: 18px 0 0;
+		padding: 0;
+		flex-wrap: wrap;
+		gap: 8px 0;
+		list-style: none;
+	}
+
+	.reel-copy-details li {
+		display: inline-flex;
+		align-items: center;
+		color: #898985;
+		font-size: 0.66rem;
+		font-weight: 600;
+		line-height: 1;
+	}
+
+	.reel-copy-details li:not(:last-child)::after {
+		width: 3px;
+		height: 3px;
+		margin-inline: 11px;
+		border-radius: 50%;
+		background: color-mix(in srgb, var(--active-accent) 62%, #8f8f8b);
+		content: "";
+	}
+
+	.reel-copy-details > a {
+		display: inline-flex;
+		min-height: 34px;
+		margin-top: 20px;
+		padding: 7px 12px;
+		align-items: center;
+		justify-content: center;
+		gap: 9px;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.045);
+		color: #e2e2dd;
+		font-size: 0.73rem;
+		font-weight: 650;
+		text-decoration: none;
+		transition:
+			background-color 180ms ease,
+			border-color 180ms ease,
+			color 180ms ease,
+			transform 220ms ease;
+	}
+
+	.reel-copy-details > a:hover,
+	.reel-copy-details > a:focus-visible,
+	.project-reel:has(.reel-slide[data-state="active"] a:hover) .reel-copy:not([hidden]) .reel-copy-details > a,
+	.project-reel:has(.reel-slide[data-state="active"] a:focus-visible) .reel-copy:not([hidden]) .reel-copy-details > a {
+		border-color: rgba(255, 255, 255, 0.28);
+		background: rgba(255, 255, 255, 0.1);
+		color: #fff;
+		transform: translateY(-1px);
+	}
+
+	.reel-progress-row {
+		display: flex;
+		margin-top: 10px;
+		align-items: center;
+		gap: 17px;
+	}
+
+	.reel-position {
+		display: flex;
+		min-width: 53px;
+		margin: 0;
+		gap: 6px;
+		color: #666662;
+		font-size: 0.65rem;
+		font-weight: 650;
+		font-variant-numeric: tabular-nums;
+		line-height: 1;
+	}
+
+	.reel-position span:first-child {
+		color: #deded9;
+	}
+
+	.reel-progress {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 1px;
+		overflow: hidden;
+		background: rgba(255, 255, 255, 0.08);
+	}
+
+	.reel-progress > span {
+		position: absolute;
+		inset: 0 auto 0 0;
+		background: var(--active-accent);
+		transition:
+			width 360ms cubic-bezier(0.22, 1, 0.36, 1),
+			background-color 220ms ease;
+	}
+
+	.reel-index {
+		display: flex;
+		margin-top: 24px;
+		overflow-x: auto;
+		gap: 28px;
+		scrollbar-width: none;
+		scroll-snap-type: x proximity;
+	}
+
+	.reel-index::-webkit-scrollbar {
+		display: none;
+	}
+
+	.reel-index button {
+		position: relative;
+		display: grid;
+		min-width: max-content;
+		padding: 13px 0 12px;
+		grid-template-columns: 22px auto;
+		align-items: center;
+		gap: 7px;
+		border: 0;
+		background: transparent;
+		color: #686864;
+		font: inherit;
+		font-size: 0.66rem;
+		font-weight: 600;
+		letter-spacing: 0;
+		line-height: 1;
+		cursor: pointer;
+		scroll-snap-align: center;
+		transition: color 180ms ease;
+	}
+
+	.reel-index button::after {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		height: 1px;
+		background: var(--project-accent);
+		content: "";
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 190ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.reel-index button span:first-child {
+		color: #4f4f4c;
+		font-variant-numeric: tabular-nums;
+		transition: color 180ms ease;
+	}
+
+	.reel-index button:hover,
+	.reel-index button:focus-visible,
+	.reel-index button[aria-pressed="true"] {
+		color: #e7e7e2;
+	}
+
+	.reel-index button[aria-pressed="true"]::after {
+		transform: scaleX(1);
+	}
+
+	.reel-index button[aria-pressed="true"] span:first-child {
+		color: var(--project-accent);
+	}
+
+	.project-gallery {
+		width: min(100%, 1020px);
+		margin-inline: auto;
+		padding: 92px 0 72px;
+	}
+
+	.project-gallery-header {
+		display: flex;
+		margin: 0 0 36px;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 28px;
+	}
+
+	.project-gallery-header h2 {
+		margin: 0;
+		color: var(--projects-paper);
+		font-size: 2.35rem;
+		font-weight: 700;
+		letter-spacing: 0;
+		line-height: 1;
+	}
+
+	.project-gallery-header > p {
+		margin: 0;
+		color: var(--projects-faint);
+		font-size: 0.7rem;
+		font-weight: 600;
+	}
+
+	.project-cards {
+		display: grid;
+		margin: 0;
+		padding: 0;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 28px 26px;
+		list-style: none;
+	}
+
+	.project-cards li {
+		min-width: 0;
+	}
+
+	@keyframes reel-copy-in {
+		from {
+			opacity: 0;
+			transform: translate3d(0, 6px, 0);
+		}
+		to {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+	}
+
+	@media (max-width: 960px) {
+		.projects-hero {
+			grid-template-columns: minmax(0, 1fr) minmax(280px, 0.82fr);
+			gap: 48px;
+		}
+
+		.reel-copy {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 46px;
+		}
+
+		.project-cards {
+			grid-template-columns: repeat(2, minmax(0, 330px));
+			justify-content: center;
+		}
+	}
+
+	@media (max-width: 760px) {
+		.projects-page {
+			padding-inline: 20px;
+		}
+
+		.projects-hero {
+			grid-template-columns: 1fr;
+			gap: 28px;
+			padding-bottom: 40px;
+		}
+
+		.projects-title-block h1 {
+			font-size: 3rem;
+		}
+
+		.projects-intro {
+			max-width: 54ch;
+		}
+
+		.project-reel {
+			--reel-width: calc(100vw - 112px);
+			padding-bottom: 40px;
+		}
+
+		.reel-stage {
+			width: calc(100vw - 16px);
+		}
+
+		.reel-viewport {
+			height: clamp(220px, 52vw, 300px);
+		}
+
+		.reel-slide[data-state="previous"] {
+			opacity: 0.1;
+			transform: translate3d(calc(-139% + var(--reel-drag)), -50%, 0) scale(0.82);
+		}
+
+		.reel-slide[data-state="next"] {
+			opacity: 0.1;
+			transform: translate3d(calc(39% + var(--reel-drag)), -50%, 0) scale(0.82);
+		}
+
+		.reel-arrow {
+			width: 32px;
+			height: 32px;
+			background: rgba(14, 14, 14, 0.88);
+		}
+
+		.reel-arrow--previous {
+			left: 10px;
+		}
+
+		.reel-arrow--next {
+			right: 10px;
+		}
+
+		.reel-caption {
+			padding-top: 23px;
+		}
+
+		.reel-copy-stack {
+			min-height: 0;
+		}
+
+		.reel-copy {
+			grid-template-columns: 1fr;
+			gap: 27px;
+		}
+
+		.reel-copy h3 {
+			font-size: 2.6rem;
+		}
+
+		.reel-copy-details > p {
+			max-width: 56ch;
+		}
+
+		.reel-progress-row {
+			margin-top: 20px;
+		}
+
+		.reel-index {
+			margin-top: 18px;
+			gap: 24px;
+		}
+
+		.project-gallery {
+			padding-top: 72px;
+		}
+
+		.project-cards {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 24px;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.project-cards {
+			grid-template-columns: minmax(0, 350px);
+			justify-content: center;
+			row-gap: 22px;
+		}
+	}
+
+	@media (max-width: 520px) {
+		.project-reel {
+			--reel-width: calc(100vw - 100px);
+		}
+
+		.projects-page {
+			padding: 26px 16px 48px;
+		}
+
+		.projects-hero {
+			padding: 20px 0 34px;
+		}
+
+		.projects-title-block h1 {
+			font-size: 2.7rem;
+		}
+
+		.projects-handwritten {
+			font-size: 1.08rem;
+		}
+
+		.projects-intro {
+			font-size: 0.9rem;
+		}
+
+		.reel-caption {
+			padding-inline: 2px;
+		}
+
+		.reel-viewport {
+			height: clamp(200px, 52vw, 260px);
+		}
+
+		.reel-arrow {
+			width: 30px;
+			height: 30px;
+		}
+
+		.reel-arrow--previous {
+			left: 4px;
+		}
+
+		.reel-arrow--next {
+			right: 4px;
+		}
+
+		.reel-copy h3 {
+			font-size: 2.25rem;
+		}
+
+		.reel-note {
+			font-size: 1rem;
+		}
+
+		.reel-copy-details > p {
+			font-size: 0.82rem;
+		}
+
+		.reel-index button {
+			grid-template-columns: 19px auto;
+			font-size: 0.62rem;
+		}
+
+		.project-gallery-header {
+			margin-bottom: 34px;
+		}
+
+		.project-gallery-header h2 {
+			font-size: 2rem;
+		}
+
+		.project-cards {
+			row-gap: 18px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.reel-slide,
+		.reel-slide a::after,
+		.reel-slide img,
+		.reel-arrow,
+		.reel-copy,
+		.reel-progress > span,
+		.reel-index button,
+		.reel-index button::after {
+			animation: none !important;
+			transition: none !important;
+		}
+	}
+</style>
+
+<script>
+	const projectReel = document.querySelector<HTMLElement>("[data-project-reel]");
+
+	if (projectReel) {
+		const slides = Array.from(projectReel.querySelectorAll<HTMLElement>("[data-project-slide]"));
+		const copies = Array.from(projectReel.querySelectorAll<HTMLElement>("[data-project-copy]"));
+		const selectors = Array.from(projectReel.querySelectorAll<HTMLButtonElement>("[data-project-select]"));
+		const previousButton = projectReel.querySelector<HTMLButtonElement>("[data-project-previous]");
+		const nextButton = projectReel.querySelector<HTMLButtonElement>("[data-project-next]");
+		const currentLabel = projectReel.querySelector<HTMLElement>("[data-project-current]");
+		const progress = projectReel.querySelector<HTMLElement>("[data-project-progress]");
+		const indexRail = projectReel.querySelector<HTMLElement>(".reel-index");
+		const stage = projectReel.querySelector<HTMLElement>("[data-reel-stage]");
+		const viewport = projectReel.querySelector<HTMLElement>(".reel-viewport");
+		let activeIndex = 0;
+		let pointerStartX: number | null = null;
+		let pointerCurrentX: number | null = null;
+		let activePointerId: number | null = null;
+		let suppressSlideClick = false;
+		let dragFrame: number | null = null;
+		let pendingDrag = 0;
+		let hasRendered = false;
+
+		const normalizeIndex = (index: number) => (index + slides.length) % slides.length;
+
+		const getSlideState = (index: number) => {
+			const offset = normalizeIndex(index - activeIndex);
+			if (offset === 0) return "active";
+			if (offset === 1) return "next";
+			if (offset === slides.length - 1) return "previous";
+			return offset < slides.length / 2 ? "after" : "before";
+		};
+
+		const setInteractiveState = (element: HTMLElement, active: boolean) => {
+			element.setAttribute("aria-hidden", String(!active));
+			element.toggleAttribute("inert", !active);
+			element.querySelectorAll<HTMLElement>("a, button").forEach(control => {
+				control.tabIndex = active ? 0 : -1;
+			});
+		};
+
+		const paintDrag = () => {
+			stage?.style.setProperty("--reel-drag", `${pendingDrag}px`);
+			dragFrame = null;
+		};
+
+		const queueDrag = (distance: number) => {
+			pendingDrag = distance;
+			if (dragFrame === null) dragFrame = window.requestAnimationFrame(paintDrag);
+		};
+
+		const clearDrag = () => {
+			if (dragFrame !== null) window.cancelAnimationFrame(dragFrame);
+			dragFrame = null;
+			pendingDrag = 0;
+			stage?.style.setProperty("--reel-drag", "0px");
+		};
+
+		const centerSelectedTitle = (index: number) => {
+			const selector = selectors[index];
+			if (!selector || !indexRail) return;
+			const targetLeft = selector.offsetLeft - (indexRail.clientWidth - selector.offsetWidth) / 2;
+			indexRail.scrollTo({
+				left: Math.max(0, targetLeft),
+				behavior: "auto",
+			});
+		};
+
+		const renderProject = (nextIndex: number, requestedDirection?: "next" | "previous") => {
+			if (!slides.length) return;
+			const normalizedIndex = normalizeIndex(nextIndex);
+			if (hasRendered && normalizedIndex === activeIndex) return;
+			const forwardDistance = normalizeIndex(normalizedIndex - activeIndex);
+			const direction =
+				requestedDirection ??
+				(forwardDistance > 0 && forwardDistance <= slides.length / 2 ? "next" : "previous");
+
+			activeIndex = normalizedIndex;
+			projectReel.dataset.direction = direction;
+
+			const activeSlide = slides[activeIndex];
+			projectReel.style.setProperty(
+				"--active-accent",
+				activeSlide.dataset.projectAccent ?? "#f2f2ef",
+			);
+			projectReel.style.setProperty(
+				"--active-screen",
+				activeSlide.dataset.projectScreen ?? "#111111",
+			);
+
+			slides.forEach((slide, index) => {
+				const isActive = index === activeIndex;
+				const wasActive = slide.dataset.state === "active";
+				const nextState = getSlideState(index);
+				if (slide.dataset.state !== nextState) slide.dataset.state = nextState;
+				if (!hasRendered || wasActive !== isActive) setInteractiveState(slide, isActive);
+			});
+
+			copies.forEach((copy, index) => {
+				const isActive = index === activeIndex;
+				const wasActive = !copy.hidden;
+				copy.hidden = !isActive;
+				if (!hasRendered || wasActive !== isActive) setInteractiveState(copy, isActive);
+			});
+
+			selectors.forEach((selector, index) => {
+				selector.setAttribute("aria-pressed", String(index === activeIndex));
+			});
+
+			if (currentLabel) {
+				currentLabel.textContent = String(activeIndex + 1).padStart(2, "0");
+			}
+			if (progress) {
+				progress.style.width = `${((activeIndex + 1) / slides.length) * 100}%`;
+			}
+
+			centerSelectedTitle(activeIndex);
+			hasRendered = true;
+		};
+
+		const resetDrag = () => {
+			pointerStartX = null;
+			pointerCurrentX = null;
+			activePointerId = null;
+			stage?.classList.remove("is-dragging");
+			clearDrag();
+		};
+
+		const finishDrag = (event: PointerEvent, cancelled = false) => {
+			if (pointerStartX === null) return;
+			const distance = (pointerCurrentX ?? event.clientX) - pointerStartX;
+			const moved = Math.abs(distance) > 7;
+			const pointerId = activePointerId;
+
+			pointerStartX = null;
+			pointerCurrentX = null;
+			activePointerId = null;
+
+			if (pointerId !== null && viewport?.hasPointerCapture(pointerId)) {
+				viewport.releasePointerCapture(pointerId);
+			}
+
+			stage?.classList.remove("is-dragging");
+			clearDrag();
+
+			if (!cancelled && Math.abs(distance) > 48) {
+				renderProject(
+					activeIndex + (distance < 0 ? 1 : -1),
+					distance < 0 ? "next" : "previous",
+				);
+			}
+
+			if (moved) {
+				suppressSlideClick = true;
+				window.setTimeout(() => {
+					suppressSlideClick = false;
+				}, 180);
+			}
+		};
+
+		previousButton?.addEventListener("click", () => {
+			renderProject(activeIndex - 1, "previous");
+		});
+		nextButton?.addEventListener("click", () => {
+			renderProject(activeIndex + 1, "next");
+		});
+
+		selectors.forEach((selector, index) => {
+			selector.addEventListener("click", () => renderProject(index));
+		});
+
+		projectReel.addEventListener("keydown", event => {
+			if (event.key === "ArrowLeft") {
+				event.preventDefault();
+				renderProject(activeIndex - 1, "previous");
+			} else if (event.key === "ArrowRight") {
+				event.preventDefault();
+				renderProject(activeIndex + 1, "next");
+			} else if (event.key === "Home") {
+				event.preventDefault();
+				renderProject(0, "previous");
+			} else if (event.key === "End") {
+				event.preventDefault();
+				renderProject(slides.length - 1, "next");
+			}
+		});
+
+		viewport?.addEventListener("pointerdown", event => {
+			if (event.pointerType === "mouse" && event.button !== 0) return;
+			pointerStartX = event.clientX;
+			pointerCurrentX = event.clientX;
+			activePointerId = event.pointerId;
+			viewport.setPointerCapture(event.pointerId);
+		});
+
+		viewport?.addEventListener("pointermove", event => {
+			if (pointerStartX === null || event.pointerId !== activePointerId) return;
+			pointerCurrentX = event.clientX;
+			const distance = pointerCurrentX - pointerStartX;
+			if (Math.abs(distance) < 5) return;
+			stage?.classList.add("is-dragging");
+			const dampedDistance = Math.max(-86, Math.min(86, distance * 0.72));
+			queueDrag(dampedDistance);
+		});
+
+		viewport?.addEventListener("pointerup", event => finishDrag(event));
+		viewport?.addEventListener("pointercancel", event => finishDrag(event, true));
+		viewport?.addEventListener("lostpointercapture", () => {
+			if (pointerStartX !== null) resetDrag();
+		});
+
+		viewport?.addEventListener(
+			"click",
+			event => {
+				if (!suppressSlideClick) return;
+				event.preventDefault();
+				event.stopPropagation();
+			},
+			true,
+		);
+
+		renderProject(0, "next");
+		}
+</script>

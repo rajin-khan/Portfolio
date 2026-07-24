@@ -1,147 +1,145 @@
 {
-  "slug": "gridgenius",
-  "order": 5,
-  "detail": true,
-  "name": "GridGenius",
-  "cardName": "GridGenius",
-  "description": "AI-Powered Energy Forecasting & Optimization for Bangladesh.",
-  "cardDescription": "AI-Powered Energy Optimization System.",
-  "image": {
-    "src": "/assets/images/projects/GridGenius.png",
-    "width": 1405,
-    "height": 565
-  },
-  "href": "/projects/gridgenius",
-  "tags": [
-    "AI",
-    "Chatbot",
-    "Research"
-  ],
-  "accents": {
-    "primary": "#d4af37",
-    "secondary": "#facc15"
-  },
-  "heroActions": [
-    {
-      "label": "Visit Live Site",
-      "href": "https://grid-genius-project.vercel.app/",
-      "primary": true
-    },
-    {
-      "label": "View on GitHub",
-      "href": "https://github.com/rajin-khan/GridGenius",
-      "primary": false
-    }
-  ],
-  "sections": [
-    {
-      "type": "prose",
-      "title": "What is GridGenius?",
-      "paragraphs": [
-        "GridGenius was born out of a deep frustration with the persistent load shedding issues in Bangladesh. Growing up, I experienced countless power outages that disrupted daily life, and when I started analyzing the data, I was shocked to see how inefficient energy generation was in the country. Determined to make a difference, I took matters into my own hands and created GridGenius, an AI-powered platform designed to address energy challenges in Bangladesh by forecasting and optimizing electricity demand. Using machine learning and a Retrieval-Augmented Generation (RAG) chatbot, it provides actionable insights for energy planning. The system forecasts daily electricity demand with ML models trained on over 1800 BPDB reports, offers real-time explanations via the \"Ask Genius\" chatbot, and visualizes trends through an interactive dashboard.",
-        "Power crises and load shedding are persistent issues in Bangladesh due to poor demand estimation. GridGenius bridges this gap by leveraging AI to predict demand, optimize generation, and provide smart insights into seasonal gaps and inefficiencies. With a focus on transparency and usability, it empowers utilities, policymakers, and the public to make informed energy decisions."
-      ]
-    },
-    {
-      "type": "features",
-      "title": "Key Features",
-      "items": [
-        {
-          "name": "GridOracle",
-          "description": "ML-based demand forecasting with BPDB data.",
-          "icon": "📈"
-        },
-        {
-          "name": "Ask Genius",
-          "description": "LLM-powered chatbot for energy insights.",
-          "icon": "🧠"
-        },
-        {
-          "name": "Smart Insights",
-          "description": "Analyze seasonal gaps and patterns.",
-          "icon": "📊"
-        },
-        {
-          "name": "Interactive Dashboard",
-          "description": "Visualize trends with Tailwind CSS.",
-          "icon": "⚡"
-        }
-      ]
-    },
-    {
-      "type": "use-cases",
-      "title": "Perfect For",
-      "items": [
-        {
-          "name": "Energy Planning",
-          "description": "Optimize generation for utilities.",
-          "emoji": "⚡"
-        },
-        {
-          "name": "Policy Making",
-          "description": "Inform decisions with data insights.",
-          "emoji": "📜"
-        },
-        {
-          "name": "Sustainability",
-          "description": "Reduce waste in energy systems.",
-          "emoji": "🌍"
-        },
-        {
-          "name": "Public Awareness",
-          "description": "Educate users on energy trends.",
-          "emoji": "📢"
-        }
-      ]
-    },
-    {
-      "type": "prose",
-      "title": "Technology & Architecture",
-      "paragraphs": [
-        "GridGenius is built on a modular, scalable architecture. The backend uses <strong>FastAPI</strong> to serve RESTful APIs for model inference and RAG-based explainability, with data retrieval from a <strong>ChromaDB</strong> vector database. The frontend, hosted on <strong>Vercel</strong>, features an interactive dashboard built with <strong>Tailwind CSS</strong> and <strong>Vanilla JS</strong>, displaying forecasts, visualizations, and a chatbot interface powered by <strong>Groq Llama 3</strong> with HuggingFace embeddings.",
-        "The system employs multiple ML models, including Random Forest, XGBoost, and a custom <strong>Transformer Regressor</strong> for demand forecasting. Feature engineering includes outlier removal, scaling, and derived features like Demand-Generation Gap. Extensive EDA revealed key insights, such as demand increases during hotter months and reduced demand on holidays, informing the model's accuracy and usability."
-      ]
-    },
-    {
-      "type": "roadmap",
-      "title": "What's Next",
-      "items": [
-        {
-          "name": "Real-Time Updates",
-          "status": "Planned"
-        },
-        {
-          "name": "Mobile App",
-          "status": "Planned"
-        },
-        {
-          "name": "Expanded Datasets",
-          "status": "Planned"
-        },
-        {
-          "name": "Advanced Visualizations",
-          "status": "Planned"
-        }
-      ]
-    },
-    {
-      "type": "prose",
-      "title": "Get Started",
-      "paragraphs": [
-        "Explore GridGenius today and see how AI can transform the energy sector. Want to contribute or learn more? Check out the project on GitHub!"
-      ],
-      "actions": [
-        {
-          "label": "Start Exploring",
-          "href": "https://grid-genius-project.vercel.app/",
-          "primary": true
-        },
-        {
-          "label": "Contribute on GitHub",
-          "href": "https://github.com/rajin-khan/GridGenius",
-          "primary": false
-        }
-      ]
-    }
-  ]
+	"slug": "gridgenius",
+	"order": 5,
+	"detail": true,
+	"name": "GridGenius",
+	"cardName": "GridGenius",
+	"description": "AI-Powered Energy Forecasting & Optimization for Bangladesh.",
+	"cardDescription": "AI-Powered Energy Optimization System.",
+	"note": "asking better questions of the grid",
+	"image": {
+		"src": "/assets/images/projects/GridGenius.png",
+		"width": 1405,
+		"height": 565
+	},
+	"href": "/projects/gridgenius",
+	"tags": ["AI", "Chatbot", "Research"],
+	"accents": {
+		"primary": "#d4af37",
+		"secondary": "#facc15",
+		"screen": "#1a1607"
+	},
+	"heroActions": [
+		{
+			"label": "Visit Live Site",
+			"href": "https://grid-genius-project.vercel.app/",
+			"primary": true
+		},
+		{
+			"label": "View on GitHub",
+			"href": "https://github.com/rajin-khan/GridGenius",
+			"primary": false
+		}
+	],
+	"sections": [
+		{
+			"type": "prose",
+			"title": "What is GridGenius?",
+			"paragraphs": [
+				"GridGenius was born out of a deep frustration with the persistent load shedding issues in Bangladesh. Growing up, I experienced countless power outages that disrupted daily life, and when I started analyzing the data, I was shocked to see how inefficient energy generation was in the country. Determined to make a difference, I took matters into my own hands and created GridGenius, an AI-powered platform designed to address energy challenges in Bangladesh by forecasting and optimizing electricity demand. Using machine learning and a Retrieval-Augmented Generation (RAG) chatbot, it provides actionable insights for energy planning. The system forecasts daily electricity demand with ML models trained on over 1800 BPDB reports, offers real-time explanations via the \"Ask Genius\" chatbot, and visualizes trends through an interactive dashboard.",
+				"Power crises and load shedding are persistent issues in Bangladesh due to poor demand estimation. GridGenius bridges this gap by leveraging AI to predict demand, optimize generation, and provide smart insights into seasonal gaps and inefficiencies. With a focus on transparency and usability, it empowers utilities, policymakers, and the public to make informed energy decisions."
+			]
+		},
+		{
+			"type": "features",
+			"title": "Key Features",
+			"items": [
+				{
+					"name": "GridOracle",
+					"description": "ML-based demand forecasting with BPDB data.",
+					"icon": "📈"
+				},
+				{
+					"name": "Ask Genius",
+					"description": "LLM-powered chatbot for energy insights.",
+					"icon": "🧠"
+				},
+				{
+					"name": "Smart Insights",
+					"description": "Analyze seasonal gaps and patterns.",
+					"icon": "📊"
+				},
+				{
+					"name": "Interactive Dashboard",
+					"description": "Visualize trends with Tailwind CSS.",
+					"icon": "⚡"
+				}
+			]
+		},
+		{
+			"type": "use-cases",
+			"title": "Perfect For",
+			"items": [
+				{
+					"name": "Energy Planning",
+					"description": "Optimize generation for utilities.",
+					"emoji": "⚡"
+				},
+				{
+					"name": "Policy Making",
+					"description": "Inform decisions with data insights.",
+					"emoji": "📜"
+				},
+				{
+					"name": "Sustainability",
+					"description": "Reduce waste in energy systems.",
+					"emoji": "🌍"
+				},
+				{
+					"name": "Public Awareness",
+					"description": "Educate users on energy trends.",
+					"emoji": "📢"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Technology & Architecture",
+			"paragraphs": [
+				"GridGenius is built on a modular, scalable architecture. The backend uses <strong>FastAPI</strong> to serve RESTful APIs for model inference and RAG-based explainability, with data retrieval from a <strong>ChromaDB</strong> vector database. The frontend, hosted on <strong>Vercel</strong>, features an interactive dashboard built with <strong>Tailwind CSS</strong> and <strong>Vanilla JS</strong>, displaying forecasts, visualizations, and a chatbot interface powered by <strong>Groq Llama 3</strong> with HuggingFace embeddings.",
+				"The system employs multiple ML models, including Random Forest, XGBoost, and a custom <strong>Transformer Regressor</strong> for demand forecasting. Feature engineering includes outlier removal, scaling, and derived features like Demand-Generation Gap. Extensive EDA revealed key insights, such as demand increases during hotter months and reduced demand on holidays, informing the model's accuracy and usability."
+			]
+		},
+		{
+			"type": "roadmap",
+			"title": "What's Next",
+			"items": [
+				{
+					"name": "Real-Time Updates",
+					"status": "Planned"
+				},
+				{
+					"name": "Mobile App",
+					"status": "Planned"
+				},
+				{
+					"name": "Expanded Datasets",
+					"status": "Planned"
+				},
+				{
+					"name": "Advanced Visualizations",
+					"status": "Planned"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Get Started",
+			"paragraphs": [
+				"Explore GridGenius today and see how AI can transform the energy sector. Want to contribute or learn more? Check out the project on GitHub!"
+			],
+			"actions": [
+				{
+					"label": "Start Exploring",
+					"href": "https://grid-genius-project.vercel.app/",
+					"primary": true
+				},
+				{
+					"label": "Contribute on GitHub",
+					"href": "https://github.com/rajin-khan/GridGenius",
+					"primary": false
+				}
+			]
+		}
+	]
 }

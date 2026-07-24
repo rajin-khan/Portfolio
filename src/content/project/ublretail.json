@@ -1,148 +1,145 @@
 {
-  "slug": "ublretail",
-  "order": 7,
-  "detail": true,
-  "name": "UBL Retail",
-  "cardName": "UBL Retail",
-  "description": "Computer Vision Pipeline for Unilever BD.",
-  "cardDescription": "Computer Vision pipeline for Unilever BD.",
-  "image": {
-    "src": "/assets/images/projects/ubl.png",
-    "width": 1220,
-    "height": 654
-  },
-  "href": "/projects/ublretail",
-  "tags": [
-    "AI",
-    "ML",
-    "DL",
-    "YOLO"
-  ],
-  "accents": {
-    "primary": "#1e40af",
-    "secondary": "#ffffff"
-  },
-  "heroActions": [
-    {
-      "label": "View Project",
-      "href": "https://github.com/rajin-khan/UBLRetailAnalysis",
-      "primary": true
-    },
-    {
-      "label": "View on GitHub",
-      "href": "https://github.com/rajin-khan/UBLRetailAnalysis",
-      "primary": false
-    }
-  ],
-  "sections": [
-    {
-      "type": "prose",
-      "title": "What is UBL Retail?",
-      "paragraphs": [
-        "UBL Retail is a computer vision pipeline developed for Unilever Bangladesh to analyze product placement, sales trends, and distribution in retail stores. By leveraging AI, machine learning, and deep learning, it provides actionable insights to optimize sales strategies and improve product distribution.",
-        "Using the YOLO object detection model, UBL Retail identifies Unilever products on store shelves, monitors their placement, and analyzes sales patterns. This data-driven approach helps Unilever redirect sales efforts, enhance inventory management, and ensure optimal product availability, ultimately boosting retail efficiency and customer satisfaction."
-      ]
-    },
-    {
-      "type": "features",
-      "title": "Key Features",
-      "items": [
-        {
-          "name": "Product Detection",
-          "description": "Identify Unilever products using YOLO.",
-          "icon": "🔍"
-        },
-        {
-          "name": "Sales Analysis",
-          "description": "Analyze product placement and sales trends.",
-          "icon": "📊"
-        },
-        {
-          "name": "Distribution Insights",
-          "description": "Optimize product distribution strategies.",
-          "icon": "📦"
-        },
-        {
-          "name": "Retail Monitoring",
-          "description": "Monitor store shelves in real-time.",
-          "icon": "🏬"
-        }
-      ]
-    },
-    {
-      "type": "use-cases",
-      "title": "Perfect For",
-      "items": [
-        {
-          "name": "Inventory Management",
-          "description": "Track product stock on shelves.",
-          "emoji": "📋"
-        },
-        {
-          "name": "Sales Optimization",
-          "description": "Redirect sales based on insights.",
-          "emoji": "💰"
-        },
-        {
-          "name": "Product Placement",
-          "description": "Improve shelf positioning strategies.",
-          "emoji": "📍"
-        },
-        {
-          "name": "Market Analysis",
-          "description": "Understand consumer behavior trends.",
-          "emoji": "📈"
-        }
-      ]
-    },
-    {
-      "type": "prose",
-      "title": "Technology & Architecture",
-      "paragraphs": [
-        "UBL Retail leverages a computer vision pipeline powered by <strong>YOLO</strong> for real-time object detection of Unilever products on store shelves. The system uses deep learning models to process images, combined with machine learning techniques for sales trend analysis and distribution optimization.",
-        "Built with a modular architecture, UBL Retail integrates AI-driven analytics to provide insights into product placement and inventory levels. The pipeline processes store images, extracts product data, and generates reports to guide sales redirection and distribution strategies, ensuring scalability and accuracy for retail operations."
-      ]
-    },
-    {
-      "type": "roadmap",
-      "title": "What's Next",
-      "items": [
-        {
-          "name": "Real-Time Analytics",
-          "status": "Planned"
-        },
-        {
-          "name": "Multi-Store Support",
-          "status": "Planned"
-        },
-        {
-          "name": "Enhanced YOLO Models",
-          "status": "Planned"
-        },
-        {
-          "name": "Mobile Integration",
-          "status": "Planned"
-        }
-      ]
-    },
-    {
-      "type": "prose",
-      "title": "Get Started",
-      "paragraphs": [
-        "This was one of the most interesting projects I've worked on in a while. You can explore the UBL Retail project on GitHub, and see how computer vision can transform product analysis and sales strategies."
-      ],
-      "actions": [
-        {
-          "label": "Explore UBL Retail",
-          "href": "https://github.com/rajin-khan/UBLRetailAnalysis",
-          "primary": true
-        },
-        {
-          "label": "Contribute on GitHub",
-          "href": "https://github.com/rajin-khan/UBLRetailAnalysis",
-          "primary": false
-        }
-      ]
-    }
-  ]
+	"slug": "ublretail",
+	"order": 7,
+	"detail": true,
+	"name": "UBL Retail",
+	"cardName": "UBL Retail",
+	"description": "Computer Vision Pipeline for Unilever BD.",
+	"cardDescription": "Computer Vision pipeline for Unilever BD.",
+	"note": "computer vision in the real world",
+	"image": {
+		"src": "/assets/images/projects/ubl.png",
+		"width": 1220,
+		"height": 654
+	},
+	"href": "/projects/ublretail",
+	"tags": ["AI", "ML", "DL", "YOLO"],
+	"accents": {
+		"primary": "#1e40af",
+		"secondary": "#ffffff",
+		"screen": "#080f20"
+	},
+	"heroActions": [
+		{
+			"label": "View Project",
+			"href": "https://github.com/rajin-khan/UBLRetailAnalysis",
+			"primary": true
+		},
+		{
+			"label": "View on GitHub",
+			"href": "https://github.com/rajin-khan/UBLRetailAnalysis",
+			"primary": false
+		}
+	],
+	"sections": [
+		{
+			"type": "prose",
+			"title": "What is UBL Retail?",
+			"paragraphs": [
+				"UBL Retail is a computer vision pipeline developed for Unilever Bangladesh to analyze product placement, sales trends, and distribution in retail stores. By leveraging AI, machine learning, and deep learning, it provides actionable insights to optimize sales strategies and improve product distribution.",
+				"Using the YOLO object detection model, UBL Retail identifies Unilever products on store shelves, monitors their placement, and analyzes sales patterns. This data-driven approach helps Unilever redirect sales efforts, enhance inventory management, and ensure optimal product availability, ultimately boosting retail efficiency and customer satisfaction."
+			]
+		},
+		{
+			"type": "features",
+			"title": "Key Features",
+			"items": [
+				{
+					"name": "Product Detection",
+					"description": "Identify Unilever products using YOLO.",
+					"icon": "🔍"
+				},
+				{
+					"name": "Sales Analysis",
+					"description": "Analyze product placement and sales trends.",
+					"icon": "📊"
+				},
+				{
+					"name": "Distribution Insights",
+					"description": "Optimize product distribution strategies.",
+					"icon": "📦"
+				},
+				{
+					"name": "Retail Monitoring",
+					"description": "Monitor store shelves in real-time.",
+					"icon": "🏬"
+				}
+			]
+		},
+		{
+			"type": "use-cases",
+			"title": "Perfect For",
+			"items": [
+				{
+					"name": "Inventory Management",
+					"description": "Track product stock on shelves.",
+					"emoji": "📋"
+				},
+				{
+					"name": "Sales Optimization",
+					"description": "Redirect sales based on insights.",
+					"emoji": "💰"
+				},
+				{
+					"name": "Product Placement",
+					"description": "Improve shelf positioning strategies.",
+					"emoji": "📍"
+				},
+				{
+					"name": "Market Analysis",
+					"description": "Understand consumer behavior trends.",
+					"emoji": "📈"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Technology & Architecture",
+			"paragraphs": [
+				"UBL Retail leverages a computer vision pipeline powered by <strong>YOLO</strong> for real-time object detection of Unilever products on store shelves. The system uses deep learning models to process images, combined with machine learning techniques for sales trend analysis and distribution optimization.",
+				"Built with a modular architecture, UBL Retail integrates AI-driven analytics to provide insights into product placement and inventory levels. The pipeline processes store images, extracts product data, and generates reports to guide sales redirection and distribution strategies, ensuring scalability and accuracy for retail operations."
+			]
+		},
+		{
+			"type": "roadmap",
+			"title": "What's Next",
+			"items": [
+				{
+					"name": "Real-Time Analytics",
+					"status": "Planned"
+				},
+				{
+					"name": "Multi-Store Support",
+					"status": "Planned"
+				},
+				{
+					"name": "Enhanced YOLO Models",
+					"status": "Planned"
+				},
+				{
+					"name": "Mobile Integration",
+					"status": "Planned"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Get Started",
+			"paragraphs": [
+				"This was one of the most interesting projects I've worked on in a while. You can explore the UBL Retail project on GitHub, and see how computer vision can transform product analysis and sales strategies."
+			],
+			"actions": [
+				{
+					"label": "Explore UBL Retail",
+					"href": "https://github.com/rajin-khan/UBLRetailAnalysis",
+					"primary": true
+				},
+				{
+					"label": "Contribute on GitHub",
+					"href": "https://github.com/rajin-khan/UBLRetailAnalysis",
+					"primary": false
+				}
+			]
+		}
+	]
 }

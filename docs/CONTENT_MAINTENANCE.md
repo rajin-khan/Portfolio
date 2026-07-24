@@ -121,24 +121,32 @@ The important shared fields are:
   "cardName": "Project Name",
   "description": "The fuller description used on the detail page and in metadata.",
   "cardDescription": "A concise one-line card description.",
+  "note": "A short handwritten aside shared by every card and the carousel.",
   "image": {
     "src": "/assets/images/projects/project-name.jpg",
     "width": 1600,
     "height": 900
   },
   "href": "/projects/project-name",
-  "tags": ["AI", "Web"]
+  "tags": ["AI", "Web"],
+  "accents": {
+    "primary": "#22c55e",
+    "secondary": "#f8fafc",
+    "screen": "#07140c"
+  }
 }
 ```
 
 `order` controls the catalogue. The homepage shows the six lowest values and
-`/projects/` shows every entry. Tags are editable here, but their visual colors
-remain neutral and are controlled by the shared card component. The filename,
-`slug`, and internal `href` should use the same lowercase kebab-case value.
+`/projects/` shows every entry. `note` supplies the restrained handwritten copy,
+while `accents.screen` frames previews and `accents.primary` and
+`accents.secondary` carry the project palette into the carousel and detail
+page. Tags remain visually neutral and are controlled by the shared
+`src/components/project.astro` card. The filename, `slug`, and internal `href`
+should use the same lowercase kebab-case value.
 
 For an internal detail page, keep `detail` set to `true` and also provide:
 
-- `accents.primary` and `accents.secondary` as six-digit hex colors.
 - `heroActions`, normally a live-project link and a GitHub link.
 - `sections`, rendered in array order.
 
@@ -169,8 +177,9 @@ To add an internal project:
 6. Verify the card and detail page on desktop and mobile.
 
 For an external-only project, set `detail` to `false`, use the full external URL
-for `href`, and omit `accents`, `heroActions`, and `sections`. It will appear in
-the catalogue without generating an internal route.
+for `href`, and omit `heroActions` and `sections`. It still needs `note` and
+`accents` because the shared cards and carousel use them, but it will not
+generate an internal route.
 
 ## Update the Homepage rajintalksalot Visual
 

@@ -208,6 +208,16 @@ const commitLogPlaceholders = Array.from({ length: 5 });
             </figure>
 
             <article class="head-commit" aria-label="Most recent public commit">
+              <span class="head-octocat" aria-hidden="true">
+                <img
+                  src="/assets/images/github/octocat-loading.gif"
+                  alt=""
+                  width="384"
+                  height="384"
+                  loading="eager"
+                  decoding="async"
+                />
+              </span>
               <p class="head-label">HEAD</p>
               <a
                 class="head-sha"
@@ -1137,6 +1147,27 @@ const commitLogPlaceholders = Array.from({ length: 5 });
     border-left: 1px dashed var(--line-strong);
   }
 
+  .head-octocat {
+    position: absolute;
+    top: 18px;
+    right: 8px;
+    display: block;
+    z-index: 2;
+    width: 46px;
+    height: 46px;
+    pointer-events: none;
+  }
+
+  .head-octocat img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(2.15);
+    image-rendering: pixelated;
+    opacity: 0.82;
+  }
+
   .head-label {
     margin: 0 0 28px;
     color: var(--faint);
@@ -2054,6 +2085,13 @@ const commitLogPlaceholders = Array.from({ length: 5 });
       padding: 44px 0 36px;
       border-top: 1px dashed var(--line-strong);
       border-left: 0;
+    }
+
+    .head-octocat {
+      top: 24px;
+      right: 2px;
+      width: 38px;
+      height: 38px;
     }
 
     .head-commit h3 {

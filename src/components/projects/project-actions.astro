@@ -1,13 +1,9 @@
 ---
-interface Action {
-  label: string;
-  href: string;
-  primary: boolean;
-}
+import type { ProjectDetailData } from "../../lib/projects";
 
 interface Props {
-  actions: Action[];
-  delay?: string;
+	actions: ProjectDetailData["heroActions"];
+	delay?: string;
 }
 
 const { actions, delay = "0.2s" } = Astro.props;

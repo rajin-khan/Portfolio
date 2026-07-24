@@ -43,6 +43,7 @@ changing content systems or public assets.
 
 - Blog posts: `src/content/post/*.md`
 - Project cards, ordering, and detail content: `src/content/project/*.json`
+- Shared homepage and catalogue project card: `src/components/project.astro`
 - Shared project route and renderer: `src/pages/projects/[slug].astro` and
   `src/components/projects/project-detail.astro`
 - Experience timeline: `src/collections/experiences.json`

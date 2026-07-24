@@ -1,147 +1,145 @@
 {
-  "slug": "tapsense",
-  "order": 4,
-  "detail": true,
-  "name": "TapSense",
-  "cardName": "TapSense",
-  "description": "Accessibility App for the Visually Impaired.",
-  "cardDescription": "Accessibility App for the Visually Impaired.",
-  "image": {
-    "src": "/assets/images/projects/TapSense.jpg",
-    "width": 1860,
-    "height": 1042
-  },
-  "href": "/projects/tapsense",
-  "tags": [
-    "Mobile",
-    "Flutter",
-    "Accessibility"
-  ],
-  "accents": {
-    "primary": "#d9381e",
-    "secondary": "#f97316"
-  },
-  "heroActions": [
-    {
-      "label": "Sign Up for Beta",
-      "href": "https://forms.gle/eNikmS3Znb9zGgyv9",
-      "primary": true
-    },
-    {
-      "label": "View on GitHub",
-      "href": "https://github.com/rajin-khan/TapSense",
-      "primary": false
-    }
-  ],
-  "sections": [
-    {
-      "type": "prose",
-      "title": "What is TapSense?",
-      "paragraphs": [
-        "TapSense is an accessibility app designed for visually impaired users, offering intuitive tools to simplify daily tasks. With a minimalistic interface, it provides features like text-to-speech, voice-powered to-do lists, dynamic navigation, and object detection, all tailored to enhance independence and productivity.",
-        "Built with cross-platform compatibility in mind, TapSense runs smoothly on both iOS and Android using Flutter. Its consistent UI, with \"READ SCREEN\" buttons always accessible, ensures an easy and seamless experience for users. Currently in beta testing on Android, TapSense aims to empower visually impaired individuals with practical, voice-driven solutions."
-      ]
-    },
-    {
-      "type": "features",
-      "title": "Key Features",
-      "items": [
-        {
-          "name": "Reader",
-          "description": "Scan text from images and convert to speech.",
-          "icon": "🔍"
-        },
-        {
-          "name": "To-Do",
-          "description": "Voice-powered dynamic to-do list creation.",
-          "icon": "🗒️"
-        },
-        {
-          "name": "Navigation",
-          "description": "Dynamic directions with voice commands.",
-          "icon": "🗺️"
-        },
-        {
-          "name": "Detection",
-          "description": "Identify objects with confidence levels.",
-          "icon": "👓"
-        }
-      ]
-    },
-    {
-      "type": "use-cases",
-      "title": "Perfect For",
-      "items": [
-        {
-          "name": "Daily Tasks",
-          "description": "Simplify reading and task management.",
-          "emoji": "📋"
-        },
-        {
-          "name": "Navigation",
-          "description": "Guide users with voice directions.",
-          "emoji": "🚶"
-        },
-        {
-          "name": "Object Recognition",
-          "description": "Identify surroundings easily.",
-          "emoji": "🔎"
-        },
-        {
-          "name": "Productivity",
-          "description": "Boost efficiency with voice tools.",
-          "emoji": "⚙️"
-        }
-      ]
-    },
-    {
-      "type": "prose",
-      "title": "Technology & Architecture",
-      "paragraphs": [
-        "TapSense is built using <strong>Flutter</strong> for cross-platform compatibility on iOS and Android. It leverages <strong>Google ML Kit</strong> for text recognition and object detection, ensuring accurate OCR and scene analysis. <strong>Speech-to-Text</strong> and <strong>Text-to-Speech</strong> packages enable voice-driven interactions, while <strong>Hive</strong> provides local NoSQL storage for to-do lists.",
-        "The app integrates additional tools like the <strong>Image Picker Library</strong> for capturing images, <strong>LatLong</strong> and <strong>Dio</strong> for navigation, ensuring a seamless experience. Its consistent UI design, with \"READ SCREEN\" buttons for accessibility, makes navigation intuitive for visually impaired users."
-      ]
-    },
-    {
-      "type": "roadmap",
-      "title": "What's Next",
-      "items": [
-        {
-          "name": "iOS Support",
-          "status": "In Progress"
-        },
-        {
-          "name": "Advanced Detection",
-          "status": "Planned"
-        },
-        {
-          "name": "Multi-Language Support",
-          "status": "Planned"
-        },
-        {
-          "name": "Custom Voice Commands",
-          "status": "Planned"
-        }
-      ]
-    },
-    {
-      "type": "prose",
-      "title": "Get Started",
-      "paragraphs": [
-        "Join the beta testing for TapSense on Android or explore the code on GitHub. Help us make daily tasks easier for the visually impaired community!"
-      ],
-      "actions": [
-        {
-          "label": "Join Beta Testing",
-          "href": "https://forms.gle/eNikmS3Znb9zGgyv9",
-          "primary": true
-        },
-        {
-          "label": "Contribute on GitHub",
-          "href": "https://github.com/rajin-khan/TapSense",
-          "primary": false
-        }
-      ]
-    }
-  ]
+	"slug": "tapsense",
+	"order": 4,
+	"detail": true,
+	"name": "TapSense",
+	"cardName": "TapSense",
+	"description": "Accessibility App for the Visually Impaired.",
+	"cardDescription": "Accessibility App for the Visually Impaired.",
+	"note": "accessibility should feel native",
+	"image": {
+		"src": "/assets/images/projects/TapSense.jpg",
+		"width": 1860,
+		"height": 1042
+	},
+	"href": "/projects/tapsense",
+	"tags": ["Mobile", "Flutter", "Accessibility"],
+	"accents": {
+		"primary": "#d9381e",
+		"secondary": "#f97316",
+		"screen": "#1d0d08"
+	},
+	"heroActions": [
+		{
+			"label": "Sign Up for Beta",
+			"href": "https://forms.gle/eNikmS3Znb9zGgyv9",
+			"primary": true
+		},
+		{
+			"label": "View on GitHub",
+			"href": "https://github.com/rajin-khan/TapSense",
+			"primary": false
+		}
+	],
+	"sections": [
+		{
+			"type": "prose",
+			"title": "What is TapSense?",
+			"paragraphs": [
+				"TapSense is an accessibility app designed for visually impaired users, offering intuitive tools to simplify daily tasks. With a minimalistic interface, it provides features like text-to-speech, voice-powered to-do lists, dynamic navigation, and object detection, all tailored to enhance independence and productivity.",
+				"Built with cross-platform compatibility in mind, TapSense runs smoothly on both iOS and Android using Flutter. Its consistent UI, with \"READ SCREEN\" buttons always accessible, ensures an easy and seamless experience for users. Currently in beta testing on Android, TapSense aims to empower visually impaired individuals with practical, voice-driven solutions."
+			]
+		},
+		{
+			"type": "features",
+			"title": "Key Features",
+			"items": [
+				{
+					"name": "Reader",
+					"description": "Scan text from images and convert to speech.",
+					"icon": "🔍"
+				},
+				{
+					"name": "To-Do",
+					"description": "Voice-powered dynamic to-do list creation.",
+					"icon": "🗒️"
+				},
+				{
+					"name": "Navigation",
+					"description": "Dynamic directions with voice commands.",
+					"icon": "🗺️"
+				},
+				{
+					"name": "Detection",
+					"description": "Identify objects with confidence levels.",
+					"icon": "👓"
+				}
+			]
+		},
+		{
+			"type": "use-cases",
+			"title": "Perfect For",
+			"items": [
+				{
+					"name": "Daily Tasks",
+					"description": "Simplify reading and task management.",
+					"emoji": "📋"
+				},
+				{
+					"name": "Navigation",
+					"description": "Guide users with voice directions.",
+					"emoji": "🚶"
+				},
+				{
+					"name": "Object Recognition",
+					"description": "Identify surroundings easily.",
+					"emoji": "🔎"
+				},
+				{
+					"name": "Productivity",
+					"description": "Boost efficiency with voice tools.",
+					"emoji": "⚙️"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Technology & Architecture",
+			"paragraphs": [
+				"TapSense is built using <strong>Flutter</strong> for cross-platform compatibility on iOS and Android. It leverages <strong>Google ML Kit</strong> for text recognition and object detection, ensuring accurate OCR and scene analysis. <strong>Speech-to-Text</strong> and <strong>Text-to-Speech</strong> packages enable voice-driven interactions, while <strong>Hive</strong> provides local NoSQL storage for to-do lists.",
+				"The app integrates additional tools like the <strong>Image Picker Library</strong> for capturing images, <strong>LatLong</strong> and <strong>Dio</strong> for navigation, ensuring a seamless experience. Its consistent UI design, with \"READ SCREEN\" buttons for accessibility, makes navigation intuitive for visually impaired users."
+			]
+		},
+		{
+			"type": "roadmap",
+			"title": "What's Next",
+			"items": [
+				{
+					"name": "iOS Support",
+					"status": "In Progress"
+				},
+				{
+					"name": "Advanced Detection",
+					"status": "Planned"
+				},
+				{
+					"name": "Multi-Language Support",
+					"status": "Planned"
+				},
+				{
+					"name": "Custom Voice Commands",
+					"status": "Planned"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Get Started",
+			"paragraphs": [
+				"Join the beta testing for TapSense on Android or explore the code on GitHub. Help us make daily tasks easier for the visually impaired community!"
+			],
+			"actions": [
+				{
+					"label": "Join Beta Testing",
+					"href": "https://forms.gle/eNikmS3Znb9zGgyv9",
+					"primary": true
+				},
+				{
+					"label": "Contribute on GitHub",
+					"href": "https://github.com/rajin-khan/TapSense",
+					"primary": false
+				}
+			]
+		}
+	]
 }
