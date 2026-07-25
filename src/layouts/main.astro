@@ -83,6 +83,20 @@ const schemas = [projectBreadcrumbSchema, ...extraSchemas].filter(Boolean);
     <link rel="icon" type="image/png" href="/assets/images/favicon.png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/assets/images/favicon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link
+      rel="preload"
+      href="/assets/fonts/satoshi-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/satoshi-700.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
 
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:locale" content="en_US" />

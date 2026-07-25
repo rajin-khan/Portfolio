@@ -7,11 +7,81 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("/assets/fonts/satoshi-regular.woff") format("woff");
+  src: url("/assets/fonts/satoshi-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/satoshi-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  font-style: normal;
+  font-weight: 550;
+  font-display: swap;
+  src: url("/assets/fonts/satoshi-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/assets/fonts/satoshi-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  font-style: normal;
+  font-weight: 650;
+  font-display: swap;
+  src: url("/assets/fonts/satoshi-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/assets/fonts/satoshi-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  font-style: normal;
+  font-weight: 720;
+  font-display: swap;
+  src: url("/assets/fonts/satoshi-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/assets/fonts/satoshi-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/assets/fonts/satoshi-900.woff2") format("woff2");
 }
 
 :root {
   color-scheme: dark;
+}
+
+html {
+  font-family: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 html,
@@ -22,7 +92,16 @@ body {
 
 body {
   min-height: 100vh;
-  font-weight: 500;
+  font-family: inherit;
+  font-weight: 400;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font: inherit;
 }
 
 img,
@@ -64,7 +143,7 @@ canvas {
   background: rgb(10 10 10);
   color: rgb(250 250 250);
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: 600;
   transform: translateY(calc(-100% - 1.5rem));
   transition: transform 160ms ease;
 }

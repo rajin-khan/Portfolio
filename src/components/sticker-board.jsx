@@ -1263,7 +1263,7 @@ export default function StickerBoard() {
 								<path d="M17 7 7 17" />
 							</svg>
 						</button>
-						<p className="artwork-info-kicker">tiny credit note</p>
+						<p className="artwork-info-kicker">~ note</p>
 						<h3 id="artwork-info-title">
 							The board is mine. The artwork is not.
 						</h3>
@@ -1282,16 +1282,23 @@ export default function StickerBoard() {
 							.
 						</p>
 						<p className="artwork-info-signoff">
-							I&apos;ll sort it out quickly, respectfully, and without making it
-							awkward.
+							<span className="artwork-info-signoff-intro">Best,</span>
+							<span className="artwork-info-signature" aria-label="Rajin">
+								<span aria-hidden="true">Rajin</span>
+								<svg viewBox="0 0 150 18" role="presentation">
+									<path d="M34 11.5C57 7.2 88 5.6 133 8.5" />
+								</svg>
+							</span>
 						</p>
-						<button
-							type="button"
-							className="artwork-info-confirm"
-							onClick={closeArtworkInfo}
-						>
-							Got it
-						</button>
+						<div className="artwork-info-actions">
+							<button
+								type="button"
+								className="artwork-info-confirm"
+								onClick={closeArtworkInfo}
+							>
+								Got it
+							</button>
+						</div>
 					</div>
 				</div>
 			) : null}
@@ -1503,7 +1510,7 @@ export default function StickerBoard() {
           margin: 0;
           color: rgb(23 23 23);
           font-size: 1.5rem;
-          font-weight: 700;
+          font-weight: 600;
           line-height: 1.25;
           letter-spacing: 0;
         }
@@ -1637,9 +1644,14 @@ export default function StickerBoard() {
         .artwork-info-card {
           position: relative;
           z-index: 1;
+          display: flex;
           width: min(30rem, 100%);
-          overflow: hidden;
-          padding: 1.8rem 1.85rem 1.7rem;
+          min-height: min(31rem, calc(100dvh - 2.5rem));
+          max-height: calc(100dvh - 2.5rem);
+          overflow-x: hidden;
+          overflow-y: auto;
+          padding: 3.35rem 1.85rem 1.7rem;
+          flex-direction: column;
           border: 1px solid rgb(255 255 255 / 0.14);
           border-radius: 20px;
           background: rgb(16 16 16);
@@ -1680,13 +1692,14 @@ export default function StickerBoard() {
           margin: 0 2.25rem 1.15rem 0;
           color: rgb(250 250 247);
           font-size: 1.35rem;
-          font-weight: 700;
+          font-weight: 600;
           line-height: 1.2;
           letter-spacing: 0;
           text-wrap: balance;
         }
 
-        .artwork-info-card > p:not(.artwork-info-kicker) {
+        .artwork-info-card
+          > p:not(.artwork-info-kicker):not(.artwork-info-signoff) {
           margin: 0.8rem 0 0;
           color: rgb(177 177 172);
           font-size: 0.88rem;
@@ -1707,10 +1720,60 @@ export default function StickerBoard() {
           text-decoration-color: currentColor;
         }
 
+        .artwork-info-actions {
+          display: flex;
+          margin-top: auto;
+          padding-top: 1rem;
+          align-items: flex-end;
+          justify-content: flex-end;
+        }
+
         .artwork-info-signoff {
+          display: flex;
+          margin: 1.45rem 0 0;
+          flex-direction: column;
+          align-items: flex-start;
+          color: rgb(220 220 214);
+        }
+
+        .artwork-info-signoff-intro {
+          font-size: 0.84rem;
+          font-weight: 400;
+          line-height: 1.2;
+        }
+
+        .artwork-info-signature {
+          position: relative;
+          display: inline-block;
+          width: 5.4rem;
+          margin-top: 0.55rem;
+          color: rgb(244 244 240);
           font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
-          font-size: 1.05rem !important;
-          color: rgb(220 220 214) !important;
+          font-size: 1.45rem;
+          font-weight: 400;
+          line-height: 1;
+          transform: rotate(-4deg);
+          transform-origin: center;
+        }
+
+        .artwork-info-signature > span {
+          display: block;
+          text-align: left;
+        }
+
+        .artwork-info-signature svg {
+          position: absolute;
+          bottom: -0.55rem;
+          left: -0.15rem;
+          width: 92%;
+          overflow: visible;
+        }
+
+        .artwork-info-signature path {
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 1.4;
+          stroke-linecap: round;
         }
 
         .artwork-info-close {
@@ -1749,7 +1812,7 @@ export default function StickerBoard() {
         .artwork-info-confirm {
           display: inline-flex;
           min-height: 2.3rem;
-          margin: 1.35rem 0 0;
+          margin: 0;
           padding: 0.58rem 1.08rem;
           align-items: center;
           justify-content: center;
