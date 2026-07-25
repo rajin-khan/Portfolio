@@ -29,7 +29,7 @@ portfolio. It describes the current implementation, not a proposed CMS.
 | Guestbook doodles | `public/assets/images/stickers/doodles/` and `src/components/sticker-board.jsx` |
 | Homepage rajintalksalot visual | `src/components/rajintalksalot.astro` |
 | Uses page | `src/pages/uses.astro` |
-| About-page photos | `src/components/bento-image-switcher.astro` |
+| About-page photos and Polaroid interaction | `src/pages/about.astro` |
 | Tech-stack marquee | `src/components/tech-stack.astro` |
 | Curated newsletter issues | `public/newsletters/` |
 | Navigation, footer, and global metadata | `src/layouts/main.astro` |
@@ -275,6 +275,8 @@ The current legacy field names are counterintuitive:
 
 - `role` is the large organization or school name.
 - `company` is the position, program, or qualification shown beneath it.
+- `kind` is either `work` or `education` and controls which side of the shared
+  timeline spine the entry uses.
 - `dates`, `logo`, and `description` are rendered as written.
 
 Use an optimized local icon path and concise text. When the current employer
@@ -310,11 +312,12 @@ When adding an item, use a recognizable official brand, app, or character mark.
 Export a tightly cropped PNG with a transparent background, save it in
 `public/assets/icons/uses/marks/`, record its exact source in the parent
 folder's `SOURCES.md`, and reference the filename through `icon`. Preserve the
-mark's natural silhouette, colors, orientation, and aspect ratio. Do not place
-it on a square tile, add a CSS badge shell, rotate it, or bake in a white
-background. Prefer an official horizontal wordmark only when the standalone
-logomark is unavailable or unrecognizable at this size. The layout's invisible
-logo slot handles alignment without adding visible chrome.
+mark's natural silhouette, colors, orientation, and aspect ratio. Do not add a
+custom square tile, CSS badge shell, rotation, or baked-in white background. An
+official app icon may retain its native container when that container is part of
+the source artwork, as with Codex. Prefer an official horizontal wordmark only
+when the standalone logomark is unavailable or unrecognizable at this size. The
+layout's invisible logo slot handles alignment without adding visible chrome.
 
 Highlights are data-driven and work on every Uses item. Add `highlight: true`
 and `highlightNote` to circle the item's title plus optional `details` line.
@@ -329,14 +332,10 @@ sit above their row content.
 
 ## Update About Photos
 
-The rotating profile photos are referenced in
-`src/components/bento-image-switcher.astro`. Add optimized local images, update
-the component list/styles, and confirm that crop and transition behavior still
-work at both aspect ratios.
-
-The globe textures in `public/assets/images/globe/` are optimized runtime
-assets. Keep the editable originals outside `public/`. The Three.js scene is
-intentionally isolated to the About page and pauses when hidden or offscreen.
+The two Polaroid photos, their crops, signature animation, and swap interaction
+are defined in `src/pages/about.astro`. Add optimized local images under
+`public/assets/images/`, update both image references and intrinsic dimensions,
+then confirm the hover and tap swap at desktop, tablet, and mobile widths.
 
 ## Update the Tech Stack
 

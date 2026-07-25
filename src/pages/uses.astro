@@ -165,14 +165,21 @@ const usesData: Record<string, UsesItem[]> = {
 			description:
 				"My daily driver, coding browser, all in one. Arc's UX is simply unbeatable. Pity they moved on to Dia, but I'll be sticking to this browser till Zen catches up.",
 			highlight: true,
-			highlightNote: "still unbeatable",
+			highlightNote: "use this. please.",
+		},
+		{
+			name: "Codex",
+			icon: "codex-dark.png",
+			details: "AI Agent",
+			description:
+				"I don't just use it for coding, it's my go-to for everything. I've been using it since it launched, and it's been unreal how far it's come; and how good it is.",
 		},
 		{
 			name: "Cursor",
 			icon: "cursor.png",
 			details: "Code Editor",
 			description:
-				"I barely open a traditional editor anymore, but when I do, it is still Cursor. I once realized I had gone a month without opening VSCode; this is the one that settled in, and I don't think I'll be trying another editor.",
+				"I barely open a traditional editor anymore, but when I do, it is still Cursor. I don't pay for it though, since I barely use it's AI features (Codex ftw). I haven't opened VSCode in a long time.",
 		},
 		{
 			name: "iTerm2",
@@ -186,7 +193,9 @@ const usesData: Record<string, UsesItem[]> = {
 			icon: "raycast.png",
 			details: "Spotlight Alternative",
 			description:
-				"This is a must-have. The only software missing on Macs by default. I also use Raycast for AI Chat.",
+				"This is a must-have. The only software missing on Macs by default.",
+			highlight: true,
+			highlightNote: "essential",
 		},
 	],
 	subscriptions: [
@@ -200,40 +209,36 @@ const usesData: Record<string, UsesItem[]> = {
 			highlightNote: "sister-sponsored",
 		},
 		{
-			name: "Cursor",
-			icon: "cursor.png",
-			details: "Pro, $20/Month",
-			description:
-				"Mostly just a simple code editor now. I barely touch its AI features anymore, but it stays installed as a familiar backup when I need one.",
-		},
-		{
 			name: "Railway",
 			icon: "railway.png",
-			details: "$5/Month",
+			details: "Hobby, $5/Month",
 			description:
 				"My default place for full-stack apps when I want them online without making deployment another project. My older sister pays for this one too; at this point she is quietly running the infrastructure department.",
 			highlight: true,
 			highlightNote: "also sister-sponsored",
 		},
 		{
-			name: "YouTube Premium",
+			name: "YouTube",
 			icon: "youtube-premium.png",
-			details: "Premium",
+			details: "Premium, ~$2/Month",
 			description:
-				"No ads, background play, and downloads for flights. I use YouTube enough that seeing an ad on someone else's account now feels like a service outage.",
+				"Changed my life bro 😭. Since YouTube is the only thing I watch, this felt like an insane value for money.",
 		},
 		{
 			name: "Netflix",
 			icon: "netflix.png",
-			details: "Streaming",
+			details: "Standard, $7.99/Month",
 			description:
-				"Somehow still billing me while the home server sits there doing the same job with more confidence. This subscription is living on borrowed time.",
+				"Somehow still billing me while the home server sits there doing the same job with more confidence. I should cancel this, but I'm too lazy.",
 		},
 		{
 			name: "Everything else is self-hosted.",
 			icon: "self-hosted.svg",
+			details: "Free baby",
 			description:
-				"I Self-Host all my media and use Open Source tools. I like the freedom it gives me.",
+				"I Self-Host all my media and use Open Source tools. I like the freedom it gives me. (Jellyfin, -Arr, Uptime Kuma, and more. I might make a full list someday.)",
+			highlight: true,
+			highlightNote: "there's a LOT here",
 		},
 	],
 };
@@ -584,8 +589,12 @@ const categories = Object.entries(usesData).map(([key, items], index) => ({
     transition: background-color 180ms ease;
   }
 
+  .use-row:first-child {
+    border-top: 0;
+  }
+
   .use-row:last-child {
-    border-bottom: 1px solid var(--uses-soft-line);
+    border-bottom: 0;
   }
 
   .use-row:hover,

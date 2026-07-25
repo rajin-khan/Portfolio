@@ -1,11 +1,12 @@
 # Uses mark sources
 
-The Uses directory loads local transparent PNG logomarks from `marks/`. They
-keep their natural silhouette and aspect ratio: there is no visible badge
-shell, square tile, white field, outline, or rotation. The generic desk lamp and
-self-hosted rows use custom white SVG marks because there is no useful brand to
-represent. No runtime logo CDN is involved. Product names, characters, and
-trademarks remain the property of their respective owners.
+The Uses directory loads local transparent PNG artwork from `marks/`. Most
+marks keep their natural silhouette and aspect ratio without an added badge,
+white field, outline, or rotation. The Codex mark intentionally retains the
+official dark app-icon container. The generic desk lamp and self-hosted rows use
+custom white SVG marks because there is no useful brand to represent. No
+runtime logo CDN is involved. Product names, characters, and trademarks remain
+the property of their respective owners.
 
 ## Hardware and accessories
 
@@ -42,20 +43,23 @@ trademarks remain the property of their respective owners.
   [Zoro](https://one-piece.com/character/zoro/index.html) and
   [Ace](https://one-piece.com/character/ace/index.html)
 
-## Applications and self-hosting
+## Applications
 
-`arc.png`, `cursor.png`, `raycast.png`, and `docker.png` use their transparent
-Simple Icons logomarks in recognizable brand colors. `iterm2.png` isolates the
-green prompt from the installed macOS app artwork, omitting its square app-icon
-field. `chatgpt.png` similarly keeps only the white ChatGPT knot from the
-[ChatGPT logo artwork](https://commons.wikimedia.org/wiki/File:ChatGPT_logo.svg).
-Cursor is also documented on its [official brand page](https://cursor.com/brand).
-`self-hosted.svg` is a custom home-and-server mark drawn for the self-hosted row.
-`docker.png` remains available for a future Docker-specific entry but is not
-used by the current Uses page.
+- `arc.png`, `cursor.png`, and `raycast.png`: transparent Simple Icons
+  logomarks in recognizable brand colors. Cursor is also documented on its
+  [official brand page](https://cursor.com/brand).
+- `codex-dark.png`: official dark Codex app icon bundled with the OpenAI
+  desktop app, resized to 128px. This is the same optimized local file used by
+  the tech-stack marquee.
+- `iterm2.png`: green prompt isolated from the installed macOS app artwork,
+  omitting its square app-icon field.
+- `docker.png`: transparent Simple Icons mark retained for a future
+  Docker-specific entry; it is not used by the current Uses page.
 
-## Subscription services
+## Subscriptions and self-hosting
 
+- `chatgpt.png`: white ChatGPT knot from the
+  [ChatGPT logo artwork](https://commons.wikimedia.org/wiki/File:ChatGPT_logo.svg).
 - `railway.png`: white Railway logomark from Simple Icons, chosen for contrast
   on the dark page.
 - `youtube-premium.png`: YouTube's red play mark from Simple Icons, used for
@@ -64,6 +68,7 @@ used by the current Uses page.
 - `netflix.png`: Netflix N symbol from Simple Icons in Netflix Red (`#E50914`),
   following the color and container guidance on the
   [official Netflix brand site](https://brand.netflix.com/en/assets/logos/).
+- `self-hosted.svg`: custom home-and-server mark drawn for the self-hosted row.
 
 Simple Icons is CC0, while individual marks can still be protected trademarks.
 See its [trademark disclaimer](https://github.com/simple-icons/simple-icons/blob/develop/DISCLAIMER.md).
