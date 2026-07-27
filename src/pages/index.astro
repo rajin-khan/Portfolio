@@ -160,10 +160,12 @@ const ogImage = "/assets/images/rajins-banner-new.png";
   <div class="defer-render"><TechStack /></div>
 
   <Separator text="Latest Activity" />
-  <div class="defer-render"><LatestCommit /></div>
+  <!-- Octocat sits on the card rim and must paint above the panel. -->
+  <div><LatestCommit /></div>
 
   <Separator text="Oh, and I talk a lot" />
-  <div class="defer-render"><Writings /></div>
+  <!-- Hover glow / stack layers must paint outside the card bounds. -->
+  <div><Writings /></div>
 
   <Separator text="Guest Book" />
   <!-- A fixed modal cannot live inside content-visibility containment. -->

@@ -7,20 +7,54 @@ import RajinTalksALot from "../rajintalksalot.astro";
   <h2
     class="text-2xl font-bold leading-10 tracking-tight text-neutral-900 dark:text-neutral-100"
   >
-    Blogs (I have two)
+    Blogs <span class="writings-hand">(I have two)</span>
   </h2>
   <p class="mb-6 text-base text-neutral-600 dark:text-neutral-400">
     Tech, and creative stuff. Pick your poison.
   </p>
 
-  <div class="w-full max-w-4xl mx-auto my-7 xl:px-0">
-    <div class="grid grid-cols-1 gap-10 md:grid-cols-2 md:items-center md:gap-7">
-      <div class="w-full space-y-7">
+  <div class="w-full max-w-4xl mx-auto my-7 xl:px-0 writings-pair">
+    <div class="grid grid-cols-1 gap-10 md:grid-cols-2 md:items-start md:gap-7">
+      <div class="w-full">
         <PostsLoop count="3" />
       </div>
-      <div class="w-full md:self-center">
+      <div class="w-full writings-talks">
         <RajinTalksALot />
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .writings-hand {
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .writings-pair,
+  .writings-talks {
+    overflow: visible;
+  }
+
+  /* Room for hover copy above, logo below, and the gold glow bloom. */
+  .writings-talks {
+    padding: 3.25rem 0.75rem 3.75rem;
+    margin-block: -1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .writings-talks {
+      /* Nudge the whole stack + hover chrome up toward the posts. */
+      transform: translateY(-1.75rem);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .writings-talks {
+      padding: 0.5rem 0 0.75rem;
+      margin-block: 0;
+      transform: none;
+    }
+  }
+</style>

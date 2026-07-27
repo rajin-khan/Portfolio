@@ -502,6 +502,8 @@ const allTags = Array.from(
 		flex-direction: column;
 		gap: 22px;
 		order: 2;
+		/* Match the first post’s top offset (latest note clearance). */
+		padding-top: 0.55rem;
 	}
 
 	.posts-main {
@@ -997,10 +999,27 @@ const allTags = Array.from(
 		font-size: 0.88rem;
 	}
 
+	@media (max-width: 1024px) {
+		.posts-layout {
+			grid-template-columns: minmax(0, 1fr) 210px;
+			gap: 32px;
+		}
+
+		.post-row-inner {
+			grid-template-columns: minmax(0, 1fr) 9.5rem;
+			gap: 1.1rem;
+		}
+
+		.post-thumb {
+			width: 9.5rem;
+			height: 6.1rem;
+		}
+	}
+
 	@media (max-width: 900px) {
 		.posts-layout {
 			grid-template-columns: 1fr;
-			gap: 28px;
+			gap: 22px;
 		}
 
 		.posts-aside,
@@ -1010,47 +1029,88 @@ const allTags = Array.from(
 
 		.posts-aside {
 			position: static;
+			gap: 14px;
+			padding-top: 0;
+			padding-bottom: 4px;
+			border-bottom: 1px solid var(--posts-soft-line);
+		}
+
+		.posts-list {
+			gap: 1rem;
 		}
 
 		.post-row-inner {
-			grid-template-columns: 1fr;
-			gap: 1rem;
-			padding: 1.05rem;
+			grid-template-columns: minmax(0, 1fr) 7.5rem;
+			gap: 0.95rem;
+			padding: 1rem;
+		}
+
+		.post-row--latest .post-row-inner {
+			padding-top: 1.35rem;
 		}
 
 		.post-thumb {
-			width: 100%;
-			height: 11rem;
-			order: -1;
+			width: 7.5rem;
+			height: 7.5rem;
+		}
+
+		.post-title {
+			font-size: 1.12rem;
+		}
+
+		.post-description {
+			font-size: 0.86rem;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
 		}
 
 		.post-highlight-note {
-			top: 0.45rem;
-			left: 0.95rem;
+			top: 0.4rem;
+			left: 0.85rem;
 			right: auto;
 			transform: rotate(-5deg);
 		}
 	}
 
-	@media (max-width: 640px) {
+	@media (max-width: 560px) {
 		.posts-page {
-			padding: 28px 18px 56px;
+			padding: 24px 16px 56px;
+			overflow-x: clip;
 		}
 
 		.posts-hero {
-			padding: 12px 0 34px;
+			padding: 8px 0 28px;
 		}
 
 		.posts-title-block h1 {
-			font-size: 2.85rem;
+			font-size: clamp(2.35rem, 12vw, 2.85rem);
 		}
 
 		.posts-handwritten {
-			font-size: 1.12rem;
+			margin-top: 12px;
+			font-size: 1.08rem;
+		}
+
+		.post-row-inner {
+			grid-template-columns: 1fr;
+			gap: 0.85rem;
+			padding: 0.95rem;
+		}
+
+		.post-row--latest .post-row-inner {
+			padding-top: 1.35rem;
+		}
+
+		.post-thumb {
+			width: 100%;
+			height: 9.5rem;
+			order: -1;
 		}
 
 		.post-title {
-			font-size: 1.18rem;
+			font-size: 1.12rem;
 		}
 
 		.posts-search-kbd {
@@ -1059,6 +1119,12 @@ const allTags = Array.from(
 
 		.posts-search input {
 			padding-right: 1rem;
+		}
+
+		.posts-topic {
+			min-height: 1.85rem;
+			padding: 0.42rem 0.7rem;
+			font-size: 0.74rem;
 		}
 	}
 
