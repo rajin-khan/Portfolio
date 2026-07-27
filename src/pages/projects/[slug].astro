@@ -2,32 +2,41 @@
 import type { GetStaticPaths } from "astro";
 import Layout from "../../layouts/main.astro";
 import ProjectDetail from "../../components/projects/project-detail.astro";
-import { getProjects, isProjectDetail, type ProjectDetailData } from "../../lib/projects";
+import {
+	getProjects,
+	isProjectDetail,
+	type ProjectDetailData,
+} from "../../lib/projects";
+import { getRelatedProject } from "../../lib/related-projects";
 
 export const getStaticPaths = (async () => {
-  const projects = await getProjects();
+	const projects = await getProjects();
+	const detailProjects = projects
+		.map((entry) => entry.data)
+		.filter(isProjectDetail);
 
-  return projects
-    .map((entry) => entry.data)
-    .filter(isProjectDetail)
-    .map((project) => ({
-      params: { slug: project.slug },
-      props: { project },
-    }));
+	return detailProjects.map((project) => ({
+		params: { slug: project.slug },
+		props: {
+			project,
+			related: getRelatedProject(project, detailProjects),
+		},
+	}));
 }) satisfies GetStaticPaths;
 
 interface Props {
-  project: ProjectDetailData;
+	project: ProjectDetailData;
+	related: ReturnType<typeof getRelatedProject>;
 }
 
-const { project } = Astro.props;
+const { project, related } = Astro.props;
 ---
 
 <Layout
-  title={project.name}
-  description={project.description}
-  ogImage={project.image.src}
-  ogImageAlt={`${project.name} project preview`}
+	title={project.name}
+	description={project.description}
+	ogImage={project.image.src}
+	ogImageAlt={`${project.name} project preview`}
 >
-  <ProjectDetail project={project} />
+	<ProjectDetail project={project} related={related} />
 </Layout>

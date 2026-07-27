@@ -1,0 +1,166 @@
+---
+import type { ProjectDetailData } from "../../lib/projects";
+import ProjectActions from "./project-actions.astro";
+
+interface Props {
+	project: ProjectDetailData;
+}
+
+const { project } = Astro.props;
+---
+
+<header class="project-hero animate-in" style="--animation-delay: 0ms;">
+	{
+		project.tags.length > 0 && (
+			<div class="project-hero-tags" aria-label="Project tags">
+				{project.tags.map((tag) => (
+					<span class="project-hero-tag">{tag}</span>
+				))}
+			</div>
+		)
+	}
+
+	<h1 class="project-hero-title">{project.name}</h1>
+	{
+		project.note && (
+			<p class="project-hero-note">{project.note}</p>
+		)
+	}
+	<p class="project-hero-lead">{project.description}</p>
+
+	<div class="project-hero-banner">
+		<img
+			src={project.image.src}
+			alt={`${project.name} project preview`}
+			width={project.image.width}
+			height={project.image.height}
+			fetchpriority="high"
+			decoding="async"
+		/>
+	</div>
+
+	<ProjectActions actions={project.heroActions} />
+</header>
+
+<style>
+	.project-hero {
+		--paper: #f2f2ef;
+		--muted: #9a9a96;
+		max-width: 42rem;
+		margin: 0 auto;
+		padding: 0 0 0.5rem;
+		color: var(--paper);
+	}
+
+	.project-hero-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem 0;
+		margin-bottom: 1rem;
+	}
+
+	.project-hero-tag {
+		display: inline-flex;
+		align-items: center;
+		color: #858581;
+		font-size: 0.72rem;
+		font-weight: 600;
+		line-height: 1;
+	}
+
+	.project-hero-tag:not(:last-child)::after {
+		margin-inline: 0.55rem;
+		color: color-mix(
+			in srgb,
+			var(--project-accent-primary, #858581) 40%,
+			#50504d
+		);
+		content: "/";
+		font-weight: 500;
+	}
+
+	.project-hero-title {
+		margin: 0;
+		color: var(--paper);
+		font-size: clamp(2rem, 5vw, 2.85rem);
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		line-height: 1.12;
+		text-wrap: balance;
+	}
+
+	.project-hero-note {
+		margin: 0.55rem 0 0;
+		color: color-mix(
+			in srgb,
+			var(--project-accent-primary, #f2f2ef) 35%,
+			var(--paper)
+		);
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-size: clamp(1.15rem, 2.4vw, 1.35rem);
+		font-weight: 400;
+		line-height: 1.3;
+		opacity: 0.95;
+		transform: rotate(-1deg);
+		transform-origin: left center;
+	}
+
+	.project-hero-lead {
+		margin: 0.85rem 0 0;
+		color: rgb(177 177 172);
+		font-size: 1.05rem;
+		font-weight: 400;
+		line-height: 1.55;
+		text-wrap: pretty;
+	}
+
+	.project-hero-banner {
+		position: relative;
+		margin: 1.5rem 0 0;
+		overflow: hidden;
+		border: 1px solid
+			color-mix(
+				in srgb,
+				var(--project-accent-primary, #ffffff) 22%,
+				rgba(255, 255, 255, 0.06)
+			);
+		border-radius: 14px;
+		background: #050505;
+		box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
+	}
+
+	.project-hero-banner::after {
+		position: absolute;
+		inset: 0 0 auto;
+		height: 42%;
+		background: linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--project-accent-primary, transparent) 12%, transparent),
+			transparent
+		);
+		content: "";
+		pointer-events: none;
+	}
+
+	.project-hero-banner img {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+	}
+
+	.project-hero :global(.project-actions) {
+		margin-top: 1.5rem;
+	}
+
+	@media (max-width: 640px) {
+		.project-hero-title {
+			font-size: clamp(1.75rem, 8vw, 2.15rem);
+		}
+
+		.project-hero-lead {
+			font-size: 0.98rem;
+		}
+	}
+</style>

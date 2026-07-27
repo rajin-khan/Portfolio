@@ -1,0 +1,566 @@
+---
+import type { ProjectDetailData } from "../../lib/projects";
+import ProjectActions from "./project-actions.astro";
+
+interface Props {
+	sections: ProjectDetailData["sections"];
+}
+
+const { sections } = Astro.props;
+
+function padIndex(index: number) {
+	return String(index + 1).padStart(2, "0");
+}
+
+function spineStatusClass(status: string) {
+	const normalized = status.toLowerCase();
+	if (normalized.includes("progress")) return "is-active";
+	if (normalized.includes("planned") || normalized.includes("plan")) return "is-planned";
+	return "is-neutral";
+}
+---
+
+<div class="project-sections">
+	{
+		sections.map((section) => (
+			<section class="project-section">
+				<h2 class="project-section-heading">{section.title}</h2>
+
+				{section.type === "prose" && (
+					<>
+						<div class="project-prose">
+							{section.paragraphs.map((paragraph) => (
+								<p set:html={paragraph} />
+							))}
+						</div>
+						{section.actions && <ProjectActions actions={section.actions} />}
+					</>
+				)}
+
+				{(section.type === "features" || section.type === "cards") && (
+					<ol class="project-folio">
+						{section.items.map((item, index) => (
+							<li class="project-folio-row">
+								<span class="project-folio-index" aria-hidden="true">
+									{padIndex(index)}
+								</span>
+								<div class="project-folio-copy">
+									<h3>{item.name}</h3>
+									<p>{item.description}</p>
+								</div>
+							</li>
+						))}
+					</ol>
+				)}
+
+				{section.type === "use-cases" && (
+					<>
+						<p class="project-section-aside">(if this sounds like you)</p>
+						<ul class="project-cast">
+							{section.items.map((item) => (
+								<li class="project-cast-card">
+									<h3>{item.name}</h3>
+									<p>{item.description}</p>
+								</li>
+							))}
+						</ul>
+					</>
+				)}
+
+				{section.type === "roadmap" && (
+					<ol class="project-spine">
+						{section.items.map((item, index) => (
+							<li
+								class:list={[
+									"project-spine-node",
+									spineStatusClass(item.status),
+									{ "is-first": index === 0 },
+								]}
+							>
+								<span class="project-spine-dot" aria-hidden="true" />
+								<div class="project-spine-copy">
+									<span class="project-spine-status">{item.status.toLowerCase()}</span>
+									<span class="project-spine-name">{item.name}</span>
+								</div>
+							</li>
+						))}
+					</ol>
+				)}
+
+				{section.type === "team" && (
+					<ul class="project-team">
+						{section.items.map((member) => (
+							<li class="project-team-row">
+								<div class="project-team-copy">
+									<span class="project-team-name">{member.name}</span>
+									<span class="project-team-school">{member.institution}</span>
+								</div>
+								<a
+									class="project-team-link"
+									href={member.github}
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									<svg
+										class="project-team-github"
+										viewBox="0 0 24 24"
+										fill="currentColor"
+										aria-hidden="true"
+									>
+										<path
+											fill-rule="evenodd"
+											d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+											clip-rule="evenodd"
+										/>
+									</svg>
+									GitHub
+								</a>
+							</li>
+						))}
+					</ul>
+				)}
+			</section>
+		))
+	}
+</div>
+
+<style>
+	.project-sections {
+		--paper: #f2f2ef;
+		--muted: #9a9a96;
+		--line: rgba(255, 255, 255, 0.1);
+		max-width: 42rem;
+		margin: 0 auto;
+	}
+
+	.project-section {
+		margin-top: 2.75rem;
+		padding-top: 1.75rem;
+		border-top: 1px solid var(--line);
+	}
+
+	.project-section-heading {
+		margin: 0;
+		color: var(--paper);
+		font-size: clamp(1.25rem, 3vw, 1.55rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.3;
+	}
+
+	.project-section-aside {
+		margin: 0.5rem 0 0;
+		color: color-mix(
+			in srgb,
+			var(--project-accent-primary, #f2f2ef) 38%,
+			var(--paper)
+		);
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-size: 1.05rem;
+		font-weight: 400;
+		line-height: 1.3;
+		opacity: 0.95;
+		transform: rotate(-1deg);
+		transform-origin: left center;
+	}
+
+	.project-prose {
+		margin-top: 1.1rem;
+		color: rgb(196 196 190);
+		font-size: 1.02rem;
+		line-height: 1.75;
+	}
+
+	.project-prose p {
+		margin: 0 0 1rem;
+	}
+
+	.project-prose p:last-child {
+		margin-bottom: 0;
+	}
+
+	.project-prose :global(strong) {
+		color: var(--paper);
+		font-weight: 600;
+	}
+
+	.project-prose :global(em) {
+		color: #cfcfc9;
+		font-style: italic;
+	}
+
+	.project-prose :global(code) {
+		color: #e8e8e2;
+		font-weight: 500;
+	}
+
+	.project-prose :global(a) {
+		color: var(--paper);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.18em;
+	}
+
+	/* Features / cards — folio entries */
+	.project-folio {
+		display: flex;
+		flex-direction: column;
+		margin: 1.45rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.project-folio-row {
+		position: relative;
+		display: grid;
+		grid-template-columns: 3.4rem minmax(0, 1fr);
+		gap: 0.35rem 1.1rem;
+		align-items: start;
+		padding: 1.15rem 0 1.15rem 0.65rem;
+		isolation: isolate;
+	}
+
+	.project-folio-row::before {
+		position: absolute;
+		inset: auto 0 0;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			color-mix(in srgb, var(--project-accent-primary, #ffffff) 35%, transparent),
+			rgba(255, 255, 255, 0.08) 28%,
+			transparent 92%
+		);
+		content: "";
+	}
+
+	.project-folio-row:last-child::before {
+		display: none;
+	}
+
+	.project-folio-row::after {
+		position: absolute;
+		top: 1.15rem;
+		bottom: 1.15rem;
+		left: 0;
+		width: 2px;
+		border-radius: 999px;
+		background: var(--project-accent-primary, #9a9a96);
+		content: "";
+		opacity: 0;
+		transform: scaleY(0.55);
+		transform-origin: top;
+		transition:
+			opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+			transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.project-folio-row:nth-child(even) .project-folio-index {
+		background: radial-gradient(
+			circle at 30% 40%,
+			color-mix(in srgb, var(--project-accent-secondary, transparent) 18%, transparent),
+			transparent 68%
+		);
+	}
+
+	.project-folio-index {
+		position: relative;
+		z-index: 1;
+		margin-top: -0.15rem;
+		color: color-mix(
+			in srgb,
+			var(--project-accent-primary, #9a9a96) 48%,
+			#6e6e6a
+		);
+		font-size: clamp(1.55rem, 3.2vw, 1.95rem);
+		font-weight: 600;
+		letter-spacing: -0.04em;
+		line-height: 1;
+		font-variant-numeric: tabular-nums;
+		opacity: 0.55;
+		transition: color 220ms ease, opacity 220ms ease;
+	}
+
+	.project-folio-copy {
+		position: relative;
+		z-index: 1;
+		padding-top: 0.2rem;
+	}
+
+	.project-folio-copy h3 {
+		margin: 0;
+		color: #cfcfc9;
+		font-size: 1.02rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		line-height: 1.3;
+		transition: color 200ms ease;
+	}
+
+	.project-folio-copy p {
+		margin: 0.32rem 0 0;
+		color: rgb(155 155 150);
+		font-size: 0.88rem;
+		line-height: 1.45;
+	}
+
+	.project-folio-row:hover::after {
+		opacity: 0.9;
+		transform: scaleY(1);
+	}
+
+	.project-folio-row:hover .project-folio-index {
+		color: var(--project-accent-primary, #f2f2ef);
+		opacity: 0.95;
+	}
+
+	.project-folio-row:hover .project-folio-copy h3 {
+		color: var(--paper);
+	}
+
+	/* Use-cases — cast cards */
+	.project-cast {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.85rem;
+		margin: 1.25rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.project-cast-card {
+		position: relative;
+		overflow: hidden;
+		min-width: 0;
+		padding: 1rem 1.05rem 1.05rem;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 12px;
+		background:
+			linear-gradient(
+				135deg,
+				color-mix(in srgb, var(--project-accent-primary, transparent) 14%, transparent),
+				transparent 55%
+			),
+			#0d0d0d;
+		transition:
+			border-color 220ms ease,
+			transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+			box-shadow 220ms ease;
+	}
+
+	.project-cast-card h3 {
+		margin: 0;
+		color: var(--paper);
+		font-size: 0.95rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		line-height: 1.3;
+	}
+
+	.project-cast-card p {
+		margin: 0.4rem 0 0;
+		color: rgb(160 160 155);
+		font-size: 0.82rem;
+		line-height: 1.4;
+	}
+
+	.project-cast-card:hover {
+		border-color: color-mix(
+			in srgb,
+			var(--project-accent-primary, #ffffff) 35%,
+			rgba(255, 255, 255, 0.1)
+		);
+		box-shadow: 0 10px 24px
+			color-mix(in srgb, var(--project-accent-primary, transparent) 10%, rgba(0, 0, 0, 0.2));
+		transform: translate3d(0, -2px, 0);
+	}
+
+	/* Roadmap — signal spine */
+	.project-spine {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		margin: 1.5rem 0 0;
+		padding: 0 0 0 1.2rem;
+		list-style: none;
+	}
+
+	.project-spine::before {
+		position: absolute;
+		top: 0.4rem;
+		bottom: 0.4rem;
+		left: 0.3rem;
+		width: 2px;
+		border-radius: 999px;
+		background: linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--project-accent-primary, #9a9a96) 55%, transparent),
+			color-mix(in srgb, var(--project-accent-secondary, #6e6e6a) 40%, transparent)
+		);
+		content: "";
+		opacity: 0.75;
+	}
+
+	.project-spine-node {
+		position: relative;
+		padding: 0 0 1.35rem 1rem;
+	}
+
+	.project-spine-node:last-child {
+		padding-bottom: 0;
+	}
+
+	.project-spine-dot {
+		position: absolute;
+		top: 0.42rem;
+		left: -1.05rem;
+		width: 0.58rem;
+		height: 0.58rem;
+		border: 1.5px solid
+			color-mix(in srgb, var(--project-accent-secondary, #9a9a96) 55%, #6e6e6a);
+		border-radius: 999px;
+		background: #0d0d0d;
+		box-shadow: 0 0 0 3px #0d0d0d;
+	}
+
+	.project-spine-node.is-active .project-spine-dot,
+	.project-spine-node.is-first.is-neutral .project-spine-dot {
+		border-color: var(--project-accent-primary, #9a9a96);
+		background: var(--project-accent-primary, #9a9a96);
+		box-shadow:
+			0 0 0 3px #0d0d0d,
+			0 0 0 5px color-mix(in srgb, var(--project-accent-primary, transparent) 28%, transparent);
+	}
+
+	.project-spine-node.is-planned .project-spine-dot {
+		border-color: color-mix(
+			in srgb,
+			var(--project-accent-secondary, #9a9a96) 70%,
+			#6e6e6a
+		);
+		background: #0d0d0d;
+	}
+
+	.project-spine-copy {
+		display: flex;
+		flex-direction: column;
+		gap: 0.22rem;
+		min-width: 0;
+	}
+
+	.project-spine-status {
+		color: color-mix(
+			in srgb,
+			var(--project-accent-primary, #f2f2ef) 42%,
+			var(--paper)
+		);
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-size: 1.05rem;
+		font-weight: 400;
+		line-height: 1.2;
+		opacity: 0.95;
+		transform: rotate(-1.5deg);
+		transform-origin: left center;
+	}
+
+	.project-spine-name {
+		color: #cfcfc9;
+		font-size: 0.95rem;
+		font-weight: 500;
+		line-height: 1.4;
+	}
+
+	/* Team */
+	.project-team {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		margin: 1.15rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.project-team-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.5rem 1rem;
+		padding: 0.85rem 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+	}
+
+	.project-team-row:last-child {
+		border-bottom: 0;
+	}
+
+	.project-team-copy {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		min-width: 0;
+	}
+
+	.project-team-name {
+		color: var(--paper);
+		font-size: 0.95rem;
+		font-weight: 600;
+	}
+
+	.project-team-school {
+		color: var(--muted);
+		font-size: 0.8rem;
+	}
+
+	.project-team-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		color: #9a9a96;
+		font-size: 0.82rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition: color 160ms ease;
+	}
+
+	.project-team-github {
+		width: 0.85rem;
+		height: 0.85rem;
+	}
+
+	.project-team-link:hover,
+	.project-team-link:focus-visible {
+		color: color-mix(
+			in srgb,
+			var(--project-accent-primary, #f2f2ef) 40%,
+			#f2f2ef
+		);
+	}
+
+	@media (max-width: 560px) {
+		.project-cast {
+			grid-template-columns: 1fr;
+		}
+
+		.project-folio-row {
+			grid-template-columns: 2.8rem minmax(0, 1fr);
+			gap: 0.25rem 0.75rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.project-folio-row::after,
+		.project-folio-index,
+		.project-folio-copy h3,
+		.project-cast-card {
+			transition: none;
+		}
+
+		.project-folio-row:hover::after {
+			transform: none;
+		}
+
+		.project-cast-card:hover {
+			transform: none;
+		}
+	}
+</style>

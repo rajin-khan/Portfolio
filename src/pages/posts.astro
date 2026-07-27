@@ -497,7 +497,8 @@ const allTags = Array.from(
 
 	.posts-aside {
 		position: sticky;
-		top: 24px;
+		/* Clear the absolute h-20 header (~5rem) with breathing room. */
+		top: 6rem;
 		display: flex;
 		flex-direction: column;
 		gap: 22px;

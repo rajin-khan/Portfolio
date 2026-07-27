@@ -1,0 +1,269 @@
+---
+import type { RelatedProject } from "../../lib/related-projects";
+import Button from "../button.astro";
+
+interface Props {
+	project: RelatedProject | null;
+}
+
+const { project } = Astro.props;
+---
+
+<section class="project-related" aria-labelledby="project-related-heading">
+	{
+		project && (
+			<>
+				<div class="project-related-titles">
+					<h2 class="project-related-heading" id="project-related-heading">
+						Check out one more
+					</h2>
+					<p class="project-related-aside">(a different rabbit hole)</p>
+				</div>
+
+				<a class="project-related-card" href={`/projects/${project.slug}`}>
+					<article class="project-related-inner">
+						<div class="project-related-copy">
+							{project.tags.length > 0 && (
+								<div class="project-related-tags" aria-label={`${project.name} tags`}>
+									{project.tags.slice(0, 3).map((tag) => (
+										<span>{tag}</span>
+									))}
+								</div>
+							)}
+							<h3>{project.name}</h3>
+							{project.note && <p class="project-related-note">{project.note}</p>}
+							<p>{project.description}</p>
+						</div>
+						{project.image && (
+							<div class="project-related-thumb">
+								<img
+									src={project.image}
+									alt=""
+									loading="lazy"
+									decoding="async"
+									width="128"
+									height="80"
+								/>
+							</div>
+						)}
+					</article>
+				</a>
+			</>
+		)
+	}
+
+	<div class="project-related-back">
+		<Button text="Back to Projects" link="/projects" />
+	</div>
+</section>
+
+<style>
+	.project-related {
+		--paper: #f2f2ef;
+		--muted: #9a9a96;
+		max-width: 42rem;
+		margin: 3.5rem auto 0;
+		padding-top: 2rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		color: var(--paper);
+		text-align: center;
+	}
+
+	.project-related-titles {
+		margin: 0 0 1.35rem;
+	}
+
+	.project-related-heading {
+		margin: 0;
+		color: var(--paper);
+		font-size: clamp(1.25rem, 3vw, 1.55rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.3;
+	}
+
+	.project-related-aside {
+		margin: 0.45rem 0 0;
+		color: var(--paper);
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-size: 1.05rem;
+		font-weight: 400;
+		line-height: 1.3;
+		opacity: 0.9;
+		transform: rotate(-1deg);
+		transform-origin: center;
+	}
+
+	.project-related-card {
+		position: relative;
+		display: block;
+		isolation: isolate;
+		margin: 0 auto;
+		color: inherit;
+		text-align: left;
+		text-decoration: none;
+	}
+
+	.project-related-card::before {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		border: 1px dashed rgba(255, 255, 255, 0.17);
+		border-radius: 10px;
+		content: "";
+		pointer-events: none;
+		transition:
+			border-color 160ms ease,
+			transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.project-related-card:hover::before,
+	.project-related-card:focus-visible::before {
+		border-color: rgba(255, 255, 255, 0.27);
+		transform: translate3d(3px, 3px, 0);
+	}
+
+	.project-related-card:focus-visible {
+		outline: 2px solid rgba(255, 255, 255, 0.5);
+		outline-offset: 4px;
+	}
+
+	.project-related-inner {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 5.5rem;
+		gap: 0.9rem;
+		align-items: center;
+		min-width: 0;
+		margin: 0;
+		padding: 0.95rem;
+		border: 1px solid rgba(255, 255, 255, 0.085);
+		border-radius: 10px;
+		background: #0d0d0d;
+		box-shadow: 0 12px 24px rgba(0, 0, 0, 0.14);
+		transition:
+			border-color 160ms ease,
+			transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.project-related-card:hover .project-related-inner,
+	.project-related-card:focus-visible .project-related-inner {
+		border-color: rgba(255, 255, 255, 0.15);
+		transform: translate3d(-3px, -3px, 0);
+	}
+
+	.project-related-copy {
+		min-width: 0;
+	}
+
+	.project-related-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px 0;
+		margin: 0 0 0.4rem;
+	}
+
+	.project-related-tags > span {
+		display: inline-flex;
+		align-items: center;
+		color: #858581;
+		font-size: 0.57rem;
+		font-weight: 600;
+		line-height: 1;
+	}
+
+	.project-related-tags > span:not(:last-child)::after {
+		margin-inline: 7px;
+		color: #50504d;
+		content: "/";
+		font-weight: 500;
+	}
+
+	.project-related-copy h3 {
+		margin: 0;
+		color: var(--paper);
+		font-size: 1rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		line-height: 1.3;
+		text-wrap: balance;
+	}
+
+	.project-related-note {
+		margin: 0.3rem 0 0;
+		color: var(--paper);
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-size: 0.98rem;
+		line-height: 1.25;
+		opacity: 0.88;
+		transform: rotate(-1deg);
+		transform-origin: left center;
+	}
+
+	.project-related-copy > p:last-child {
+		display: -webkit-box;
+		margin: 0.35rem 0 0;
+		overflow: hidden;
+		color: rgb(177 177 172);
+		font-size: 0.82rem;
+		line-height: 1.4;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+
+	.project-related-thumb {
+		overflow: hidden;
+		width: 5.5rem;
+		height: 3.5rem;
+		border-radius: 6px;
+		background: rgb(255 255 255 / 0.03);
+	}
+
+	.project-related-thumb img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.project-related-card:hover .project-related-thumb img,
+	.project-related-card:focus-visible .project-related-thumb img {
+		transform: scale(1.04);
+	}
+
+	.project-related-back {
+		margin-top: 0.35rem;
+	}
+
+	@media (max-width: 520px) {
+		.project-related-inner {
+			grid-template-columns: minmax(0, 1fr) 4.5rem;
+			gap: 0.7rem;
+			padding: 0.85rem;
+		}
+
+		.project-related-thumb {
+			width: 4.5rem;
+			height: 4.5rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.project-related-card::before,
+		.project-related-inner,
+		.project-related-thumb img {
+			transition: none;
+		}
+
+		.project-related-card:hover::before,
+		.project-related-card:focus-visible::before,
+		.project-related-card:hover .project-related-inner,
+		.project-related-card:focus-visible .project-related-inner,
+		.project-related-card:hover .project-related-thumb img,
+		.project-related-card:focus-visible .project-related-thumb img {
+			transform: none;
+		}
+	}
+</style>
