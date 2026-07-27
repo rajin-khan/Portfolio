@@ -33,7 +33,7 @@ If you've ever watched shows like **Mr. Robot**, or movies like **The Matrix**, 
 And that’s it! Now you have a command line where you can start typing commands.
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay preload="none" playsinline loop muted>
+  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay controls preload="metadata" playsinline loop muted>
     <source src="/assets/videos/posts/cli1.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -120,14 +120,14 @@ ls -la
 #### See for yourself:
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay preload="none" playsinline loop muted>
+  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay controls preload="metadata" playsinline loop muted>
     <source src="/assets/videos/posts/cli2.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 </div>
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay preload="none" playsinline muted>
+  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay controls preload="metadata" playsinline muted>
     <source src="/assets/videos/posts/cli3.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -187,7 +187,7 @@ networkquality -v
 You can monitor your entire system from just one window:
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay preload="none" playsinline muted>
+  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay controls preload="metadata" playsinline muted>
     <source src="/assets/videos/posts/cli4.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -221,7 +221,7 @@ From there, you can **run commands** on that computer **as if you were sitting i
 It's **like teleporting into another machine**, and it's a huge part of being a real power user.
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay preload="none" playsinline loop muted>
+  <video width="100%" poster="/assets/images/posts/cli.jpg" data-autoplay controls preload="metadata" playsinline loop muted>
     <source src="/assets/videos/posts/cli5.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>

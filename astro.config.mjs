@@ -3,6 +3,7 @@ import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
 import react from "@astrojs/react";
 import vercel from "@astrojs/vercel";
+import rehypeSlug from "rehype-slug";
 
 function improveMarkdownImages() {
   return (tree) => {
@@ -31,6 +32,6 @@ export default defineConfig({
   adapter: vercel(),
   integrations: [tailwind(), sitemap(), react()],
   markdown: {
-    rehypePlugins: [improveMarkdownImages],
+    rehypePlugins: [rehypeSlug, improveMarkdownImages],
   },
 });

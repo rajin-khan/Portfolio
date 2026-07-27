@@ -81,21 +81,24 @@ images lazy, so the first image should be the intended lead visual.
 For video, place an optimized MP4/WebM in `public/assets/videos/` and use:
 
 ```html
-<video
-  data-autoplay
-  preload="none"
-  playsinline
-  muted
-  loop
-  poster="/assets/images/posts/my-post/video-poster.jpg"
->
-  <source src="/assets/videos/my-post-clip.mp4" type="video/mp4" />
-</video>
+<div class="video-container">
+  <video
+    data-autoplay
+    controls
+    preload="metadata"
+    playsinline
+    muted
+    loop
+    poster="/assets/images/posts/my-post/video-poster.jpg"
+  >
+    <source src="/assets/videos/my-post-clip.mp4" type="video/mp4" />
+  </video>
+</div>
 ```
 
-`data-autoplay` lets the post layout play only when the video is near the
-viewport, pause it offscreen or in a hidden tab, and expose controls for reduced
-motion. Always provide a poster and avoid shipping camera-original video.
+Wrap every embed in `.video-container`. Native `controls` are always shown.
+`data-autoplay` still plays muted when the clip enters the viewport and pauses
+it offscreen. Always provide a poster and avoid shipping camera-original video.
 
 The blog index renders every post statically, shows the newest five initially,
 and reveals older posts in batches of five through the `Load older posts`

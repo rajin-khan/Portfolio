@@ -1,0 +1,423 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	date: Date;
+	tags?: string[];
+	readingLabel: string;
+}
+
+const { title, description, date, tags = [], readingLabel } = Astro.props;
+
+const dateLabel = new Date(date).toLocaleDateString("en-US", {
+	year: "numeric",
+	month: "long",
+	day: "numeric",
+});
+const dateIso = new Date(date).toISOString();
+---
+
+<header class="post-hero animate-in" style="--animation-delay: 0ms;">
+	{
+		tags.length > 0 && (
+			<div class="post-hero-tags" aria-label="Post tags">
+				{tags.map((tag) => (
+					<a class="post-hero-tag" href={`/posts?tag=${encodeURIComponent(tag)}`}>
+						{tag}
+					</a>
+				))}
+			</div>
+		)
+	}
+
+	<h1 class="post-hero-title">{title}</h1>
+	<p class="post-hero-lead">{description}</p>
+
+	<div class="post-hero-meta">
+		<div class="post-hero-byline">
+			<time datetime={dateIso}>{dateLabel}</time>
+			<span class="post-hero-sep" aria-hidden="true">·</span>
+			<span class="post-hero-author">Rajin Khan</span>
+			<span class="post-hero-sep" aria-hidden="true">·</span>
+			<span class="post-hero-reading">{readingLabel}</span>
+		</div>
+
+		<button
+			type="button"
+			class="post-share"
+			data-post-share
+			aria-label="Copy link to this post"
+		>
+			<span class="post-share-stage" aria-live="polite">
+				<span class="post-share-idle">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="14"
+						height="14"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
+					>
+						<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+						<polyline points="16 6 12 2 8 6"></polyline>
+						<line x1="12" y1="2" x2="12" y2="15"></line>
+					</svg>
+					<span>share</span>
+				</span>
+				<span class="post-share-done" aria-hidden="true">copied!</span>
+			</span>
+		</button>
+	</div>
+</header>
+
+<style>
+	.post-hero {
+		--paper: #f2f2ef;
+		--muted: #9a9a96;
+		--faint: #6e6e6a;
+		--line: rgba(255, 255, 255, 0.11);
+		max-width: 42rem;
+		margin: 0 auto;
+		padding: 0 0 1.75rem;
+		color: var(--paper);
+	}
+
+	.post-hero-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem 0;
+		margin-bottom: 1rem;
+	}
+
+	.post-hero-tag {
+		display: inline-flex;
+		align-items: center;
+		color: #858581;
+		font-size: 0.72rem;
+		font-weight: 600;
+		line-height: 1;
+		text-decoration: none;
+		transition: color 160ms ease;
+	}
+
+	.post-hero-tag:not(:last-child)::after {
+		margin-inline: 0.55rem;
+		color: #50504d;
+		content: "/";
+		font-weight: 500;
+	}
+
+	.post-hero-tag:hover,
+	.post-hero-tag:focus-visible {
+		color: var(--paper);
+	}
+
+	.post-hero-title {
+		margin: 0;
+		color: var(--paper);
+		font-size: clamp(2rem, 5vw, 2.85rem);
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		line-height: 1.12;
+		text-wrap: balance;
+	}
+
+	.post-hero-lead {
+		margin: 0.9rem 0 0;
+		color: rgb(177 177 172);
+		font-size: 1.05rem;
+		font-weight: 400;
+		line-height: 1.55;
+		text-wrap: pretty;
+	}
+
+	.post-hero-meta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.85rem 1.25rem;
+		margin-top: 1.35rem;
+		padding-top: 1.1rem;
+		border-top: 1px solid var(--line);
+	}
+
+	.post-hero-byline {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.35rem 0.45rem;
+		color: var(--muted);
+		font-size: 0.82rem;
+		font-weight: 500;
+	}
+
+	.post-hero-sep {
+		color: #50504d;
+	}
+
+	.post-hero-author {
+		color: var(--paper);
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-size: 1.15rem;
+		font-weight: 400;
+		line-height: 1;
+		transform: rotate(-1deg);
+		transform-origin: center;
+	}
+
+	.post-hero-reading {
+		text-transform: lowercase;
+	}
+
+	.post-share {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 6.1rem;
+		min-height: 2.1rem;
+		padding: 0.35rem 0.9rem;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 999px;
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015)),
+			rgb(18 18 18 / 0.88);
+		box-shadow:
+			0 1px 0 rgba(255, 255, 255, 0.05) inset,
+			0 8px 18px rgba(0, 0, 0, 0.18);
+		color: var(--muted);
+		font: inherit;
+		cursor: pointer;
+		backdrop-filter: blur(8px);
+		transition:
+			border-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
+			background-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
+			box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1),
+			transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.post-share:hover {
+		border-color: rgba(255, 255, 255, 0.24);
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+			rgb(24 24 24 / 0.94);
+		box-shadow:
+			0 1px 0 rgba(255, 255, 255, 0.07) inset,
+			0 10px 22px rgba(0, 0, 0, 0.24);
+		transform: translateY(-1px);
+	}
+
+	.post-share:focus-visible {
+		outline: 2px solid rgba(255, 255, 255, 0.42);
+		outline-offset: 3px;
+	}
+
+	.post-share-stage {
+		position: relative;
+		display: grid;
+		place-items: center;
+		min-height: 1.35rem;
+		min-width: 4.4rem;
+		user-select: none;
+	}
+
+	.post-share-idle,
+	.post-share-done {
+		grid-area: 1 / 1;
+		transition:
+			opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
+			transform 480ms cubic-bezier(0.22, 1, 0.36, 1),
+			filter 420ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.post-share-idle {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.42rem;
+		color: #c8c8c2;
+		font-size: 0.74rem;
+		font-weight: 500;
+		letter-spacing: 0.07em;
+		text-transform: lowercase;
+		opacity: 1;
+		transform: translateY(0) scale(1);
+		filter: blur(0);
+	}
+
+	.post-share-idle svg {
+		opacity: 0.88;
+		transition: opacity 280ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.post-share:hover .post-share-idle,
+	.post-share:focus-visible .post-share-idle {
+		color: var(--paper);
+	}
+
+	.post-share:hover .post-share-idle svg,
+	.post-share:focus-visible .post-share-idle svg {
+		opacity: 1;
+		transform: translateY(-0.5px);
+	}
+
+	.post-share-done {
+		color: var(--paper);
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-size: 1.18rem;
+		font-weight: 400;
+		letter-spacing: 0.01em;
+		line-height: 1.2;
+		opacity: 0;
+		transform: translateY(0.35rem) scale(0.96) rotate(-2deg);
+		filter: blur(3px);
+		transform-origin: center;
+		pointer-events: none;
+	}
+
+	.post-share.is-copied {
+		border-color: rgba(242, 242, 239, 0.28);
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
+			rgb(26 26 26 / 0.96);
+		box-shadow:
+			0 1px 0 rgba(255, 255, 255, 0.08) inset,
+			0 10px 24px rgba(0, 0, 0, 0.26);
+		animation: post-share-press 420ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.post-share.is-copied .post-share-idle {
+		opacity: 0;
+		transform: translateY(-0.35rem) scale(0.98);
+		filter: blur(2px);
+	}
+
+	.post-share.is-copied .post-share-done {
+		opacity: 1;
+		transform: translateY(0.2rem) scale(1) rotate(-1.5deg);
+		filter: blur(0);
+		animation: post-share-copied-in 560ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	@keyframes post-share-press {
+		0% {
+			transform: scale(1);
+		}
+		35% {
+			transform: scale(0.96);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
+	@keyframes post-share-copied-in {
+		0% {
+			opacity: 0;
+			transform: translateY(0.55rem) scale(0.94) rotate(-3deg);
+			filter: blur(4px);
+		}
+		55% {
+			opacity: 1;
+			transform: translateY(0.12rem) scale(1.02) rotate(-1deg);
+			filter: blur(0);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0.2rem) scale(1) rotate(-1.5deg);
+			filter: blur(0);
+		}
+	}
+
+	@media (max-width: 640px) {
+		.post-hero-title {
+			font-size: clamp(1.75rem, 8vw, 2.15rem);
+		}
+
+		.post-hero-lead {
+			font-size: 0.98rem;
+		}
+
+		.post-hero-meta {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.post-share,
+		.post-share-idle,
+		.post-share-done,
+		.post-share-idle svg {
+			transition: none;
+		}
+
+		.post-share:hover {
+			transform: none;
+		}
+
+		.post-share-idle,
+		.post-share-done {
+			filter: none;
+			transform: none;
+		}
+
+		.post-share.is-copied,
+		.post-share.is-copied .post-share-done {
+			animation: none;
+		}
+
+		.post-share.is-copied .post-share-idle {
+			opacity: 0;
+		}
+
+		.post-share.is-copied .post-share-done {
+			opacity: 1;
+		}
+	}
+</style>
+
+<script>
+	function initPostShare() {
+		const buttons = document.querySelectorAll("[data-post-share]");
+		buttons.forEach((button) => {
+			if (!(button instanceof HTMLButtonElement) || button.dataset.bound === "true") {
+				return;
+			}
+			button.dataset.bound = "true";
+
+			const idle = button.querySelector(".post-share-idle");
+			const done = button.querySelector(".post-share-done");
+			let resetTimer = 0;
+
+			button.addEventListener("click", async () => {
+				try {
+					await navigator.clipboard.writeText(window.location.href);
+				} catch {
+					return;
+				}
+
+				button.classList.remove("is-copied");
+				void button.offsetWidth;
+				button.classList.add("is-copied");
+				done?.removeAttribute("aria-hidden");
+				idle?.setAttribute("aria-hidden", "true");
+				button.setAttribute("aria-label", "Link copied");
+
+				window.clearTimeout(resetTimer);
+				resetTimer = window.setTimeout(() => {
+					button.classList.remove("is-copied");
+					done?.setAttribute("aria-hidden", "true");
+					idle?.removeAttribute("aria-hidden");
+					button.setAttribute("aria-label", "Copy link to this post");
+				}, 1750);
+			});
+		});
+	}
+
+	initPostShare();
+	document.addEventListener("astro:page-load", initPostShare);
+</script>

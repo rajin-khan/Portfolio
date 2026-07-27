@@ -1,0 +1,154 @@
+---
+---
+
+<section class="post-comments" data-post-comments aria-labelledby="post-comments-heading">
+	<div class="post-comments-head">
+		<h2 class="post-comments-heading" id="post-comments-heading">Comments</h2>
+		<p class="post-comments-hand">say hi if you made it this far.</p>
+	</div>
+
+	<button
+		type="button"
+		class="post-comments-toggle relative inline-flex items-center justify-center px-5 py-2 mt-5 text-sm font-medium text-white transition-all duration-300 bg-neutral-900 border border-neutral-800 rounded-full hover:bg-neutral-800 hover:border-neutral-700 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95 group"
+		data-comments-toggle
+	>
+		<span class="relative z-10" data-comments-toggle-label>Show comments</span>
+		<div
+			class="absolute inset-0 rounded-full bg-gradient-to-b from-white/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+		>
+		</div>
+	</button>
+
+	<div class="post-comments-panel" data-comments-panel hidden>
+		<div id="giscus-container" data-giscus-container></div>
+	</div>
+</section>
+
+<style>
+	.post-comments {
+		--paper: #f2f2ef;
+		--muted: #9a9a96;
+		--line: rgba(255, 255, 255, 0.11);
+		max-width: 42rem;
+		margin: 3rem auto 0;
+		padding-top: 2rem;
+		border-top: 1px solid var(--line);
+		color: var(--paper);
+		text-align: center;
+	}
+
+	.post-comments-head {
+		margin-bottom: 1rem;
+	}
+
+	.post-comments-heading {
+		margin: 0;
+		color: var(--paper);
+		font-size: 1.35rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+
+	.post-comments-hand {
+		margin: 0.45rem 0 0;
+		color: var(--paper);
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-size: 1.15rem;
+		font-weight: 400;
+		line-height: 1.3;
+		transform: rotate(-1deg);
+		transform-origin: center;
+	}
+
+	.post-comments-toggle {
+		cursor: pointer;
+	}
+
+	.post-comments-panel {
+		margin-top: 1.25rem;
+		text-align: left;
+	}
+
+	.post-comments-panel[hidden] {
+		display: none;
+	}
+</style>
+
+<script>
+	function getGiscusTheme() {
+		return document.documentElement.classList.contains("dark")
+			? "dark_high_contrast"
+			: "light";
+	}
+
+	function loadGiscus(container: HTMLElement) {
+		if (container.children.length > 0) return;
+
+		const script = document.createElement("script");
+		script.src = "https://giscus.app/client.js";
+		script.setAttribute("data-repo", "rajin-khan/Portfolio");
+		script.setAttribute("data-repo-id", "R_kgDON2W65A");
+		script.setAttribute("data-category", "Announcements");
+		script.setAttribute("data-category-id", "DIC_kwDON2W65M4Cm1Wm");
+		script.setAttribute("data-mapping", "pathname");
+		script.setAttribute("data-strict", "0");
+		script.setAttribute("data-reactions-enabled", "1");
+		script.setAttribute("data-emit-metadata", "0");
+		script.setAttribute("data-input-position", "top");
+		script.setAttribute("data-theme", getGiscusTheme());
+		script.setAttribute("data-lang", "en");
+		script.setAttribute("data-loading", "lazy");
+		script.crossOrigin = "anonymous";
+		script.async = true;
+		container.appendChild(script);
+	}
+
+	function updateGiscusTheme() {
+		const iframe = document.querySelector("iframe.giscus-frame");
+		if (!(iframe instanceof HTMLIFrameElement)) return;
+		iframe.contentWindow?.postMessage(
+			{ giscus: { setConfig: { theme: getGiscusTheme() } } },
+			"https://giscus.app",
+		);
+	}
+
+	function initPostComments() {
+		const root = document.querySelector("[data-post-comments]");
+		if (!(root instanceof HTMLElement) || root.dataset.bound === "true") return;
+		root.dataset.bound = "true";
+
+		const toggle = root.querySelector("[data-comments-toggle]");
+		const panel = root.querySelector("[data-comments-panel]");
+		const container = root.querySelector("[data-giscus-container]");
+		const label = root.querySelector("[data-comments-toggle-label]");
+
+		if (
+			!(toggle instanceof HTMLButtonElement) ||
+			!(panel instanceof HTMLElement) ||
+			!(container instanceof HTMLElement)
+		) {
+			return;
+		}
+
+		toggle.addEventListener("click", () => {
+			const opening = panel.hasAttribute("hidden");
+			if (opening) {
+				panel.removeAttribute("hidden");
+				loadGiscus(container);
+				if (label) label.textContent = "Hide comments";
+			} else {
+				panel.setAttribute("hidden", "");
+				if (label) label.textContent = "Show comments";
+			}
+		});
+
+		const themeObserver = new MutationObserver(updateGiscusTheme);
+		themeObserver.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ["class"],
+		});
+	}
+
+	initPostComments();
+	document.addEventListener("astro:page-load", initPostComments);
+</script>

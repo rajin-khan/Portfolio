@@ -1,0 +1,120 @@
+---
+---
+
+{/* Reliable post video players: always show controls, optional in-view muted autoplay. */}
+<script>
+	function initPostVideos() {
+		const videos = document.querySelectorAll<HTMLVideoElement>(".post-prose video");
+		if (videos.length === 0) return;
+
+		const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const autoplayVideos: HTMLVideoElement[] = [];
+
+		videos.forEach((video) => {
+			if (video.dataset.videoReady === "true") return;
+			video.dataset.videoReady = "true";
+
+			video.controls = true;
+			video.setAttribute("controls", "");
+			video.setAttribute("playsinline", "");
+			video.playsInline = true;
+
+			// Keep demos quiet by default; user can unmute via native controls.
+			if (video.hasAttribute("data-autoplay") || video.hasAttribute("muted")) {
+				video.muted = true;
+				video.setAttribute("muted", "");
+			}
+
+			if (video.preload === "" || video.preload === "none") {
+				video.preload = "metadata";
+			}
+
+			if (video.hasAttribute("data-autoplay") && !reduceMotion) {
+				autoplayVideos.push(video);
+			}
+		});
+
+		if (autoplayVideos.length === 0) return;
+
+		const playIfVisible = (video: HTMLVideoElement) => {
+			if (document.hidden) return;
+			video.play().catch(() => {
+				/* Native controls remain available. */
+			});
+		};
+
+		if (!("IntersectionObserver" in window)) {
+			autoplayVideos.forEach(playIfVisible);
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					const video = entry.target as HTMLVideoElement;
+					if (entry.isIntersecting && !document.hidden) {
+						playIfVisible(video);
+					} else {
+						video.pause();
+					}
+				});
+			},
+			{ rootMargin: "120px 0px", threshold: 0.2 },
+		);
+
+		autoplayVideos.forEach((video) => observer.observe(video));
+
+		if (document.documentElement.dataset.postVideoVisibility !== "true") {
+			document.documentElement.dataset.postVideoVisibility = "true";
+			document.addEventListener("visibilitychange", () => {
+				if (!document.hidden) return;
+				document
+					.querySelectorAll<HTMLVideoElement>(".post-prose video[data-autoplay]")
+					.forEach((video) => video.pause());
+			});
+		}
+	}
+
+	initPostVideos();
+	document.addEventListener("astro:page-load", initPostVideos);
+</script>
+
+<style is:global>
+	.post-prose .video-container {
+		margin: 1.85rem 0;
+		border-color: rgba(255, 255, 255, 0.08);
+		border-radius: 14px;
+		background: #050505;
+		box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+		line-height: 0;
+	}
+
+	.post-prose .video-container video {
+		position: static;
+		inset: auto;
+		display: block;
+		width: 100%;
+		height: auto;
+		max-width: 100%;
+		object-fit: unset;
+		background: #050505;
+	}
+
+	/* Standalone videos not wrapped in .video-container */
+	.post-prose > video,
+	.post-prose :where(p > video) {
+		display: block;
+		width: 100%;
+		height: auto;
+		margin: 1.85rem 0;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 14px;
+		background: #050505;
+		box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+	}
+
+	.post-prose .video-container,
+	.post-prose video {
+		max-width: 100%;
+	}
+</style>

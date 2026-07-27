@@ -29,8 +29,10 @@
         "@astrojs/sitemap": "^3.4.0",
         "@astrojs/vercel": "^9.0.0",
         "@upstash/redis": "^1.35.8",
+        "github-slugger": "^2.0.0",
         "react": "^19.1.1",
         "react-dom": "^19.1.1",
+        "rehype-slug": "^6.0.0",
         "resend": "^6.6.0"
     }
 }

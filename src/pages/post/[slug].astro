@@ -1,192 +1,189 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import PostLayout from "../../layouts/post.astro";
+import PostHero from "../../components/post/hero.astro";
+import PostRelated from "../../components/post/related.astro";
+import PostComments from "../../components/post/comments.astro";
+import CodeCopy from "../../components/post/code-copy.astro";
+import PostVideos from "../../components/post/videos.astro";
+import Button from "../../components/button.astro";
+import {
+	estimateReadingMinutes,
+	formatReadingTime,
+} from "../../lib/reading-time";
+import { getRelatedPosts } from "../../lib/related-posts";
 
-// Define the static paths for dynamic routes
 export async function getStaticPaths() {
-  const posts = await getCollection("post");
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { entry: post },
-  }));
+	const posts = await getCollection("post");
+	return posts.map((post) => ({
+		params: { slug: post.slug },
+		props: { entry: post },
+	}));
 }
 
 type Props = {
-  entry: CollectionEntry<"post">;
+	entry: CollectionEntry<"post">;
 };
 
 const { entry } = Astro.props;
+const allPosts = await getCollection("post");
 
 const { Content } = await entry.render();
-const { title, description, date, updated, image } = entry.data;
+const { title, description, date, updated, image, tags = [] } = entry.data;
+const readingLabel = formatReadingTime(estimateReadingMinutes(entry.body));
+const related = getRelatedPosts(entry, allPosts, 1);
 ---
 
 <PostLayout
-  title={title}
-  description={description}
-  date={date}
-  updated={updated}
-  image={image}
+	title={title}
+	description={description}
+	date={date}
+	updated={updated}
+	image={image}
 >
-  <article class="prose dark:prose-invert mx-auto">
-    <div class="flex items-center justify-between text-sm mb-6">
-      <p class="text-gray-500 dark:text-gray-400">
-        {
-          new Date(date).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
-        } · <strong>Rajin Khan</strong>
-      </p>
-      <button
-        id="share-button"
-        class="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-full transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 bg-white dark:bg-gray-800 hover:shadow-md"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-          <polyline points="16 6 12 2 8 6"></polyline>
-          <line x1="12" y1="2" x2="12" y2="15"></line>
-        </svg>
-        <span>Share</span>
-      </button>
-    </div>
-    <Content />
-  </article>
-  <section class="mt-10">
-    <!-- Toggle Button -->
-    <div class="flex justify-center mt-4">
-      <button
-        id="toggle-comments"
-        class="flex items-center text-lg text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
-      >
-        <span>Show Comments</span>
-        <span id="arrow" class="ml-2 transition-transform">↓</span>
-      </button>
-    </div>
+	<article class="post-page">
+		<PostHero
+			title={title}
+			description={description}
+			date={date}
+			tags={tags}
+			readingLabel={readingLabel}
+		/>
 
-    <!-- Comments Section (Initially Hidden) -->
-    <div id="comments-section" class="hidden mt-6">
-      <div id="giscus-container"></div>
-    </div>
+		<div class="post-layout">
+			<div class="post-main">
+				<div class="post-prose prose dark:prose-invert">
+					<Content />
+				</div>
+			</div>
+		</div>
 
-    <script>
-      function getTheme() {
-        return document.documentElement.classList.contains("dark")
-          ? "dark_high_contrast"
-          : "light";
-      }
-
-      function loadGiscus() {
-        if (document.getElementById("giscus-container").children.length > 0)
-          return;
-        const theme = getTheme();
-        const script = document.createElement("script");
-        script.src = "https://giscus.app/client.js";
-        script.setAttribute("data-repo", "rajin-khan/Portfolio");
-        script.setAttribute("data-repo-id", "R_kgDON2W65A");
-        script.setAttribute("data-category", "Announcements");
-        script.setAttribute("data-category-id", "DIC_kwDON2W65M4Cm1Wm");
-        script.setAttribute("data-mapping", "pathname");
-        script.setAttribute("data-strict", "0");
-        script.setAttribute("data-reactions-enabled", "1");
-        script.setAttribute("data-emit-metadata", "0");
-        script.setAttribute("data-input-position", "top");
-        script.setAttribute("data-theme", theme);
-        script.setAttribute("data-lang", "en");
-        script.setAttribute("data-loading", "lazy");
-        script.crossOrigin = "anonymous";
-        script.async = true;
-
-        document.getElementById("giscus-container").appendChild(script);
-      }
-
-      function updateGiscusTheme() {
-        const theme = getTheme();
-        const iframe = document.querySelector("iframe.giscus-frame");
-        if (iframe) {
-          (iframe as HTMLIFrameElement).contentWindow.postMessage(
-            { giscus: { setConfig: { theme } } },
-            "https://giscus.app"
-          );
-        }
-      }
-
-      // Share button functionality
-      document
-        .getElementById("share-button")
-        .addEventListener("click", async () => {
-          try {
-            await navigator.clipboard.writeText(window.location.href);
-            const button = document.getElementById("share-button");
-            const originalText = button.innerHTML;
-            button.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            <span>Copied!</span>
-          `;
-            // Add success state styles
-            button.classList.add(
-              "bg-green-50",
-              "dark:bg-green-900/20",
-              "text-green-600",
-              "dark:text-green-400",
-              "border-green-200",
-              "dark:border-green-800"
-            );
-
-            setTimeout(() => {
-              button.innerHTML = originalText;
-              // Remove success state styles
-              button.classList.remove(
-                "bg-green-50",
-                "dark:bg-green-900/20",
-                "text-green-600",
-                "dark:text-green-400",
-                "border-green-200",
-                "dark:border-green-800"
-              );
-            }, 2000);
-          } catch (err) {
-            console.error("Failed to copy URL:", err);
-          }
-        });
-
-      document.addEventListener("DOMContentLoaded", () => {
-        const toggleBtn = document.getElementById("toggle-comments");
-        const commentsSection = document.getElementById("comments-section");
-        const arrow = document.getElementById("arrow");
-
-        toggleBtn.addEventListener("click", () => {
-          const isHidden = commentsSection.classList.contains("hidden");
-          commentsSection.classList.toggle("hidden");
-          arrow.textContent = isHidden ? "↑" : "↓";
-          toggleBtn.firstElementChild.textContent = isHidden
-            ? "Hide Comments"
-            : "Show Comments";
-
-          if (isHidden) {
-            loadGiscus();
-          }
-        });
-      });
-
-      const observer = new MutationObserver(updateGiscusTheme);
-      observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ["class"],
-      });
-    </script>
-  </section>
+		<CodeCopy />
+		<PostVideos />
+		<PostRelated posts={related} />
+		{
+			related.length === 0 && (
+				<div class="post-back-wrap">
+					<Button text="Back to Blog" link="/posts" />
+				</div>
+			)
+		}
+		<PostComments />
+	</article>
 </PostLayout>
+
+<style is:global>
+	.post-page {
+		--post-paper: #f2f2ef;
+		--post-muted: #9a9a96;
+		--post-faint: #6e6e6a;
+		--post-line: rgba(255, 255, 255, 0.11);
+	}
+
+	.post-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 42rem);
+		justify-content: center;
+		margin-top: 0.5rem;
+	}
+
+	.post-main {
+		min-width: 0;
+		max-width: 42rem;
+		width: 100%;
+	}
+
+	.post-prose.prose {
+		max-width: none;
+		color: rgb(196 196 190);
+		font-size: 1.02rem;
+		line-height: 1.75;
+	}
+
+	.post-prose.prose :where(h2, h3, h4) {
+		color: var(--post-paper);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		scroll-margin-top: 6rem;
+	}
+
+	.post-prose.prose :where(h2) {
+		margin-top: 2.4rem;
+		margin-bottom: 0.85rem;
+		font-size: 1.55rem;
+		line-height: 1.25;
+	}
+
+	.post-prose.prose :where(h3) {
+		margin-top: 1.85rem;
+		margin-bottom: 0.65rem;
+		font-size: 1.2rem;
+		line-height: 1.3;
+	}
+
+	.post-prose.prose :where(p, li) {
+		color: rgb(196 196 190);
+	}
+
+	.post-prose.prose :where(a) {
+		color: var(--post-paper);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.18em;
+	}
+
+	.post-prose.prose :where(a:hover) {
+		opacity: 0.85;
+	}
+
+	.post-prose.prose :where(strong) {
+		color: var(--post-paper);
+		font-weight: 600;
+	}
+
+	.post-prose.prose :where(blockquote) {
+		border-left: 2px solid rgba(255, 255, 255, 0.22);
+		color: #b7b7b1;
+		font-style: normal;
+	}
+
+	.post-prose.prose :where(code) {
+		color: #e8e8e2;
+		font-weight: 500;
+	}
+
+	.post-prose.prose :where(pre),
+	.post-prose.prose :where(pre.astro-code) {
+		border: 1px solid rgba(255, 255, 255, 0.07);
+		border-radius: 12px;
+		background: #050505 !important;
+		background-color: #050505 !important;
+	}
+
+	.post-prose.prose :where(hr) {
+		border-color: rgba(255, 255, 255, 0.1);
+	}
+
+	.post-prose.prose :where(img) {
+		margin-top: 1.5rem;
+		margin-bottom: 1.5rem;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 12px;
+	}
+
+	.post-prose.prose :where(ul > li::marker, ol > li::marker) {
+		color: #7a7a76;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.post-page .animate-in {
+			animation: none;
+			opacity: 1;
+		}
+	}
+
+	.post-back-wrap {
+		max-width: 42rem;
+		margin: 2.5rem auto 0;
+		text-align: center;
+	}
+</style>

@@ -16,7 +16,7 @@ image: "/assets/images/posts/qbni2.jpg"
 ---
 
 <div class="video-container">
-  <video width="100%" poster="/assets/images/posts/qbni1.jpg" data-autoplay preload="none" playsinline loop muted>
+  <video width="100%" poster="/assets/images/posts/qbni1.jpg" data-autoplay controls preload="metadata" playsinline loop muted>
     <source src="/assets/videos/posts/qbni1.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
