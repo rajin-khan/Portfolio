@@ -1,213 +1,1052 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../layouts/main.astro";
-import PageHeading from "../components/page-heading.astro";
+import {
+	estimateReadingMinutes,
+	formatReadingTime,
+} from "../lib/reading-time";
 
-const POSTS_PER_BATCH = 5;
+const FEATURED_SLUG = "quiet-but-not-idle";
+
 const allPosts = await getCollection("post");
 
-const sortedPosts = allPosts
-  .map((post) => ({
-    ...post,
-    date: new Date(post.data.date),
-  }))
-  .sort((a, b) => b.date.getTime() - a.date.getTime());
+const posts = allPosts
+	.map((post) => {
+		const date = new Date(post.data.date);
+		const tags = post.data.tags ?? [];
+		const readingMinutes = estimateReadingMinutes(post.body);
+		return {
+			slug: post.slug,
+			title: post.data.title,
+			description: post.data.description,
+			image: post.data.image,
+			tags,
+			date,
+			dateLabel: date.toLocaleDateString("en-US", {
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+			}),
+			dateIso: date.toISOString(),
+			timestamp: date.getTime(),
+			readingMinutes,
+			readingLabel: formatReadingTime(readingMinutes),
+			searchBlob: [post.data.title, post.data.description, ...tags]
+				.join(" ")
+				.toLowerCase(),
+			featured: post.slug === FEATURED_SLUG,
+		};
+	})
+	.sort((a, b) => b.timestamp - a.timestamp);
 
+const allTags = Array.from(
+	new Set(posts.flatMap((post) => post.tags)),
+).sort((a, b) => a.localeCompare(b));
 ---
 
 <Layout
-  title="Blog"
-  description="Essays and practical notes from Rajin Khan about AI, software, design, creative work, and learning in public."
+	title="Blog"
+	description="Essays and practical notes from Rajin Khan about AI, software, design, creative work, and learning in public."
 >
-  <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
-    <!-- Animation applied to the heading -->
-    <div class="animate-in" style="--animation-delay: 0ms;">
-      <PageHeading
-        title="Blog Posts"
-        description="All the things I love. New Tech, Design, or things I learn as I'm growing my skillset."
-      />
-    </div>
+	<section class="posts-page">
+		<div class="posts-shell">
+			<header class="posts-hero animate-in" style="--animation-delay: 0ms;">
+				<div class="posts-title-block">
+					<h1>Blog</h1>
+					<p class="posts-handwritten">half thinking out loud.</p>
+				</div>
+			</header>
 
-    <!-- Animation applied to the posts container -->
-    <div
-      id="posts-container"
-      class="z-50 flex flex-col items-stretch w-full gap-5 my-8 animate-in"
-      style="--animation-delay: 200ms;"
-    >
-      {
-        sortedPosts.map((post, index) => (
-          <article
-            class="post-card"
-            data-blog-post
-            hidden={index >= POSTS_PER_BATCH}
-          >
-            <a
-              href={`/post/${post.slug}`}
-              class="relative flex w-full flex-col md:flex-row items-stretch md:justify-between duration-300 ease-out p-7 group h-100 rounded-2xl"
-            >
-            <span
-              class="absolute inset-0 z-20 block w-full h-full duration-300 ease-out bg-transparent border border-transparent border-dashed group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:border group-hover:border-neutral-300 dark:group-hover:border-neutral-600 group-hover:bg-white dark:group-hover:bg-neutral-950 rounded-2xl"
-            ></span>
-            <span
-              class="absolute inset-0 z-10 block w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-300 dark:border-neutral-600 group-hover:translate-x-1 group-hover:translate-y-1"
-            ></span>
+			<div
+				class="posts-layout animate-in"
+				style="--animation-delay: 180ms;"
+				data-posts-archive
+			>
+				<aside class="posts-aside" aria-label="Filter posts">
+					<label class="posts-search">
+						<span class="sr-only">Search posts</span>
+						<svg
+							class="posts-search-icon"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.6"
+							aria-hidden="true"
+						>
+							<circle cx="11" cy="11" r="7"></circle>
+							<path d="m20 20-3.5-3.5"></path>
+						</svg>
+						<input
+							id="posts-search"
+							type="search"
+							placeholder="Search..."
+							autocomplete="off"
+							spellcheck="false"
+							data-posts-search
+						/>
+						<kbd class="posts-search-kbd" data-search-kbd>⌘K</kbd>
+					</label>
 
-            <div class="relative z-30 duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1 w-full">
-              <div class="flex flex-col md:flex-row items-stretch gap-6 w-full">
-                <div class="flex-1">
-                  <div class="flex flex-wrap gap-1.5 mb-3">
-                    {post.data.tags?.map((tag) => (
-                      <span class="inline-flex items-center rounded-[0.35rem] border border-white/[0.08] bg-neutral-700/55 px-1.5 py-0.5 text-[0.65rem] font-medium leading-none text-neutral-100/90">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <span class="block w-full px-1 mt-3 mb-1">
-                    <span class="flex items-center mb-0 text-base font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-                      {post.data.title}
-                      <span class="ml-1 inline-block transition-transform duration-300 translate-x-0 group-hover:translate-x-1">
-                        →
-                      </span>
-                    </span>
-                  </span>
-                  <span class="text-xs text-neutral-600 dark:text-neutral-400 block truncate overflow-hidden break-words w-full max-w-full">
-                    {post.data.description}
-                  </span>
-                  <p class="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
-                    Posted on{" "}
-                    <time datetime={post.date.toISOString()}>
-                      {post.date.toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </time>
-                  </p>
-                </div>
-                {post.data.image && (
-                  <div class="relative z-30 w-full sm:w-52 h-36 rounded-xl overflow-hidden ml-auto">
-                    <img
-                      src={post.data.image}
-                      alt={post.data.title}
-                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                      decoding="async"
-                      width="208"
-                      height="144"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-            </a>
-          </article>
-        ))
-      }
-    </div>
-    {
-      sortedPosts.length > POSTS_PER_BATCH && (
-        <div
-          id="post-archive-controls"
-          class="post-archive-controls flex justify-center mt-8 animate-in"
-          style="--animation-delay: 400ms;"
-        >
-          <button
-            id="load-older-posts"
-            type="button"
-            class="inline-flex items-center justify-center px-4 py-1.5 text-sm font-medium rounded-full border border-neutral-800 dark:border-neutral-200 bg-neutral-800 dark:bg-neutral-200 text-neutral-100 dark:text-neutral-900 transition-[background-color,color,border-color,transform] duration-200 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-neutral-900 dark:hover:text-neutral-100 active:scale-[0.98]"
-            aria-controls="posts-container"
-            aria-expanded="false"
-            data-batch-size={POSTS_PER_BATCH}
-          >
-            Load older posts
-          </button>
-          <span id="post-archive-status" class="sr-only" aria-live="polite">
-            Showing {POSTS_PER_BATCH} of {sortedPosts.length} posts.
-          </span>
-        </div>
-      )
-    }
-  </section>
+					<div class="posts-sort">
+						<label class="sr-only" for="posts-sort">Sort posts</label>
+						<select id="posts-sort" data-posts-sort>
+							<option value="newest">Newest first</option>
+							<option value="oldest">Oldest first</option>
+						</select>
+					</div>
+
+					<div class="posts-topics" data-posts-topics>
+						<div class="posts-topics-head">
+							<button
+								type="button"
+								class="posts-topics-toggle"
+								data-posts-topics-toggle
+								aria-expanded="false"
+								aria-controls="posts-topic-list"
+								id="posts-topics-toggle"
+							>
+								<span>Topics</span>
+								<svg
+									class="posts-topics-chevron"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="m6 9 6 6 6-6"></path>
+								</svg>
+							</button>
+							<button
+								type="button"
+								class="posts-clear"
+								data-posts-clear
+								hidden
+							>
+								Clear
+							</button>
+						</div>
+						<div
+							id="posts-topic-list"
+							class="posts-topic-list"
+							role="group"
+							aria-label="Filter by topic"
+							aria-labelledby="posts-topics-toggle"
+							data-posts-topic-list
+							hidden
+						>
+							{
+								allTags.map((tag) => (
+									<button
+										type="button"
+										class="posts-topic"
+										data-posts-tag={tag}
+										aria-pressed="false"
+									>
+										{tag}
+									</button>
+								))
+							}
+						</div>
+					</div>
+				</aside>
+
+				<div class="posts-main">
+					<ul
+						id="posts-list"
+						class="posts-list"
+						data-posts-list
+						aria-live="polite"
+					>
+						{
+							posts.map((post) => (
+								<li
+									class:list={[
+										"post-row",
+										{ "post-row--featured": post.featured },
+									]}
+									data-blog-post
+									data-title={post.title}
+									data-search={post.searchBlob}
+									data-tags={post.tags.join("|")}
+									data-timestamp={String(post.timestamp)}
+								>
+									{post.featured && (
+										<span class="post-highlight-note" aria-hidden="true">
+											start here
+										</span>
+									)}
+									<a class="post-row-link" href={`/post/${post.slug}`}>
+										<article class="post-row-inner">
+											<div class="post-row-copy">
+												<time class="post-date" datetime={post.dateIso}>
+													{post.dateLabel}
+												</time>
+												<div class="post-title-row">
+													<h2 class="post-title">{post.title}</h2>
+													<span class="post-arrow" aria-hidden="true">→</span>
+												</div>
+												<p class="post-description">{post.description}</p>
+												<div class="post-meta">
+													<span class="post-reading">{post.readingLabel}</span>
+													{post.tags.length > 0 && (
+														<div
+															class="post-tags"
+															aria-label={`${post.title} tags`}
+														>
+															{post.tags.map((tag) => (
+																<span>{tag}</span>
+															))}
+														</div>
+													)}
+												</div>
+											</div>
+											{post.image && (
+												<div class="post-thumb">
+													<img
+														src={post.image}
+														alt=""
+														loading="lazy"
+														decoding="async"
+														width="208"
+														height="128"
+													/>
+												</div>
+											)}
+										</article>
+									</a>
+								</li>
+							))
+						}
+					</ul>
+
+					<p class="posts-empty" data-posts-empty hidden>
+						<span class="posts-empty-hand">nothing under that rock.</span>
+						<span class="posts-empty-copy">Try another search or topic.</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
 </Layout>
 
-<noscript>
-  <style>
-    [data-blog-post][hidden] {
-      display: block !important;
-    }
-
-    .post-archive-controls {
-      display: none !important;
-    }
-  </style>
-</noscript>
-
 <script>
-  function initializePostArchive() {
-    const button = document.getElementById("load-older-posts");
-    const postsContainer = document.getElementById("posts-container");
-    const controls = document.getElementById("post-archive-controls");
-    const status = document.getElementById("post-archive-status");
+	function initializePostsArchive() {
+		const root = document.querySelector("[data-posts-archive]");
+		if (!(root instanceof HTMLElement) || root.dataset.bound === "true") {
+			return;
+		}
+		root.dataset.bound = "true";
 
-    if (
-      !(button instanceof HTMLButtonElement) ||
-      !(postsContainer instanceof HTMLElement) ||
-      !(controls instanceof HTMLElement) ||
-      button.dataset.bound === "true"
-    ) {
-      return;
-    }
+		const searchNode = root.querySelector("[data-posts-search]");
+		const sortNode = root.querySelector("[data-posts-sort]");
+		const clearNode = root.querySelector("[data-posts-clear]");
+		const listNode = root.querySelector("[data-posts-list]");
+		const emptyNode = root.querySelector("[data-posts-empty]");
+		const kbd = root.querySelector("[data-search-kbd]");
 
-    button.dataset.bound = "true";
-    const batchSize = Number(button.dataset.batchSize) || 5;
-    const allPosts = Array.from(
-      postsContainer.querySelectorAll<HTMLElement>("[data-blog-post]")
-    );
+		if (
+			!(searchNode instanceof HTMLInputElement) ||
+			!(sortNode instanceof HTMLSelectElement) ||
+			!(clearNode instanceof HTMLButtonElement) ||
+			!(listNode instanceof HTMLElement) ||
+			!(emptyNode instanceof HTMLElement)
+		) {
+			return;
+		}
 
-    button.addEventListener("click", () => {
-      const postsToReveal = allPosts
-        .filter((post) => post.hidden)
-        .slice(0, batchSize);
+		const searchInput = searchNode;
+		const sortSelect = sortNode;
+		const clearButton = clearNode;
+		const list = listNode;
+		const empty = emptyNode;
+		const topicsToggle = root.querySelector("[data-posts-topics-toggle]");
+		const topicList = root.querySelector("[data-posts-topic-list]");
+		const topicsRoot = root.querySelector("[data-posts-topics]");
+		const tagButtons = Array.from(
+			root.querySelectorAll("[data-posts-tag]"),
+		).filter((el): el is HTMLButtonElement => el instanceof HTMLButtonElement);
+		const rows = Array.from(root.querySelectorAll("[data-blog-post]")).filter(
+			(el): el is HTMLElement => el instanceof HTMLElement,
+		);
 
-      postsToReveal.forEach((post) => {
-        post.hidden = false;
-        requestAnimationFrame(() => post.classList.add("is-revealed"));
-      });
+		if (
+			!(topicsToggle instanceof HTMLButtonElement) ||
+			!(topicList instanceof HTMLElement) ||
+			!(topicsRoot instanceof HTMLElement)
+		) {
+			return;
+		}
 
-      const remainingCount = allPosts.filter((post) => post.hidden).length;
-      const visibleCount = allPosts.length - remainingCount;
+		const topicsButton = topicsToggle;
+		const topicsPanel = topicList;
+		const topicsWrap = topicsRoot;
 
-      if (status) {
-        status.textContent = `Showing ${visibleCount} of ${allPosts.length} posts.`;
-      }
+		function setTopicsOpen(open: boolean) {
+			topicsButton.setAttribute("aria-expanded", open ? "true" : "false");
+			topicsPanel.hidden = !open;
+			topicsWrap.classList.toggle("is-open", open);
+		}
 
-      if (remainingCount === 0) {
-        button.setAttribute("aria-expanded", "true");
-        controls.hidden = true;
-      }
-    });
-  }
+		topicsButton.addEventListener("click", () => {
+			const open = topicsButton.getAttribute("aria-expanded") !== "true";
+			setTopicsOpen(open);
+		});
 
-  initializePostArchive();
-  document.addEventListener("astro:page-load", initializePostArchive);
+		const selectedTags = new Set<string>();
+		const isMac =
+			typeof navigator !== "undefined" &&
+			/Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+		if (kbd) {
+			kbd.textContent = isMac ? "⌘K" : "Ctrl K";
+		}
+
+		const params = new URLSearchParams(window.location.search);
+		const initialQuery = params.get("q")?.trim() ?? "";
+		const initialTags = (params.get("tag") ?? "")
+			.split(",")
+			.map((tag) => tag.trim())
+			.filter(Boolean);
+		const initialSort = params.get("sort") === "oldest" ? "oldest" : "newest";
+
+		if (initialQuery) {
+			searchInput.value = initialQuery;
+		}
+		sortSelect.value = initialSort;
+		initialTags.forEach((tag) => {
+			const match = tagButtons.find(
+				(button) =>
+					button.dataset.postsTag?.toLowerCase() === tag.toLowerCase(),
+			);
+			if (match?.dataset.postsTag) {
+				selectedTags.add(match.dataset.postsTag);
+				match.setAttribute("aria-pressed", "true");
+				match.classList.add("is-active");
+			}
+		});
+
+		if (selectedTags.size > 0) {
+			setTopicsOpen(true);
+		}
+
+		function syncUrl() {
+			const next = new URLSearchParams();
+			const query = searchInput.value.trim();
+			if (query) next.set("q", query);
+			if (selectedTags.size > 0) {
+				next.set("tag", Array.from(selectedTags).join(","));
+			}
+			if (sortSelect.value === "oldest") next.set("sort", "oldest");
+
+			const search = next.toString();
+			const nextUrl = `${window.location.pathname}${search ? `?${search}` : ""}${window.location.hash}`;
+			window.history.replaceState({}, "", nextUrl);
+		}
+
+		function applyFilters() {
+			const query = searchInput.value.trim().toLowerCase();
+			const sort = sortSelect.value === "oldest" ? "oldest" : "newest";
+			let visibleCount = 0;
+
+			const ordered = [...rows].sort((a, b) => {
+				const aTime = Number(a.dataset.timestamp || 0);
+				const bTime = Number(b.dataset.timestamp || 0);
+				return sort === "oldest" ? aTime - bTime : bTime - aTime;
+			});
+
+			ordered.forEach((row) => list.appendChild(row));
+
+			rows.forEach((row) => {
+				const haystack = row.dataset.search ?? "";
+				const rowTags = (row.dataset.tags ?? "")
+					.split("|")
+					.filter(Boolean);
+				const matchesQuery = !query || haystack.includes(query);
+				const matchesTags =
+					selectedTags.size === 0 ||
+					Array.from(selectedTags).every((tag) =>
+						rowTags.some(
+							(rowTag) => rowTag.toLowerCase() === tag.toLowerCase(),
+						),
+					);
+				const matches = matchesQuery && matchesTags;
+
+				row.classList.toggle("is-hidden", !matches);
+				row.toggleAttribute("hidden", !matches);
+				row.setAttribute("aria-hidden", matches ? "false" : "true");
+				if (matches) visibleCount += 1;
+			});
+
+			empty.hidden = visibleCount > 0;
+			clearButton.hidden = !(query || selectedTags.size > 0);
+			syncUrl();
+		}
+
+		searchInput.addEventListener("input", applyFilters);
+		sortSelect.addEventListener("change", applyFilters);
+
+		tagButtons.forEach((button) => {
+			button.addEventListener("click", () => {
+				const tag = button.dataset.postsTag;
+				if (!tag) return;
+
+				if (selectedTags.has(tag)) {
+					selectedTags.delete(tag);
+					button.setAttribute("aria-pressed", "false");
+					button.classList.remove("is-active");
+				} else {
+					selectedTags.add(tag);
+					button.setAttribute("aria-pressed", "true");
+					button.classList.add("is-active");
+				}
+				applyFilters();
+			});
+		});
+
+		clearButton.addEventListener("click", () => {
+			searchInput.value = "";
+			selectedTags.clear();
+			tagButtons.forEach((button) => {
+				button.setAttribute("aria-pressed", "false");
+				button.classList.remove("is-active");
+			});
+			applyFilters();
+			searchInput.focus();
+		});
+
+		document.addEventListener("keydown", (event) => {
+			const meta = event.metaKey || event.ctrlKey;
+			if (!meta || event.key.toLowerCase() !== "k") return;
+			const target = event.target;
+			if (
+				target instanceof HTMLElement &&
+				(target.tagName === "INPUT" ||
+					target.tagName === "TEXTAREA" ||
+					target.isContentEditable)
+			) {
+				if (target === searchInput) return;
+			}
+			event.preventDefault();
+			searchInput.focus();
+			searchInput.select();
+		});
+
+		applyFilters();
+	}
+
+	initializePostsArchive();
+	document.addEventListener("astro:page-load", initializePostsArchive);
 </script>
 
 <style>
-  @media (prefers-reduced-motion: no-preference) {
-    .post-card.is-revealed {
-      animation: reveal-post 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-  }
+	.posts-page {
+		--posts-paper: #f2f2ef;
+		--posts-muted: #9a9a96;
+		--posts-faint: #6e6e6a;
+		--posts-line: rgba(255, 255, 255, 0.11);
+		--posts-soft-line: rgba(255, 255, 255, 0.065);
+		--posts-ink: #0a0a0a;
+		position: relative;
+		z-index: 20;
+		padding: 40px 28px 72px;
+		color: var(--posts-paper);
+	}
 
-  @keyframes reveal-post {
-    from {
-      opacity: 0;
-      transform: translateY(0.5rem);
-    }
+	.posts-shell {
+		width: min(100%, 1120px);
+		margin: 0 auto;
+	}
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+	.posts-hero {
+		padding: 28px 0 48px;
+		text-align: center;
+	}
+
+	.posts-title-block h1 {
+		margin: 0;
+		color: var(--posts-paper);
+		font-size: 3.75rem;
+		font-weight: 600;
+		letter-spacing: 0;
+		line-height: 1;
+	}
+
+	.posts-handwritten,
+	.posts-empty-hand,
+	.post-highlight-note {
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+	}
+
+	.posts-handwritten {
+		margin: 16px 0 0;
+		color: var(--posts-paper);
+		font-size: 1.28rem;
+		line-height: 1.35;
+	}
+
+	.posts-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 240px;
+		gap: 48px;
+		align-items: start;
+	}
+
+	.posts-aside {
+		position: sticky;
+		top: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 22px;
+		order: 2;
+	}
+
+	.posts-main {
+		order: 1;
+		min-width: 0;
+	}
+
+	.posts-search {
+		position: relative;
+		display: flex;
+		align-items: center;
+	}
+
+	.posts-search-icon {
+		position: absolute;
+		left: 0.85rem;
+		width: 0.95rem;
+		height: 0.95rem;
+		color: var(--posts-muted);
+		pointer-events: none;
+	}
+
+	.posts-search input {
+		width: 100%;
+		min-height: 2.55rem;
+		padding: 0.65rem 3.4rem 0.65rem 2.35rem;
+		border: 1px solid var(--posts-line);
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.03);
+		color: var(--posts-paper);
+		font: inherit;
+		font-size: 0.9rem;
+		outline: none;
+		transition:
+			border-color 160ms ease,
+			background-color 160ms ease;
+	}
+
+	.posts-search input::placeholder {
+		color: var(--posts-faint);
+	}
+
+	.posts-search input:focus {
+		border-color: rgb(255 255 255 / 0.28);
+		background: rgb(255 255 255 / 0.05);
+	}
+
+	.posts-search-kbd {
+		position: absolute;
+		right: 0.7rem;
+		padding: 0.15rem 0.4rem;
+		border: 1px solid var(--posts-soft-line);
+		border-radius: 0.35rem;
+		color: var(--posts-faint);
+		font-family: ui-sans-serif, system-ui, sans-serif;
+		font-size: 0.65rem;
+		font-weight: 500;
+		line-height: 1.2;
+		pointer-events: none;
+	}
+
+	.posts-sort {
+		position: relative;
+	}
+
+	.posts-sort select {
+		width: 100%;
+		min-height: 2.55rem;
+		padding: 0.65rem 2.35rem 0.65rem 0.95rem;
+		border: 1px solid var(--posts-line);
+		border-radius: 0.85rem;
+		appearance: none;
+		-webkit-appearance: none;
+		background-color: rgb(255 255 255 / 0.03);
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a9a96' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 0.9rem center;
+		background-size: 0.75rem;
+		color: var(--posts-paper);
+		font: inherit;
+		font-size: 0.86rem;
+		line-height: 1.2;
+		text-align: left;
+		cursor: pointer;
+		outline: none;
+		transition:
+			border-color 160ms ease,
+			background-color 160ms ease;
+	}
+
+	.posts-sort select:hover,
+	.posts-sort select:focus {
+		border-color: rgb(255 255 255 / 0.28);
+		background-color: rgb(255 255 255 / 0.05);
+	}
+
+	.posts-sort select option {
+		background: #0d0d0d;
+		color: var(--posts-paper);
+	}
+
+	.posts-topics-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+	}
+
+	.posts-topics.is-open .posts-topics-head {
+		margin-bottom: 0.75rem;
+	}
+
+	.posts-topics-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--posts-paper);
+		font: inherit;
+		font-size: 0.92rem;
+		font-weight: 550;
+		cursor: pointer;
+	}
+
+	.posts-topics-toggle:hover,
+	.posts-topics-toggle:focus-visible {
+		color: rgb(255 255 255 / 0.92);
+	}
+
+	.posts-topics-chevron {
+		width: 0.85rem;
+		height: 0.85rem;
+		color: var(--posts-muted);
+		transition: transform 180ms ease;
+	}
+
+	.posts-topics.is-open .posts-topics-chevron {
+		transform: rotate(180deg);
+	}
+
+	.posts-clear {
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--posts-muted);
+		font: inherit;
+		font-size: 0.78rem;
+		cursor: pointer;
+		text-decoration: underline;
+		text-underline-offset: 0.18em;
+	}
+
+	.posts-clear:hover,
+	.posts-clear:focus-visible {
+		color: var(--posts-paper);
+	}
+
+	.posts-topic-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem;
+	}
+
+	.posts-topic-list[hidden] {
+		display: none;
+	}
+
+	.posts-topic {
+		padding: 0.35rem 0.62rem;
+		border: 1px solid var(--posts-soft-line);
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.03);
+		color: var(--posts-muted);
+		font: inherit;
+		font-size: 0.72rem;
+		font-weight: 500;
+		line-height: 1;
+		cursor: pointer;
+		transition:
+			border-color 160ms ease,
+			background-color 160ms ease,
+			color 160ms ease;
+	}
+
+	.posts-topic:hover,
+	.posts-topic:focus-visible {
+		border-color: rgb(255 255 255 / 0.22);
+		color: var(--posts-paper);
+	}
+
+	.posts-topic.is-active {
+		border-color: rgb(255 255 255 / 0.28);
+		background: rgb(255 255 255 / 0.12);
+		color: var(--posts-paper);
+	}
+
+	.posts-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1.15rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.post-row {
+		position: relative;
+	}
+
+	.post-row.is-hidden {
+		display: none;
+	}
+
+	.post-row-link {
+		position: relative;
+		display: block;
+		isolation: isolate;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.post-row-link::before {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		border: 1px dashed rgba(255, 255, 255, 0.17);
+		border-radius: 10px;
+		background: transparent;
+		content: "";
+		pointer-events: none;
+		transition:
+			border-color 160ms ease,
+			transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.post-row-link:hover::before,
+	.post-row-link:focus-visible::before {
+		border-color: rgba(255, 255, 255, 0.27);
+		transform: translate3d(3px, 3px, 0);
+	}
+
+	.post-row-link:focus-visible {
+		outline: 2px solid rgba(255, 255, 255, 0.5);
+		outline-offset: 4px;
+	}
+
+	.post-row-inner {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 11.5rem;
+		gap: 1.35rem;
+		align-items: center;
+		min-width: 0;
+		margin: 0;
+		padding: 1.15rem 1.15rem 1.15rem 1.25rem;
+		border: 1px solid rgba(255, 255, 255, 0.085);
+		border-radius: 10px;
+		background: #0d0d0d;
+		box-shadow: 0 16px 34px rgba(0, 0, 0, 0.16);
+		backface-visibility: hidden;
+		transition:
+			border-color 160ms ease,
+			transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.post-row-link:hover .post-row-inner,
+	.post-row-link:focus-visible .post-row-inner {
+		border-color: rgba(255, 255, 255, 0.15);
+		transform: translate3d(-3px, -3px, 0);
+	}
+
+	.post-row-copy {
+		min-width: 0;
+	}
+
+	.post-date {
+		display: block;
+		margin: 0 0 0.4rem;
+		color: var(--posts-muted);
+		font-size: 0.78rem;
+		font-weight: 500;
+	}
+
+	.post-title-row {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.45rem;
+	}
+
+	.post-title {
+		margin: 0;
+		color: var(--posts-paper);
+		font-size: 1.28rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		line-height: 1.25;
+	}
+
+	.post-arrow {
+		flex-shrink: 0;
+		margin-top: 0.18rem;
+		color: var(--posts-muted);
+		font-size: 1rem;
+		line-height: 1;
+		opacity: 0.55;
+		transform: translateX(-0.15rem);
+		transition:
+			opacity 180ms ease,
+			transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+			color 160ms ease;
+	}
+
+	.post-row-link:hover .post-arrow,
+	.post-row-link:focus-visible .post-arrow {
+		color: var(--posts-paper);
+		opacity: 1;
+		transform: translateX(0.05rem);
+	}
+
+	.post-description {
+		margin: 0.5rem 0 0;
+		color: rgb(177 177 172);
+		font-size: 0.9rem;
+		font-weight: 400;
+		line-height: 1.55;
+		text-wrap: pretty;
+	}
+
+	.post-meta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.45rem 0.85rem;
+		margin-top: 0.85rem;
+	}
+
+	.post-reading {
+		color: #858581;
+		font-size: 0.57rem;
+		font-weight: 600;
+		line-height: 1;
+		letter-spacing: 0.01em;
+		text-transform: lowercase;
+	}
+
+	.post-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px 0;
+	}
+
+	.post-tags > span {
+		display: inline-flex;
+		align-items: center;
+		color: #858581;
+		font-size: 0.57rem;
+		font-weight: 600;
+		line-height: 1;
+		transition: color 180ms ease;
+	}
+
+	.post-tags > span:not(:last-child)::after {
+		margin-inline: 7px;
+		color: #50504d;
+		content: "/";
+		font-weight: 500;
+	}
+
+	.post-row-link:hover .post-reading,
+	.post-row-link:focus-visible .post-reading,
+	.post-row-link:hover .post-tags > span,
+	.post-row-link:focus-visible .post-tags > span {
+		color: #a3a39f;
+	}
+
+	.post-thumb {
+		position: relative;
+		overflow: hidden;
+		width: 11.5rem;
+		height: 7.1rem;
+		border-radius: 6px;
+		background: rgb(255 255 255 / 0.03);
+		isolation: isolate;
+	}
+
+	.post-thumb::after {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		background: linear-gradient(
+			180deg,
+			transparent 55%,
+			rgba(0, 0, 0, 0.18)
+		);
+		content: "";
+		opacity: 0.55;
+		pointer-events: none;
+		transition: opacity 180ms ease;
+	}
+
+	.post-thumb img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.post-row-link:hover .post-thumb::after,
+	.post-row-link:focus-visible .post-thumb::after {
+		opacity: 0.2;
+	}
+
+	.post-row-link:hover .post-thumb img,
+	.post-row-link:focus-visible .post-thumb img {
+		transform: scale(1.03);
+	}
+
+	.post-row--featured {
+		padding-top: 0.55rem;
+	}
+
+	.post-highlight-note {
+		position: absolute;
+		top: -0.15rem;
+		left: 0.85rem;
+		z-index: 2;
+		color: var(--posts-paper);
+		font-size: 0.95rem;
+		line-height: 1;
+		transform: rotate(-4deg);
+		pointer-events: none;
+		opacity: 0.92;
+	}
+
+	.posts-empty {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.45rem;
+		padding: 1.5rem 0.2rem 0.5rem;
+	}
+
+	.posts-empty[hidden] {
+		display: none;
+	}
+
+	.posts-empty-hand {
+		color: var(--posts-paper);
+		font-size: 1.35rem;
+		line-height: 1.2;
+		transform: rotate(-2deg);
+	}
+
+	.posts-empty-copy {
+		color: var(--posts-muted);
+		font-size: 0.88rem;
+	}
+
+	@media (max-width: 900px) {
+		.posts-layout {
+			grid-template-columns: 1fr;
+			gap: 28px;
+		}
+
+		.posts-aside,
+		.posts-main {
+			order: initial;
+		}
+
+		.posts-aside {
+			position: static;
+		}
+
+		.post-row-inner {
+			grid-template-columns: 1fr;
+			gap: 1rem;
+			padding: 1.05rem;
+		}
+
+		.post-thumb {
+			width: 100%;
+			height: 11rem;
+			order: -1;
+		}
+
+		.post-highlight-note {
+			left: auto;
+			right: 0.85rem;
+			top: -0.2rem;
+			transform: rotate(5deg);
+		}
+	}
+
+	@media (max-width: 640px) {
+		.posts-page {
+			padding: 28px 18px 56px;
+		}
+
+		.posts-hero {
+			padding: 12px 0 34px;
+		}
+
+		.posts-title-block h1 {
+			font-size: 2.85rem;
+		}
+
+		.posts-handwritten {
+			font-size: 1.12rem;
+		}
+
+		.post-title {
+			font-size: 1.18rem;
+		}
+
+		.posts-search-kbd {
+			display: none;
+		}
+
+		.posts-search input {
+			padding-right: 1rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.post-row-link::before,
+		.post-row-inner,
+		.post-arrow,
+		.post-thumb img,
+		.post-thumb::after,
+		.posts-topics-chevron {
+			transition: none;
+		}
+
+		.post-row-link:hover::before,
+		.post-row-link:focus-visible::before,
+		.post-row-link:hover .post-row-inner,
+		.post-row-link:focus-visible .post-row-inner,
+		.post-row-link:hover .post-arrow,
+		.post-row-link:focus-visible .post-arrow,
+		.post-row-link:hover .post-thumb img,
+		.post-row-link:focus-visible .post-thumb img {
+			transform: none;
+		}
+	}
 </style>
