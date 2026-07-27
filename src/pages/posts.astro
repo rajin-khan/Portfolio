@@ -6,8 +6,6 @@ import {
 	formatReadingTime,
 } from "../lib/reading-time";
 
-const FEATURED_SLUG = "quiet-but-not-idle";
-
 const allPosts = await getCollection("post");
 
 const posts = allPosts
@@ -34,10 +32,13 @@ const posts = allPosts
 			searchBlob: [post.data.title, post.data.description, ...tags]
 				.join(" ")
 				.toLowerCase(),
-			featured: post.slug === FEATURED_SLUG,
 		};
 	})
-	.sort((a, b) => b.timestamp - a.timestamp);
+	.sort((a, b) => b.timestamp - a.timestamp)
+	.map((post, index) => ({
+		...post,
+		latest: index === 0,
+	}));
 
 const allTags = Array.from(
 	new Set(posts.flatMap((post) => post.tags)),
@@ -163,23 +164,23 @@ const allTags = Array.from(
 						{
 							posts.map((post) => (
 								<li
-									class:list={[
-										"post-row",
-										{ "post-row--featured": post.featured },
-									]}
+									class:list={["post-row", { "post-row--latest": post.latest }]}
 									data-blog-post
 									data-title={post.title}
 									data-search={post.searchBlob}
 									data-tags={post.tags.join("|")}
 									data-timestamp={String(post.timestamp)}
 								>
-									{post.featured && (
-										<span class="post-highlight-note" aria-hidden="true">
-											start here
-										</span>
-									)}
 									<a class="post-row-link" href={`/post/${post.slug}`}>
 										<article class="post-row-inner">
+											{post.latest && (
+												<span class="post-highlight-note post-highlight-note--latest" aria-hidden="true">
+													<span>latest</span>
+													<svg viewBox="0 0 72 10" role="presentation">
+														<path d="M2.5 6.2C18 3.4 38 2.2 69 5.6" />
+													</svg>
+												</span>
+											)}
 											<div class="post-row-copy">
 												<time class="post-date" datetime={post.dateIso}>
 													{post.dateLabel}
@@ -759,6 +760,7 @@ const allTags = Array.from(
 		min-width: 0;
 		margin: 0;
 		padding: 1.15rem 1.15rem 1.15rem 1.25rem;
+		overflow: visible;
 		border: 1px solid rgba(255, 255, 255, 0.085);
 		border-radius: 10px;
 		background: #0d0d0d;
@@ -922,21 +924,53 @@ const allTags = Array.from(
 		transform: scale(1.03);
 	}
 
-	.post-row--featured {
+	.post-row--latest {
 		padding-top: 0.55rem;
+	}
+
+	.post-row--latest .post-row-inner {
+		padding-top: 1.45rem;
 	}
 
 	.post-highlight-note {
 		position: absolute;
-		top: -0.15rem;
-		left: 0.85rem;
-		z-index: 2;
+		top: 0.45rem;
+		left: 0.95rem;
+		z-index: 3;
 		color: var(--posts-paper);
-		font-size: 0.95rem;
+		font-size: 1.02rem;
 		line-height: 1;
-		transform: rotate(-4deg);
+		transform: rotate(-5deg);
+		transform-origin: left center;
 		pointer-events: none;
-		opacity: 0.92;
+		opacity: 0.94;
+	}
+
+	.post-highlight-note--latest {
+		display: inline-block;
+		padding-bottom: 0.35rem;
+	}
+
+	.post-highlight-note--latest > span {
+		display: block;
+	}
+
+	.post-highlight-note--latest svg {
+		position: absolute;
+		right: -0.1rem;
+		bottom: -0.05rem;
+		left: -0.12rem;
+		width: calc(100% + 0.22rem);
+		height: 0.55rem;
+		overflow: visible;
+	}
+
+	.post-highlight-note--latest path {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.45;
+		stroke-linecap: round;
+		opacity: 0.82;
 	}
 
 	.posts-empty {
@@ -991,10 +1025,10 @@ const allTags = Array.from(
 		}
 
 		.post-highlight-note {
-			left: auto;
-			right: 0.85rem;
-			top: -0.2rem;
-			transform: rotate(5deg);
+			top: 0.45rem;
+			left: 0.95rem;
+			right: auto;
+			transform: rotate(-5deg);
 		}
 	}
 
