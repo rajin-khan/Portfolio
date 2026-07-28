@@ -382,74 +382,87 @@ const sticker = {
 
 <script>
 	const root = document.querySelector("[data-aria-sticker]");
-	const sticker = root?.querySelector("[data-aria-sticker-card]");
-	const openButton = root?.querySelector("[data-aria-sticker-open]");
-	const closeButton = root?.querySelector("[data-aria-sticker-close]");
-	const backFace = root?.querySelector("[data-aria-sticker-back]");
+	if (!(root instanceof HTMLElement)) {
+		// Sticker mount missing.
+	} else {
+		const stickerNode = root.querySelector("[data-aria-sticker-card]");
+		const openNode = root.querySelector("[data-aria-sticker-open]");
+		const closeNode = root.querySelector("[data-aria-sticker-close]");
+		const backNode = root.querySelector("[data-aria-sticker-back]");
 
-	if (
-		root instanceof HTMLElement &&
-		sticker instanceof HTMLElement &&
-		openButton instanceof HTMLButtonElement &&
-		closeButton instanceof HTMLButtonElement &&
-		backFace instanceof HTMLElement
-	) {
-		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-		const finePointer = window.matchMedia("(pointer: fine)");
-		let flipped = false;
-		let tiltFrame = 0;
+		if (
+			!(stickerNode instanceof HTMLElement) ||
+			!(openNode instanceof HTMLButtonElement) ||
+			!(closeNode instanceof HTMLButtonElement) ||
+			!(backNode instanceof HTMLElement)
+		) {
+			// Incomplete sticker markup.
+		} else {
+			const sticker: HTMLElement = stickerNode;
+			const openButton: HTMLButtonElement = openNode;
+			const closeButton: HTMLButtonElement = closeNode;
+			const backFace: HTMLElement = backNode;
+			const reducedMotion = window.matchMedia(
+				"(prefers-reduced-motion: reduce)",
+			);
+			const finePointer = window.matchMedia("(pointer: fine)");
+			let flipped = false;
+			let tiltFrame = 0;
 
-		function resetTilt() {
-			sticker.style.setProperty("--tilt-x", "0deg");
-			sticker.style.setProperty("--tilt-y", "0deg");
-			sticker.style.setProperty("--lift-x", "0px");
-			sticker.style.setProperty("--lift-y", "0px");
-		}
-
-		function setFlipped(nextFlipped: boolean, restoreFocus = false) {
-			flipped = nextFlipped;
-			sticker.classList.toggle("is-flipped", flipped);
-			openButton.disabled = flipped;
-			openButton.setAttribute("aria-expanded", String(flipped));
-			backFace.inert = !flipped;
-			backFace.setAttribute("aria-hidden", String(!flipped));
-			resetTilt();
-
-			const focusDelay = reducedMotion.matches ? 0 : 470;
-			window.setTimeout(() => {
-				if (flipped) {
-					closeButton.focus({ preventScroll: true });
-				} else if (restoreFocus) {
-					openButton.focus({ preventScroll: true });
-				}
-			}, focusDelay);
-		}
-
-		openButton.addEventListener("click", () => setFlipped(true));
-		closeButton.addEventListener("click", () => setFlipped(false, true));
-
-		document.addEventListener("keydown", (event) => {
-			if (event.key === "Escape" && flipped) {
-				setFlipped(false, true);
+			function resetTilt() {
+				sticker.style.setProperty("--tilt-x", "0deg");
+				sticker.style.setProperty("--tilt-y", "0deg");
+				sticker.style.setProperty("--lift-x", "0px");
+				sticker.style.setProperty("--lift-y", "0px");
 			}
-		});
 
-		sticker.addEventListener("pointermove", (event) => {
-			if (flipped || reducedMotion.matches || !finePointer.matches) return;
+			function setFlipped(nextFlipped: boolean, restoreFocus = false) {
+				flipped = nextFlipped;
+				sticker.classList.toggle("is-flipped", flipped);
+				openButton.disabled = flipped;
+				openButton.setAttribute("aria-expanded", String(flipped));
+				backFace.inert = !flipped;
+				backFace.setAttribute("aria-hidden", String(!flipped));
+				resetTilt();
 
-			const bounds = sticker.getBoundingClientRect();
-			const normalizedX = (event.clientX - bounds.left) / bounds.width - 0.5;
-			const normalizedY = (event.clientY - bounds.top) / bounds.height - 0.5;
+				const focusDelay = reducedMotion.matches ? 0 : 470;
+				window.setTimeout(() => {
+					if (flipped) {
+						closeButton.focus({ preventScroll: true });
+					} else if (restoreFocus) {
+						openButton.focus({ preventScroll: true });
+					}
+				}, focusDelay);
+			}
 
-			window.cancelAnimationFrame(tiltFrame);
-			tiltFrame = window.requestAnimationFrame(() => {
-				sticker.style.setProperty("--tilt-x", `${normalizedY * -7}deg`);
-				sticker.style.setProperty("--tilt-y", `${normalizedX * 9}deg`);
-				sticker.style.setProperty("--lift-x", `${normalizedX * 7}px`);
-				sticker.style.setProperty("--lift-y", `${normalizedY * 5}px`);
+			openButton.addEventListener("click", () => setFlipped(true));
+			closeButton.addEventListener("click", () => setFlipped(false, true));
+
+			document.addEventListener("keydown", (event) => {
+				if (event.key === "Escape" && flipped) {
+					setFlipped(false, true);
+				}
 			});
-		});
 
-		sticker.addEventListener("pointerleave", resetTilt);
+			sticker.addEventListener("pointermove", (event) => {
+				if (flipped || reducedMotion.matches || !finePointer.matches) return;
+
+				const bounds = sticker.getBoundingClientRect();
+				const normalizedX =
+					(event.clientX - bounds.left) / bounds.width - 0.5;
+				const normalizedY =
+					(event.clientY - bounds.top) / bounds.height - 0.5;
+
+				window.cancelAnimationFrame(tiltFrame);
+				tiltFrame = window.requestAnimationFrame(() => {
+					sticker.style.setProperty("--tilt-x", `${normalizedY * -7}deg`);
+					sticker.style.setProperty("--tilt-y", `${normalizedX * 9}deg`);
+					sticker.style.setProperty("--lift-x", `${normalizedX * 7}px`);
+					sticker.style.setProperty("--lift-y", `${normalizedY * 5}px`);
+				});
+			});
+
+			sticker.addEventListener("pointerleave", resetTilt);
+		}
 	}
 </script>
