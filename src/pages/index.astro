@@ -86,9 +86,15 @@ const ogImage = "/assets/images/rajins-banner-new.png";
     >
       <div class="relative w-full md:w-1/2">
         <h1
-          class="mb-5 text-4xl font-semibold leading-tight md:text-4xl lg:text-6xl dark:text-white"
+          class="hero-title mb-5 text-4xl font-semibold leading-tight md:text-4xl lg:text-6xl dark:text-white"
         >
-          Hey, I'm Rajin.
+          <span class="hero-title-lead">Hey, I'm</span>{" "}
+          <span class="hero-signature">
+            <span class="hero-signature-name">Rajin</span>
+            <svg viewBox="0 0 160 20" role="presentation" aria-hidden="true">
+              <path pathLength="1" d="M8 13C42 7.5 88 5.2 154 10.5" />
+            </svg>
+          </span><span class="hero-signature-dot">.</span>
         </h1>
         <p class="hero-handwritten mb-6 text-[1.375rem] leading-relaxed text-neutral-700 dark:text-neutral-300">
           I make machines think so I don't have to. <br
@@ -184,5 +190,151 @@ const ogImage = "/assets/images/rajins-banner-new.png";
   .hero-handwritten {
     font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
     font-weight: 400;
+  }
+
+  .hero-title {
+    --signature-start: 120ms;
+    --signature-name-duration: 520ms;
+    --signature-line-duration: 160ms;
+    --signature-dot-delay: calc(
+      var(--signature-start) + var(--signature-name-duration) + var(--signature-line-duration) +
+        40ms
+    );
+    overflow: visible;
+  }
+
+  .hero-title-lead {
+    font-size: 0.96em;
+  }
+
+  .hero-signature {
+    position: relative;
+    display: inline-block;
+    overflow: visible;
+    margin: 0 0.02em;
+    padding: 0.28em 0.12em 0.08em;
+    color: inherit;
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-size: 0.96em;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0;
+    vertical-align: baseline;
+    transform: rotate(-2deg);
+    transform-origin: left bottom;
+  }
+
+  .hero-signature-name {
+    display: inline-block;
+    padding: 0.1em 0.04em 0.35em;
+    /* Start fully open so the j descender is visible while painting. */
+    clip-path: inset(-0.15em -0.08em -0.4em -0.08em);
+    -webkit-mask-image: linear-gradient(90deg, #000 0 50%, transparent 50% 100%);
+    mask-image: linear-gradient(90deg, #000 0 50%, transparent 50% 100%);
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 200% 100%;
+    mask-size: 200% 100%;
+    animation:
+      hero-signature-paint var(--signature-name-duration) linear var(--signature-start) forwards,
+      hero-signature-trim var(--signature-line-duration) cubic-bezier(0.16, 1, 0.3, 1)
+        calc(var(--signature-start) + var(--signature-name-duration)) forwards;
+    will-change: mask-position, clip-path;
+  }
+
+  .hero-signature svg {
+    position: absolute;
+    left: -2%;
+    /* Sit through the j descender so the stroke creates the clip. */
+    bottom: 0.2em;
+    width: 112%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hero-signature path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.35;
+    stroke-linecap: round;
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+    animation: hero-signature-draw var(--signature-line-duration)
+      cubic-bezier(0.16, 1, 0.3, 1)
+      calc(var(--signature-start) + var(--signature-name-duration)) forwards;
+  }
+
+  .hero-signature-dot {
+    display: inline-block;
+    font-size: 0.78em;
+    opacity: 0;
+    animation: hero-signature-dot-in 280ms ease var(--signature-dot-delay) forwards;
+  }
+
+  @keyframes hero-signature-paint {
+    to {
+      -webkit-mask-position: 0 0;
+      mask-position: 0 0;
+    }
+  }
+
+  /* Trim the descender only as the underline strokes across. */
+  @keyframes hero-signature-trim {
+    from {
+      clip-path: inset(-0.15em -0.08em -0.4em -0.08em);
+    }
+    to {
+      clip-path: inset(-0.15em -0.08em 0.22em -0.08em);
+    }
+  }
+
+  @keyframes hero-signature-draw {
+    0% {
+      opacity: 0;
+      stroke-dashoffset: 1;
+    }
+    2% {
+      opacity: 1;
+      stroke-dashoffset: 0.98;
+    }
+    to {
+      opacity: 1;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes hero-signature-dot-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.08em);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-signature-name {
+      -webkit-mask-position: 0 0;
+      mask-position: 0 0;
+      clip-path: inset(-0.15em -0.08em 0.22em -0.08em);
+      animation: none;
+    }
+
+    .hero-signature path {
+      opacity: 1;
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+
+    .hero-signature-dot {
+      opacity: 1;
+      animation: none;
+    }
   }
 </style>
