@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../layouts/main.astro";
+import AriaSticker from "../components/posts/aria-sticker.astro";
 import {
 	estimateReadingMinutes,
 	formatReadingTime,
@@ -131,27 +132,34 @@ const allTags = Array.from(
 						</div>
 						<div
 							id="posts-topic-list"
-							class="posts-topic-list"
+							class="posts-topic-panel"
 							role="group"
 							aria-label="Filter by topic"
 							aria-labelledby="posts-topics-toggle"
+							aria-hidden="true"
+							inert
 							data-posts-topic-list
-							hidden
 						>
-							{
-								allTags.map((tag) => (
-									<button
-										type="button"
-										class="posts-topic"
-										data-posts-tag={tag}
-										aria-pressed="false"
-									>
-										{tag}
-									</button>
-								))
-							}
+							<div class="posts-topic-panel-inner">
+								<div class="posts-topic-list">
+									{
+										allTags.map((tag) => (
+											<button
+												type="button"
+												class="posts-topic"
+												data-posts-tag={tag}
+												aria-pressed="false"
+											>
+												{tag}
+											</button>
+										))
+									}
+								</div>
+							</div>
 						</div>
 					</div>
+
+					<AriaSticker />
 				</aside>
 
 				<div class="posts-main">
@@ -287,8 +295,9 @@ const allTags = Array.from(
 
 		function setTopicsOpen(open: boolean) {
 			topicsButton.setAttribute("aria-expanded", open ? "true" : "false");
-			topicsPanel.hidden = !open;
 			topicsWrap.classList.toggle("is-open", open);
+			topicsPanel.inert = !open;
+			topicsPanel.setAttribute("aria-hidden", String(!open));
 		}
 
 		topicsButton.addEventListener("click", () => {
@@ -611,6 +620,8 @@ const allTags = Array.from(
 		align-items: center;
 		justify-content: space-between;
 		gap: 0.75rem;
+		margin-bottom: 0;
+		transition: margin-bottom 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
 	}
 
 	.posts-topics.is-open .posts-topics-head {
@@ -664,14 +675,25 @@ const allTags = Array.from(
 		color: var(--posts-paper);
 	}
 
+	.posts-topic-panel {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.posts-topics.is-open .posts-topic-panel {
+		grid-template-rows: 1fr;
+	}
+
+	.posts-topic-panel-inner {
+		min-height: 0;
+		overflow: hidden;
+	}
+
 	.posts-topic-list {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.45rem;
-	}
-
-	.posts-topic-list[hidden] {
-		display: none;
 	}
 
 	.posts-topic {
@@ -1135,7 +1157,9 @@ const allTags = Array.from(
 		.post-arrow,
 		.post-thumb img,
 		.post-thumb::after,
-		.posts-topics-chevron {
+		.posts-topics-chevron,
+		.posts-topics-head,
+		.posts-topic-panel {
 			transition: none;
 		}
 

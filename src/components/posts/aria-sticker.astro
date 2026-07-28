@@ -1,0 +1,455 @@
+---
+const sticker = {
+	id: "sticker-050",
+	src: "/assets/images/stickers/curated/sticker-050.jpg",
+	width: 1170,
+	height: 1167,
+};
+---
+
+<div class="aria-sticker-block" data-aria-sticker>
+	<article
+		class="aria-sticker is-ready"
+		aria-label="Note from A.R.I.A."
+		data-aria-sticker-card
+	>
+		<div class="aria-sticker__inner">
+			<div class="aria-sticker__face aria-sticker__front">
+				<img
+					src={sticker.src}
+					alt=""
+					width={sticker.width}
+					height={sticker.height}
+					loading="lazy"
+					decoding="async"
+					draggable="false"
+				/>
+
+				<span class="aria-sticker__flip-cue" aria-hidden="true">
+					<svg
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.8"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"
+						></path>
+						<path d="M21 3v5h-5"></path>
+					</svg>
+				</span>
+
+				<button
+					class="aria-sticker__trigger"
+					type="button"
+					aria-label="Turn the A.R.I.A. note over"
+					aria-controls="aria-sticker-back"
+					aria-expanded="false"
+					title="Read the back"
+					data-aria-sticker-open
+				>
+				</button>
+			</div>
+
+			<div
+				class="aria-sticker__face aria-sticker__back"
+				id="aria-sticker-back"
+				aria-hidden="true"
+				inert
+				data-aria-sticker-back
+			>
+				<img
+					class="aria-sticker__doodle"
+					src="/assets/images/stickers/doodles/doodle-1.png"
+					alt=""
+					width="360"
+					height="360"
+					loading="lazy"
+					decoding="async"
+					aria-hidden="true"
+				/>
+
+				<p class="aria-sticker__copy">
+					I know, he hasn't<br />
+					posted in a while.<br />
+					He's lazy —
+				</p>
+
+				<p class="aria-sticker__meta" aria-hidden="true">
+					<span>~ A.R.I.A.</span>
+				</p>
+
+				<button
+					class="aria-sticker__trigger aria-sticker__flip-back"
+					type="button"
+					aria-label="Turn the sticker back over"
+					title="Show the front"
+					data-aria-sticker-close
+				>
+					<span class="aria-sticker__flip-back-cue" aria-hidden="true">
+						<svg
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.8"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<path
+								d="M3 12a9 9 0 1 0 9-9c-2.52 0-4.93 1-6.74 2.74L3 8"
+							></path>
+							<path d="M3 3v5h5"></path>
+						</svg>
+					</span>
+				</button>
+			</div>
+		</div>
+	</article>
+
+	<p class="aria-sticker-caption" aria-hidden="true">
+		Message from A.R.I.A.<br />
+		(Rajin's AI Assistant)
+	</p>
+</div>
+
+<style>
+	.aria-sticker-block {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.7rem;
+		width: 100%;
+		perspective: 900px;
+	}
+
+	.aria-sticker {
+		--tilt-x: 0deg;
+		--tilt-y: 0deg;
+		--lift-x: 0px;
+		--lift-y: 0px;
+		position: relative;
+		width: min(100%, 9.5rem);
+		aspect-ratio: 1170 / 1167;
+		transform:
+			translate3d(var(--lift-x), var(--lift-y), 0)
+			rotateX(var(--tilt-x))
+			rotateY(var(--tilt-y))
+			rotate(-4deg);
+		transform-style: preserve-3d;
+		transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+		will-change: transform;
+	}
+
+	.aria-sticker__inner {
+		position: absolute;
+		inset: 0;
+		transform-style: preserve-3d;
+		transition: transform 680ms cubic-bezier(0.2, 0.82, 0.25, 1);
+	}
+
+	.aria-sticker.is-flipped .aria-sticker__inner {
+		transform: rotateY(180deg);
+	}
+
+	.aria-sticker__face {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		border-radius: 0.48rem;
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+		box-shadow:
+			0 1.1rem 2.4rem rgb(0 0 0 / 0.48),
+			0 0 0 1px rgb(255 255 255 / 0.08),
+			0 0 0 0.22rem rgb(20 20 20);
+		transform-style: preserve-3d;
+	}
+
+	.aria-sticker__front {
+		background: rgb(10 10 10);
+		transform: rotateY(0deg) translateZ(1px);
+	}
+
+	.aria-sticker__front::after {
+		position: absolute;
+		inset: 0;
+		border: 1px solid rgb(255 255 255 / 0.12);
+		border-radius: inherit;
+		content: "";
+		pointer-events: none;
+	}
+
+	.aria-sticker__front img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		opacity: 0;
+		transform: scale(0.99);
+		transition:
+			filter 300ms ease,
+			opacity 240ms ease,
+			transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.aria-sticker.is-ready .aria-sticker__front img {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	.aria-sticker:hover .aria-sticker__front img,
+	.aria-sticker:focus-within .aria-sticker__front img {
+		filter: brightness(1.06) saturate(1.04);
+		transform: scale(1.025);
+	}
+
+	.aria-sticker__trigger {
+		position: absolute;
+		z-index: 5;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		padding: 0;
+		border: 0;
+		border-radius: inherit;
+		background: transparent;
+		cursor: pointer;
+	}
+
+	.aria-sticker__trigger:disabled {
+		pointer-events: none;
+	}
+
+	.aria-sticker__flip-cue {
+		position: absolute;
+		z-index: 3;
+		right: 0.55rem;
+		bottom: 0.55rem;
+		display: grid;
+		width: 1.55rem;
+		height: 1.55rem;
+		place-items: center;
+		border: 1px solid rgb(255 255 255 / 0.24);
+		border-radius: 50%;
+		background: rgb(10 10 10 / 0.82);
+		color: rgb(229 229 229);
+		pointer-events: none;
+		transition:
+			background 180ms ease,
+			transform 180ms ease;
+	}
+
+	.aria-sticker__flip-cue svg,
+	.aria-sticker__flip-back-cue svg {
+		width: 0.85rem;
+		height: 0.85rem;
+	}
+
+	.aria-sticker:hover .aria-sticker__flip-cue,
+	.aria-sticker:focus-within .aria-sticker__flip-cue {
+		border-color: rgb(255 255 255 / 0.46);
+		background: rgb(23 23 23 / 0.94);
+		color: rgb(250 250 250);
+		transform: rotate(14deg) scale(1.04);
+	}
+
+	.aria-sticker__back {
+		background:
+			linear-gradient(
+				90deg,
+				transparent 0 13%,
+				rgb(224 116 116 / 0.34) 13.25%,
+				transparent 13.7%
+			),
+			repeating-linear-gradient(
+				0deg,
+				rgb(252 248 232) 0 1.35rem,
+				rgb(123 166 203 / 0.28) 1.39rem,
+				rgb(252 248 232) 1.45rem
+			);
+		color: rgb(44 41 36);
+		transform: rotateY(180deg) translateZ(1px);
+	}
+
+	.aria-sticker__doodle {
+		position: absolute;
+		top: 0.5rem;
+		left: 0.55rem;
+		width: 1.7rem;
+		height: 1.7rem;
+		object-fit: contain;
+		opacity: 0.58;
+		pointer-events: none;
+		transform: rotate(-11deg);
+	}
+
+	.aria-sticker__copy {
+		position: absolute;
+		top: 46%;
+		left: 50%;
+		width: 78%;
+		margin: 0;
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-weight: 400;
+		font-size: 0.92rem;
+		line-height: 1.2;
+		letter-spacing: 0;
+		pointer-events: none;
+		text-align: center;
+		text-wrap: balance;
+		transform: translate(-50%, -50%) rotate(-2deg);
+	}
+
+	.aria-sticker__meta {
+		position: absolute;
+		right: 0.7rem;
+		bottom: 0.7rem;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		margin: 0;
+		color: rgb(44 41 36 / 0.62);
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-weight: 400;
+		font-size: 0.58rem;
+		line-height: 1.12;
+		letter-spacing: 0;
+		transform: rotate(-2deg);
+	}
+
+	.aria-sticker__flip-back {
+		color: rgb(44 41 36 / 0.72);
+	}
+
+	.aria-sticker__flip-back-cue {
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+		display: grid;
+		width: 1.45rem;
+		height: 1.45rem;
+		place-items: center;
+		border: 1px solid rgb(44 41 36 / 0.2);
+		border-radius: 50%;
+		background: rgb(252 248 232 / 0.78);
+		pointer-events: none;
+		transition:
+			background 160ms ease,
+			transform 160ms ease;
+	}
+
+	.aria-sticker__flip-back:hover .aria-sticker__flip-back-cue,
+	.aria-sticker__flip-back:focus-visible .aria-sticker__flip-back-cue {
+		background: rgb(252 248 232);
+		transform: rotate(-15deg);
+	}
+
+	.aria-sticker-caption {
+		margin: 0;
+		max-width: 11rem;
+		color: rgb(255 255 255 / 0.72);
+		font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+		font-size: 0.92rem;
+		line-height: 1.25;
+		text-align: center;
+		transform: rotate(-3deg);
+	}
+
+	@media (max-width: 52.5rem) {
+		.aria-sticker {
+			width: min(100%, 7.75rem);
+		}
+
+		.aria-sticker__copy {
+			font-size: 0.8rem;
+		}
+
+		.aria-sticker-caption {
+			font-size: 0.84rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.aria-sticker,
+		.aria-sticker__inner,
+		.aria-sticker__front img,
+		.aria-sticker__flip-cue,
+		.aria-sticker__flip-back-cue {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	const root = document.querySelector("[data-aria-sticker]");
+	const sticker = root?.querySelector("[data-aria-sticker-card]");
+	const openButton = root?.querySelector("[data-aria-sticker-open]");
+	const closeButton = root?.querySelector("[data-aria-sticker-close]");
+	const backFace = root?.querySelector("[data-aria-sticker-back]");
+
+	if (
+		root instanceof HTMLElement &&
+		sticker instanceof HTMLElement &&
+		openButton instanceof HTMLButtonElement &&
+		closeButton instanceof HTMLButtonElement &&
+		backFace instanceof HTMLElement
+	) {
+		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+		const finePointer = window.matchMedia("(pointer: fine)");
+		let flipped = false;
+		let tiltFrame = 0;
+
+		function resetTilt() {
+			sticker.style.setProperty("--tilt-x", "0deg");
+			sticker.style.setProperty("--tilt-y", "0deg");
+			sticker.style.setProperty("--lift-x", "0px");
+			sticker.style.setProperty("--lift-y", "0px");
+		}
+
+		function setFlipped(nextFlipped: boolean, restoreFocus = false) {
+			flipped = nextFlipped;
+			sticker.classList.toggle("is-flipped", flipped);
+			openButton.disabled = flipped;
+			openButton.setAttribute("aria-expanded", String(flipped));
+			backFace.inert = !flipped;
+			backFace.setAttribute("aria-hidden", String(!flipped));
+			resetTilt();
+
+			const focusDelay = reducedMotion.matches ? 0 : 470;
+			window.setTimeout(() => {
+				if (flipped) {
+					closeButton.focus({ preventScroll: true });
+				} else if (restoreFocus) {
+					openButton.focus({ preventScroll: true });
+				}
+			}, focusDelay);
+		}
+
+		openButton.addEventListener("click", () => setFlipped(true));
+		closeButton.addEventListener("click", () => setFlipped(false, true));
+
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "Escape" && flipped) {
+				setFlipped(false, true);
+			}
+		});
+
+		sticker.addEventListener("pointermove", (event) => {
+			if (flipped || reducedMotion.matches || !finePointer.matches) return;
+
+			const bounds = sticker.getBoundingClientRect();
+			const normalizedX = (event.clientX - bounds.left) / bounds.width - 0.5;
+			const normalizedY = (event.clientY - bounds.top) / bounds.height - 0.5;
+
+			window.cancelAnimationFrame(tiltFrame);
+			tiltFrame = window.requestAnimationFrame(() => {
+				sticker.style.setProperty("--tilt-x", `${normalizedY * -7}deg`);
+				sticker.style.setProperty("--tilt-y", `${normalizedX * 9}deg`);
+				sticker.style.setProperty("--lift-x", `${normalizedX * 7}px`);
+				sticker.style.setProperty("--lift-y", `${normalizedY * 5}px`);
+			});
+		});
+
+		sticker.addEventListener("pointerleave", resetTilt);
+	}
+</script>
