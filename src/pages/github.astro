@@ -1,4 +1,5 @@
 ---
+import { WORK_PROFILE } from "../data/github-profile.js";
 import Layout from "../layouts/main.astro";
 
 const commitPlaceholders = Array.from({ length: 100 });
@@ -8,6 +9,8 @@ const weekdayPlaceholders = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const languagePlaceholders = Array.from({ length: 6 });
 const repositoryPlaceholders = Array.from({ length: 5 });
 const commitLogPlaceholders = Array.from({ length: 5 });
+const workSealText =
+	`CURRENTLY WORKING AT • ${WORK_PROFILE.company} • ${WORK_PROFILE.position} •`.toUpperCase();
 ---
 
 <Layout
@@ -19,7 +22,10 @@ const commitLogPlaceholders = Array.from({ length: 5 });
   <div
     class="github-page"
     data-github-dashboard
+    data-profile-mode="personal"
+    data-work-profile-enabled={String(WORK_PROFILE.enabled)}
     data-state="loading"
+    style={`--work-accent: ${WORK_PROFILE.primaryColor}`}
     aria-busy="true"
   >
     <header class="github-nav">
@@ -120,22 +126,59 @@ const commitLogPlaceholders = Array.from({ length: 5 });
       <section class="github-hero" aria-labelledby="github-title">
         <div class="hero-profile">
           <div class="profile-lockup">
-            <img
-              data-profile-avatar
-              src="https://avatars.githubusercontent.com/u/121302497?v=4"
-              alt="Rajin Khan's GitHub avatar"
-              width="112"
-              height="112"
-              loading="eager"
-              decoding="async"
-              fetchpriority="high"
-            />
-            <div>
-              <h1 id="github-title">github</h1>
+            <div class="profile-switch-wrap">
+              <button
+                class="profile-coin"
+                type="button"
+                data-profile-switch
+                aria-label="Show Rajin's work GitHub profile"
+                aria-pressed="false"
+                disabled={!WORK_PROFILE.enabled}
+              >
+                <span class="profile-coin-wobble">
+                  <span class="profile-coin-inner">
+                    <span class="profile-coin-face profile-coin-front">
+                      <img
+                        data-profile-avatar-personal
+                        src="https://avatars.githubusercontent.com/u/121302497?v=4"
+                        alt="Rajin Khan's personal GitHub avatar"
+                        width="112"
+                        height="112"
+                        loading="eager"
+                        decoding="async"
+                        fetchpriority="high"
+                      />
+                    </span>
+                    <span class="profile-coin-face profile-coin-back">
+                      <img
+                        src={WORK_PROFILE.logo}
+                        alt={`${WORK_PROFILE.company} logomark`}
+                        width="76"
+                        height="56"
+                        loading="eager"
+                        decoding="async"
+                      />
+                    </span>
+                  </span>
+                </span>
+              </button>
+
+              <span class="profile-switch-hint" aria-hidden="true">
+                <svg viewBox="0 0 24 28" fill="none">
+                  <path d="M3 3c6 2 11 8 13 17" />
+                  <path d="m10 17 6 4 4-6" />
+                </svg>
+                <span class="profile-switch-hint-desktop">click me</span>
+                <span class="profile-switch-hint-touch">tap me</span>
+              </span>
             </div>
+            <h1 id="github-title">github</h1>
           </div>
 
-          <p class="hero-line">i do like building.</p>
+          <p class="hero-line" data-profile-tagline>i do like building.</p>
+          <span class="visually-hidden" data-profile-mode-status aria-live="polite">
+            Personal GitHub profile shown
+          </span>
 
           <div class="profile-details">
             <a
@@ -153,7 +196,7 @@ const commitLogPlaceholders = Array.from({ length: 5 });
               <strong class="hero-total" data-total-commits>----</strong>
               <span class="hero-plus" aria-hidden="true">+</span>
             </div>
-            <p class="hero-total-label">public commits</p>
+            <p class="hero-total-label" data-total-label>public commits</p>
 
             <dl class="hero-facts">
               <div>
@@ -218,7 +261,39 @@ const commitLogPlaceholders = Array.from({ length: 5 });
                   decoding="async"
                 />
               </span>
-              <p class="head-label">HEAD</p>
+              <span class="head-work-seal" aria-hidden="true">
+                <span class="work-seal-ring">
+                  <svg viewBox="0 0 120 120" role="presentation">
+                    <defs>
+                      <path
+                        id="skelementor-seal-path"
+                        d="M60,60 m-48,0 a48,48 0 1,1 96,0 a48,48 0 1,1 -96,0"
+                      ></path>
+                    </defs>
+                    <text>
+                      <textPath
+                        href="#skelementor-seal-path"
+                        startOffset="0%"
+                        textLength="296"
+                        lengthAdjust="spacing"
+                      >
+                        {workSealText}
+                      </textPath>
+                    </text>
+                  </svg>
+                </span>
+                <span class="work-seal-core">
+                  <img
+                    src={WORK_PROFILE.logo}
+                    alt=""
+                    width="76"
+                    height="56"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </span>
+              </span>
+              <p class="head-label" data-head-label>HEAD</p>
               <a
                 class="head-sha"
                 data-head-link
@@ -239,7 +314,7 @@ const commitLogPlaceholders = Array.from({ length: 5 });
                 >
                 <time data-head-date datetime="">just now</time>
               </div>
-              <p class="head-aside">currently at the top of the pile</p>
+              <p class="head-aside" data-head-aside>currently at the top of the pile</p>
             </article>
           </div>
         </div>
@@ -402,9 +477,10 @@ const commitLogPlaceholders = Array.from({ length: 5 });
             <header class="section-heading">
               <div>
                 <h2 id="repositories-title">Worth opening</h2>
-                <p>Public repositories, ordered by the attention they found.</p>
+                <p data-repositories-description>Public repositories, ordered by the attention they found.</p>
               </div>
               <a
+                data-repositories-link
                 href="https://github.com/rajin-khan?tab=repositories"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -434,7 +510,7 @@ const commitLogPlaceholders = Array.from({ length: 5 });
             <header class="section-heading">
               <div>
                 <h2 id="commit-log-title">Recent commits</h2>
-                <p>The messages say more than the graph does.</p>
+                <p data-commit-log-description>The messages say more than the graph does.</p>
               </div>
               <span data-commit-log-count>Reading the log...</span>
             </header>
@@ -508,9 +584,12 @@ const commitLogPlaceholders = Array.from({ length: 5 });
     --activity-2: #006d32;
     --activity-3: #26a641;
     --activity-4: #39d353;
+    --profile-accent: #39d353;
+    --profile-accent-soft: rgba(57, 211, 83, 0.22);
     min-height: 100svh;
     width: 100%;
     max-width: 100vw;
+    isolation: isolate;
     overflow-x: hidden;
     color: var(--paper);
     background-color: var(--ink);
@@ -522,10 +601,202 @@ const commitLogPlaceholders = Array.from({ length: 5 });
     font-weight: 400;
   }
 
+  .github-page::after {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 0 18px color-mix(in srgb, var(--profile-accent) 72%, transparent),
+      -22px 0 72px 18px color-mix(in srgb, var(--profile-accent) 12%, transparent);
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(-8vw, 0, 0);
+  }
+
+  .github-page[data-profile-transitioning="true"]::after {
+    animation: profile-page-scan 760ms cubic-bezier(0.2, 0.78, 0.2, 1) both;
+  }
+
+  .github-page[data-profile-mode="work"] {
+    --activity-1: color-mix(in srgb, var(--work-accent) 24%, #02040a);
+    --activity-2: color-mix(in srgb, var(--work-accent) 58%, #02040a);
+    --activity-3: var(--work-accent);
+    --activity-4: color-mix(in srgb, var(--work-accent) 72%, white);
+    --profile-accent: var(--work-accent);
+    --profile-accent-soft: color-mix(in srgb, var(--work-accent) 24%, transparent);
+  }
+
+  .github-hero > .hero-profile,
+  .github-hero > .hero-activity,
+  .github-main > .data-section > .section-inner,
+  .dashboard-api-note {
+    transition:
+      opacity 180ms ease,
+      transform 220ms cubic-bezier(0.4, 0, 1, 1);
+  }
+
+  .github-page[data-profile-transitioning="true"]
+    :is(
+      .github-hero > .hero-profile,
+      .github-hero > .hero-activity,
+      .github-main > .data-section > .section-inner,
+      .dashboard-api-note
+    ) {
+    will-change: opacity, transform;
+  }
+
+  .github-page[data-profile-transition="leaving"]
+    :is(
+      .github-hero > .hero-profile,
+      .github-hero > .hero-activity,
+      .github-main > .data-section > .section-inner,
+      .dashboard-api-note
+    ) {
+    opacity: 0;
+    transform: translate3d(0, 7px, 0) scale(0.997);
+  }
+
+  .github-page[data-profile-transition="entering"]
+    :is(
+      .github-hero > .hero-profile,
+      .github-hero > .hero-activity,
+      .github-main > .data-section > .section-inner,
+      .dashboard-api-note
+    ) {
+    animation: profile-section-enter 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .github-page[data-profile-transition="entering"] .hero-profile {
+    animation-delay: 30ms;
+  }
+
+  .github-page[data-profile-transition="entering"] .hero-activity {
+    animation-delay: 70ms;
+  }
+
+  .github-page[data-profile-transition="entering"]
+    .public-month-section
+    .section-inner {
+    animation-delay: 105ms;
+  }
+
+  .github-page[data-profile-transition="entering"]
+    .analysis-section
+    .section-inner {
+    animation-delay: 140ms;
+  }
+
+  .github-page[data-profile-transition="entering"]
+    .code-index-section
+    .section-inner {
+    animation-delay: 175ms;
+  }
+
+  .github-page[data-profile-transition="entering"] .commit-pixel:not(.commit-pixel--skeleton) {
+    animation: profile-pixel-enter 340ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+    animation-delay: calc(80ms + var(--profile-delay, 0ms));
+  }
+
+  .github-page[data-profile-transition="entering"] .event-bar:not(.event-bar--skeleton),
+  .github-page[data-profile-transition="entering"] .hour-bar:not(.hour-bar--skeleton) {
+    animation: profile-bar-enter 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(100ms + var(--profile-delay, 0ms));
+  }
+
+  .github-page[data-profile-transition="entering"] .weekday-bar:not(.weekday-bar--skeleton),
+  .github-page[data-profile-transition="entering"] .language-bar {
+    animation: profile-line-enter 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(110ms + var(--profile-delay, 0ms));
+  }
+
+  @keyframes profile-page-scan {
+    0% {
+      opacity: 0;
+      transform: translate3d(-8vw, 0, 0);
+    }
+
+    14% {
+      opacity: 0.78;
+    }
+
+    78% {
+      opacity: 0.62;
+    }
+
+    100% {
+      opacity: 0;
+      transform: translate3d(108vw, 0, 0);
+    }
+  }
+
+  @keyframes profile-section-enter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 10px, 0) scale(0.997);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  @keyframes profile-pixel-enter {
+    from {
+      opacity: 0;
+      transform: scale(0.62);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes profile-bar-enter {
+    from {
+      opacity: 0;
+      transform: scaleY(0.08);
+    }
+
+    to {
+      opacity: 0.8;
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes profile-line-enter {
+    from {
+      opacity: 0;
+      transform: scaleX(0.08);
+    }
+
+    to {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+
   .github-page *,
   .github-page *::before,
   .github-page *::after {
     box-sizing: border-box;
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
   }
 
   .github-nav {
@@ -695,13 +966,174 @@ const commitLogPlaceholders = Array.from({ length: 5 });
     gap: 24px;
   }
 
-  .profile-lockup img {
+  .profile-switch-wrap {
+    position: relative;
+    flex: 0 0 auto;
     width: 88px;
     height: 88px;
-    border: 1px dashed #5f5f5c;
+    perspective: 720px;
+  }
+
+  .profile-coin {
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
     border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    transform: translateZ(0) scale(1);
+    transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .github-page[data-profile-transition="preparing"] .profile-coin {
+    transform: translateZ(0) scale(0.94);
+  }
+
+  .github-page[data-work-profile-enabled="false"] .profile-coin {
+    cursor: default;
+  }
+
+  .github-page[data-work-profile-enabled="false"] .profile-switch-hint {
+    display: none;
+  }
+
+  .profile-coin-wobble,
+  .profile-coin-inner,
+  .profile-coin-face {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transform-style: preserve-3d;
+  }
+
+  .profile-coin-wobble {
+    transition: filter 180ms ease;
+  }
+
+  .profile-coin-inner {
+    position: relative;
+    transform: rotateY(0deg);
+    transition: transform 620ms cubic-bezier(0.2, 0.82, 0.2, 1);
+    will-change: transform;
+  }
+
+  .github-page[data-profile-mode="work"] .profile-coin-inner {
+    transform: rotateY(180deg);
+  }
+
+  .profile-coin-face {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .profile-coin-front {
+    border: 1px dashed #5f5f5c;
+    background: #070707;
+  }
+
+  .profile-coin-back {
+    border: 1px solid color-mix(in srgb, var(--work-accent) 52%, transparent);
+    background: #02040a;
+    box-shadow:
+      inset 0 0 0 5px rgba(255, 255, 255, 0.018),
+      0 0 30px color-mix(in srgb, var(--work-accent) 12%, transparent);
+    transform: rotateY(180deg);
+  }
+
+  .profile-coin-front img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     filter: saturate(0.9) contrast(1.03);
+  }
+
+  .profile-coin-back img {
+    width: 60%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(
+      0 5px 14px color-mix(in srgb, var(--work-accent) 22%, transparent)
+    );
+  }
+
+  .profile-coin:hover .profile-coin-wobble,
+  .profile-coin:focus-visible .profile-coin-wobble {
+    filter: brightness(1.08);
+  }
+
+  .github-page[data-work-profile-enabled="false"]
+    .profile-coin:hover
+    .profile-coin-wobble {
+    filter: none;
+  }
+
+  .profile-coin:focus-visible::after {
+    position: absolute;
+    inset: -5px;
+    border: 1px solid var(--paper);
+    border-radius: 50%;
+    content: "";
+  }
+
+  .profile-switch-hint {
+    position: absolute;
+    top: -31px;
+    left: -5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: max-content;
+    color: #fff;
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1;
+    opacity: 0.94;
+    pointer-events: none;
+    transform: rotate(-4deg);
+    transition:
+      color 300ms ease,
+      opacity 180ms ease,
+      transform 180ms ease;
+  }
+
+  .profile-switch-hint svg {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 28px;
+    margin-bottom: -13px;
+    overflow: visible;
+    stroke: currentColor;
+    stroke-width: 1.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .profile-switch-hint-touch {
+    display: none;
+  }
+
+  .profile-switch-wrap:hover .profile-switch-hint,
+  .profile-switch-wrap:focus-within .profile-switch-hint {
+    opacity: 1;
+    transform: rotate(-2deg) translateY(-2px);
+  }
+
+  .github-page[data-profile-transition] .profile-switch-hint {
+    opacity: 0;
+    transform: rotate(-2deg) translateY(-5px);
   }
 
   .profile-lockup h1 {
@@ -760,6 +1192,13 @@ const commitLogPlaceholders = Array.from({ length: 5 });
 
   .profile-details a:hover {
     color: var(--paper);
+  }
+
+  .github-page[data-profile-mode="work"] .commit-popover {
+    border-color: color-mix(in srgb, var(--work-accent) 42%, transparent);
+    box-shadow:
+      0 20px 54px rgba(0, 0, 0, 0.55),
+      0 0 34px color-mix(in srgb, var(--work-accent) 8%, transparent);
   }
 
   .hero-count {
@@ -1173,7 +1612,12 @@ const commitLogPlaceholders = Array.from({ length: 5 });
     width: var(--octocat-size);
     height: var(--octocat-size);
     animation: octocat-walk 8s linear infinite;
+    filter: blur(0);
+    opacity: 1;
     pointer-events: none;
+    transition:
+      filter 260ms ease,
+      opacity 220ms ease;
     will-change: transform;
   }
 
@@ -1187,6 +1631,85 @@ const commitLogPlaceholders = Array.from({ length: 5 });
     opacity: 0.82;
     animation: octocat-turn 8s steps(1, end) infinite;
     will-change: transform;
+  }
+
+  .github-page[data-profile-mode="work"] .head-octocat {
+    animation-play-state: paused;
+    filter: blur(7px);
+    opacity: 0;
+  }
+
+  .head-work-seal {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 3;
+    display: grid;
+    width: 94px;
+    height: 94px;
+    place-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.68) rotate(-12deg);
+    transition:
+      opacity 220ms ease,
+      transform 500ms cubic-bezier(0.2, 0.82, 0.2, 1);
+  }
+
+  .github-page[data-profile-mode="work"] .head-work-seal {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    transition-delay: 180ms;
+  }
+
+  .work-seal-ring,
+  .work-seal-ring svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .work-seal-ring {
+    position: absolute;
+    inset: 0;
+    color: color-mix(in srgb, var(--work-accent) 46%, white);
+    animation: work-seal-spin 14s linear infinite;
+  }
+
+  .work-seal-ring text {
+    fill: currentColor;
+    font-family: Satoshi, Inter, Arial, sans-serif;
+    font-size: 7px;
+    font-weight: 650;
+    letter-spacing: 0;
+  }
+
+  .work-seal-core {
+    display: grid;
+    width: 54px;
+    height: 54px;
+    border: 1px solid color-mix(in srgb, var(--work-accent) 52%, transparent);
+    border-radius: 50%;
+    background: #02040a;
+    box-shadow:
+      inset 0 0 0 4px rgba(255, 255, 255, 0.018),
+      0 0 25px color-mix(in srgb, var(--work-accent) 18%, transparent);
+    place-items: center;
+  }
+
+  .work-seal-core img {
+    display: block;
+    width: 61%;
+    height: auto;
+    filter: drop-shadow(
+      0 4px 10px color-mix(in srgb, var(--work-accent) 26%, transparent)
+    );
+  }
+
+  @keyframes work-seal-spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   @keyframes octocat-walk {
@@ -1240,6 +1763,11 @@ const commitLogPlaceholders = Array.from({ length: 5 });
 
   .head-sha:hover {
     color: var(--paper) !important;
+  }
+
+  .head-sha[aria-disabled="true"] {
+    color: #8fa8ff !important;
+    pointer-events: none;
   }
 
   .head-commit h3 {
@@ -1907,6 +2435,48 @@ const commitLogPlaceholders = Array.from({ length: 5 });
     grid-row: 1 / 3;
   }
 
+  .hour-figure[hidden],
+  .weekday-chart[hidden],
+  .analysis-caption[hidden],
+  .language-list[hidden],
+  .repository-list[hidden],
+  .commit-log[hidden] {
+    display: none;
+  }
+
+  .github-page[data-profile-mode="work"] .analysis-section .section-inner,
+  .github-page[data-profile-mode="work"] .code-index-section .section-inner {
+    padding-top: 54px;
+    padding-bottom: 58px;
+  }
+
+  .github-page[data-profile-mode="work"] .analysis-grid,
+  .github-page[data-profile-mode="work"] .code-index-grid {
+    align-items: start;
+  }
+
+  .github-page[data-profile-mode="work"] .analysis-heading,
+  .github-page[data-profile-mode="work"] .code-index-grid .section-heading {
+    min-height: 0;
+    margin-bottom: 0;
+  }
+
+  .github-page[data-profile-mode="work"] .analysis-heading h2,
+  .github-page[data-profile-mode="work"] .code-index-grid .section-heading h2 {
+    font-size: 2.2rem;
+  }
+
+  .github-page[data-profile-mode="work"] .analysis-heading .section-aside,
+  .github-page[data-profile-mode="work"] .code-index-grid .section-heading p {
+    margin-top: 14px;
+    color: #d7d7d2;
+    font-family: "La Belle Aurore", "Bradley Hand", "Segoe Print", cursive;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.25;
+    transform: rotate(-1deg);
+  }
+
   .repository-item--skeleton,
   .commit-log-item--skeleton,
   .language-row--skeleton {
@@ -1935,6 +2505,10 @@ const commitLogPlaceholders = Array.from({ length: 5 });
   }
 
   @media (min-width: 981px) {
+    .github-page[data-profile-mode="work"] .analysis-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .code-index-grid .repository-link,
     .code-index-grid .commit-log-link {
       height: 110px;
@@ -2023,6 +2597,16 @@ const commitLogPlaceholders = Array.from({ length: 5 });
       min-height: 0;
     }
 
+    .github-page[data-profile-mode="work"] .analysis-grid,
+    .github-page[data-profile-mode="work"] .code-index-grid {
+      gap: 32px;
+    }
+
+    .github-page[data-profile-mode="work"] .language-panel,
+    .github-page[data-profile-mode="work"] .commit-log-panel {
+      padding-top: 32px;
+    }
+
     .repository-link {
       grid-template-columns: 36px minmax(0, 1fr) 24px;
     }
@@ -2077,9 +2661,14 @@ const commitLogPlaceholders = Array.from({ length: 5 });
       gap: 16px;
     }
 
-    .profile-lockup img {
+    .profile-switch-wrap {
       width: 72px;
       height: 72px;
+    }
+
+    .profile-switch-hint {
+      top: -33px;
+      font-size: 0.76rem;
     }
 
     .profile-lockup h1 {
@@ -2152,6 +2741,18 @@ const commitLogPlaceholders = Array.from({ length: 5 });
 
     .head-octocat {
       top: 24px;
+    }
+
+    .head-work-seal {
+      top: 12px;
+      right: 0;
+      width: 84px;
+      height: 84px;
+    }
+
+    .work-seal-core {
+      width: 48px;
+      height: 48px;
     }
 
     .head-commit h3 {
@@ -2277,6 +2878,14 @@ const commitLogPlaceholders = Array.from({ length: 5 });
   }
 
   @media (hover: none), (max-width: 720px) {
+    .profile-switch-hint-desktop {
+      display: none;
+    }
+
+    .profile-switch-hint-touch {
+      display: inline;
+    }
+
     .commit-popover {
       top: auto !important;
       right: 20px;
@@ -2292,6 +2901,12 @@ const commitLogPlaceholders = Array.from({ length: 5 });
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .profile-coin-wobble,
+    .profile-coin-inner {
+      animation: none !important;
+      transition: none !important;
+    }
+
     .head-octocat {
       animation: none !important;
       transform: none !important;

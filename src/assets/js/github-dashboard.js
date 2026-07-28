@@ -1,5 +1,18 @@
-const USERNAME = "rajin-khan";
-const CACHE_KEY = "rajin-github-dashboard-v3";
+import { WORK_PROFILE } from "../../data/github-profile.js";
+
+const PROFILES = {
+	personal: {
+		username: "rajin-khan",
+		tagline: "i do like building.",
+		privateHistory: false,
+	},
+	work: {
+		username: WORK_PROFILE.githubUsername,
+		tagline: WORK_PROFILE.tagline,
+		privateHistory: true,
+	},
+};
+const CACHE_PREFIX = "rajin-github-dashboard-v4";
 const CACHE_TTL = 30 * 60 * 1000;
 const MAX_COMMIT_PAGES = 10;
 const RHYTHM_DEFAULT = "tap a bar, it has opinions";
@@ -7,14 +20,6 @@ const API_HEADERS = {
 	Accept: "application/vnd.github+json",
 	"X-GitHub-Api-Version": "2022-11-28",
 };
-const ENDPOINTS = {
-	profile: `https://api.github.com/users/${USERNAME}`,
-	repositories: `https://api.github.com/users/${USERNAME}/repos?type=owner&sort=pushed&per_page=100`,
-};
-const COMMIT_SEARCH_URL = `https://api.github.com/search/commits?q=${encodeURIComponent(
-	`author:${USERNAME}`,
-)}&sort=committer-date&order=desc&per_page=100`;
-
 const numberFormatter = new Intl.NumberFormat("en-US");
 const shortDateFormatter = new Intl.DateTimeFormat("en", {
 	month: "short",
@@ -38,6 +43,25 @@ const dayNames = [
 let activeCommitCell = null;
 let popoverHideTimer = null;
 let popoverHiddenTimer = null;
+let activeProfileKey = "personal";
+let dashboardRequestId = 0;
+let profileTransitionInProgress = false;
+
+function wait(duration) {
+	return new Promise((resolve) => window.setTimeout(resolve, duration));
+}
+
+function prefersReducedMotion() {
+	return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function getActiveProfile() {
+	return PROFILES[activeProfileKey];
+}
+
+function getCacheKey(profileKey) {
+	return `${CACHE_PREFIX}:${profileKey}`;
+}
 
 function query(selector) {
 	return document.querySelector(selector);
@@ -99,7 +123,7 @@ function getRepositoryName(commit) {
 }
 
 function stripOwner(repository) {
-	return String(repository).replace(`${USERNAME}/`, "");
+	return String(repository).replace(`${getActiveProfile().username}/`, "");
 }
 
 function isBirthday(date) {
@@ -207,8 +231,11 @@ function showCommitPopover(day, cell) {
 	activeCommitCell = cell;
 	cell.setAttribute("aria-expanded", "true");
 
-	const latest = day.commits[0];
-	const count = day.commits.length;
+	const latest = day.commits?.[0];
+	const count = Number.isFinite(day.count)
+		? day.count
+		: day.commits?.length || 0;
+	const privateHistory = Boolean(day.privateHistory);
 	const birthday = isBirthday(day.date);
 	const dateElement = query("[data-commit-popover-date]");
 	const link = query("[data-commit-popover-link]");
@@ -218,31 +245,49 @@ function showCommitPopover(day, cell) {
 	);
 	setText(
 		"[data-commit-popover-count]",
-		`${count} ${count === 1 ? "commit" : "commits"}`,
+		`${count} ${
+			privateHistory
+				? count === 1
+					? "work contribution"
+					: "work contributions"
+				: count === 1
+					? "commit"
+					: "commits"
+		}`,
 	);
 	setText(
 		"[data-commit-popover-message]",
-		birthday
-			? "it was my birthday"
-			: latest
-				? getCommitMessage(latest)
-				: "Nothing public landed here",
+		privateHistory
+			? birthday
+				? "Birthday. Work lost this round."
+				: count
+					? "You can't see this one. It belongs to work."
+					: "No work followed me home this day."
+			: birthday
+				? "it was my birthday"
+				: latest
+					? getCommitMessage(latest)
+					: "Nothing public landed here",
 	);
 	setText(
 		"[data-commit-popover-repository]",
-		birthday && latest
-			? `also committed to ${stripOwner(getRepositoryName(latest))}`
-			: birthday
-				? "a good reason for a quiet square"
-				: latest
-					? stripOwner(getRepositoryName(latest))
-					: "the keyboard got a quiet day",
+		privateHistory
+			? count
+				? "private work, public footprint"
+				: "the blue square gets a quiet day"
+			: birthday && latest
+				? `also committed to ${stripOwner(getRepositoryName(latest))}`
+				: birthday
+					? "a good reason for a quiet square"
+					: latest
+						? stripOwner(getRepositoryName(latest))
+						: "the keyboard got a quiet day",
 	);
 
 	if (dateElement instanceof HTMLTimeElement) dateElement.dateTime = day.key;
 	if (link instanceof HTMLAnchorElement) {
-		link.hidden = !latest;
-		if (latest) link.href = latest.html_url;
+		link.hidden = privateHistory || !latest;
+		if (!privateHistory && latest) link.href = latest.html_url;
 	}
 
 	popover.hidden = false;
@@ -348,17 +393,20 @@ async function fetchJson(url) {
 	return response.json();
 }
 
-async function fetchCommitHistory() {
+async function fetchCommitHistory(profile) {
 	const cutoff = new Date();
 	cutoff.setHours(0, 0, 0, 0);
 	cutoff.setDate(cutoff.getDate() - 99);
+	const searchUrl = `https://api.github.com/search/commits?q=${encodeURIComponent(
+		`author:${profile.username}`,
+	)}&sort=committer-date&order=desc&per_page=100`;
 
 	const items = [];
 	let totalCount = null;
 	let incompleteResults = false;
 
 	for (let page = 1; page <= MAX_COMMIT_PAGES; page += 1) {
-		const response = await fetchJson(`${COMMIT_SEARCH_URL}&page=${page}`);
+		const response = await fetchJson(`${searchUrl}&page=${page}`);
 		const pageItems = Array.isArray(response.items) ? response.items : [];
 		if (page === 1) totalCount = response.total_count;
 		incompleteResults ||= Boolean(response.incomplete_results);
@@ -381,9 +429,30 @@ async function fetchCommitHistory() {
 	};
 }
 
-function readCache() {
+async function fetchContributionHistory() {
+	const to = new Date();
+	to.setHours(12, 0, 0, 0);
+	const from = new Date(to);
+	from.setDate(from.getDate() - 364);
+	const params = new URLSearchParams({
+		profile: "work",
+		from: localDateKey(from),
+		to: localDateKey(to),
+	});
+	const response = await fetchJson(`/api/github-contributions?${params}`);
+
+	return {
+		total_count: response.totalCount,
+		incomplete_results: false,
+		items: [],
+		contributionDays: Array.isArray(response.days) ? response.days : [],
+		private: true,
+	};
+}
+
+function readCache(profileKey) {
 	try {
-		const cached = localStorage.getItem(CACHE_KEY);
+		const cached = localStorage.getItem(getCacheKey(profileKey));
 		if (!cached) return null;
 		const parsed = JSON.parse(cached);
 		if (Date.now() - parsed.fetchedAt > CACHE_TTL) return null;
@@ -393,19 +462,28 @@ function readCache() {
 	}
 }
 
-function writeCache(data) {
+function writeCache(profileKey, data) {
 	try {
-		localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+		localStorage.setItem(getCacheKey(profileKey), JSON.stringify(data));
 	} catch {
 		// The live page remains usable when storage is blocked.
 	}
 }
 
-async function fetchDashboardData() {
-	const names = [...Object.keys(ENDPOINTS), "commits"];
+async function fetchDashboardData(profileKey) {
+	const profileConfig = PROFILES[profileKey];
+	const endpoints = {
+		profile: `https://api.github.com/users/${profileConfig.username}`,
+		repositories: `https://api.github.com/users/${profileConfig.username}/repos?type=owner&sort=pushed&per_page=100`,
+	};
+	const names = [...Object.keys(endpoints), "commits"];
 	const results = await Promise.allSettled(
 		names.map((name) =>
-			name === "commits" ? fetchCommitHistory() : fetchJson(ENDPOINTS[name]),
+			name === "commits"
+				? profileConfig.privateHistory
+					? fetchContributionHistory()
+					: fetchCommitHistory(profileConfig)
+				: fetchJson(endpoints[name]),
 		),
 	);
 	const responses = Object.fromEntries(
@@ -429,15 +507,17 @@ async function fetchDashboardData() {
 				? responses.commits.value
 				: { total_count: null, incomplete_results: false, items: [] },
 		warnings,
+		profileKey,
 		fetchedAt: Date.now(),
 	};
 
-	writeCache(data);
+	writeCache(profileKey, data);
 	return data;
 }
 
 function renderProfile(data) {
 	const { profile, repositories, commits } = data;
+	const profileConfig = PROFILES[data.profileKey];
 	const ownedRepositories = repositories.filter(
 		(repository) => !repository.fork,
 	);
@@ -453,7 +533,14 @@ function renderProfile(data) {
 
 	setText("[data-profile-handle]", `@${profile.login}`);
 	setText("[data-profile-since]", `on GitHub since ${profileYear}`);
+	setText("[data-profile-tagline]", profileConfig.tagline);
 	setText("[data-total-commits]", formatNumber(commits.total_count));
+	setText(
+		"[data-total-label]",
+		profileConfig.privateHistory
+			? "work contributions, past year"
+			: "public commits",
+	);
 	setText("[data-public-repos]", formatNumber(profile.public_repos));
 	setText("[data-total-stars]", formatNumber(totalStars));
 	setText("[data-total-forks]", formatNumber(totalForks));
@@ -463,21 +550,51 @@ function renderProfile(data) {
 		`Updated ${formatRelativeTime(data.fetchedAt)}`,
 	);
 
-	const avatar = query("[data-profile-avatar]");
-	if (avatar instanceof HTMLImageElement) {
+	const avatar = query("[data-profile-avatar-personal]");
+	if (!profileConfig.privateHistory && avatar instanceof HTMLImageElement) {
 		avatar.src = profile.avatar_url;
-		avatar.alt = `${profile.name || profile.login}'s GitHub avatar`;
+		avatar.alt = `${profile.name || profile.login}'s personal GitHub avatar`;
 	}
 
 	const profileLinks = document.querySelectorAll("[data-profile-link]");
 	for (const link of profileLinks) {
-		if (link instanceof HTMLAnchorElement) link.href = profile.html_url;
+		if (!(link instanceof HTMLAnchorElement)) continue;
+		link.href = profile.html_url;
+		link.setAttribute(
+			"aria-label",
+			`Open ${profile.name || profile.login} on GitHub`,
+		);
 	}
+
+	const repositoriesLink = query("[data-repositories-link]");
+	if (repositoriesLink instanceof HTMLAnchorElement) {
+		repositoriesLink.href = `${profile.html_url}?tab=repositories`;
+	}
+
+	const switchButton = query("[data-profile-switch]");
+	if (switchButton instanceof HTMLButtonElement) {
+		const workActive = data.profileKey === "work";
+		switchButton.setAttribute("aria-pressed", String(workActive));
+		switchButton.setAttribute(
+			"aria-label",
+			workActive
+				? "Show Rajin's personal GitHub profile"
+				: "Show Rajin's work GitHub profile",
+		);
+	}
+	setText(
+		"[data-profile-mode-status]",
+		`${data.profileKey === "work" ? "Work" : "Personal"} GitHub profile shown`,
+	);
 }
 
 function renderCommitField(commitSearch) {
 	const grid = query("[data-commit-grid]");
 	const commits = Array.isArray(commitSearch.items) ? commitSearch.items : [];
+	const contributionDays = Array.isArray(commitSearch.contributionDays)
+		? commitSearch.contributionDays
+		: [];
+	const privateHistory = Boolean(commitSearch.private);
 	if (!grid) return;
 
 	const today = new Date();
@@ -485,36 +602,55 @@ function renderCommitField(commitSearch) {
 	const days = Array.from({ length: 100 }, (_, index) => {
 		const date = new Date(today);
 		date.setDate(today.getDate() - (99 - index));
-		return { date, key: localDateKey(date), commits: [] };
+		return {
+			date,
+			key: localDateKey(date),
+			commits: [],
+			count: 0,
+			privateHistory,
+		};
 	});
 	const daysByKey = new Map(days.map((day) => [day.key, day]));
 
 	for (const commit of commits) {
 		const day = daysByKey.get(localDateKey(getCommitDate(commit)));
-		if (day) day.commits.push(commit);
+		if (day) {
+			day.commits.push(commit);
+			day.count += 1;
+		}
+	}
+	for (const contribution of contributionDays) {
+		const day = daysByKey.get(contribution.date);
+		if (day) day.count = Number(contribution.count) || 0;
 	}
 
-	const maxCommits = Math.max(1, ...days.map((day) => day.commits.length));
-	const activeDays = days.filter((day) => day.commits.length > 0).length;
-	const windowCommits = days.reduce(
-		(total, day) => total + day.commits.length,
-		0,
-	);
+	const maxCommits = Math.max(1, ...days.map((day) => day.count));
+	const activeDays = days.filter((day) => day.count > 0).length;
+	const windowCommits = days.reduce((total, day) => total + day.count, 0);
 	const fragment = document.createDocumentFragment();
-	for (const day of days) {
-		const count = day.commits.length;
+	for (const [index, day] of days.entries()) {
+		const count = day.count;
 		const level = getIntensityLevel(count, maxCommits);
 		const cell = document.createElement("button");
 		cell.type = "button";
 		cell.className = `commit-pixel commit-pixel--level-${level}`;
+		cell.style.setProperty("--profile-delay", `${index * 2}ms`);
 		cell.setAttribute("aria-haspopup", "dialog");
 		cell.setAttribute("aria-controls", "commit-day-details");
 		cell.setAttribute("aria-expanded", "false");
 		cell.setAttribute(
 			"aria-label",
 			`${formatDate(day.date)}, ${count} ${
-				count === 1 ? "commit" : "commits"
-			}.${isBirthday(day.date) ? " It was my birthday." : ""} Show details`,
+				privateHistory
+					? count === 1
+						? "work contribution"
+						: "work contributions"
+					: count === 1
+						? "commit"
+						: "commits"
+			}.${isBirthday(day.date) ? " It was my birthday." : ""} ${
+				privateHistory ? "Private details. " : ""
+			}Show details`,
 		);
 		cell.addEventListener("mouseenter", () => showCommitPopover(day, cell));
 		cell.addEventListener("mouseleave", scheduleCommitPopoverHide);
@@ -522,7 +658,8 @@ function renderCommitField(commitSearch) {
 		cell.addEventListener("blur", scheduleCommitPopoverHide);
 		cell.addEventListener("click", () => showCommitPopover(day, cell));
 		cell.addEventListener("keydown", (event) => {
-			if (event.key !== "Enter" || !day.commits.length) return;
+			if (event.key !== "Enter" || privateHistory || !day.commits.length)
+				return;
 			event.preventDefault();
 			showCommitPopover(day, cell);
 			requestAnimationFrame(() => {
@@ -536,7 +673,6 @@ function renderCommitField(commitSearch) {
 	grid.replaceChildren(fragment);
 	grid.setAttribute("aria-busy", "false");
 
-	const newest = commits[0];
 	setText(
 		"[data-commit-range]",
 		`${formatDate(days[0].date, compactDateFormatter)} to ${formatDate(
@@ -546,9 +682,50 @@ function renderCommitField(commitSearch) {
 	);
 	setText(
 		"[data-commit-sample]",
-		`${activeDays} active days / ${windowCommits} commits`,
+		`${activeDays} active days / ${windowCommits} ${
+			privateHistory ? "contributions" : "commits"
+		}`,
 	);
 
+	const headLink = query("[data-head-link]");
+	const repositoryLink = query("[data-head-repository]");
+	if (privateHistory) {
+		const latestWorkday = [...days].reverse().find((day) => day.count > 0);
+		setText("[data-head-label]", "LATEST WORKDAY");
+		setText("[data-head-sha]", "private");
+		setText(
+			"[data-head-message]",
+			latestWorkday
+				? `${latestWorkday.count} ${
+						latestWorkday.count === 1 ? "contribution" : "contributions"
+					}, zero spoilers`
+				: "the work account is enjoying a quiet stretch",
+		);
+		setText("[data-head-repository]", "private repository");
+		setText(
+			"[data-head-date]",
+			latestWorkday ? formatDate(latestWorkday.date) : "nothing to clock yet",
+		);
+		setText("[data-head-aside]", "proof of work, minus the paperwork");
+		if (headLink instanceof HTMLAnchorElement) {
+			headLink.removeAttribute("href");
+			headLink.setAttribute("aria-disabled", "true");
+			headLink.tabIndex = -1;
+		}
+		if (repositoryLink instanceof HTMLAnchorElement) {
+			repositoryLink.href = `https://github.com/${getActiveProfile().username}`;
+		}
+		return;
+	}
+
+	setText("[data-head-label]", "HEAD");
+	setText("[data-head-aside]", "currently at the top of the pile");
+	if (headLink instanceof HTMLAnchorElement) {
+		headLink.removeAttribute("aria-disabled");
+		headLink.tabIndex = 0;
+	}
+
+	const newest = commits[0];
 	if (!newest) {
 		setText("[data-head-sha]", "-------");
 		setText(
@@ -560,8 +737,6 @@ function renderCommitField(commitSearch) {
 		return;
 	}
 
-	const headLink = query("[data-head-link]");
-	const repositoryLink = query("[data-head-repository]");
 	const date = getCommitDate(newest);
 	setText("[data-head-sha]", newest.sha.slice(0, 7));
 	setText("[data-head-message]", getCommitMessage(newest));
@@ -582,6 +757,10 @@ function renderPublicMonth(commitSearch) {
 	const chart = query("[data-event-chart]");
 	if (!chart) return;
 	const commits = Array.isArray(commitSearch.items) ? commitSearch.items : [];
+	const contributionDays = Array.isArray(commitSearch.contributionDays)
+		? commitSearch.contributionDays
+		: [];
+	const privateHistory = Boolean(commitSearch.private);
 
 	const today = new Date();
 	today.setHours(12, 0, 0, 0);
@@ -600,6 +779,10 @@ function renderPublicMonth(commitSearch) {
 			day.commits.push(commit);
 		}
 	}
+	for (const contribution of contributionDays) {
+		const day = counts.get(contribution.date);
+		if (day) day.count = Number(contribution.count) || 0;
+	}
 
 	const max = Math.max(1, ...days.map((day) => day.count));
 	const fragment = document.createDocumentFragment();
@@ -616,6 +799,7 @@ function renderPublicMonth(commitSearch) {
 			"--event-height",
 			`${Math.max(5, (day.count / max) * 100)}%`,
 		);
+		column.style.setProperty("--profile-delay", `${index * 9}ms`);
 		track.className = "event-bar-track";
 		bar.className = `event-bar activity-level-${getIntensityLevel(
 			day.count,
@@ -623,8 +807,14 @@ function renderPublicMonth(commitSearch) {
 		)}`;
 		column.setAttribute(
 			"aria-label",
-			`${formatDate(day.date, compactDateFormatter)}, ${day.count} public ${
-				day.count === 1 ? "commit" : "commits"
+			`${formatDate(day.date, compactDateFormatter)}, ${day.count} ${
+				privateHistory
+					? day.count === 1
+						? "work contribution"
+						: "work contributions"
+					: day.count === 1
+						? "public commit"
+						: "public commits"
 			}`,
 		);
 		count.className = "event-count";
@@ -679,13 +869,22 @@ function renderPublicMonth(commitSearch) {
 				}`
 			: "quiet",
 	);
-	setText("[data-month-repositories]", formatNumber(repositories.size));
+	setText(
+		"[data-month-repositories]",
+		privateHistory ? "private" : formatNumber(repositories.size),
+	);
 }
 
 function renderCommitRhythm(commitSearch) {
 	const commits = Array.isArray(commitSearch.items)
 		? commitSearch.items.slice(0, 100)
 		: [];
+	const privateHistory = Boolean(commitSearch.private);
+	if (privateHistory) {
+		setText("[data-rhythm-note]", "the clock punched out before the data did");
+		setRhythmReadout("");
+		return;
+	}
 	const hours = Array(24).fill(0);
 	const weekdays = Array(7).fill(0);
 
@@ -695,7 +894,6 @@ function renderCommitRhythm(commitSearch) {
 		hours[date.getHours()] += 1;
 		weekdays[(date.getDay() + 6) % 7] += 1;
 	}
-
 	const hourChart = query("[data-hour-chart]");
 	if (hourChart) {
 		const maxHour = Math.max(1, ...hours);
@@ -706,6 +904,7 @@ function renderCommitRhythm(commitSearch) {
 			const label = document.createElement("span");
 			column.type = "button";
 			column.className = "hour-column";
+			column.style.setProperty("--profile-delay", `${hour * 8}ms`);
 			column.setAttribute("aria-pressed", "false");
 			bar.className = "hour-bar";
 			bar.style.setProperty(
@@ -746,6 +945,7 @@ function renderCommitRhythm(commitSearch) {
 			const value = document.createElement("span");
 			row.type = "button";
 			row.className = "weekday-row";
+			row.style.setProperty("--profile-delay", `${index * 28}ms`);
 			row.setAttribute("aria-pressed", "false");
 			row.setAttribute(
 				"aria-label",
@@ -782,11 +982,18 @@ function renderCommitRhythm(commitSearch) {
 				).toLowerCase()}`
 			: "waiting for the next commit",
 	);
+	setRhythmReadout(RHYTHM_DEFAULT);
 }
 
-function renderLanguages(repositories) {
+function renderLanguages(repositories, profileConfig) {
 	const list = query("[data-language-list]");
 	if (!list) return;
+	if (profileConfig.privateHistory) {
+		list.replaceChildren();
+		list.setAttribute("aria-busy", "false");
+		setText("[data-language-note]", "mostly NDA, with a little JavaScript");
+		return;
+	}
 
 	const languageCounts = repositories
 		.filter(
@@ -814,6 +1021,7 @@ function renderLanguages(repositories) {
 		const track = document.createElement("span");
 		const bar = document.createElement("span");
 		row.className = "language-row";
+		row.style.setProperty("--profile-delay", `${index * 28}ms`);
 		rank.className = "language-rank";
 		rank.textContent = String(index + 1).padStart(2, "0");
 		content.className = "language-content";
@@ -847,17 +1055,64 @@ function renderLanguages(repositories) {
 	);
 }
 
-function renderRepositories(repositories) {
+function setWorkPrivacyPanels(isWorkProfile) {
+	const privateElements = [
+		query(".hour-figure"),
+		query("[data-weekday-chart]"),
+		query(".analysis-caption"),
+		query("[data-language-list]"),
+		query("[data-repository-list]"),
+		query("[data-commit-list]"),
+	];
+	const repositoriesLink = query("[data-repositories-link]");
+	const commitCount = query("[data-commit-log-count]");
+
+	for (const element of privateElements) {
+		if (element instanceof HTMLElement) element.hidden = isWorkProfile;
+	}
+	if (repositoriesLink instanceof HTMLElement) {
+		repositoriesLink.hidden = isWorkProfile;
+	}
+	if (commitCount instanceof HTMLElement) commitCount.hidden = isWorkProfile;
+
+	setText(
+		"[data-repositories-description]",
+		isWorkProfile
+			? "the good bits have an employee badge"
+			: "Public repositories, ordered by the attention they found.",
+	);
+	setText(
+		"[data-commit-log-description]",
+		isWorkProfile
+			? "the messages stayed at the office"
+			: "The messages say more than the graph does.",
+	);
+	if (isWorkProfile) {
+		setText("[data-rhythm-note]", "the clock punched out before the data did");
+		setText("[data-language-note]", "mostly NDA, with a little JavaScript");
+	}
+}
+
+function renderRepositories(repositories, profileConfig) {
 	const list = query("[data-repository-list]");
 	if (!list) return;
+	const isWorkProfile = profileConfig.privateHistory;
+
+	setWorkPrivacyPanels(isWorkProfile);
+
+	if (isWorkProfile) {
+		list.replaceChildren();
+		list.setAttribute("aria-busy", "false");
+		return;
+	}
 
 	const featured = repositories
 		.filter(
 			(repository) =>
 				!repository.fork &&
 				!repository.archived &&
-				repository.name !== USERNAME &&
-				repository.description,
+				repository.name !== profileConfig.username &&
+				(profileConfig.privateHistory || repository.description),
 		)
 		.sort((a, b) => {
 			if (b.stargazers_count !== a.stargazers_count) {
@@ -893,7 +1148,8 @@ function renderRepositories(repositories) {
 		title.className = "repository-name";
 		title.textContent = repository.name;
 		description.className = "repository-description";
-		description.textContent = repository.description || "Public repository.";
+		description.textContent =
+			repository.description || "A public corner of the work account.";
 		facts.className = "repository-facts";
 		language.className = "repository-language";
 		language.textContent = repository.language || "Mixed";
@@ -916,6 +1172,15 @@ function renderRepositories(repositories) {
 function renderCommitLog(commitSearch) {
 	const list = query("[data-commit-list]");
 	if (!list) return;
+	const privateHistory = Boolean(commitSearch.private);
+	setWorkPrivacyPanels(privateHistory);
+
+	if (privateHistory) {
+		list.replaceChildren();
+		list.setAttribute("aria-busy", "false");
+		return;
+	}
+
 	const commits = Array.isArray(commitSearch.items)
 		? commitSearch.items.slice(0, 10)
 		: [];
@@ -961,9 +1226,13 @@ function renderCommitLog(commitSearch) {
 		"[data-commit-log-count]",
 		commits.length ? "fresh from git" : "Commit search unavailable",
 	);
+	setText(
+		"[data-commit-log-description]",
+		"The messages say more than the graph does.",
+	);
 }
 
-function renderWarnings(warnings) {
+function renderWarnings(warnings, profileKey) {
 	const note = query("[data-api-note]");
 	if (!note) return;
 	if (!warnings.length) {
@@ -972,19 +1241,23 @@ function renderWarnings(warnings) {
 	}
 
 	note.textContent =
-		"GitHub's commit search is taking a breather. Everything else is still live.";
+		profileKey === "work"
+			? "The work contribution calendar is taking a breather. The public profile is still live."
+			: "GitHub's commit search is taking a breather. Everything else is still live.";
 	note.hidden = false;
 }
 
 function renderDashboard(data) {
+	const profile = PROFILES[data.profileKey];
+	setWorkPrivacyPanels(profile.privateHistory);
 	renderProfile(data);
 	renderCommitField(data.commits);
 	renderPublicMonth(data.commits);
 	renderCommitRhythm(data.commits);
-	renderLanguages(data.repositories);
-	renderRepositories(data.repositories);
+	renderLanguages(data.repositories, profile);
+	renderRepositories(data.repositories, profile);
 	renderCommitLog(data.commits);
-	renderWarnings(data.warnings || []);
+	renderWarnings(data.warnings || [], data.profileKey);
 }
 
 function showError(error) {
@@ -999,9 +1272,58 @@ function showError(error) {
 	if (alert) alert.hidden = false;
 }
 
-async function initDashboard({ force = false } = {}) {
+function setProfileMode(profileKey) {
+	const resolvedProfileKey =
+		profileKey === "work" && !WORK_PROFILE.enabled ? "personal" : profileKey;
+	const dashboard = query("[data-github-dashboard]");
+	const profile = PROFILES[resolvedProfileKey];
+	if (!dashboard || !profile) return;
+
+	activeProfileKey = resolvedProfileKey;
+	dashboard.dataset.profileMode = resolvedProfileKey;
+	setText("[data-profile-tagline]", profile.tagline);
+	setText("[data-profile-handle]", `@${profile.username}`);
+	setText(
+		"[data-profile-mode-status]",
+		`Switching to ${
+			resolvedProfileKey === "work" ? "work" : "personal"
+		} GitHub profile`,
+	);
+	setText("[data-dashboard-updated]", "Turning the coin...");
+
+	for (const link of document.querySelectorAll("[data-profile-link]")) {
+		if (link instanceof HTMLAnchorElement) {
+			link.href = `https://github.com/${profile.username}`;
+		}
+	}
+
+	const switchButton = query("[data-profile-switch]");
+	if (switchButton instanceof HTMLButtonElement) {
+		const workActive = resolvedProfileKey === "work";
+		switchButton.setAttribute("aria-pressed", String(workActive));
+		switchButton.setAttribute(
+			"aria-label",
+			workActive
+				? "Show Rajin's personal GitHub profile"
+				: "Show Rajin's work GitHub profile",
+		);
+	}
+
+	setWorkPrivacyPanels(resolvedProfileKey === "work");
+
+	clearMonthlyBarSelection();
+	hideCommitPopover({ immediate: true });
+}
+
+async function initDashboard({
+	force = false,
+	profileKey = activeProfileKey,
+} = {}) {
+	const resolvedProfileKey =
+		profileKey === "work" && !WORK_PROFILE.enabled ? "personal" : profileKey;
 	const dashboard = query("[data-github-dashboard]");
 	if (!dashboard) return;
+	const requestId = ++dashboardRequestId;
 	dashboard.dataset.state = "loading";
 	dashboard.setAttribute("aria-busy", "true");
 
@@ -1009,15 +1331,97 @@ async function initDashboard({ force = false } = {}) {
 	if (alert) alert.hidden = true;
 
 	try {
-		const cached = force ? null : readCache();
-		const data = cached || (await fetchDashboardData());
+		const cached = force ? null : readCache(resolvedProfileKey);
+		const data = cached || (await fetchDashboardData(resolvedProfileKey));
+		if (
+			requestId !== dashboardRequestId ||
+			resolvedProfileKey !== activeProfileKey
+		)
+			return;
 		renderDashboard(data);
 		dashboard.dataset.state = "ready";
 	} catch (error) {
+		if (
+			requestId !== dashboardRequestId ||
+			resolvedProfileKey !== activeProfileKey
+		)
+			return;
 		showError(error);
 		dashboard.dataset.state = "error";
 	} finally {
+		if (requestId === dashboardRequestId) {
+			dashboard.setAttribute("aria-busy", "false");
+		}
+	}
+}
+
+async function transitionProfile(profileKey) {
+	const resolvedProfileKey =
+		profileKey === "work" && !WORK_PROFILE.enabled ? "personal" : profileKey;
+	const dashboard = query("[data-github-dashboard]");
+	const switchButton = query("[data-profile-switch]");
+	const profile = PROFILES[resolvedProfileKey];
+	if (
+		!dashboard ||
+		!profile ||
+		profileTransitionInProgress ||
+		resolvedProfileKey === activeProfileKey
+	)
+		return;
+
+	const requestId = ++dashboardRequestId;
+	const reduceMotion = prefersReducedMotion();
+	profileTransitionInProgress = true;
+	dashboard.dataset.profileTransition = "preparing";
+	dashboard.setAttribute("aria-busy", "true");
+	if (switchButton instanceof HTMLButtonElement) switchButton.disabled = true;
+
+	setText(
+		"[data-profile-mode-status]",
+		`Preparing the ${
+			resolvedProfileKey === "work" ? "work" : "personal"
+		} GitHub profile`,
+	);
+	setText("[data-dashboard-updated]", "Turning the coin...");
+	clearMonthlyBarSelection();
+	hideCommitPopover({ immediate: true });
+
+	const alert = query("[data-dashboard-error]");
+	if (alert) alert.hidden = true;
+
+	try {
+		const cached = readCache(resolvedProfileKey);
+		const [data] = await Promise.all([
+			cached || fetchDashboardData(resolvedProfileKey),
+			wait(reduceMotion ? 0 : 120),
+		]);
+		if (requestId !== dashboardRequestId) return;
+
+		dashboard.dataset.profileTransitioning = "true";
+		dashboard.dataset.profileTransition = "leaving";
+		await wait(reduceMotion ? 0 : 180);
+		if (requestId !== dashboardRequestId) return;
+
+		setProfileMode(resolvedProfileKey);
+		renderDashboard(data);
+		dashboard.dataset.state = "ready";
+		dashboard.dataset.profileTransition = "entering";
+
+		await wait(reduceMotion ? 0 : 760);
+	} catch (error) {
+		if (requestId === dashboardRequestId) {
+			showError(error);
+			dashboard.dataset.state = "error";
+			setText("[data-dashboard-updated]", "The coin stayed put");
+		}
+	} finally {
+		delete dashboard.dataset.profileTransition;
+		delete dashboard.dataset.profileTransitioning;
 		dashboard.setAttribute("aria-busy", "false");
+		if (switchButton instanceof HTMLButtonElement) {
+			switchButton.disabled = !WORK_PROFILE.enabled;
+		}
+		profileTransitionInProgress = false;
 	}
 }
 
@@ -1025,11 +1429,19 @@ const retryButton = query("[data-dashboard-retry]");
 if (retryButton instanceof HTMLButtonElement) {
 	retryButton.addEventListener("click", () => {
 		try {
-			localStorage.removeItem(CACHE_KEY);
+			localStorage.removeItem(getCacheKey(activeProfileKey));
 		} catch {
 			// Retry can still proceed without storage access.
 		}
 		initDashboard({ force: true });
+	});
+}
+
+const profileSwitch = query("[data-profile-switch]");
+if (profileSwitch instanceof HTMLButtonElement && WORK_PROFILE.enabled) {
+	profileSwitch.addEventListener("click", () => {
+		const nextProfile = activeProfileKey === "personal" ? "work" : "personal";
+		transitionProfile(nextProfile);
 	});
 }
 
