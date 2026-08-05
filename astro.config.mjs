@@ -31,6 +31,9 @@ export default defineConfig({
   output: "static",
   adapter: vercel(),
   integrations: [tailwind(), sitemap(), react()],
+  redirects: {
+    "/projects/tessro": "/projects/fliccs",
+  },
   markdown: {
     rehypePlugins: [rehypeSlug, improveMarkdownImages],
   },

@@ -1,0 +1,173 @@
+{
+	"slug": "fliccs",
+	"order": 0,
+	"detail": true,
+	"name": "Fliccs",
+	"cardName": "Fliccs",
+	"description": "Watch movies together in sync. No uploads, no accounts, just the room.",
+	"cardDescription": "Real-time watch parties. Sync or stream.",
+	"note": "formerly Tessro. long story.",
+	"image": {
+		"src": "/assets/images/projects/Fliccs.png",
+		"width": 1280,
+		"height": 640
+	},
+	"href": "/projects/fliccs",
+	"tags": ["Streaming", "Peer-to-Peer", "Live Chat"],
+	"accents": {
+		"primary": "#6435ac",
+		"secondary": "#4c2e90",
+		"screen": "#010515"
+	},
+	"heroActions": [
+		{
+			"label": "Visit Live Site",
+			"href": "https://fliccs.up.railway.app/",
+			"primary": true
+		},
+		{
+			"label": "View on GitHub",
+			"href": "https://github.com/rajin-khan/Fliccs",
+			"primary": false
+		}
+	],
+	"sections": [
+		{
+			"type": "prose",
+			"title": "What is Fliccs?",
+			"paragraphs": [
+				"I used to watch movies with my girlfriend over long-distance calls, and we'd spend half the night trying to sync. \"Pause.\" \"No, you pause.\" \"Okay, play on three. One... two...\" and somehow we'd still be thirty seconds apart. I got tired of the ritual, so I built a room where playback actually stays in sync.",
+				"<strong>Fliccs</strong> is that room. Create a session, invite friends, pick a local file. In <strong>Sync Mode</strong>, everyone has the same video on their machine and Fliccs keeps play, pause, and seek locked together. In <strong>Stream Mode</strong>, the host broadcasts via WebRTC so guests don't need the file at all. Live chat, password-protected sessions, randomly assigned little avatars, no accounts, no uploads.",
+				"It's privacy-first on purpose. Your video never gets uploaded to my servers. No trackers, no \"sign up to continue.\" Just a link, a nickname, and a movie night that doesn't require a countdown."
+			]
+		},
+		{
+			"type": "prose",
+			"title": "It used to be called Tessro",
+			"paragraphs": [
+				"Before Fliccs, this project was <strong>Tessro</strong>. Same soul, different name, and a domain I was weirdly proud of. I bought <em>tessro.com</em>, put it on the landing page, linked it from my portfolio, and walked around like I'd locked in a real brand.",
+				"Then I lost the domain. Not in a cool cyber-heist way. In the boring, \"I blinked and renewals are a thing apparently\" way. One day the site was mine. Next day it wasn't. Lesson learned the expensive, slightly humiliating way: treat domains like rent, not trophies. Also maybe don't build your entire identity around a name you can accidentally misplace.",
+				"So I renamed the whole thing to <strong>Fliccs</strong>. Fresh mark, fresh repo, same watch-party brain. The old Tessro links are gone; this is the real one now. If you still have a tessro.com bookmark, I'm sorry. I am also mildly roasting myself about it forever."
+			]
+		},
+		{
+			"type": "features",
+			"title": "Key Features",
+			"items": [
+				{
+					"name": "Sync Mode",
+					"description": "Same local file, shared playback. Play, pause, seek together.",
+					"icon": "🔄"
+				},
+				{
+					"name": "Stream Mode",
+					"description": "Host broadcasts live over WebRTC. Guests just watch.",
+					"icon": "📺"
+				},
+				{
+					"name": "Live Chat",
+					"description": "Room chat that stays with you, even in fullscreen.",
+					"icon": "💬"
+				},
+				{
+					"name": "Secure Sessions",
+					"description": "Password-protected rooms with one-click invite links.",
+					"icon": "🔒"
+				},
+				{
+					"name": "Privacy First",
+					"description": "No uploads. No accounts. No tracking.",
+					"icon": "🛡️"
+				},
+				{
+					"name": "Actually Responsive",
+					"description": "Desktop theater layout, mobile stack, hideable chat rail.",
+					"icon": "📱"
+				}
+			]
+		},
+		{
+			"type": "use-cases",
+			"title": "Perfect For",
+			"items": [
+				{
+					"name": "Long-distance movie nights",
+					"description": "The whole reason this exists.",
+					"emoji": "🎞️"
+				},
+				{
+					"name": "Friend watch parties",
+					"description": "One host, many couches, one timeline.",
+					"emoji": "🍿"
+				},
+				{
+					"name": "Quick file reviews",
+					"description": "Sync a cut or a lecture without uploading it.",
+					"emoji": "📽️"
+				},
+				{
+					"name": "Family time",
+					"description": "Share a film without sharing a Google Drive folder.",
+					"emoji": "🤝"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Privacy & Technology",
+			"paragraphs": [
+				"Your files stay on your devices. Sync Mode only compares a local hash so everyone knows they're watching the same thing. Stream Mode pushes media peer-to-peer with WebRTC; the server just handles signaling, chat, and session state. Nicknames and dicebear avatars, no profile pages, no \"we sold your watch history.\"",
+				"Stack-wise: <strong>React</strong> + <strong>Vite</strong> on the frontend, <strong>Node.js</strong> + <strong>Express</strong> on the backend, <strong>Socket.IO</strong> for sync and chat, <strong>WebRTC</strong> for streaming, <strong>Tailwind</strong> for the UI, deployed on <strong>Railway</strong>. TURN keeps Stream Mode alive across nasty NATs. Domains, as established, are a separate skill tree I'm still leveling."
+			]
+		},
+		{
+			"type": "roadmap",
+			"title": "What's Next",
+			"items": [
+				{
+					"name": "Voice Chat",
+					"status": "In Progress"
+				},
+				{
+					"name": "Emoji Reactions",
+					"status": "In Progress"
+				},
+				{
+					"name": "Subtitle Syncing",
+					"status": "Planned"
+				},
+				{
+					"name": "Self-hosted TURN",
+					"status": "Planned"
+				},
+				{
+					"name": "Mobile App",
+					"status": "Planned"
+				},
+				{
+					"name": "Offline LAN Mode",
+					"status": "Planned"
+				}
+			]
+		},
+		{
+			"type": "prose",
+			"title": "Get Started",
+			"paragraphs": [
+				"Want to try it? Spin up a room on Fliccs, send the invite link, and skip the 3...2...1. Code's open on GitHub if you want to poke around or contribute. And if you ever see me bragging about a domain again, please laugh."
+			],
+			"actions": [
+				{
+					"label": "Start a Session",
+					"href": "https://fliccs.up.railway.app/",
+					"primary": true
+				},
+				{
+					"label": "Contribute on GitHub",
+					"href": "https://github.com/rajin-khan/Fliccs",
+					"primary": false
+				}
+			]
+		}
+	]
+}
