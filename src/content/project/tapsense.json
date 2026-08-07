@@ -7,6 +7,7 @@
 	"description": "Accessibility App for the Visually Impaired.",
 	"cardDescription": "Accessibility App for the Visually Impaired.",
 	"note": "accessibility should feel native",
+	"badge": "archived",
 	"image": {
 		"src": "/assets/images/projects/TapSense.jpg",
 		"width": 1860,

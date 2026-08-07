@@ -7,6 +7,7 @@
 	"description": "Custom Shell Exploring the Kernel and OS.",
 	"cardDescription": "Custom shell exploring the Kernel and OS.",
 	"note": "because making a shell sounded fun",
+	"badge": "archived",
 	"image": {
 		"src": "/assets/images/projects/cash.png",
 		"width": 2374,

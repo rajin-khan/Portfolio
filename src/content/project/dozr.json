@@ -7,6 +7,7 @@
 	"description": "Real-time driver drowsiness detection system using YOLOv5 and OpenCV for road safety.",
 	"cardDescription": "Real-time drowsiness detection w/ YOLO, OpenCV.",
 	"note": "trying to keep drivers awake",
+	"badge": "archived",
 	"image": {
 		"src": "/assets/images/projects/dozrtiny.jpg",
 		"width": 2560,

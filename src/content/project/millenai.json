@@ -7,6 +7,7 @@
 	"description": "A high-performance AI workspace featuring the 'AI Council'—a multi-agent system for deep, collaborative reasoning.",
 	"cardDescription": "AI Workspace with Multi Agent Workflows.",
 	"note": "many models, one workspace",
+	"badge": "archived",
 	"image": {
 		"src": "/assets/images/projects/MillenAI.png",
 		"width": 1200,

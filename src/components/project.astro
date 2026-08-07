@@ -35,8 +35,15 @@ const isExternal = project.href.startsWith("http");
 			</div>
 			<p class="project-card-note">{project.note}</p>
 			<p class="project-card-description">{project.cardDescription}</p>
-			<div class="project-card-tags" aria-label={`${project.cardName} tags`}>
-				{project.tags.map(tag => <span>{tag}</span>)}
+			<div class="project-card-meta">
+				<div class="project-card-tags" aria-label={`${project.cardName} tags`}>
+					{project.tags.map(tag => <span>{tag}</span>)}
+				</div>
+				{
+					project.badge && (
+						<span class="project-card-badge">{project.badge}</span>
+					)
+				}
 			</div>
 		</div>
 	</article>
@@ -208,12 +215,40 @@ const isExternal = project.href.startsWith("http");
 		text-wrap: pretty;
 	}
 
-	.project-card-tags {
+	.project-card-meta {
 		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 10px;
 		margin-top: auto;
 		padding-top: 17px;
+	}
+
+	.project-card-tags {
+		display: flex;
+		min-width: 0;
+		flex: 1;
 		flex-wrap: wrap;
 		gap: 6px 0;
+	}
+
+	.project-card-badge {
+		display: inline-flex;
+		flex: 0 0 auto;
+		align-items: center;
+		align-self: flex-end;
+		margin-bottom: -0.12rem;
+		padding: 0.28rem 0.52rem;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.04);
+		color: #a3a39f;
+		font-size: 0.57rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		line-height: 1;
+		white-space: nowrap;
+		transform: translateY(0.18rem);
 	}
 
 	.project-card-tags > span {
@@ -236,6 +271,12 @@ const isExternal = project.href.startsWith("http");
 	.project-card:hover .project-card-tags > span,
 	.project-card:focus-visible .project-card-tags > span {
 		color: #a3a39f;
+	}
+
+	.project-card:hover .project-card-badge,
+	.project-card:focus-visible .project-card-badge {
+		border-color: rgba(255, 255, 255, 0.2);
+		color: #d8d8d3;
 	}
 
 	@media (max-width: 520px) {

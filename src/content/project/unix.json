@@ -7,6 +7,7 @@
 	"description": "A lightweight terminal-based grocery management system built with C for efficient inventory tracking.",
 	"cardDescription": "A terminal-based CRUD system to explore C.",
 	"note": "small systems, useful lessons",
+	"badge": "archived",
 	"image": {
 		"src": "/assets/images/projects/UNIX.png",
 		"width": 1318,

@@ -81,6 +81,7 @@ const projectBaseSchema = {
 	description: z.string().min(1),
 	cardDescription: z.string().min(1),
 	note: z.string().min(1),
+	badge: z.string().min(1).optional(),
 	image: z.object({
 		src: z.string().startsWith("/"),
 		width: z.number().int().positive(),

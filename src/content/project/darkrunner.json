@@ -7,6 +7,7 @@
 	"description": "A thrilling 2D platformer game built with Java Swing, featuring pixel art and dynamic gameplay.",
 	"cardDescription": "A 2D platformer to explore OOP with Java.",
 	"note": "learning OOP the noisy way",
+	"badge": "archived",
 	"image": {
 		"src": "/assets/images/projects/DarkRunner.png",
 		"width": 1357,

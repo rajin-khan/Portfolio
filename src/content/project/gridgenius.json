@@ -6,14 +6,15 @@
 	"cardName": "GridGenius",
 	"description": "AI-Powered Energy Forecasting & Optimization for Bangladesh.",
 	"cardDescription": "AI-Powered Energy Optimization System.",
-	"note": "asking better questions of the grid",
+	"note": "teaching the grid foresight",
+	"badge": "research",
 	"image": {
 		"src": "/assets/images/projects/GridGenius.png",
 		"width": 1405,
 		"height": 565
 	},
 	"href": "/projects/gridgenius",
-	"tags": ["AI", "Chatbot", "Research"],
+	"tags": ["AI", "Chatbot", "Forecasting"],
 	"accents": {
 		"primary": "#d4af37",
 		"secondary": "#facc15",
